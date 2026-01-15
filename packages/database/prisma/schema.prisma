@@ -103,10 +103,11 @@ model Planet {
   createdAt  DateTime @default(now())
 
   // Relations
-  buildQueue BuildQueue[]
+  buildQueue   BuildQueue[]
   researchQueue ResearchQueue[]
-  ships      Ship[]
-  defenses   Defense[]
+  shipQueue    ShipQueue[]
+  ships        Ship[]
+  defenses     Defense[]
 
   @@unique([galaxy, system, position])
   @@index([userId])
@@ -184,6 +185,25 @@ model Ship {
 
   @@unique([planetId, shipId])
   @@index([planetId])
+}
+
+model ShipQueue {
+  id        String   @id @default(uuid())
+  planetId  String
+  planet    Planet   @relation(fields: [planetId], references: [id], onDelete: Cascade)
+
+  shipId    Int
+  amount    Int
+
+  startTime DateTime
+  endTime   DateTime
+  completed Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@index([planetId])
+  @@index([endTime])
+  @@index([completed])
 }
 
 model Defense {

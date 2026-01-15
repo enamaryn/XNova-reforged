@@ -18,6 +18,7 @@ const buildings_module_1 = require("./buildings/buildings.module");
 const fleet_module_1 = require("./fleet/fleet.module");
 const galaxy_module_1 = require("./galaxy/galaxy.module");
 const research_module_1 = require("./research/research.module");
+const shipyard_module_1 = require("./shipyard/shipyard.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -37,6 +38,7 @@ exports.AppModule = AppModule = __decorate([
             fleet_module_1.FleetModule,
             galaxy_module_1.GalaxyModule,
             research_module_1.ResearchModule,
+            shipyard_module_1.ShipyardModule,
         ],
         controllers: [],
         providers: [],

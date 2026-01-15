@@ -2153,3 +2153,98 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 - Préparer les bases du Sprint 7 (combat simplifié)
 
 **Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 24 - Roadmap admin + nettoyage + clôture Sprint 6
+
+**Date :** 15 janvier 2026
+**Objectif :** Ajouter la page admin au roadmap, nettoyer les artefacts, finaliser le Sprint 6.
+
+### ✅ Tâches réalisées
+- [x] Nettoyage ciblé des artefacts locaux (`apps/web/.next`, `apps/api/dist/tsconfig.tsbuildinfo`)
+- [x] Sprint 6 clôturé dans la roadmap (statut ✅)
+- [x] Déplacement du hangar en Sprint 6B (scope dédié)
+- [x] Ajout d’un Sprint 9.5 “Administration serveur”
+
+### 🔧 Fichiers modifiés
+
+**Documentation :**
+- `ROADMAP_MVP.md` : Sprint 6 terminé, Sprint 6B ajouté, Sprint 9.5 admin ajouté
+- `CLAUDE_SESSION.md` : session 24 ajoutée
+
+### 📍 État actuel du projet
+
+**Sprint 6 :** ✅ terminé (rappel, mouvements, estimation durée)
+**Sprint 6B :** ⏳ hangar spatial à planifier/implémenter
+**Administration :** ⏳ ajoutée au roadmap (Sprint 9.5)
+
+### ⏭️ Prochaines étapes
+- Implémenter le Sprint 6B (construction vaisseaux)
+- Démarrer le Sprint 7 (combat simplifié) après validation hangar
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 25 - Sprint 6B : Hangar spatial
+
+**Date :** 15 janvier 2026
+**Objectif :** Implémenter la construction de vaisseaux (backend + frontend) et la file d’attente.
+
+### ✅ Tâches réalisées
+- [x] Ajout du modèle `ShipQueue` dans Prisma
+- [x] Module Shipyard (service, controller, cron) avec calculs temps/coûts
+- [x] Endpoints `/shipyard` + `/shipyard/build` + `/shipyard/queue`
+- [x] UI `/shipyard` avec file d’attente et construction de vaisseaux
+
+### 🔧 Fichiers créés/modifiés
+
+**Backend :**
+- `packages/database/prisma/schema.prisma` : modèle `ShipQueue`
+- `apps/api/src/shipyard/shipyard.service.ts` ✅ NEW
+- `apps/api/src/shipyard/shipyard.controller.ts` ✅ NEW
+- `apps/api/src/shipyard/shipyard-cron.service.ts` ✅ NEW
+- `apps/api/src/shipyard/shipyard.module.ts` ✅ NEW
+- `apps/api/src/shipyard/dto/build-ship.dto.ts` ✅ NEW
+- `apps/api/src/app.module.ts` : import ShipyardModule
+
+**Frontend :**
+- `apps/web/lib/api/shipyard.ts` ✅ NEW
+- `apps/web/components/game/ShipyardQueue.tsx` ✅ NEW
+- `apps/web/app/(game)/shipyard/page.tsx` ✅ NEW
+
+**Documentation :**
+- `ROADMAP_MVP.md` : Sprint 6B terminé
+
+### 📍 État actuel du projet
+
+**Sprint 6B :** ✅ terminé (chantier spatial)
+**Sprint 7 :** ⏳ prêt à démarrer (combat simplifié)
+
+### ⏭️ Prochaines étapes
+- Démarrer Sprint 7 (combat simplifié)
+- Ajouter la construction de défenses (si prévu en parallèle)
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 26 - Correctif Prisma ShipQueue
+
+**Date :** 15 janvier 2026
+**Objectif :** Corriger la relation Prisma ShipQueue/Planet et regénérer le client.
+
+### ✅ Tâches réalisées
+- [x] Ajout de la relation `shipQueue` côté `Planet`
+- [x] Regénération du client Prisma (`npx prisma generate`)
+
+### 🔧 Fichiers modifiés
+- `packages/database/prisma/schema.prisma`
+- `ROADMAP_MVP.md`
+
+### ⏭️ Prochaines étapes
+- Lancer `npm run db:push` si le schéma doit être poussé en local
+- Vérifier que l’API Shipyard répond correctement
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.

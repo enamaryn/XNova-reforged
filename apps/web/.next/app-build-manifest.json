@@ -31,30 +31,30 @@
       "static/chunks/main-app.js",
       "static/chunks/app/(game)/overview/page.js"
     ],
+    "/(game)/shipyard/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(game)/shipyard/page.js"
+    ],
     "/(game)/fleet/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(game)/fleet/page.js"
+    ],
+    "/(game)/movement/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(game)/movement/page.js"
     ],
     "/(game)/galaxy/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(game)/galaxy/page.js"
     ],
-    "/(game)/buildings/page": [
+    "/_not-found/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(game)/buildings/page.js"
-    ],
-    "/(game)/buildings/[buildingId]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(game)/buildings/[buildingId]/page.js"
-    ],
-    "/(game)/research/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(game)/research/page.js"
+      "static/chunks/app/_not-found/page.js"
     ]
   }
 }

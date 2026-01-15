@@ -487,7 +487,7 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 
 ## 📅 PHASE 3 : Combat & Flottes (Semaine 9-12)
 
-### Sprint 6 : Système de Flottes
+### Sprint 6 : Système de Flottes ✅ TERMINÉ
 
 **Objectif :** Gestion et déplacement de flottes
 
@@ -546,7 +546,7 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
   - Arrivée : exécuter mission
   - Retour : restituer vaisseaux
 - [x] WebSocket events (flotte arrivée)
-- [ ] Endpoints :
+- [x] Endpoints :
   - [x] `POST /fleet/send`
   - [x] `GET /fleet/active`
   - [x] `DELETE /fleet/:id` (rappeler avant arrivée)
@@ -562,14 +562,43 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
   - [x] Liste flottes en cours
   - [x] Countdown timers
   - [x] Rappel possible
-- [ ] UI hangar spatial
-  - Liste vaisseaux disponibles
-  - Construction vaisseaux
 
 **Livrables :**
 - ✅ Envoi flottes fonctionnel
 - ✅ Missions transport
 - ✅ Tracking temps réel
+
+**Complété le :** 15 janvier 2026 (Session 23-24)
+
+---
+
+### Sprint 6B : Hangar Spatial ✅ TERMINÉ
+
+**Objectif :** Construction et gestion des vaisseaux
+
+#### Backend - Module Shipyard
+- [x] Schema Prisma (file d’attente vaisseaux)
+- [x] Service ShipyardService (coûts, temps, validation ressources)
+- [x] Cron job construction vaisseaux
+- [x] Endpoints :
+  - [x] `GET /shipyard`
+  - [x] `POST /shipyard/build`
+  - [x] `GET /shipyard/queue`
+  - [x] `DELETE /shipyard/queue/:id`
+
+#### Frontend - UI Hangar
+- [x] Page `/shipyard`
+  - [x] Liste vaisseaux disponibles
+  - [x] Construction vaisseaux
+  - [x] File d’attente + timers
+
+**Livrables :**
+- ✅ Construction vaisseaux fonctionnelle
+- ✅ File d’attente shipyard
+
+**Complété le :** 15 janvier 2026 (Session 25)
+
+**Note :** Correction relation Prisma `ShipQueue` ↔ `Planet` (Session 26)
 
 ---
 
@@ -740,6 +769,34 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 - ✅ Messagerie complète
 - ✅ Système alliances basique
 - ✅ Classements
+
+---
+
+### Sprint 9.5 : Administration Serveur
+
+**Objectif :** Interface admin pour régler les paramètres globaux du jeu
+
+#### Backend - Configuration
+- [ ] Modèle `GameConfig` (vitesses, tailles planètes, multiplicateurs)
+- [ ] Endpoints admin sécurisés (RBAC)
+  - [ ] `GET /admin/config`
+  - [ ] `PUT /admin/config`
+- [ ] Validation stricte des valeurs (bornes, types)
+- [ ] Journalisation des modifications (audit log)
+
+#### Frontend - UI Admin
+- [ ] Page `/admin` (layout dédié)
+- [ ] Écran “Configuration serveur”
+  - [ ] Vitesse du jeu
+  - [ ] Vitesse des flottes
+  - [ ] Vitesse de production
+  - [ ] Taille planète / cases disponibles
+  - [ ] Multiplicateurs ressources de base
+- [ ] Écran “Vue générale” (statut serveur)
+
+**Livrables :**
+- ✅ Paramètres globaux modifiables en live
+- ✅ Traçabilité des changements
 
 ---
 

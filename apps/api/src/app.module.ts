@@ -9,6 +9,7 @@ import { BuildingsModule } from './buildings/buildings.module';
 import { FleetModule } from './fleet/fleet.module';
 import { GalaxyModule } from './galaxy/galaxy.module';
 import { ResearchModule } from './research/research.module';
+import { ShipyardModule } from './shipyard/shipyard.module';
 
 @Module({
   imports: [
@@ -44,6 +45,9 @@ import { ResearchModule } from './research/research.module';
 
     // Module recherche
     ResearchModule,
+
+    // Module chantier spatial
+    ShipyardModule,
   ],
   controllers: [],
   providers: [],
