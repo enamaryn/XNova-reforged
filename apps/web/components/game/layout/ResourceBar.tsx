@@ -41,12 +41,14 @@ export function ResourceBar({ compact = false }: ResourceBarProps) {
     refetchInterval: 10000, // Actualiser toutes les 10s
   });
 
-  const metal = resources?.metal ?? 0;
-  const crystal = resources?.crystal ?? 0;
-  const deuterium = resources?.deuterium ?? 0;
-  const energy = resources?.energy ?? 0;
-  const energyUsed = resources?.energyUsed ?? 0;
-  const energyBalance = energy - energyUsed;
+  const metal = Number(resources?.metal ?? 0);
+  const crystal = Number(resources?.crystal ?? 0);
+  const deuterium = Number(resources?.deuterium ?? 0);
+  const energy = Number(resources?.energy ?? 0);
+  const energyUsed = Number(resources?.energyUsed ?? 0);
+  const safeEnergy = Number.isNaN(energy) ? 0 : energy;
+  const safeEnergyUsed = Number.isNaN(energyUsed) ? 0 : energyUsed;
+  const energyBalance = safeEnergy - safeEnergyUsed;
 
   if (compact) {
     return (

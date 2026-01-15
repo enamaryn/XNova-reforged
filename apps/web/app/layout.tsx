@@ -32,7 +32,7 @@ export default function RootLayout({
         <Providers>
           <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900">
             <Header />
-            <main className="mx-auto w-full max-w-6xl px-6 py-10">
+            <main className="w-full">
               {children}
             </main>
             <Footer />

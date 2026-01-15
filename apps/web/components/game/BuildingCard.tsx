@@ -59,6 +59,7 @@ export function BuildingCard({ building, onBuild, isBuilding }: BuildingCardProp
 
   const icon = categoryIcons[building.category] || '🏗️';
   const borderColor = categoryColors[building.category] || 'border-gray-500/50';
+  const categoryLabel = getCategoryLabel(building.category);
 
   return (
     <div
@@ -70,7 +71,7 @@ export function BuildingCard({ building, onBuild, isBuilding }: BuildingCardProp
           <span className="text-2xl">{icon}</span>
           <div>
             <h3 className="font-semibold text-white">{building.name}</h3>
-            <span className="text-xs text-gray-400 capitalize">{building.category}</span>
+            <span className="text-xs text-slate-500">{categoryLabel}</span>
           </div>
         </div>
         <div className="rounded-full border border-slate-700/80 bg-slate-900/70 px-3 py-1">
@@ -160,4 +161,15 @@ export function BuildingCard({ building, onBuild, isBuilding }: BuildingCardProp
       </div>
     </div>
   );
+}
+
+function getCategoryLabel(category: string): string {
+  const labels: Record<string, string> = {
+    resource: 'Ressource',
+    facility: 'Installation',
+    station: 'Station',
+    defense: 'Défense',
+    moon: 'Lunaire',
+  };
+  return labels[category] || category;
 }

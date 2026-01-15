@@ -320,6 +320,53 @@ Corriger l'ordre des hooks sur la page overview pour éliminer l'erreur React.
 ### ⚠️ Note
 - Outil TodoWrite non disponible dans cet environnement
 
+---
+
+## 📅 SESSION 14 - Header Ressources & Layout (15 janvier 2026)
+
+### 🎯 Objectif de la session
+Corriger les ressources à 0 dans l'entête et élargir l'overview.
+
+### ✅ Tâches accomplies
+- [x] Récupération de l'utilisateur/planètes dans ProtectedRoute
+- [x] Sécurisation des valeurs ressources dans l'entête
+- [x] Suppression de la contrainte de largeur globale pour le layout jeu
+
+### 📁 Fichiers modifiés
+- `apps/web/components/auth/ProtectedRoute.tsx` : chargement du profil + sélection planète
+- `apps/web/components/game/layout/ResourceBar.tsx` : guard NaN ressources
+- `apps/web/app/layout.tsx` : main full-width
+- `apps/web/app/page.tsx` : container rétabli pour la home
+
+### 🔎 État actuel du projet
+- L'entête récupère les bonnes ressources si l'utilisateur est chargé
+- Le tronc central de l'overview occupe toute la largeur dispo
+
+### 🔜 Prochaines étapes
+- Vérifier l'entête en navigation cross-pages
+
+### ⚠️ Note
+- Outil TodoWrite non disponible dans cet environnement
+
+---
+
+## 📅 SESSION 15 - Libellés Catégorie Bâtiments (15 janvier 2026)
+
+### 🎯 Objectif de la session
+Traduire la catégorie "resource" en "Ressource" sur les cartes bâtiments.
+
+### ✅ Tâches accomplies
+- [x] Libellés catégories localisés sur les cartes bâtiments
+
+### 📁 Fichiers modifiés
+- `apps/web/components/game/BuildingCard.tsx` : traduction des catégories
+
+### 🔎 État actuel du projet
+- Catégories visibles en français sur les cartes et fiches bâtiments
+
+### ⚠️ Note
+- Outil TodoWrite non disponible dans cet environnement
+
 - **redis** : Redis 7 Alpine
   - Port: 6379
   - Volume: redis_data

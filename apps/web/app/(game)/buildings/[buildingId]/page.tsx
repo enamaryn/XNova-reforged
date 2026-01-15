@@ -98,7 +98,7 @@ export default function BuildingDetailPage() {
             </div>
             <div className="flex items-center justify-between rounded-xl bg-slate-900/60 px-4 py-3">
               <span>Catégorie</span>
-              <span className="font-mono text-slate-200">{building.category}</span>
+              <span className="font-mono text-slate-200">{getCategoryLabel(building.category)}</span>
             </div>
           </div>
         </div>
@@ -152,4 +152,15 @@ export default function BuildingDetailPage() {
       </div>
     </div>
   );
+}
+
+function getCategoryLabel(category: string): string {
+  const labels: Record<string, string> = {
+    resource: 'Ressource',
+    facility: 'Installation',
+    station: 'Station',
+    defense: 'Défense',
+    moon: 'Lunaire',
+  };
+  return labels[category] || category;
 }

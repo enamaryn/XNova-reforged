@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { apiClient } from "@/lib/api/client";
 import { useAuthStore } from "@/lib/stores/auth-store";
+import { usePlanetStore } from "@/lib/stores/planet-store";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -12,6 +14,9 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const router = useRouter();
   const tokens = useAuthStore((state) => state.tokens);
   const setStatus = useAuthStore((state) => state.setStatus);
+  const setUser = useAuthStore((state) => state.setUser);
+  const selectedPlanetId = usePlanetStore((state) => state.selectedPlanetId);
+  const setSelectedPlanetId = usePlanetStore((state) => state.setSelectedPlanetId);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
@@ -39,6 +44,47 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
       router.replace("/login");
     }
   }, [hydrated, tokens, router, setStatus]);
+
+  useEffect(() => {
+    if (!hydrated || !tokens?.accessToken) return;
+
+    let active = true;
+
+    const loadUser = async () => {
+      try {
+        const me = await apiClient.get<{
+          id: string;
+          username: string;
+          email: string;
+          points: number;
+          rank: number;
+          createdAt: string;
+          planets?: Array<{
+            id: string;
+            name: string;
+            galaxy: number;
+            system: number;
+            position: number;
+          }>;
+        }>("/auth/me");
+
+        if (!active) return;
+        setUser(me);
+        if (!selectedPlanetId && me.planets?.length) {
+          setSelectedPlanetId(me.planets[0].id);
+        }
+      } catch (error) {
+        if (!active) return;
+        setStatus("unauthenticated");
+      }
+    };
+
+    loadUser();
+
+    return () => {
+      active = false;
+    };
+  }, [hydrated, tokens, setUser, selectedPlanetId, setSelectedPlanetId, setStatus]);
 
   if (!hydrated || !tokens?.accessToken) {
     return (
