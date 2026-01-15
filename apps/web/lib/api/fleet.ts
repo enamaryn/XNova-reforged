@@ -63,3 +63,13 @@ export interface SendFleetResponse {
 export function sendFleet(payload: SendFleetPayload) {
   return apiClient.post<SendFleetResponse>('/fleet/send', payload);
 }
+
+export interface RecallFleetResponse {
+  success: boolean;
+  fleetId: string;
+  returnTime: string;
+}
+
+export function recallFleet(fleetId: string) {
+  return apiClient.delete<RecallFleetResponse>(`/fleet/${fleetId}`);
+}

@@ -28,6 +28,7 @@ const navItems: NavItem[] = [
 
   // Flotte
   { href: '/fleet', label: 'nav.fleet', icon: '🛸', category: 'flotte' },
+  { href: '/movement', label: 'nav.movement', icon: '🛰️', category: 'flotte' },
   { href: '/galaxy', label: 'nav.galaxy', icon: '🌌', category: 'flotte' },
 
   // Social

@@ -549,7 +549,7 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 - [ ] Endpoints :
   - [x] `POST /fleet/send`
   - [x] `GET /fleet/active`
-  - [ ] `DELETE /fleet/:id` (rappeler avant arrivée)
+  - [x] `DELETE /fleet/:id` (rappeler avant arrivée)
 
 #### Frontend - UI Fleet
 - [x] Page `/fleet`
@@ -557,11 +557,11 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
   - Sélection destination (galaxie/système/position)
   - Choix mission
   - Chargement cargo (si transport)
-  - [ ] Calcul durée affichée
-- [ ] Page `/movement`
-  - Liste flottes en cours
-  - Countdown timers
-  - Rappel possible
+  - [x] Calcul durée affichée
+- [x] Page `/movement`
+  - [x] Liste flottes en cours
+  - [x] Countdown timers
+  - [x] Rappel possible
 - [ ] UI hangar spatial
   - Liste vaisseaux disponibles
   - Construction vaisseaux
@@ -569,7 +569,7 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 **Livrables :**
 - ✅ Envoi flottes fonctionnel
 - ✅ Missions transport
-- ⏳ Tracking temps réel
+- ✅ Tracking temps réel
 
 ---
 

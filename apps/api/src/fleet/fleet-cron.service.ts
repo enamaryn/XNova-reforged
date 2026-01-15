@@ -38,6 +38,7 @@ export class FleetCronService {
 
     for (const fleet of fleets) {
       await this.database.$transaction(async (tx) => {
+        let cargoDelivered = false;
         if (fleet.mission === MissionType.TRANSPORT || fleet.mission === MissionType.DEPLOY) {
           const target = await tx.planet.findFirst({
             where: {
@@ -57,12 +58,13 @@ export class FleetCronService {
                 deuterium: { increment: Number(cargo.deuterium || 0) },
               },
             });
+            cargoDelivered = true;
           }
         }
 
         await tx.fleet.update({
           where: { id: fleet.id },
-          data: { status: 'returning' },
+          data: cargoDelivered ? { status: 'returning', cargo: {} } : { status: 'returning' },
         });
       });
 
@@ -96,6 +98,18 @@ export class FleetCronService {
         });
 
         if (origin) {
+          const cargo = fleet.cargo as Record<string, number>;
+          if (cargo.metal || cargo.crystal || cargo.deuterium) {
+            await tx.planet.update({
+              where: { id: origin.id },
+              data: {
+                metal: { increment: Number(cargo.metal || 0) },
+                crystal: { increment: Number(cargo.crystal || 0) },
+                deuterium: { increment: Number(cargo.deuterium || 0) },
+              },
+            });
+          }
+
           const ships = fleet.ships as Record<string, number>;
           await Promise.all(
             Object.entries(ships).map(([shipId, amount]) =>
@@ -119,7 +133,7 @@ export class FleetCronService {
 
         await tx.fleet.update({
           where: { id: fleet.id },
-          data: { status: 'completed' },
+          data: { status: 'completed', cargo: {} },
         });
       });
     }

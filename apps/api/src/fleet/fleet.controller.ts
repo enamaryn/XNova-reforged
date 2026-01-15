@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { FleetService } from './fleet.service';
@@ -25,5 +25,10 @@ export class FleetController {
   @Post('send')
   sendFleet(@Body() dto: SendFleetDto, @CurrentUser('id') userId: string) {
     return this.fleetService.sendFleet(dto, userId);
+  }
+
+  @Delete(':fleetId')
+  recallFleet(@Param('fleetId') fleetId: string, @CurrentUser('id') userId: string) {
+    return this.fleetService.recallFleet(fleetId, userId);
   }
 }

@@ -266,6 +266,46 @@ export class FleetService {
     };
   }
 
+  async recallFleet(fleetId: string, userId: string) {
+    const fleet = await this.database.fleet.findUnique({
+      where: { id: fleetId },
+    });
+
+    if (!fleet) {
+      throw new NotFoundException('Flotte introuvable');
+    }
+
+    if (fleet.userId !== userId) {
+      throw new ForbiddenException('Acces refuse');
+    }
+
+    if (fleet.status !== 'traveling') {
+      throw new BadRequestException('La flotte ne peut pas etre rappelee');
+    }
+
+    const now = new Date();
+    if (fleet.arrivalTime <= now) {
+      throw new BadRequestException('La flotte est deja arrivee');
+    }
+
+    const elapsedSeconds = Math.max(
+      1,
+      Math.floor((now.getTime() - fleet.startTime.getTime()) / 1000),
+    );
+    const returnTime = new Date(now.getTime() + elapsedSeconds * 1000);
+
+    const updatedFleet = await this.database.fleet.update({
+      where: { id: fleet.id },
+      data: { status: 'returning', returnTime },
+    });
+
+    return {
+      success: true,
+      fleetId: updatedFleet.id,
+      returnTime: updatedFleet.returnTime,
+    };
+  }
+
   private getNumber(key: string, fallback: number): number {
     const rawValue = this.configService.get<string>(key);
     if (!rawValue) return fallback;

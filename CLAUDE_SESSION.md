@@ -2100,3 +2100,56 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 - ...
 
 **Choix de l'utilisateur :** Option A (Backend-first) sauf indication contraire.
+
+---
+
+## ✅ Session 23 - Sprint 6 : Flottes (rappel + mouvements)
+
+**Date :** 15 janvier 2026
+**Objectif :** Finaliser le suivi des flottes (rappel avant arrivée, page mouvements, durée affichée).
+
+### ✅ Tâches réalisées
+- [x] Ajouter l’endpoint de rappel `DELETE /fleet/:id` avec validations serveur
+- [x] Sécuriser le retour des cargaisons lors du retour de flotte
+- [x] Créer la page `/movement` avec timers et action de rappel
+- [x] Afficher la durée estimée et la consommation sur `/fleet`
+- [x] Mettre à jour la navigation et les traductions associées
+
+### 🔧 Fichiers créés/modifiés
+
+**Backend :**
+- `apps/api/src/fleet/fleet.service.ts` : rappel flotte (contrôles + returnTime)
+- `apps/api/src/fleet/fleet.controller.ts` : route `DELETE /fleet/:id`
+- `apps/api/src/fleet/fleet-cron.service.ts` : retour cargaison + purge cargo livré
+
+**Frontend :**
+- `apps/web/app/(game)/movement/page.tsx` ✅ NEW : suivi des flottes, compte à rebours, rappel
+- `apps/web/app/(game)/fleet/page.tsx` : estimation durée + conso + refresh timers
+- `apps/web/lib/api/fleet.ts` : fonction `recallFleet`
+- `apps/web/components/game/layout/GameSidebar.tsx` : lien `/movement`
+- `apps/web/lib/i18n/index.tsx` : libellés nav + mouvements + missions
+
+**Documentation :**
+- `ROADMAP_MVP.md` : Sprint 6 mis à jour (rappel + mouvements + durée)
+
+### 📍 État actuel du projet
+
+**Sprints terminés :**
+- Sprint 1A : Infrastructure Backend ✅
+- Sprint 1B : Infrastructure Frontend ✅
+- Sprint 2A : Auth Backend ✅
+- Sprint 2B : Auth Frontend ✅
+- Sprint 3 : Ressources ✅
+- Sprint 3.5 : Refonte Frontend & Navigation ✅
+- Sprint 4 : Construction de Bâtiments ✅
+- Sprint 5 : Technologies ✅
+
+**Sprint 6 :**
+- ✅ Envoi flottes + suivi des mouvements + rappel
+- ⏳ Reste : UI hangar spatial (construction vaisseaux)
+
+### ⏭️ Prochaines étapes
+- Implémenter l’UI hangar spatial (liste vaisseaux + construction)
+- Préparer les bases du Sprint 7 (combat simplifié)
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.

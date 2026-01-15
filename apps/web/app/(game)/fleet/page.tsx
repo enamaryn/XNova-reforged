@@ -1,20 +1,40 @@
 'use client';
 
 import { useMemo, useState, useEffect } from 'react';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { SHIPS, getShipSpeed } from '@xnova/game-config';
+import {
+  calculateDistance,
+  calculateFleetSpeed,
+  calculateFlightDurationSeconds,
+  calculateFuelConsumption,
+} from '@xnova/game-engine';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { usePlanetStore } from '@/lib/stores/planet-store';
 import { getActiveFleets, getAvailableShips, sendFleet } from '@/lib/api/fleet';
+import { researchApi } from '@/lib/api/research';
 import { useI18n } from '@/lib/i18n';
 
-function formatCountdown(dateValue?: string | Date | null) {
+function formatCountdown(dateValue: string | Date | null | undefined, nowMs: number) {
   if (!dateValue) return '--';
   const target = new Date(dateValue).getTime();
-  const diffSeconds = Math.max(0, Math.floor((target - Date.now()) / 1000));
+  const diffSeconds = Math.max(0, Math.floor((target - nowMs) / 1000));
   const hours = Math.floor(diffSeconds / 3600);
   const minutes = Math.floor((diffSeconds % 3600) / 60);
   const seconds = diffSeconds % 60;
   return `${hours}h ${minutes}m ${seconds}s`;
+}
+
+function formatDuration(seconds: number) {
+  const safeSeconds = Math.max(0, Math.floor(seconds));
+  const hours = Math.floor(safeSeconds / 3600);
+  const minutes = Math.floor((safeSeconds % 3600) / 60);
+  const remainingSeconds = safeSeconds % 60;
+  return `${hours}h ${minutes}m ${remainingSeconds}s`;
+}
+
+function formatNumber(value: number) {
+  return new Intl.NumberFormat().format(Math.floor(value));
 }
 
 export default function FleetPage() {
@@ -23,10 +43,17 @@ export default function FleetPage() {
   const [shipSelection, setShipSelection] = useState<Record<number, number>>({});
   const [cargo, setCargo] = useState({ metal: 0, crystal: 0, deuterium: 0 });
   const [destination, setDestination] = useState({ galaxy: 1, system: 1, position: 1 });
+  const [nowMs, setNowMs] = useState(Date.now());
+  const queryClient = useQueryClient();
   const { user } = useAuthStore();
   const { selectedPlanetId } = usePlanetStore();
   const { t } = useI18n();
   const planetId = selectedPlanetId || user?.planets?.[0]?.id;
+
+  useEffect(() => {
+    const interval = setInterval(() => setNowMs(Date.now()), 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const {
     data: shipsData,
@@ -47,6 +74,13 @@ export default function FleetPage() {
     queryFn: () => getActiveFleets(),
   });
 
+  const { data: techData } = useQuery({
+    queryKey: ['fleet-tech', planetId],
+    queryFn: () => researchApi.getTechnologies(planetId!),
+    enabled: !!planetId,
+    staleTime: 60000,
+  });
+
   const ships = useMemo(() => shipsData?.ships ?? [], [shipsData]);
 
   useEffect(() => {
@@ -62,6 +96,95 @@ export default function FleetPage() {
     });
   }, [shipsData]);
 
+  const selectedShips = useMemo(
+    () =>
+      Object.entries(shipSelection)
+        .map(([id, amount]) => ({ shipId: Number(id), amount: Number(amount) }))
+        .filter((ship) => ship.amount > 0),
+    [shipSelection],
+  );
+
+  const originPlanet = useMemo(
+    () => user?.planets?.find((planet) => planet.id === planetId) ?? null,
+    [user, planetId],
+  );
+
+  const techLevels = useMemo(() => {
+    const levels = { combustion: 0, impulse: 0, hyperspace: 0 };
+    if (!techData?.technologies) return levels;
+    for (const tech of techData.technologies) {
+      if (tech.id === 115) levels.combustion = tech.currentLevel;
+      if (tech.id === 117) levels.impulse = tech.currentLevel;
+      if (tech.id === 118) levels.hyperspace = tech.currentLevel;
+    }
+    return levels;
+  }, [techData]);
+
+  const missionSummary = useMemo(() => {
+    if (!originPlanet || selectedShips.length === 0) return null;
+
+    const shipSpeeds = selectedShips.map((ship) =>
+      getShipSpeed(
+        ship.shipId,
+        techLevels.combustion,
+        techLevels.impulse,
+        techLevels.hyperspace,
+      ),
+    );
+
+    const fleetSpeed = calculateFleetSpeed(shipSpeeds);
+    if (!fleetSpeed) return null;
+
+    const distance = calculateDistance(
+      {
+        galaxy: originPlanet.galaxy,
+        system: originPlanet.system,
+        position: originPlanet.position,
+      },
+      {
+        galaxy: destination.galaxy,
+        system: destination.system,
+        position: destination.position,
+      },
+    );
+
+    const baseDuration = calculateFlightDurationSeconds({
+      distance,
+      fleetSpeed,
+      speedPercent,
+    });
+    const speedMultiplierRaw = Number(process.env.NEXT_PUBLIC_FLEET_SPEED ?? '1');
+    const speedMultiplier =
+      Number.isFinite(speedMultiplierRaw) && speedMultiplierRaw > 0 ? speedMultiplierRaw : 1;
+    const durationSeconds = Math.max(1, Math.floor(baseDuration / speedMultiplier));
+
+    const fuelConsumption = calculateFuelConsumption({
+      distance,
+      fleetSpeed,
+      ships: selectedShips.map((ship) => ({
+        amount: ship.amount,
+        consumption: SHIPS[ship.shipId]?.consumption ?? 0,
+      })),
+    });
+
+    const capacity = selectedShips.reduce(
+      (sum, ship) => sum + (SHIPS[ship.shipId]?.cargo ?? 0) * ship.amount,
+      0,
+    );
+    const cargoTotal = cargo.metal + cargo.crystal + cargo.deuterium;
+
+    return {
+      distance,
+      durationSeconds,
+      fuelConsumption,
+      capacity,
+      cargoTotal,
+    };
+  }, [originPlanet, selectedShips, destination, speedPercent, cargo, techLevels]);
+
+  const isOverCapacity =
+    missionSummary ? missionSummary.cargoTotal > missionSummary.capacity : false;
+
   const sendMutation = useMutation({
     mutationFn: () =>
       sendFleet({
@@ -71,14 +194,13 @@ export default function FleetPage() {
         toPosition: destination.position,
         mission: mission === 'transport' ? 3 : mission === 'attaque' ? 1 : mission === 'espionnage' ? 6 : 7,
         speedPercent,
-        ships: Object.fromEntries(
-          Object.entries(shipSelection).filter(([, amount]) => Number(amount) > 0),
-        ),
+        ships: Object.fromEntries(selectedShips.map((ship) => [ship.shipId, ship.amount])),
         cargo,
       }),
     onSuccess: () => {
       setShipSelection({});
       setCargo({ metal: 0, crystal: 0, deuterium: 0 });
+      queryClient.invalidateQueries({ queryKey: ['fleet-active'] });
     },
   });
 
@@ -233,6 +355,44 @@ export default function FleetPage() {
                 className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
               />
             </div>
+
+            {missionSummary && (
+              <div className="rounded-2xl bg-slate-900/60 p-4">
+                <p className="text-sm text-slate-300">{t('fleet.summary')}</p>
+                <div className="mt-3 grid gap-2 text-xs text-slate-400 sm:grid-cols-2">
+                  <div className="flex items-center justify-between">
+                    <span>{t('fleet.distance')}</span>
+                    <span className="text-slate-200">
+                      {formatNumber(missionSummary.distance)} u
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span>{t('fleet.duration')}</span>
+                    <span className="text-slate-200">
+                      {formatDuration(missionSummary.durationSeconds)}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span>{t('fleet.fuel')}</span>
+                    <span className="text-slate-200">
+                      {formatNumber(missionSummary.fuelConsumption)} D
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span>{t('fleet.capacity')}</span>
+                    <span className="text-slate-200">
+                      {formatNumber(missionSummary.capacity)}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between sm:col-span-2">
+                    <span>{t('fleet.cargoSelected')}</span>
+                    <span className={isOverCapacity ? 'text-red-300' : 'text-slate-200'}>
+                      {formatNumber(missionSummary.cargoTotal)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           <button
@@ -270,26 +430,32 @@ export default function FleetPage() {
               </div>
             )}
             {!fleetsLoading && !fleetsError && activeFleets && activeFleets.length > 0 ? (
-              activeFleets.map((fleet) => (
-                <div
-                  key={fleet.id}
-                  className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-4"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                      Mission {fleet.mission}
-                    </span>
-                    <span className="text-xs text-slate-500">{fleet.status}</span>
+              activeFleets.map((fleet) => {
+                const isReturning = fleet.status === 'returning';
+                const targetTime = isReturning ? fleet.returnTime : fleet.arrivalTime;
+                const countdownLabel = isReturning ? t('movement.backIn') : t('movement.arrivalIn');
+
+                return (
+                  <div
+                    key={fleet.id}
+                    className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-4"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs uppercase tracking-[0.2em] text-slate-500">
+                        Mission {fleet.mission}
+                      </span>
+                      <span className="text-xs text-slate-500">{fleet.status}</span>
+                    </div>
+                    <div className="mt-2 text-sm text-slate-300">
+                      {fleet.fromGalaxy}:{fleet.fromSystem}:{fleet.fromPosition} →{' '}
+                      {fleet.toGalaxy}:{fleet.toSystem}:{fleet.toPosition}
+                    </div>
+                    <div className="mt-2 text-xs text-slate-500">
+                      {countdownLabel} {formatCountdown(targetTime, nowMs)}
+                    </div>
                   </div>
-                  <div className="mt-2 text-sm text-slate-300">
-                    {fleet.fromGalaxy}:{fleet.fromSystem}:{fleet.fromPosition} →{' '}
-                    {fleet.toGalaxy}:{fleet.toSystem}:{fleet.toPosition}
-                  </div>
-                  <div className="mt-2 text-xs text-slate-500">
-                    Arrivée dans {formatCountdown(fleet.arrivalTime)}
-                  </div>
-                </div>
-              ))
+                );
+              })
             ) : !fleetsLoading && !fleetsError ? (
               <>
                 <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-4">
