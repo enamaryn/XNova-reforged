@@ -5,6 +5,7 @@ exports.getBuildingCost = getBuildingCost;
 exports.getDemolitionRefund = getDemolitionRefund;
 exports.getBuildingTime = getBuildingTime;
 exports.checkBuildingRequirements = checkBuildingRequirements;
+const technologies_1 = require("./technologies");
 exports.BUILDINGS = {
     1: {
         id: 1,
@@ -204,8 +205,8 @@ function checkBuildingRequirements(buildingId, planetBuildings, userTechnologies
                 : (userTechnologies[reqIdNum] || 0);
             if (currentLevel < reqLevel) {
                 const reqName = reqIdNum < 100
-                    ? (exports.BUILDINGS[reqIdNum]?.name || `Building ${reqIdNum}`)
-                    : `Technology ${reqIdNum}`;
+                    ? (exports.BUILDINGS[reqIdNum]?.name || `Batiment ${reqIdNum}`)
+                    : (technologies_1.TECHNOLOGIES[reqIdNum]?.name || `Technologie ${reqIdNum}`);
                 missingRequirements.push(`${reqName} niveau ${reqLevel} requis (actuel: ${currentLevel})`);
             }
         }

@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { SHIPS, type ShipCost } from '@xnova/game-config';
+import { BUILDINGS, SHIPS, TECHNOLOGIES, type ShipCost } from '@xnova/game-config';
 import { DatabaseService } from '../database/database.service';
 
 @Injectable()
@@ -385,8 +385,8 @@ export class ShipyardService {
         if (currentLevel < reqLevel) {
           const name =
             reqIdNum < 100
-              ? `Batiment ${reqIdNum}`
-              : `Technologie ${reqIdNum}`;
+              ? (BUILDINGS[reqIdNum]?.name || `Batiment ${reqIdNum}`)
+              : (TECHNOLOGIES[reqIdNum]?.name || `Technologie ${reqIdNum}`);
           missingRequirements.push(
             `${name} niveau ${reqLevel} requis (actuel: ${currentLevel})`,
           );

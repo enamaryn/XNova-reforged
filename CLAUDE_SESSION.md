@@ -2335,3 +2335,22 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 - Relancer `npm run dev` et vérifier que l’API compile
 
 **Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 30 - Libellés prérequis lisibles
+
+**Date :** 15 janvier 2026
+**Objectif :** Afficher des noms de bâtiments/technologies au lieu d’IDs.
+
+### ✅ Tâches réalisées
+- [x] Remplacement des IDs par des noms dans les prérequis (chantier + bâtiments)
+
+### 🔧 Fichiers modifiés
+- `apps/api/src/shipyard/shipyard.service.ts`
+- `packages/game-config/src/buildings.ts`
+
+### ⏭️ Prochaines étapes
+- Rebuild `@xnova/game-config` si nécessaire
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.

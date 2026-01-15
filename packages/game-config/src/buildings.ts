@@ -1,5 +1,7 @@
 // Building configurations based on GAME_FORMULAS.md
 
+import { TECHNOLOGIES } from './technologies'
+
 export interface BuildingCost {
   metal: number
   crystal: number
@@ -267,9 +269,9 @@ export function checkBuildingRequirements(
         : (userTechnologies[reqIdNum] || 0)
 
       if (currentLevel < reqLevel) {
-        const reqName = reqIdNum < 100
-          ? (BUILDINGS[reqIdNum]?.name || `Building ${reqIdNum}`)
-          : `Technology ${reqIdNum}`
+      const reqName = reqIdNum < 100
+          ? (BUILDINGS[reqIdNum]?.name || `Batiment ${reqIdNum}`)
+          : (TECHNOLOGIES[reqIdNum]?.name || `Technologie ${reqIdNum}`)
         missingRequirements.push(`${reqName} niveau ${reqLevel} requis (actuel: ${currentLevel})`)
       }
     }
