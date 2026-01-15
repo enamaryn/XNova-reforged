@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
 import { ResourcesModule } from './resources/resources.module';
 import { GameEventsModule } from './game-events/game-events.module';
+import { BuildingsModule } from './buildings/buildings.module';
 
 @Module({
   imports: [
@@ -28,6 +29,9 @@ import { GameEventsModule } from './game-events/game-events.module';
 
     // Module événements WebSocket
     GameEventsModule,
+
+    // Module batiments
+    BuildingsModule,
   ],
   controllers: [],
   providers: [],

@@ -34,4 +34,5 @@ export declare class GameEventsGateway implements OnGatewayInit, OnGatewayConnec
     emitFleetArrived(userId: string, data: any): void;
     emitToUser(userId: string, event: string, data: any): void;
     broadcast(event: string, data: any): void;
+    emitToPlanet(planetId: string, event: string, data: any): void;
 }

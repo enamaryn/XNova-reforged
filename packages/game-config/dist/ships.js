@@ -1,4 +1,8 @@
-export const SHIPS = {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SHIPS = void 0;
+exports.getShipSpeed = getShipSpeed;
+exports.SHIPS = {
     202: {
         id: 202,
         name: 'Petit Transporteur',
@@ -160,8 +164,8 @@ export const SHIPS = {
         requirements: { 21: 7, 114: 5, 118: 5 },
     },
 };
-export function getShipSpeed(shipId, combustionLevel, impulseLevel, hyperspaceLevel) {
-    const ship = SHIPS[shipId];
+function getShipSpeed(shipId, combustionLevel, impulseLevel, hyperspaceLevel) {
+    const ship = exports.SHIPS[shipId];
     if (!ship)
         return 0;
     const driveType = getShipDriveType(shipId);

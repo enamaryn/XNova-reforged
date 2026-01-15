@@ -14,6 +14,7 @@ const auth_module_1 = require("./auth/auth.module");
 const database_module_1 = require("./database/database.module");
 const resources_module_1 = require("./resources/resources.module");
 const game_events_module_1 = require("./game-events/game-events.module");
+const buildings_module_1 = require("./buildings/buildings.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -29,6 +30,7 @@ exports.AppModule = AppModule = __decorate([
             auth_module_1.AuthModule,
             resources_module_1.ResourcesModule,
             game_events_module_1.GameEventsModule,
+            buildings_module_1.BuildingsModule,
         ],
         controllers: [],
         providers: [],

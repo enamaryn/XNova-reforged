@@ -1,4 +1,11 @@
-export const BUILDINGS = {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.BUILDINGS = void 0;
+exports.getBuildingCost = getBuildingCost;
+exports.getDemolitionRefund = getDemolitionRefund;
+exports.getBuildingTime = getBuildingTime;
+exports.checkBuildingRequirements = checkBuildingRequirements;
+exports.BUILDINGS = {
     1: {
         id: 1,
         name: 'Mine de Métal',
@@ -150,8 +157,8 @@ export const BUILDINGS = {
         requirements: { 41: 1, 114: 7 },
     },
 };
-export function getBuildingCost(buildingId, currentLevel) {
-    const building = BUILDINGS[buildingId];
+function getBuildingCost(buildingId, currentLevel) {
+    const building = exports.BUILDINGS[buildingId];
     if (!building) {
         throw new Error(`Building ${buildingId} not found`);
     }
@@ -165,7 +172,7 @@ export function getBuildingCost(buildingId, currentLevel) {
             : 0,
     };
 }
-export function getDemolitionRefund(buildingId, currentLevel) {
+function getDemolitionRefund(buildingId, currentLevel) {
     const cost = getBuildingCost(buildingId, currentLevel - 1);
     return {
         metal: Math.floor(cost.metal / 4),
@@ -173,7 +180,7 @@ export function getDemolitionRefund(buildingId, currentLevel) {
         deuterium: Math.floor(cost.deuterium / 4),
     };
 }
-export function getBuildingTime(params) {
+function getBuildingTime(params) {
     const { buildingId, currentLevel, roboticsLevel, naniteLevel = 0, engineerLevel = 0, } = params;
     const cost = getBuildingCost(buildingId, currentLevel);
     const baseDivisor = 2500 * (1 + roboticsLevel) * Math.pow(2, naniteLevel);
@@ -183,8 +190,8 @@ export function getBuildingTime(params) {
     }
     return Math.max(1, Math.floor(buildTime));
 }
-export function checkBuildingRequirements(buildingId, planetBuildings, userTechnologies = {}) {
-    const building = BUILDINGS[buildingId];
+function checkBuildingRequirements(buildingId, planetBuildings, userTechnologies = {}) {
+    const building = exports.BUILDINGS[buildingId];
     if (!building) {
         return { canBuild: false, missingRequirements: ['Building not found'] };
     }
@@ -197,7 +204,7 @@ export function checkBuildingRequirements(buildingId, planetBuildings, userTechn
                 : (userTechnologies[reqIdNum] || 0);
             if (currentLevel < reqLevel) {
                 const reqName = reqIdNum < 100
-                    ? (BUILDINGS[reqIdNum]?.name || `Building ${reqIdNum}`)
+                    ? (exports.BUILDINGS[reqIdNum]?.name || `Building ${reqIdNum}`)
                     : `Technology ${reqIdNum}`;
                 missingRequirements.push(`${reqName} niveau ${reqLevel} requis (actuel: ${currentLevel})`);
             }

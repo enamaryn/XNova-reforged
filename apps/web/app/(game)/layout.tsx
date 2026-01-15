@@ -1,18 +1,16 @@
+'use client';
+
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { GameLayout } from "@/components/game/layout";
 
-// Forcer le rendu dynamique pour toutes les pages du jeu
-export const dynamic = 'force-dynamic';
-
-export default function GameLayout({
+export default function GameLayoutWrapper({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <section className="space-y-8">
-      <div className="rounded-3xl border border-slate-200 bg-white/80 p-6 shadow-lg">
-        <ProtectedRoute>{children}</ProtectedRoute>
-      </div>
-    </section>
+    <ProtectedRoute>
+      <GameLayout>{children}</GameLayout>
+    </ProtectedRoute>
   );
 }

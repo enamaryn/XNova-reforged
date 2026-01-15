@@ -1,4 +1,4 @@
-// File: /home/didrod/Documents/projet GITHUB/XNova-Reforged/apps/web/app/(game)/overview/page.tsx
+// File: /home/didrod/Documents/projet GITHUB/XNova-reforged/apps/web/app/(game)/overview/page.tsx
 import * as entry from '../../../../../app/(game)/overview/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

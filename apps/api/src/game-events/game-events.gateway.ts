@@ -203,4 +203,17 @@ export class GameEventsGateway
     });
     this.logger.debug(`Broadcasted ${event} to all clients`);
   }
+
+  /**
+   * Émet un événement générique à une planète (room)
+   */
+  emitToPlanet(planetId: string, event: string, data: any) {
+    const room = `planet:${planetId}`;
+    this.server.to(room).emit(event, {
+      planetId,
+      timestamp: new Date().toISOString(),
+      ...data,
+    });
+    this.logger.debug(`Emitted ${event} to room ${room}`);
+  }
 }

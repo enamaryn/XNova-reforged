@@ -1,6 +1,14 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
+export interface Planet {
+  id: string;
+  name: string;
+  galaxy: number;
+  system: number;
+  position: number;
+}
+
 export interface AuthUser {
   id: string;
   username: string;
@@ -8,6 +16,7 @@ export interface AuthUser {
   points: number;
   rank: number;
   createdAt: string;
+  planets?: Planet[];
 }
 
 export interface AuthTokens {

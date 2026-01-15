@@ -1,4 +1,8 @@
-export const TECHNOLOGIES = {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.TECHNOLOGIES = void 0;
+exports.getTechnologyCost = getTechnologyCost;
+exports.TECHNOLOGIES = {
     106: {
         id: 106,
         name: 'Technologie Espionnage',
@@ -144,8 +148,8 @@ export const TECHNOLOGIES = {
         requirements: { 31: 12 },
     },
 };
-export function getTechnologyCost(techId, currentLevel) {
-    const tech = TECHNOLOGIES[techId];
+function getTechnologyCost(techId, currentLevel) {
+    const tech = exports.TECHNOLOGIES[techId];
     if (!tech) {
         throw new Error(`Technology ${techId} not found`);
     }
