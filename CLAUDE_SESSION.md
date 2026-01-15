@@ -646,6 +646,41 @@ Corriger les erreurs de chargement dues à un planetId persistant invalide.
 ### ⚠️ Note
 - Outil TodoWrite non disponible dans cet environnement
 
+---
+
+## 📅 SESSION 26 - Sprint 6 Flottes (15 janvier 2026)
+
+### 🎯 Objectif de la session
+Démarrer Sprint 6 avec envoi de flotte côté backend et UI branchée.
+
+### ✅ Tâches accomplies
+- [x] Calculs de distance/vitesse/consommation (game-engine)
+- [x] Endpoint `POST /fleet/send` et validation ressources/vaisseaux
+- [x] Cron arrivée/retour flottes
+- [x] UI flotte branchée (sélection vaisseaux + destination + cargaison)
+- [x] Roadmap MVP mise à jour
+
+### 📁 Fichiers créés
+- `packages/game-engine/src/fleet.ts` : calculs flottes
+- `apps/api/src/fleet/dto/send-fleet.dto.ts` : DTO envoi flotte
+- `apps/api/src/fleet/fleet-cron.service.ts` : cron flotte
+
+### 📁 Fichiers modifiés
+- `packages/game-engine/src/index.ts` : export fleet
+- `apps/api/src/fleet/fleet.controller.ts` : endpoint send
+- `apps/api/src/fleet/fleet.service.ts` : logique envoi
+- `apps/api/src/fleet/fleet.module.ts` : cron + GameEvents
+- `apps/web/lib/api/fleet.ts` : client send
+- `apps/web/app/(game)/fleet/page.tsx` : formulaire envoi
+- `ROADMAP_MVP.md` : Sprint 6 en cours
+
+### 🔎 État actuel du projet
+- Envoi de flotte fonctionnel (transport)
+- Retour automatique des vaisseaux au temps prévu
+
+### ⚠️ Note
+- Outil TodoWrite non disponible dans cet environnement
+
 - **redis** : Redis 7 Alpine
   - Port: 6379
   - Volume: redis_data

@@ -492,7 +492,7 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 **Objectif :** Gestion et déplacement de flottes
 
 #### Backend - Module Fleet
-- [ ] Schema Prisma
+- [x] Schema Prisma
   ```prisma
   model Ship {
     id       String @id @default(uuid())
@@ -525,7 +525,7 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
     status          String   // traveling, arrived, returning
   }
   ```
-- [ ] Configuration vaisseaux
+- [x] Configuration vaisseaux
   ```typescript
   {
     202: { // Petit Transporteur
@@ -537,27 +537,27 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
     }
   }
   ```
-- [ ] Service FleetService
+- [x] Service FleetService
   - Calcul vitesse flotte (vaisseau le plus lent)
   - Calcul durée voyage
   - Consommation deuterium
   - Validation cibles
-- [ ] Cron job gestion flottes
+- [x] Cron job gestion flottes
   - Arrivée : exécuter mission
   - Retour : restituer vaisseaux
-- [ ] WebSocket events (flotte arrivée)
+- [x] WebSocket events (flotte arrivée)
 - [ ] Endpoints :
-  - `POST /fleet/send`
-  - `GET /fleet/active`
-  - `DELETE /fleet/:id` (rappeler avant arrivée)
+  - [x] `POST /fleet/send`
+  - [x] `GET /fleet/active`
+  - [ ] `DELETE /fleet/:id` (rappeler avant arrivée)
 
 #### Frontend - UI Fleet
-- [ ] Page `/fleet`
+- [x] Page `/fleet`
   - Sélection vaisseaux
   - Sélection destination (galaxie/système/position)
   - Choix mission
   - Chargement cargo (si transport)
-  - Calcul durée affichée
+  - [ ] Calcul durée affichée
 - [ ] Page `/movement`
   - Liste flottes en cours
   - Countdown timers
@@ -569,7 +569,7 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 **Livrables :**
 - ✅ Envoi flottes fonctionnel
 - ✅ Missions transport
-- ✅ Tracking temps réel
+- ⏳ Tracking temps réel
 
 ---
 

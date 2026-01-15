@@ -1,10 +1,10 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useMemo, useState, useEffect } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { usePlanetStore } from '@/lib/stores/planet-store';
-import { getActiveFleets, getAvailableShips } from '@/lib/api/fleet';
+import { getActiveFleets, getAvailableShips, sendFleet } from '@/lib/api/fleet';
 import { useI18n } from '@/lib/i18n';
 
 function formatCountdown(dateValue?: string | Date | null) {
@@ -19,6 +19,10 @@ function formatCountdown(dateValue?: string | Date | null) {
 
 export default function FleetPage() {
   const [mission, setMission] = useState('transport');
+  const [speedPercent, setSpeedPercent] = useState(100);
+  const [shipSelection, setShipSelection] = useState<Record<number, number>>({});
+  const [cargo, setCargo] = useState({ metal: 0, crystal: 0, deuterium: 0 });
+  const [destination, setDestination] = useState({ galaxy: 1, system: 1, position: 1 });
   const { user } = useAuthStore();
   const { selectedPlanetId } = usePlanetStore();
   const { t } = useI18n();
@@ -44,6 +48,39 @@ export default function FleetPage() {
   });
 
   const ships = useMemo(() => shipsData?.ships ?? [], [shipsData]);
+
+  useEffect(() => {
+    if (!shipsData) return;
+    setShipSelection((prev) => {
+      const next = { ...prev };
+      shipsData.ships.forEach((ship) => {
+        if (next[ship.shipId] === undefined) {
+          next[ship.shipId] = 0;
+        }
+      });
+      return next;
+    });
+  }, [shipsData]);
+
+  const sendMutation = useMutation({
+    mutationFn: () =>
+      sendFleet({
+        planetId: planetId!,
+        toGalaxy: destination.galaxy,
+        toSystem: destination.system,
+        toPosition: destination.position,
+        mission: mission === 'transport' ? 3 : mission === 'attaque' ? 1 : mission === 'espionnage' ? 6 : 7,
+        speedPercent,
+        ships: Object.fromEntries(
+          Object.entries(shipSelection).filter(([, amount]) => Number(amount) > 0),
+        ),
+        cargo,
+      }),
+    onSuccess: () => {
+      setShipSelection({});
+      setCargo({ metal: 0, crystal: 0, deuterium: 0 });
+    },
+  });
 
   return (
     <div className="space-y-6">
@@ -84,8 +121,26 @@ export default function FleetPage() {
                     key={ship.shipId}
                     className="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-slate-400"
                   >
-                    <span>{ship.name}</span>
-                    <span className="font-mono text-slate-200">{ship.amount}</span>
+                    <div>
+                      <div className="text-slate-200">{ship.name}</div>
+                      <div className="text-xs text-slate-500">Disponible: {ship.amount}</div>
+                    </div>
+                    <input
+                      type="number"
+                      min={0}
+                      max={ship.amount}
+                      value={shipSelection[ship.shipId] ?? 0}
+                      onChange={(event) =>
+                        setShipSelection((prev) => ({
+                          ...prev,
+                          [ship.shipId]: Math.min(
+                            ship.amount,
+                            Math.max(0, Number(event.target.value)),
+                          ),
+                        }))
+                      }
+                      className="w-20 rounded-lg border border-slate-800 bg-slate-950/60 px-2 py-1 text-sm text-white"
+                    />
                   </div>
                 ))}
               </div>
@@ -124,6 +179,21 @@ export default function FleetPage() {
                     <input
                       type="number"
                       min={1}
+                      value={
+                        label === 'Galaxie'
+                          ? destination.galaxy
+                          : label === 'Système'
+                            ? destination.system
+                            : destination.position
+                      }
+                      onChange={(event) => {
+                        const value = Math.max(1, Number(event.target.value));
+                        setDestination((prev) => ({
+                          galaxy: label === 'Galaxie' ? value : prev.galaxy,
+                          system: label === 'Système' ? value : prev.system,
+                          position: label === 'Position' ? value : prev.position,
+                        }));
+                      }}
                       className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
                       placeholder="0"
                     />
@@ -131,14 +201,57 @@ export default function FleetPage() {
                 ))}
               </div>
             </div>
+
+            <div className="rounded-2xl bg-slate-900/60 p-4">
+              <p className="text-sm text-slate-300">Cargaison</p>
+              <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                {(['metal', 'crystal', 'deuterium'] as const).map((key) => (
+                  <label key={key} className="text-xs uppercase tracking-[0.2em] text-slate-500">
+                    {key}
+                    <input
+                      type="number"
+                      min={0}
+                      value={cargo[key]}
+                      onChange={(event) =>
+                        setCargo((prev) => ({ ...prev, [key]: Math.max(0, Number(event.target.value)) }))
+                      }
+                      className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                    />
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-2xl bg-slate-900/60 p-4">
+              <p className="text-sm text-slate-300">Vitesse (%)</p>
+              <input
+                type="number"
+                min={10}
+                max={100}
+                value={speedPercent}
+                onChange={(event) => setSpeedPercent(Math.min(100, Math.max(10, Number(event.target.value))))}
+                className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+              />
+            </div>
           </div>
 
           <button
-            disabled
-            className="mt-6 w-full rounded-xl bg-slate-800 py-3 text-sm font-semibold text-slate-500"
+            onClick={() => sendMutation.mutate()}
+            disabled={!planetId || sendMutation.isPending}
+            className={`mt-6 w-full rounded-xl py-3 text-sm font-semibold ${
+              sendMutation.isPending
+                ? 'bg-slate-800 text-slate-500'
+                : 'bg-blue-500/20 text-blue-100 hover:bg-blue-500/30'
+            }`}
           >
-            {t('fleet.sendSoon')}
+            {sendMutation.isPending ? 'Envoi...' : 'Envoyer la flotte'}
           </button>
+
+          {sendMutation.error && (
+            <div className="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
+              {(sendMutation.error as Error).message}
+            </div>
+          )}
         </div>
 
         <div className="rounded-3xl border border-slate-800/80 bg-slate-950/60 p-6">

@@ -35,3 +35,31 @@ export function getAvailableShips(planetId: string) {
 export function getActiveFleets() {
   return apiClient.get<ActiveFleet[]>(`/fleet/active`);
 }
+
+export interface SendFleetPayload {
+  planetId: string;
+  toGalaxy: number;
+  toSystem: number;
+  toPosition: number;
+  mission: number;
+  speedPercent: number;
+  ships: Record<string, number>;
+  cargo?: {
+    metal?: number;
+    crystal?: number;
+    deuterium?: number;
+  };
+}
+
+export interface SendFleetResponse {
+  success: boolean;
+  fleetId: string;
+  durationSeconds: number;
+  fuelConsumption: number;
+  mission: number;
+  arrivalTime: string;
+}
+
+export function sendFleet(payload: SendFleetPayload) {
+  return apiClient.post<SendFleetResponse>('/fleet/send', payload);
+}
