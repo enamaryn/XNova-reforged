@@ -1,0 +1,20 @@
+
+> @xnova/game-config@1.0.0 lint
+> eslint .
+
+[1G[0K
+Oops! Something went wrong! :(
+
+ESLint: 8.57.1
+
+No files matching the pattern "." were found.
+Please check for typing mistakes in the pattern.
+
+[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m Lifecycle script `lint` failed with error:
+[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mcode[39m [33m2[39m
+[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mpath[39m /home/didrod/Documents/projet GITHUB/XNova-Reforged/packages/game-config
+[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mworkspace[39m @xnova/game-config@1.0.0
+[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mlocation[39m /home/didrod/Documents/projet GITHUB/XNova-Reforged/packages/game-config
+[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m command failed
+[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mcommand[39m sh -c eslint .
+[1G[0K⠙[1G[0K

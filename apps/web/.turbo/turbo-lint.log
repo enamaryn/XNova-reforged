@@ -1,0 +1,9 @@
+
+> @xnova/web@1.0.0 lint
+> next lint
+
+[1G[0K[33m`next lint` is deprecated and will be removed in Next.js 16.
+[39mFor new projects, use [1mcreate-next-app[22m to choose your preferred linter.
+For existing projects, migrate to the ESLint CLI:
+[1mnpx @next/codemod@canary next-lint-to-eslint-cli .[22m
+
