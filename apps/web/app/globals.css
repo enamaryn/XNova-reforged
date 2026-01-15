@@ -32,3 +32,18 @@ h4 {
 main {
   min-height: calc(100vh - 140px);
 }
+
+@keyframes pageFade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-fade {
+  animation: pageFade 0.45s ease-out;
+}

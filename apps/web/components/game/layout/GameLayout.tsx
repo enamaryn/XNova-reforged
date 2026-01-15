@@ -50,10 +50,36 @@ export function GameLayout({ children }: GameLayoutProps) {
         <div className="md:hidden h-10" />
 
         {/* Contenu */}
-        <div className="p-4 md:p-6 lg:p-8">
+        <div className="page-fade p-4 pb-20 md:p-6 lg:p-8">
           {children}
         </div>
       </main>
+
+      {/* Navigation mobile rapide */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-800/80 bg-slate-950/90 backdrop-blur md:hidden">
+        <div className="mx-auto flex max-w-md items-center justify-between px-4 py-2 text-[10px] uppercase tracking-[0.18em] text-slate-400">
+          <a href="/overview" className="flex flex-col items-center gap-1 text-slate-300">
+            <span className="text-lg">🏠</span>
+            Vue
+          </a>
+          <a href="/buildings" className="flex flex-col items-center gap-1 text-slate-300">
+            <span className="text-lg">🏗️</span>
+            Bâtiments
+          </a>
+          <a href="/research" className="flex flex-col items-center gap-1 text-slate-300">
+            <span className="text-lg">🔬</span>
+            Recherche
+          </a>
+          <a href="/fleet" className="flex flex-col items-center gap-1 text-slate-300">
+            <span className="text-lg">🛸</span>
+            Flotte
+          </a>
+          <a href="/galaxy" className="flex flex-col items-center gap-1 text-slate-300">
+            <span className="text-lg">🌌</span>
+            Galaxie
+          </a>
+        </div>
+      </div>
     </div>
   );
 }

@@ -315,7 +315,7 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 
 ---
 
-### Sprint 3.5 : Refonte Frontend & Navigation 🚧 PRIORITAIRE
+### Sprint 3.5 : Refonte Frontend & Navigation ✅ TERMINÉ
 
 **Objectif :** Refonte UI/UX 2026 tout en gardant l'esprit XNova, avec navigation fluide pour tests utilisateurs.
 
@@ -324,15 +324,15 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 - [x] Accès direct aux pages clés depuis la planète (overview → bâtiments/technos/détails)
 - [x] Pages dédiées par bâtiment (fiche + actions)
 - [x] Pages dédiées par technologie (fiche + prérequis + recherche)
-- [ ] Parcours mobile-first pour navigation rapide
+- [x] Parcours mobile-first pour navigation rapide
 - [x] Carte commandant + panneau stats compte depuis l'overview
 - [x] Renommage planète (UI + API)
 
 #### Design system "XNova 2026"
 - [x] Palette et typographies cohérentes (futuriste, lisible)
 - [x] Composants réutilisables (cards, panneaux, jauges, badges)
-- [ ] Hiérarchie visuelle claire (états disponibles/en cours/verrouillé)
-- [ ] Animations sobres (transitions, apparitions, focus)
+- [x] Hiérarchie visuelle claire (états disponibles/en cours/verrouillé)
+- [x] Animations sobres (transitions, apparitions, focus)
 
 #### Pages prioritaires
 - [x] `/overview` (planète centrale + hubs d'accès)
@@ -342,11 +342,12 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 - [x] `/galaxy` (navigation + actions)
 
 **Livrables :**
-- ⏳ Navigation jeu testable de bout en bout
-- ⏳ UI cohérente 2026 sans perdre l'identité XNova
-- ⏳ Base UX pour tests utilisateurs
+- ✅ Navigation jeu testable de bout en bout
+- ✅ UI cohérente 2026 sans perdre l'identité XNova
+- ✅ Base UX pour tests utilisateurs
 
 **Commencé le :** 15 janvier 2026 (Session 10)
+**Complété le :** 15 janvier 2026 (Session 19)
 
 ---
 

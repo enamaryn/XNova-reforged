@@ -483,6 +483,29 @@ Ajouter un système i18n (FR/EN/ES) et renforcer l’UX d’erreurs sur Fleet/Ga
 ### ⚠️ Note
 - Outil TodoWrite non disponible dans cet environnement
 
+---
+
+## 📅 SESSION 19 - Sprint 3.5 Finalisation (15 janvier 2026)
+
+### 🎯 Objectif de la session
+Clore Sprint 3.5 avec navigation mobile et animations sobres.
+
+### ✅ Tâches accomplies
+- [x] Ajout d’une navigation mobile rapide
+- [x] Animation d’apparition des pages
+- [x] Roadmap MVP mise à jour (Sprint 3.5 terminé)
+
+### 📁 Fichiers modifiés
+- `apps/web/components/game/layout/GameLayout.tsx` : nav mobile
+- `apps/web/app/globals.css` : animation page
+- `ROADMAP_MVP.md` : Sprint 3.5 terminé
+
+### 🔎 État actuel du projet
+- Sprint 3.5 complété, navigation testable desktop + mobile
+
+### ⚠️ Note
+- Outil TodoWrite non disponible dans cet environnement
+
 - **redis** : Redis 7 Alpine
   - Port: 6379
   - Volume: redis_data
