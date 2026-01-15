@@ -1,9 +1,39 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useAuthStore } from '@/lib/stores/auth-store';
+import { usePlanetStore } from '@/lib/stores/planet-store';
+import { getActiveFleets, getAvailableShips } from '@/lib/api/fleet';
+
+function formatCountdown(dateValue?: string | Date | null) {
+  if (!dateValue) return '--';
+  const target = new Date(dateValue).getTime();
+  const diffSeconds = Math.max(0, Math.floor((target - Date.now()) / 1000));
+  const hours = Math.floor(diffSeconds / 3600);
+  const minutes = Math.floor((diffSeconds % 3600) / 60);
+  const seconds = diffSeconds % 60;
+  return `${hours}h ${minutes}m ${seconds}s`;
+}
 
 export default function FleetPage() {
   const [mission, setMission] = useState('transport');
+  const { user } = useAuthStore();
+  const { selectedPlanetId } = usePlanetStore();
+  const planetId = selectedPlanetId || user?.planets?.[0]?.id;
+
+  const { data: shipsData } = useQuery({
+    queryKey: ['fleet-available', planetId],
+    queryFn: () => getAvailableShips(planetId!),
+    enabled: !!planetId,
+  });
+
+  const { data: activeFleets } = useQuery({
+    queryKey: ['fleet-active'],
+    queryFn: () => getActiveFleets(),
+  });
+
+  const ships = useMemo(() => shipsData?.ships ?? [], [shipsData]);
 
   return (
     <div className="space-y-6">
@@ -24,17 +54,20 @@ export default function FleetPage() {
             <div className="rounded-2xl bg-slate-900/60 p-4">
               <p className="text-sm text-slate-300">Vaisseaux disponibles</p>
               <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                {['Petit transporteur', 'Chasseur léger', 'Sonde espionnage', 'Recycleur'].map(
-                  (ship) => (
-                    <div
-                      key={ship}
-                      className="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-slate-400"
-                    >
-                      <span>{ship}</span>
-                      <span className="font-mono text-slate-500">0</span>
-                    </div>
-                  ),
+                {ships.length === 0 && (
+                  <div className="rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-slate-400">
+                    Aucun vaisseau disponible.
+                  </div>
                 )}
+                {ships.map((ship) => (
+                  <div
+                    key={ship.shipId}
+                    className="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-slate-400"
+                  >
+                    <span>{ship.name}</span>
+                    <span className="font-mono text-slate-200">{ship.amount}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -93,12 +126,37 @@ export default function FleetPage() {
             Flottes en cours
           </h2>
           <div className="mt-4 space-y-3 text-sm text-slate-400">
-            <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-4">
-              Aucune flotte en déplacement.
-            </div>
-            <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-4">
-              Dernière mission : aucune.
-            </div>
+            {activeFleets && activeFleets.length > 0 ? (
+              activeFleets.map((fleet) => (
+                <div
+                  key={fleet.id}
+                  className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-4"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs uppercase tracking-[0.2em] text-slate-500">
+                      Mission {fleet.mission}
+                    </span>
+                    <span className="text-xs text-slate-500">{fleet.status}</span>
+                  </div>
+                  <div className="mt-2 text-sm text-slate-300">
+                    {fleet.fromGalaxy}:{fleet.fromSystem}:{fleet.fromPosition} →{' '}
+                    {fleet.toGalaxy}:{fleet.toSystem}:{fleet.toPosition}
+                  </div>
+                  <div className="mt-2 text-xs text-slate-500">
+                    Arrivée dans {formatCountdown(fleet.arrivalTime)}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <>
+                <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-4">
+                  Aucune flotte en déplacement.
+                </div>
+                <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-4">
+                  Dernière mission : aucune.
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

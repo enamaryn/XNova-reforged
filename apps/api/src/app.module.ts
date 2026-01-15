@@ -6,6 +6,8 @@ import { DatabaseModule } from './database/database.module';
 import { ResourcesModule } from './resources/resources.module';
 import { GameEventsModule } from './game-events/game-events.module';
 import { BuildingsModule } from './buildings/buildings.module';
+import { FleetModule } from './fleet/fleet.module';
+import { GalaxyModule } from './galaxy/galaxy.module';
 
 @Module({
   imports: [
@@ -32,6 +34,12 @@ import { BuildingsModule } from './buildings/buildings.module';
 
     // Module batiments
     BuildingsModule,
+
+    // Module flotte
+    FleetModule,
+
+    // Module galaxie
+    GalaxyModule,
   ],
   controllers: [],
   providers: [],

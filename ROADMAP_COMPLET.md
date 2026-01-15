@@ -802,6 +802,10 @@ Cette roadmap étend le MVP avec des fonctionnalités avancées pour créer un M
     - Messages non lus
     - Prochains événements
     - Classements
+- [ ] Sélecteur de langue
+  - Bouton drapeau FR en haut à droite
+  - Langues disponibles : Français, Anglais, Espagnol
+  - Traductions UI complètes
 - [ ] Thèmes customisables
   - Dark mode / Light mode
   - Thèmes presets (Cyber, Space, Classic)

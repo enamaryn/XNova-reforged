@@ -407,6 +407,46 @@ Finaliser les pages Fleet/Galaxy, corriger les ressources d’entête et activer
 ### ⚠️ Note
 - Outil TodoWrite non disponible dans cet environnement
 
+---
+
+## 📅 SESSION 17 - Fleet/Galaxy Data + Roadmap Langues (15 janvier 2026)
+
+### 🎯 Objectif de la session
+Brancher les pages flotte/galaxie sur l'API et préparer la roadmap multi-langue.
+
+### ✅ Tâches accomplies
+- [x] API flotte (vaisseaux disponibles, flottes actives)
+- [x] API galaxie (système + positions)
+- [x] Pages /fleet et /galaxy connectées aux données
+- [x] Ajout du sélecteur de langue (FR/EN/ES) dans ROADMAP_COMPLET
+
+### 📁 Fichiers créés
+- `apps/api/src/fleet/fleet.module.ts` : module flotte
+- `apps/api/src/fleet/fleet.controller.ts` : endpoints flotte
+- `apps/api/src/fleet/fleet.service.ts` : logique flotte
+- `apps/api/src/galaxy/galaxy.module.ts` : module galaxie
+- `apps/api/src/galaxy/galaxy.controller.ts` : endpoints galaxie
+- `apps/api/src/galaxy/galaxy.service.ts` : logique galaxie
+- `apps/web/lib/api/fleet.ts` : client API flotte
+- `apps/web/lib/api/galaxy.ts` : client API galaxie
+
+### 📁 Fichiers modifiés
+- `apps/api/src/app.module.ts` : ajout modules flotte/galaxie
+- `apps/web/app/(game)/fleet/page.tsx` : données dynamiques
+- `apps/web/app/(game)/galaxy/page.tsx` : données dynamiques
+- `ROADMAP_COMPLET.md` : section multi-langue
+
+### 🔎 État actuel du projet
+- Fleet/Galaxy affichent les données backend
+- Roadmap complète inclut le sélecteur de langue
+
+### 🔜 Prochaines étapes
+- Ajouter la gestion d’erreurs UX sur les pages flotte/galaxie
+- Définir le système i18n (lib, fichiers de traduction)
+
+### ⚠️ Note
+- Outil TodoWrite non disponible dans cet environnement
+
 - **redis** : Redis 7 Alpine
   - Port: 6379
   - Volume: redis_data

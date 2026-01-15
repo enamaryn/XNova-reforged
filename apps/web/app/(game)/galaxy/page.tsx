@@ -1,12 +1,22 @@
 'use client';
 
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { getGalaxySystem } from '@/lib/api/galaxy';
 
 export default function GalaxyPage() {
   const [galaxy, setGalaxy] = useState(1);
   const [system, setSystem] = useState(1);
 
-  const slots = Array.from({ length: 15 }, (_, index) => index + 1);
+  const { data, isLoading } = useQuery({
+    queryKey: ['galaxy', galaxy, system],
+    queryFn: () => getGalaxySystem(galaxy, system),
+  });
+
+  const slots = data?.positions ?? Array.from({ length: 15 }, (_, index) => ({
+    position: index + 1,
+    occupied: false,
+  }));
 
   return (
     <div className="space-y-6">
@@ -49,18 +59,31 @@ export default function GalaxyPage() {
         </div>
 
         <div className="mt-6 grid gap-2">
+          {isLoading && (
+            <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 px-4 py-3 text-sm text-slate-400">
+              Chargement du système...
+            </div>
+          )}
           {slots.map((slot) => (
             <div
-              key={slot}
+              key={slot.position}
               className="flex items-center justify-between rounded-2xl border border-slate-800/60 bg-slate-900/60 px-4 py-3 text-sm"
             >
               <div className="flex items-center gap-4">
                 <span className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                  {galaxy}:{system}:{slot}
+                  {galaxy}:{system}:{slot.position}
                 </span>
-                <span className="text-slate-300">Position libre</span>
+                {slot.occupied ? (
+                  <span className="text-slate-200">
+                    {slot.name} · {slot.owner}
+                  </span>
+                ) : (
+                  <span className="text-slate-400">Position libre</span>
+                )}
               </div>
-              <div className="text-xs text-slate-500">--</div>
+              <div className="text-xs text-slate-500">
+                {slot.occupied ? (slot.isOwn ? 'Vous' : 'Contact') : '--'}
+              </div>
             </div>
           ))}
         </div>
