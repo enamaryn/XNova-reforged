@@ -2409,3 +2409,18 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 - Tester un combat complet et valider la timeline
 
 **Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 33 - Fix JSON timeline
+
+**Date :** 15 janvier 2026
+**Objectif :** Corriger le cast JSON pour la timeline combat.
+
+### ✅ Tâches réalisées
+- [x] Ajustement du cast Prisma pour `timeline`
+
+### 🔧 Fichiers modifiés
+- `apps/api/src/combat/combat.service.ts`
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
