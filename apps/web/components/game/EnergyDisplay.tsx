@@ -23,7 +23,7 @@ export function EnergyDisplay({ used, available, productionLevel }: EnergyDispla
   };
 
   return (
-    <div className="rounded-lg border border-yellow-500 bg-gray-800/50 p-4 backdrop-blur-sm">
+    <div className="rounded-2xl border border-amber-500/40 bg-slate-900/60 p-4 backdrop-blur-sm shadow-[0_0_24px_rgba(15,23,42,0.6)]">
       {/* Header */}
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -31,7 +31,7 @@ export function EnergyDisplay({ used, available, productionLevel }: EnergyDispla
           <h3 className="text-lg font-semibold text-white">Énergie</h3>
         </div>
         {isDeficit && (
-          <div className="rounded bg-red-500/20 px-2 py-1 text-xs font-semibold text-red-400">
+          <div className="rounded-full bg-red-500/20 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-red-300">
             DÉFICIT
           </div>
         )}
@@ -40,50 +40,50 @@ export function EnergyDisplay({ used, available, productionLevel }: EnergyDispla
       {/* Stats énergie */}
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <div className="text-xs text-gray-400">Disponible</div>
-          <div className="font-mono text-xl font-bold text-green-400">
+          <div className="text-xs uppercase tracking-[0.18em] text-slate-500">Disponible</div>
+          <div className="font-mono text-xl font-bold text-emerald-400">
             {formatNumber(available)}
           </div>
         </div>
         <div>
-          <div className="text-xs text-gray-400">Consommée</div>
-          <div className="font-mono text-xl font-bold text-orange-400">
+          <div className="text-xs uppercase tracking-[0.18em] text-slate-500">Consommée</div>
+          <div className="font-mono text-xl font-bold text-amber-400">
             {formatNumber(used)}
           </div>
         </div>
       </div>
 
       {/* Surplus/Déficit */}
-      <div className="mt-3 border-t border-gray-700 pt-3">
+      <div className="mt-3 border-t border-slate-800 pt-3">
         <div className="flex items-center justify-between">
-          <div className="text-sm text-gray-400">
+          <div className="text-sm text-slate-400">
             {isDeficit ? 'Déficit' : 'Surplus'}
           </div>
-          <div className={`font-mono text-lg font-bold ${isDeficit ? 'text-red-400' : 'text-green-400'}`}>
+          <div className={`font-mono text-lg font-bold ${isDeficit ? 'text-red-400' : 'text-emerald-400'}`}>
             {surplus >= 0 ? '+' : ''}{formatNumber(surplus)}
           </div>
         </div>
       </div>
 
       {/* Niveau de production */}
-      <div className="mt-3 border-t border-gray-700 pt-3">
+      <div className="mt-3 border-t border-slate-800 pt-3">
         <div className="flex items-center justify-between">
-          <div className="text-sm text-gray-400">Production mines</div>
-          <div className={`font-mono text-base font-semibold ${productionLevel < 100 ? 'text-orange-400' : 'text-green-400'}`}>
+          <div className="text-sm text-slate-400">Production mines</div>
+          <div className={`font-mono text-base font-semibold ${productionLevel < 100 ? 'text-amber-400' : 'text-emerald-400'}`}>
             {productionLevel.toFixed(0)}%
           </div>
         </div>
         {productionLevel < 100 && (
-          <div className="mt-2 text-xs text-red-400">
+          <div className="mt-2 text-xs text-red-300">
             ⚠ Manque d'énergie : production réduite
           </div>
         )}
       </div>
 
       {/* Barre de progression énergie */}
-      <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-gray-700">
+      <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-slate-800">
         <div
-          className={`h-full transition-all duration-500 ${isDeficit ? 'bg-red-500' : 'bg-yellow-500'}`}
+          className={`h-full transition-all duration-500 ${isDeficit ? 'bg-red-500' : 'bg-amber-400'}`}
           style={{ width: `${Math.min((available / Math.max(used, 1)) * 100, 100)}%` }}
         />
       </div>

@@ -31,12 +31,12 @@ export function PlanetSelector() {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 rounded-lg bg-slate-800 px-3 py-1.5 text-sm transition-colors hover:bg-slate-700"
+        className="flex items-center gap-2 rounded-full border border-slate-800 bg-slate-950/60 px-3 py-1.5 text-sm transition-colors hover:border-slate-600"
       >
         <span className="text-lg">🌍</span>
         <div className="text-left hidden sm:block">
           <div className="font-medium text-white">{currentPlanet?.name || 'Planète'}</div>
-          <div className="text-[10px] text-slate-400">
+          <div className="text-[10px] text-slate-500">
             [{currentPlanet?.galaxy}:{currentPlanet?.system}:{currentPlanet?.position}]
           </div>
         </div>
@@ -56,8 +56,8 @@ export function PlanetSelector() {
             className="fixed inset-0 z-10"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute right-0 top-full mt-1 w-56 rounded-lg border border-slate-700 bg-slate-800 py-1 shadow-xl z-20">
-            <div className="px-3 py-2 text-xs text-slate-400 uppercase tracking-wider border-b border-slate-700">
+          <div className="absolute right-0 top-full mt-2 w-56 rounded-2xl border border-slate-800 bg-slate-950/95 py-1 shadow-xl z-20">
+            <div className="px-3 py-2 text-[10px] uppercase tracking-[0.2em] text-slate-500 border-b border-slate-800">
               Vos planètes ({planets.length})
             </div>
             {planets.map((planet) => (
@@ -69,14 +69,14 @@ export function PlanetSelector() {
                 }}
                 className={`w-full flex items-center gap-3 px-3 py-2 text-left transition-colors ${
                   planet.id === selectedPlanetId
-                    ? 'bg-blue-600/20 text-blue-400'
-                    : 'text-slate-300 hover:bg-slate-700'
+                    ? 'bg-blue-500/15 text-blue-300'
+                    : 'text-slate-300 hover:bg-slate-900'
                 }`}
               >
                 <span className="text-xl">🌍</span>
                 <div>
                   <div className="font-medium">{planet.name}</div>
-                  <div className="text-xs text-slate-400">
+                  <div className="text-xs text-slate-500">
                     [{planet.galaxy}:{planet.system}:{planet.position}]
                   </div>
                 </div>

@@ -20,13 +20,13 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 h-14 border-b border-slate-700/50 bg-slate-900/95 backdrop-blur-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 h-14 border-b border-slate-800/60 bg-slate-950/80 backdrop-blur-md">
       <div className="flex h-full items-center justify-between px-4">
         {/* Gauche: Menu burger + Logo */}
         <div className="flex items-center gap-3">
           <button
             onClick={onMenuToggle}
-            className="lg:hidden p-2 text-slate-400 hover:text-white transition-colors"
+            className="lg:hidden rounded-full border border-slate-800 p-2 text-slate-300 transition-colors hover:text-white"
             aria-label="Menu"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -34,8 +34,9 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
             </svg>
           </button>
           <Link href="/overview" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-              <span className="text-white font-bold text-sm">X</span>
+            <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-sky-400 via-blue-500 to-blue-700">
+              <span className="text-white font-semibold text-sm">X</span>
+              <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-cyan-200/80 shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
             </div>
             <span className="hidden sm:block text-lg font-bold text-white tracking-tight">
               XNova
@@ -43,8 +44,24 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
           </Link>
         </div>
 
-        {/* Centre: Ressources */}
-        <div className="hidden md:flex items-center">
+        {/* Centre: Ressources + accès rapide */}
+        <div className="hidden md:flex items-center gap-6">
+          <nav className="flex items-center gap-2 text-xs text-slate-300">
+            {[
+              { href: '/overview', label: 'Vue' },
+              { href: '/buildings', label: 'Bâtiments' },
+              { href: '/research', label: 'Recherche' },
+              { href: '/galaxy', label: 'Galaxie' },
+            ].map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="rounded-full border border-slate-800 px-3 py-1 transition-colors hover:border-slate-600 hover:text-white"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
           <ResourceBar />
         </div>
 
@@ -56,9 +73,9 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
           <div className="relative">
             <button
               onClick={() => setShowUserMenu(!showUserMenu)}
-              className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm text-slate-300 hover:bg-slate-800 transition-colors"
+              className="flex items-center gap-2 rounded-full border border-slate-800 px-3 py-1.5 text-sm text-slate-300 hover:border-slate-600 hover:text-white transition-colors"
             >
-              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
+              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-slate-600 to-slate-400 flex items-center justify-center">
                 <span className="text-white text-xs font-bold">
                   {user?.username?.charAt(0).toUpperCase() || 'U'}
                 </span>
@@ -108,7 +125,7 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
       </div>
 
       {/* Ressources sur mobile (sous le header) */}
-      <div className="md:hidden border-t border-slate-700/50 bg-slate-900/95 px-4 py-2">
+      <div className="md:hidden border-t border-slate-800/60 bg-slate-950/90 px-4 py-2">
         <ResourceBar compact />
       </div>
     </header>

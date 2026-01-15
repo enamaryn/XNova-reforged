@@ -315,6 +315,41 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 
 ---
 
+### Sprint 3.5 : Refonte Frontend & Navigation 🚧 PRIORITAIRE
+
+**Objectif :** Refonte UI/UX 2026 tout en gardant l'esprit XNova, avec navigation fluide pour tests utilisateurs.
+
+#### UX/Navigation globale
+- [x] Nouvelle navigation principale (planète, bâtiments, technologies, flottes, galaxie, messages)
+- [x] Accès direct aux pages clés depuis la planète (overview → bâtiments/technos/détails)
+- [x] Pages dédiées par bâtiment (fiche + actions)
+- [x] Pages dédiées par technologie (fiche + prérequis + recherche)
+- [ ] Parcours mobile-first pour navigation rapide
+- [ ] Carte commandant + panneau stats compte depuis l'overview
+- [ ] Renommage planète (UI + API)
+
+#### Design system "XNova 2026"
+- [x] Palette et typographies cohérentes (futuriste, lisible)
+- [x] Composants réutilisables (cards, panneaux, jauges, badges)
+- [ ] Hiérarchie visuelle claire (états disponibles/en cours/verrouillé)
+- [ ] Animations sobres (transitions, apparitions, focus)
+
+#### Pages prioritaires
+- [x] `/overview` (planète centrale + hubs d'accès)
+- [x] `/buildings` (liste + filtres + fiche bâtiment)
+- [x] `/research` (arbre techno + fiche recherche)
+- [ ] `/fleet` (navigation + préparation)
+- [ ] `/galaxy` (navigation + actions)
+
+**Livrables :**
+- ⏳ Navigation jeu testable de bout en bout
+- ⏳ UI cohérente 2026 sans perdre l'identité XNova
+- ⏳ Base UX pour tests utilisateurs
+
+**Commencé le :** 15 janvier 2026 (Session 10)
+
+---
+
 ### Sprint 4 : Construction de Bâtiments ⏳ EN COURS
 
 **Objectif :** Système de construction avec file d'attente

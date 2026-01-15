@@ -67,21 +67,21 @@ export function ResourceDisplay({
 
   // Couleurs selon le type de ressource
   const colors = {
-    blue: 'bg-blue-500',
-    green: 'bg-green-500',
-    purple: 'bg-purple-500',
-    yellow: 'bg-yellow-500',
+    blue: 'bg-sky-400',
+    green: 'bg-emerald-400',
+    purple: 'bg-violet-400',
+    yellow: 'bg-amber-400',
   };
 
   const borderColors = {
-    blue: 'border-blue-500',
-    green: 'border-green-500',
-    purple: 'border-purple-500',
-    yellow: 'border-yellow-500',
+    blue: 'border-sky-500/50',
+    green: 'border-emerald-500/50',
+    purple: 'border-violet-500/50',
+    yellow: 'border-amber-500/50',
   };
 
   return (
-    <div className={`rounded-lg border ${borderColors[color as keyof typeof borderColors] || borderColors.blue} bg-gray-800/50 p-4 backdrop-blur-sm`}>
+    <div className={`rounded-2xl border ${borderColors[color as keyof typeof borderColors] || borderColors.blue} bg-slate-900/60 p-4 backdrop-blur-sm shadow-[0_0_24px_rgba(15,23,42,0.6)]`}>
       {/* Header */}
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -89,8 +89,8 @@ export function ResourceDisplay({
           <h3 className="text-lg font-semibold text-white">{name}</h3>
         </div>
         <div className="text-right">
-          <div className="text-sm text-gray-400">Production/h</div>
-          <div className={`font-mono text-sm font-semibold ${production >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+          <div className="text-xs uppercase tracking-[0.18em] text-slate-500">Prod/h</div>
+          <div className={`font-mono text-sm font-semibold ${production >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
             {production >= 0 ? '+' : ''}{formatNumber(production)}
           </div>
         </div>
@@ -101,13 +101,13 @@ export function ResourceDisplay({
         <div className="font-mono text-3xl font-bold text-white">
           {formatNumber(currentAmount)}
         </div>
-        <div className="text-xs text-gray-400">
+        <div className="text-xs text-slate-500">
           Max: {formatNumber(storage)}
         </div>
       </div>
 
       {/* Barre de progression du stockage */}
-      <div className="h-2 w-full overflow-hidden rounded-full bg-gray-700">
+      <div className="h-2 w-full overflow-hidden rounded-full bg-slate-800">
         <div
           className={`h-full transition-all duration-500 ${colors[color as keyof typeof colors] || colors.blue}`}
           style={{ width: `${storagePercent}%` }}
@@ -115,7 +115,7 @@ export function ResourceDisplay({
       </div>
 
       {/* Pourcentage */}
-      <div className="mt-1 text-right text-xs text-gray-400">
+      <div className="mt-1 text-right text-xs text-slate-500">
         {storagePercent.toFixed(1)}%
       </div>
     </div>

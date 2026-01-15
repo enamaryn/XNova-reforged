@@ -62,22 +62,53 @@ export function GameSidebar({ isOpen, onClose }: GameSidebarProps) {
       {/* Overlay mobile */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/60 z-40 lg:hidden"
           onClick={onClose}
         />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-14 left-0 bottom-0 w-64 bg-slate-900 border-r border-slate-700/50 z-40 transform transition-transform duration-200 ease-in-out ${
+        className={`fixed top-14 left-0 bottom-0 w-64 bg-slate-950/95 border-r border-slate-800/60 z-40 transform transition-transform duration-200 ease-in-out ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0`}
       >
         {/* Contenu scrollable */}
         <nav className="h-full overflow-y-auto py-4 px-3">
+          <div className="mb-5 rounded-2xl border border-slate-800/80 bg-slate-900/60 p-3">
+            <p className="text-[10px] uppercase tracking-[0.24em] text-slate-500">
+              Accès rapide
+            </p>
+            <div className="mt-3 grid gap-2">
+              <Link
+                href="/overview"
+                onClick={onClose}
+                className="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-950/70 px-3 py-2 text-xs text-slate-300 transition hover:border-slate-600 hover:text-white"
+              >
+                <span>Vue planète</span>
+                <span className="text-lg">🪐</span>
+              </Link>
+              <div className="grid grid-cols-2 gap-2">
+                <Link
+                  href="/buildings"
+                  onClick={onClose}
+                  className="rounded-xl border border-slate-800 bg-slate-950/70 px-3 py-2 text-xs text-slate-300 transition hover:border-slate-600 hover:text-white"
+                >
+                  🏗️ Bâtiments
+                </Link>
+                <Link
+                  href="/research"
+                  onClick={onClose}
+                  className="rounded-xl border border-slate-800 bg-slate-950/70 px-3 py-2 text-xs text-slate-300 transition hover:border-slate-600 hover:text-white"
+                >
+                  🔬 Recherche
+                </Link>
+              </div>
+            </div>
+          </div>
           {Object.entries(groupedItems).map(([category, items]) => (
             <div key={category} className="mb-4">
-              <h3 className="px-3 mb-2 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+              <h3 className="px-3 mb-2 text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500">
                 {categoryLabels[category]}
               </h3>
               <ul className="space-y-1">
@@ -88,16 +119,16 @@ export function GameSidebar({ isOpen, onClose }: GameSidebarProps) {
                       <Link
                         href={item.href}
                         onClick={onClose}
-                        className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-150 ${
+                        className={`flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all duration-150 ${
                           isActive
-                            ? 'bg-blue-600/20 text-blue-400 font-medium'
-                            : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                            ? 'bg-blue-500/15 text-blue-300 font-medium border border-blue-500/40'
+                            : 'text-slate-400 hover:bg-slate-900 hover:text-white border border-transparent'
                         }`}
                       >
                         <span className="text-lg w-6 text-center">{item.icon}</span>
                         <span>{item.label}</span>
                         {isActive && (
-                          <div className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-400" />
+                          <div className="ml-auto h-1.5 w-1.5 rounded-full bg-blue-400 shadow-[0_0_6px_rgba(59,130,246,0.8)]" />
                         )}
                       </Link>
                     </li>
@@ -109,7 +140,7 @@ export function GameSidebar({ isOpen, onClose }: GameSidebarProps) {
         </nav>
 
         {/* Info bas de sidebar */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-700/50 bg-slate-900">
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-800/60 bg-slate-950/90">
           <div className="text-center">
             <p className="text-[10px] text-slate-500 uppercase tracking-wider">XNova Reforged</p>
             <p className="text-xs text-slate-400">v0.1.0 Alpha</p>

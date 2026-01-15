@@ -1,11 +1,15 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '@/lib/api/client';
 import { usePlanetResources } from '@/lib/hooks/use-planet-resources';
 import { ResourceDisplay } from '@/components/game/ResourceDisplay';
 import { EnergyDisplay } from '@/components/game/EnergyDisplay';
+import { PlanetScene } from '@/components/game/PlanetScene';
+import { usePlanetStore } from '@/lib/stores/planet-store';
+import { useAuthStore } from '@/lib/stores/auth-store';
 
 // Forcer le rendu côté client uniquement
 export const dynamic = 'force-dynamic';
@@ -19,7 +23,11 @@ interface Planet {
 }
 
 export default function OverviewPage() {
-  const [selectedPlanetId, setSelectedPlanetId] = useState<string | null>(null);
+  const { user } = useAuthStore();
+  const { selectedPlanetId, setSelectedPlanetId } = usePlanetStore();
+  const [showCommanderPanel, setShowCommanderPanel] = useState(false);
+  const [isRenaming, setIsRenaming] = useState(false);
+  const [planetNameDraft, setPlanetNameDraft] = useState('');
 
   // Récupérer la liste des planètes de l'utilisateur
   const { data: planets, isLoading: planetsLoading } = useQuery<Planet[]>({
@@ -62,44 +70,180 @@ export default function OverviewPage() {
   }
 
   const selectedPlanet = planets.find((p) => p.id === selectedPlanetId);
+  const coordinates = selectedPlanet
+    ? `[${selectedPlanet.galaxy}:${selectedPlanet.system}:${selectedPlanet.position}]`
+    : '';
+  const commanderProgress = user?.points ? Math.min(100, (user.points % 1000) / 10) : 0;
+
+  useEffect(() => {
+    if (!isRenaming && selectedPlanet) {
+      setPlanetNameDraft(selectedPlanet.name);
+    }
+  }, [isRenaming, selectedPlanet]);
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+    <div className="space-y-8">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white">
+          <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">
+            Commandement
+          </p>
+          <h1 className="mt-2 text-3xl font-semibold text-white">
             Vue d'ensemble
           </h1>
-          {selectedPlanet && (
-            <p className="mt-1 text-sm text-gray-400">
-              {selectedPlanet.name} [{selectedPlanet.galaxy}:{selectedPlanet.system}:{selectedPlanet.position}]
-            </p>
+        </div>
+
+        <div className="flex items-center gap-2 rounded-full border border-slate-800/80 bg-slate-900/40 px-4 py-2 text-xs text-slate-400">
+          <span
+            className={`h-2 w-2 rounded-full ${isRealtimeConnected ? 'bg-emerald-400' : 'bg-red-500'}`}
+          />
+          {isRealtimeConnected ? 'Temps réel actif' : 'Temps réel inactif'}
+        </div>
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
+        <div className="relative rounded-3xl border border-slate-800/80 bg-slate-950/60 p-5">
+          <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">
+            Commandant
+          </p>
+          <div className="mt-3 flex flex-wrap items-center gap-4">
+            <button
+              onClick={() => setShowCommanderPanel((prev) => !prev)}
+              className="relative h-16 w-16 rounded-full border border-blue-500/40 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 text-2xl text-white shadow-[0_0_16px_rgba(59,130,246,0.3)]"
+              aria-label="Ouvrir les statistiques du commandant"
+            >
+              {user?.username?.charAt(0).toUpperCase() || 'C'}
+            </button>
+            <div>
+              <h2 className="text-xl font-semibold text-white">
+                {user?.username || 'Commandant'}
+              </h2>
+              <p className="text-xs text-slate-400">
+                Rang #{user?.rank ?? '-'} · {user?.points ?? 0} points
+              </p>
+            </div>
+            <div className="ml-auto min-w-[160px]">
+              <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.2em] text-slate-500">
+                <span>Progression</span>
+                <span>{commanderProgress.toFixed(0)}%</span>
+              </div>
+              <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-slate-800">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-sky-400 via-blue-500 to-blue-600 transition-all"
+                  style={{ width: `${commanderProgress}%` }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {showCommanderPanel && (
+            <>
+              <div
+                className="fixed inset-0 z-40"
+                onClick={() => setShowCommanderPanel(false)}
+              />
+              <div className="absolute left-6 top-full z-50 mt-3 w-full max-w-sm rounded-2xl border border-slate-800 bg-slate-950/95 p-4 shadow-xl">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
+                    Statistiques compte
+                  </p>
+                  <button
+                    onClick={() => setShowCommanderPanel(false)}
+                    className="text-xs text-slate-500 hover:text-white"
+                  >
+                    Fermer
+                  </button>
+                </div>
+                <div className="mt-3 space-y-2 text-sm text-slate-300">
+                  <div className="flex items-center justify-between rounded-xl bg-slate-900/60 px-3 py-2">
+                    <span>Planètes</span>
+                    <span className="font-mono">{user?.planets?.length ?? 0}</span>
+                  </div>
+                  <div className="flex items-center justify-between rounded-xl bg-slate-900/60 px-3 py-2">
+                    <span>Rang</span>
+                    <span className="font-mono">#{user?.rank ?? '-'}</span>
+                  </div>
+                  <div className="flex items-center justify-between rounded-xl bg-slate-900/60 px-3 py-2">
+                    <span>Points</span>
+                    <span className="font-mono">{user?.points ?? 0}</span>
+                  </div>
+                  <div className="flex items-center justify-between rounded-xl bg-slate-900/60 px-3 py-2">
+                    <span>Email</span>
+                    <span className="font-mono text-xs">{user?.email || '-'}</span>
+                  </div>
+                </div>
+              </div>
+            </>
           )}
         </div>
 
-        {/* Indicateur connexion temps réel */}
-        <div className="flex items-center gap-2">
-          <div
-            className={`h-2 w-2 rounded-full ${isRealtimeConnected ? 'bg-green-500' : 'bg-red-500'}`}
-          />
-          <span className="text-sm text-gray-400">
-            {isRealtimeConnected ? 'Temps réel actif' : 'Temps réel inactif'}
-          </span>
+        <div className="rounded-3xl border border-slate-800/80 bg-slate-950/60 p-5">
+          <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">
+            Planète
+          </p>
+          <div className="mt-3 flex flex-wrap items-center gap-3">
+            {isRenaming ? (
+              <input
+                value={planetNameDraft}
+                onChange={(event) => setPlanetNameDraft(event.target.value)}
+                className="w-full rounded-xl border border-slate-800 bg-slate-900/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+              />
+            ) : (
+              <div>
+                <h3 className="text-xl font-semibold text-white">
+                  {planetNameDraft || selectedPlanet?.name || 'Planète'}
+                </h3>
+                <p className="text-xs text-slate-400">{coordinates}</p>
+              </div>
+            )}
+            <div className="ml-auto flex items-center gap-2">
+              {isRenaming ? (
+                <>
+                  <div className="flex flex-col items-end gap-1">
+                    <button
+                      onClick={() => setIsRenaming(false)}
+                      className="rounded-full border border-blue-500/50 px-3 py-1 text-xs uppercase tracking-[0.2em] text-blue-200 hover:border-blue-400"
+                    >
+                      Enregistrer (local)
+                    </button>
+                    <p className="text-[10px] text-slate-500">
+                      Sauvegarde serveur bientôt disponible.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setPlanetNameDraft(selectedPlanet?.name || '');
+                      setIsRenaming(false);
+                    }}
+                    className="text-xs text-slate-400 hover:text-white"
+                  >
+                    Annuler
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => setIsRenaming(true)}
+                  className="rounded-full border border-slate-800 px-3 py-1 text-xs uppercase tracking-[0.2em] text-slate-300 hover:border-slate-600 hover:text-white"
+                >
+                  Renommer
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Sélecteur de planète (si plusieurs planètes) */}
       {planets.length > 1 && (
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {planets.map((planet) => (
             <button
               key={planet.id}
               onClick={() => setSelectedPlanetId(planet.id)}
-              className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+              className={`rounded-full border px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] transition-colors ${
                 planet.id === selectedPlanetId
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  ? 'border-blue-400/60 bg-blue-500/10 text-blue-200'
+                  : 'border-slate-800 text-slate-400 hover:border-slate-600 hover:text-white'
               }`}
             >
               {planet.name}
@@ -108,13 +252,20 @@ export default function OverviewPage() {
         </div>
       )}
 
+      {selectedPlanet && (
+        <PlanetScene
+          planetName={selectedPlanet.name}
+          coordinates={coordinates}
+        />
+      )}
+
       {/* Ressources */}
       {resourcesLoading ? (
-        <div className="flex h-64 items-center justify-center">
-          <div className="text-gray-400">Chargement des ressources...</div>
+        <div className="flex h-64 items-center justify-center rounded-3xl border border-slate-800/80 bg-slate-900/40">
+          <div className="text-slate-400">Chargement des ressources...</div>
         </div>
       ) : error ? (
-        <div className="rounded-lg border border-red-500 bg-red-500/10 p-4 text-red-400">
+        <div className="rounded-2xl border border-red-500/40 bg-red-500/10 p-4 text-red-300">
           Erreur lors du chargement des ressources
         </div>
       ) : resources ? (
@@ -158,27 +309,30 @@ export default function OverviewPage() {
         </div>
       ) : null}
 
-      {/* Informations supplémentaires */}
-      <div className="grid gap-4 md:grid-cols-2">
-        {/* Activité récente (placeholder) */}
-        <div className="rounded-lg border border-gray-700 bg-gray-800/50 p-4 backdrop-blur-sm">
-          <h3 className="mb-3 text-lg font-semibold text-white">
-            Activité récente
-          </h3>
-          <p className="text-sm text-gray-400">
-            Aucune activité récente
-          </p>
-        </div>
-
-        {/* Flottes en cours (placeholder) */}
-        <div className="rounded-lg border border-gray-700 bg-gray-800/50 p-4 backdrop-blur-sm">
-          <h3 className="mb-3 text-lg font-semibold text-white">
-            Flottes en cours
-          </h3>
-          <p className="text-sm text-gray-400">
-            Aucune flotte en déplacement
-          </p>
-        </div>
+      {/* Navigation rapide */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {[
+          { href: '/buildings', title: 'Bâtiments', desc: 'Évoluer l’infrastructure', icon: '🏗️' },
+          { href: '/research', title: 'Technologies', desc: 'Débloquer de nouveaux atouts', icon: '🔬' },
+          { href: '/fleet', title: 'Flotte', desc: 'Préparer les mouvements', icon: '🛸' },
+          { href: '/galaxy', title: 'Galaxie', desc: 'Explorer les systèmes', icon: '🌌' },
+        ].map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className="group rounded-2xl border border-slate-800/80 bg-slate-900/40 p-4 transition hover:border-blue-500/50 hover:bg-slate-900/70"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
+                  {item.title}
+                </p>
+                <p className="mt-2 text-sm text-slate-300">{item.desc}</p>
+              </div>
+              <div className="text-3xl">{item.icon}</div>
+            </div>
+          </Link>
+        ))}
       </div>
     </div>
   );

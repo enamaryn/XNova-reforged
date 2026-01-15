@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import type { BuildingInfo } from '@/lib/api/buildings';
 
 interface BuildingCardProps {
@@ -20,11 +21,11 @@ const categoryIcons: Record<string, string> = {
 
 // Couleurs par catégorie
 const categoryColors: Record<string, string> = {
-  resource: 'border-amber-500/50 hover:border-amber-500',
-  facility: 'border-blue-500/50 hover:border-blue-500',
-  station: 'border-purple-500/50 hover:border-purple-500',
-  defense: 'border-red-500/50 hover:border-red-500',
-  moon: 'border-gray-400/50 hover:border-gray-400',
+  resource: 'border-amber-500/40 hover:border-amber-400',
+  facility: 'border-blue-500/40 hover:border-blue-400',
+  station: 'border-sky-500/40 hover:border-sky-400',
+  defense: 'border-red-500/40 hover:border-red-400',
+  moon: 'border-slate-400/40 hover:border-slate-300',
 };
 
 // Formater le temps (secondes -> format lisible)
@@ -61,7 +62,7 @@ export function BuildingCard({ building, onBuild, isBuilding }: BuildingCardProp
 
   return (
     <div
-      className={`rounded-lg border-2 ${borderColor} bg-gray-800/50 p-4 backdrop-blur-sm transition-all duration-200`}
+      className={`rounded-2xl border ${borderColor} bg-slate-900/60 p-4 backdrop-blur-sm transition-all duration-200 shadow-[0_0_24px_rgba(15,23,42,0.6)]`}
     >
       {/* Header */}
       <div className="mb-3 flex items-start justify-between">
@@ -72,31 +73,31 @@ export function BuildingCard({ building, onBuild, isBuilding }: BuildingCardProp
             <span className="text-xs text-gray-400 capitalize">{building.category}</span>
           </div>
         </div>
-        <div className="rounded bg-gray-700/50 px-2 py-1">
-          <span className="text-sm font-mono text-white">Niv. {building.currentLevel}</span>
+        <div className="rounded-full border border-slate-700/80 bg-slate-900/70 px-3 py-1">
+          <span className="text-xs font-mono text-slate-200">Niv. {building.currentLevel}</span>
         </div>
       </div>
 
       {/* Description */}
-      <p className="mb-3 text-sm text-gray-400 line-clamp-2">{building.description}</p>
+      <p className="mb-3 text-sm text-slate-400 line-clamp-2">{building.description}</p>
 
       {/* Coûts */}
       <div className="mb-3 grid grid-cols-3 gap-2 text-xs">
-        <div className={`rounded bg-gray-700/30 p-2 ${building.cost.metal > 0 ? '' : 'opacity-50'}`}>
-          <div className="text-gray-400">Métal</div>
-          <div className={`font-mono font-semibold ${building.canAfford ? 'text-amber-400' : 'text-red-400'}`}>
+        <div className={`rounded-xl bg-slate-950/40 p-2 ${building.cost.metal > 0 ? '' : 'opacity-50'}`}>
+          <div className="text-slate-500">Métal</div>
+          <div className={`font-mono font-semibold ${building.canAfford ? 'text-amber-300' : 'text-red-400'}`}>
             {formatNumber(building.cost.metal)}
           </div>
         </div>
-        <div className={`rounded bg-gray-700/30 p-2 ${building.cost.crystal > 0 ? '' : 'opacity-50'}`}>
-          <div className="text-gray-400">Cristal</div>
-          <div className={`font-mono font-semibold ${building.canAfford ? 'text-cyan-400' : 'text-red-400'}`}>
+        <div className={`rounded-xl bg-slate-950/40 p-2 ${building.cost.crystal > 0 ? '' : 'opacity-50'}`}>
+          <div className="text-slate-500">Cristal</div>
+          <div className={`font-mono font-semibold ${building.canAfford ? 'text-sky-300' : 'text-red-400'}`}>
             {formatNumber(building.cost.crystal)}
           </div>
         </div>
-        <div className={`rounded bg-gray-700/30 p-2 ${building.cost.deuterium > 0 ? '' : 'opacity-50'}`}>
-          <div className="text-gray-400">Deutérium</div>
-          <div className={`font-mono font-semibold ${building.canAfford ? 'text-purple-400' : 'text-red-400'}`}>
+        <div className={`rounded-xl bg-slate-950/40 p-2 ${building.cost.deuterium > 0 ? '' : 'opacity-50'}`}>
+          <div className="text-slate-500">Deutérium</div>
+          <div className={`font-mono font-semibold ${building.canAfford ? 'text-blue-300' : 'text-red-400'}`}>
             {formatNumber(building.cost.deuterium)}
           </div>
         </div>
@@ -104,13 +105,13 @@ export function BuildingCard({ building, onBuild, isBuilding }: BuildingCardProp
 
       {/* Durée de construction */}
       <div className="mb-3 flex items-center justify-between text-sm">
-        <span className="text-gray-400">Durée de construction:</span>
+        <span className="text-slate-400">Durée de construction:</span>
         <span className="font-mono text-white">{formatTime(building.buildTime)}</span>
       </div>
 
       {/* Prérequis manquants */}
       {building.missingRequirements.length > 0 && (
-        <div className="mb-3 rounded bg-red-500/10 p-2 text-xs text-red-400">
+        <div className="mb-3 rounded-xl bg-red-500/10 p-2 text-xs text-red-300">
           <div className="font-semibold mb-1">Prérequis manquants:</div>
           <ul className="list-disc list-inside">
             {building.missingRequirements.map((req, i) => (
@@ -122,33 +123,41 @@ export function BuildingCard({ building, onBuild, isBuilding }: BuildingCardProp
 
       {/* En construction */}
       {building.inQueue && (
-        <div className="mb-3 rounded bg-blue-500/20 p-2 text-center text-sm text-blue-400">
+        <div className="mb-3 rounded-xl bg-blue-500/10 p-2 text-center text-sm text-blue-200">
           🔨 En cours de construction...
         </div>
       )}
 
       {/* Bouton construire */}
-      <button
-        onClick={handleBuild}
-        disabled={!building.canBuild || loading || isBuilding}
-        className={`w-full rounded py-2 px-4 font-semibold transition-all duration-200 ${
-          building.canBuild && !loading && !isBuilding
-            ? 'bg-green-600 hover:bg-green-500 text-white cursor-pointer'
-            : 'bg-gray-600 text-gray-400 cursor-not-allowed'
-        }`}
-      >
-        {loading ? (
-          '⏳ Construction...'
-        ) : building.inQueue ? (
-          '🔨 En file'
-        ) : !building.canAfford ? (
-          '💰 Ressources insuffisantes'
-        ) : building.missingRequirements.length > 0 ? (
-          '🔒 Prérequis manquants'
-        ) : (
-          `🔨 Construire niveau ${building.currentLevel + 1}`
-        )}
-      </button>
+      <div className="flex items-center gap-2">
+        <button
+          onClick={handleBuild}
+          disabled={!building.canBuild || loading || isBuilding}
+          className={`flex-1 rounded-xl py-2 px-4 text-sm font-semibold transition-all duration-200 ${
+            building.canBuild && !loading && !isBuilding
+              ? 'bg-blue-500/20 text-blue-100 hover:bg-blue-500/30 cursor-pointer'
+              : 'bg-slate-800 text-slate-500 cursor-not-allowed'
+          }`}
+        >
+          {loading ? (
+            '⏳ Construction...'
+          ) : building.inQueue ? (
+            '🔨 En file'
+          ) : !building.canAfford ? (
+            '💰 Ressources insuffisantes'
+          ) : building.missingRequirements.length > 0 ? (
+            '🔒 Prérequis manquants'
+          ) : (
+            `🔨 Construire niveau ${building.currentLevel + 1}`
+          )}
+        </button>
+        <Link
+          href={`/buildings/${building.id}`}
+          className="rounded-xl border border-slate-700 px-3 py-2 text-xs text-slate-300 transition hover:border-slate-500 hover:text-white"
+        >
+          Détails
+        </Link>
+      </div>
     </div>
   );
 }

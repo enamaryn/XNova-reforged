@@ -198,6 +198,105 @@ XNova-Reforged/
   - Volume: postgres_data
   - Healthcheck: pg_isready
 
+---
+
+## 📅 SESSION 10 - Mise à jour Roadmap Frontend (15 janvier 2026)
+
+### 🎯 Objectif de la session
+Prioriser la refonte frontend pour tests utilisateurs et navigation fluide (esprit XNova + design 2026).
+
+### ✅ Tâches accomplies
+- [x] Ajout d'une étape "Refonte Frontend & Navigation" en priorité dans la roadmap MVP
+- [x] Définition des objectifs UX/navigation et pages prioritaires
+
+### 📁 Fichiers modifiés
+- `ROADMAP_MVP.md` : ajout du Sprint 3.5 (refonte frontend prioritaire)
+
+### 🔎 État actuel du projet
+- Frontend : refonte UI/UX priorisée pour navigation et tests utilisateurs
+- Backend : sprints en cours inchangés
+
+### 🔜 Prochaines étapes
+- Décliner le design system "XNova 2026"
+- Mettre à niveau la navigation et les pages clés (overview, buildings, research)
+
+### ⚠️ Note
+- Outil TodoWrite non disponible dans cet environnement
+
+---
+
+## 📅 SESSION 11 - Refonte Frontend & Navigation (15 janvier 2026)
+
+### 🎯 Objectif de la session
+Mettre en place le design noir/bleu 2026, refondre la navigation et moderniser les pages clés du jeu.
+
+### ✅ Tâches accomplies
+- [x] Définition du design global (palette noir/bleu, typos, fond spatial)
+- [x] Refonte du header, sidebar et sélecteur de planète
+- [x] Refonte des pages `/overview`, `/buildings`, `/research`
+- [x] Ajout des pages détails bâtiments et technologies
+
+### 📁 Fichiers créés
+- `apps/web/components/game/PlanetScene.tsx` : scène planète avec soleil et CTA
+- `apps/web/app/(game)/buildings/[buildingId]/page.tsx` : fiche bâtiment
+- `apps/web/app/(game)/research/[techId]/page.tsx` : fiche technologie
+
+### 📁 Fichiers modifiés
+- `apps/web/app/globals.css` : palette et typographies
+- `apps/web/app/layout.tsx` : fond global assombri
+- `apps/web/components/game/layout/GameLayout.tsx` : fond spatial 2026
+- `apps/web/components/game/layout/GameHeader.tsx` : navigation rapide + style
+- `apps/web/components/game/layout/GameSidebar.tsx` : navigation regroupée + accès rapides
+- `apps/web/components/game/layout/PlanetSelector.tsx` : style 2026
+- `apps/web/components/game/layout/ResourceBar.tsx` : couleurs et séparateurs
+- `apps/web/components/game/ResourceDisplay.tsx` : cartes ressources modernisées
+- `apps/web/components/game/EnergyDisplay.tsx` : carte énergie modernisée
+- `apps/web/components/game/BuildQueue.tsx` : file de construction modernisée
+- `apps/web/components/game/BuildingCard.tsx` : cartes bâtiments + lien détails
+- `apps/web/app/(game)/overview/page.tsx` : nouveau hub planète
+- `apps/web/app/(game)/buildings/page.tsx` : page bâtiments refondue
+- `apps/web/app/(game)/research/page.tsx` : liste technologies refondue
+- `ROADMAP_MVP.md` : avancées Sprint 3.5
+
+### 🔎 État actuel du projet
+- Navigation jeu cohérente (overview → buildings → research) prête pour tests UX
+- Accès aux fiches bâtiment/technologie opérationnel
+- Style 2026 aligné avec ambiance XNova
+
+### 🔜 Prochaines étapes
+- Refonte des pages `/fleet` et `/galaxy`
+- Ajout d’animations de transitions et états interactifs
+
+### ⚠️ Note
+- Outil TodoWrite non disponible dans cet environnement
+
+---
+
+## 📅 SESSION 12 - Commandant & Renommage Planète (15 janvier 2026)
+
+### 🎯 Objectif de la session
+Ajouter la carte commandant et la gestion du nom de planète sur l'overview.
+
+### ✅ Tâches accomplies
+- [x] Carte commandant avec progression et accès aux stats compte
+- [x] Bloc planète avec renommage local (UI) + indication API à venir
+- [x] Mise à jour de la roadmap pour suivre ces besoins
+
+### 📁 Fichiers modifiés
+- `apps/web/app/(game)/overview/page.tsx` : ajout carte commandant + renommage planète
+- `ROADMAP_MVP.md` : ajout tâches commandant/renommage
+
+### 🔎 État actuel du projet
+- Overview enrichi avec identité joueur et stats compte
+- Renommage planète prêt côté UI (sauvegarde serveur à implémenter)
+
+### 🔜 Prochaines étapes
+- Implémenter l'API de renommage planète
+- Connecter la progression joueur aux vraies formules de niveau
+
+### ⚠️ Note
+- Outil TodoWrite non disponible dans cet environnement
+
 - **redis** : Redis 7 Alpine
   - Port: 6379
   - Volume: redis_data

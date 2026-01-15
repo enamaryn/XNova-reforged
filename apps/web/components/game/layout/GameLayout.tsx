@@ -13,27 +13,30 @@ export function GameLayout({ children }: GameLayoutProps) {
 
   return (
     <div className="min-h-screen bg-slate-950">
-      {/* Fond étoilé */}
+      {/* Fond spatial */}
       <div
         className="fixed inset-0 z-0"
         style={{
           backgroundImage: `
-            radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 25%),
-            radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 25%),
-            radial-gradient(circle at 40% 80%, rgba(6, 182, 212, 0.05) 0%, transparent 25%),
-            radial-gradient(1px 1px at 10% 10%, white 1px, transparent 1px),
-            radial-gradient(1px 1px at 20% 20%, rgba(255,255,255,0.8) 1px, transparent 1px),
-            radial-gradient(1px 1px at 30% 30%, rgba(255,255,255,0.6) 1px, transparent 1px),
-            radial-gradient(1px 1px at 40% 40%, rgba(255,255,255,0.4) 1px, transparent 1px),
-            radial-gradient(1px 1px at 50% 50%, white 1px, transparent 1px),
-            radial-gradient(1px 1px at 60% 60%, rgba(255,255,255,0.7) 1px, transparent 1px),
-            radial-gradient(1px 1px at 70% 70%, rgba(255,255,255,0.5) 1px, transparent 1px),
-            radial-gradient(1px 1px at 80% 80%, rgba(255,255,255,0.3) 1px, transparent 1px),
-            radial-gradient(1px 1px at 90% 90%, rgba(255,255,255,0.9) 1px, transparent 1px)
+            radial-gradient(circle at 15% 20%, rgba(59, 130, 246, 0.18) 0%, transparent 40%),
+            radial-gradient(circle at 85% 10%, rgba(14, 165, 233, 0.12) 0%, transparent 35%),
+            radial-gradient(circle at 60% 85%, rgba(2, 132, 199, 0.12) 0%, transparent 40%),
+            linear-gradient(180deg, rgba(2, 6, 23, 0.96) 0%, rgba(2, 6, 23, 1) 100%),
+            radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,0.9) 1px, transparent 1px),
+            radial-gradient(1px 1px at 28% 32%, rgba(255,255,255,0.6) 1px, transparent 1px),
+            radial-gradient(1px 1px at 46% 22%, rgba(255,255,255,0.5) 1px, transparent 1px),
+            radial-gradient(1px 1px at 62% 40%, rgba(255,255,255,0.7) 1px, transparent 1px),
+            radial-gradient(1px 1px at 78% 28%, rgba(255,255,255,0.4) 1px, transparent 1px),
+            radial-gradient(1px 1px at 88% 60%, rgba(255,255,255,0.8) 1px, transparent 1px)
           `,
-          backgroundSize: '100% 100%, 100% 100%, 100% 100%, 250px 250px, 200px 200px, 300px 300px, 350px 350px, 280px 280px, 220px 220px, 180px 180px, 320px 320px, 270px 270px',
+          backgroundSize: '100% 100%, 100% 100%, 100% 100%, 100% 100%, 260px 260px, 320px 320px, 240px 240px, 360px 360px, 300px 300px, 280px 280px',
         }}
       />
+
+      <div className="pointer-events-none fixed inset-0 z-0 opacity-40">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(59,130,246,0.08),transparent_55%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(148,163,184,0.08)_1px,transparent_1px),linear-gradient(180deg,rgba(148,163,184,0.08)_1px,transparent_1px)] bg-[size:120px_120px]" />
+      </div>
 
       {/* Header */}
       <GameHeader onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />

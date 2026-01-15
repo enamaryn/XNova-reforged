@@ -2,19 +2,17 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { buildingsApi, type PlanetBuildings, type BuildingInfo } from '@/lib/api/buildings';
+import { buildingsApi } from '@/lib/api/buildings';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { usePlanetStore } from '@/lib/stores/planet-store';
 import { useSocket } from '@/lib/providers/socket-provider';
-import { BuildQueuePanel } from '@/components/game/buildings/BuildQueuePanel';
-import { BuildingsList } from '@/components/game/buildings/BuildingsList';
-import { BuildingDetailModal } from '@/components/game/buildings/BuildingDetailModal';
+import { BuildQueue } from '@/components/game/BuildQueue';
+import { BuildingCard } from '@/components/game/BuildingCard';
 
 export default function BuildingsPage() {
   const { user } = useAuthStore();
   const { selectedPlanetId, setSelectedPlanetId } = usePlanetStore();
   const { socket } = useSocket();
-  const [selectedBuilding, setSelectedBuilding] = useState<BuildingInfo | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('all');
 
   // Initialiser la planète sélectionnée
@@ -57,7 +55,6 @@ export default function BuildingsPage() {
     onSuccess: () => {
       refetchBuildings();
       refetchQueue();
-      setSelectedBuilding(null);
     },
   });
 
@@ -160,19 +157,21 @@ export default function BuildingsPage() {
   return (
     <div className="space-y-6">
       {/* Header de page */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Bâtiments</h1>
+          <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">Infrastructure</p>
+          <h1 className="mt-2 text-2xl font-semibold text-white">Bâtiments</h1>
           <p className="text-sm text-slate-400">
             Construisez et améliorez les infrastructures de votre planète
           </p>
         </div>
+        <div className="rounded-full border border-slate-800/80 bg-slate-900/40 px-4 py-2 text-xs text-slate-400">
+          {queue.length} en cours
+        </div>
       </div>
 
       {/* File de construction */}
-      {queue.length > 0 && (
-        <BuildQueuePanel queue={queue} onCancel={handleCancel} />
-      )}
+      <BuildQueue queue={queue} onCancel={handleCancel} />
 
       {/* Filtres par catégorie */}
       <div className="flex flex-wrap gap-2">
@@ -180,10 +179,10 @@ export default function BuildingsPage() {
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+            className={`rounded-full border px-4 py-2 text-xs uppercase tracking-[0.2em] transition-colors ${
               activeCategory === cat
-                ? 'bg-blue-600 text-white'
-                : 'bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white'
+                ? 'border-blue-400/60 bg-blue-500/10 text-blue-200'
+                : 'border-slate-800 text-slate-400 hover:border-slate-600 hover:text-white'
             }`}
           >
             {cat === 'all' ? 'Tous' : getCategoryLabel(cat)}
@@ -192,25 +191,19 @@ export default function BuildingsPage() {
       </div>
 
       {/* Liste des bâtiments */}
-      <BuildingsList
-        buildings={filteredBuildings}
-        onSelect={setSelectedBuilding}
-        isPending={buildMutation.isPending}
-      />
-
-      {/* Modal de détail */}
-      {selectedBuilding && (
-        <BuildingDetailModal
-          building={selectedBuilding}
-          onClose={() => setSelectedBuilding(null)}
-          onBuild={handleBuild}
-          isPending={buildMutation.isPending}
-          error={buildMutation.error as Error | null}
-        />
-      )}
+      <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+        {filteredBuildings.map((building) => (
+          <BuildingCard
+            key={building.id}
+            building={building}
+            onBuild={handleBuild}
+            isBuilding={buildMutation.isPending}
+          />
+        ))}
+      </div>
 
       {/* Message d'erreur flottant */}
-      {(buildMutation.error || cancelMutation.error) && !selectedBuilding && (
+      {(buildMutation.error || cancelMutation.error) && (
         <div className="fixed bottom-4 right-4 max-w-sm rounded-lg bg-red-500/90 px-4 py-3 text-white shadow-lg backdrop-blur-sm">
           <p className="text-sm">
             {((buildMutation.error || cancelMutation.error) as Error).message}

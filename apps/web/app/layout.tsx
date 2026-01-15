@@ -30,7 +30,7 @@ export default function RootLayout({
     <html lang="fr" className={`${splineSans.variable} ${spaceGrotesk.variable}`}>
       <body>
         <Providers>
-          <div className="min-h-screen bg-gradient-to-b from-slate-50 via-slate-100 to-slate-200">
+          <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900">
             <Header />
             <main className="mx-auto w-full max-w-6xl px-6 py-10">
               {children}

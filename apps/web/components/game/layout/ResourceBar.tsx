@@ -60,13 +60,13 @@ export function ResourceBar({ compact = false }: ResourceBarProps) {
         <ResourceItem
           icon="💎"
           value={crystal}
-          color="text-cyan-400"
+          color="text-sky-300"
           compact
         />
         <ResourceItem
           icon="🧪"
           value={deuterium}
-          color="text-purple-400"
+          color="text-blue-300"
           compact
         />
         <ResourceItem
@@ -88,21 +88,21 @@ export function ResourceBar({ compact = false }: ResourceBarProps) {
         value={metal}
         color="text-amber-400"
       />
-      <div className="w-px h-6 bg-slate-700" />
+      <div className="w-px h-6 bg-slate-800" />
       <ResourceItem
         label="Cristal"
         icon="💎"
         value={crystal}
-        color="text-cyan-400"
+        color="text-sky-300"
       />
-      <div className="w-px h-6 bg-slate-700" />
+      <div className="w-px h-6 bg-slate-800" />
       <ResourceItem
         label="Deutérium"
         icon="🧪"
         value={deuterium}
-        color="text-purple-400"
+        color="text-blue-300"
       />
-      <div className="w-px h-6 bg-slate-700" />
+      <div className="w-px h-6 bg-slate-800" />
       <ResourceItem
         label="Énergie"
         icon="⚡"

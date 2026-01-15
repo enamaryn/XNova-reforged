@@ -67,34 +67,34 @@ function QueueItem({
   const progress = Math.min(100, Math.max(0, (elapsed / totalDuration) * 100));
 
   return (
-    <div className="rounded-lg border border-blue-500/50 bg-gray-800/50 p-4">
+    <div className="rounded-2xl border border-blue-500/30 bg-slate-900/60 p-4 shadow-[0_0_24px_rgba(2,132,199,0.12)]">
       <div className="flex items-center justify-between mb-2">
         <div>
           <h4 className="font-semibold text-white">{item.buildingName}</h4>
-          <span className="text-xs text-gray-400">Niveau {item.targetLevel}</span>
+          <span className="text-xs text-slate-500">Niveau {item.targetLevel}</span>
         </div>
         <div className="text-right">
-          <div className="font-mono text-lg font-bold text-blue-400">
+          <div className="font-mono text-lg font-bold text-blue-300">
             {formatTimeRemaining(remainingSeconds)}
           </div>
           <button
             onClick={handleCancel}
             disabled={canceling}
-            className="text-xs text-red-400 hover:text-red-300 transition-colors"
+            className="text-[11px] uppercase tracking-[0.18em] text-red-300 hover:text-red-200 transition-colors"
           >
-            {canceling ? 'Annulation...' : '❌ Annuler'}
+            {canceling ? 'Annulation...' : 'Annuler'}
           </button>
         </div>
       </div>
 
       {/* Barre de progression */}
-      <div className="h-2 w-full overflow-hidden rounded-full bg-gray-700">
+      <div className="h-2 w-full overflow-hidden rounded-full bg-slate-800">
         <div
-          className="h-full bg-blue-500 transition-all duration-1000"
+          className="h-full bg-gradient-to-r from-sky-400 via-blue-500 to-blue-600 transition-all duration-1000"
           style={{ width: `${progress}%` }}
         />
       </div>
-      <div className="mt-1 text-right text-xs text-gray-400">
+      <div className="mt-1 text-right text-xs text-slate-500">
         {progress.toFixed(0)}%
       </div>
     </div>
@@ -104,10 +104,10 @@ function QueueItem({
 export function BuildQueue({ queue, onCancel }: BuildQueueProps) {
   if (queue.length === 0) {
     return (
-      <div className="rounded-lg border border-gray-600/50 bg-gray-800/30 p-6 text-center">
+      <div className="rounded-2xl border border-slate-800/80 bg-slate-900/40 p-6 text-center">
         <div className="text-3xl mb-2">🏗️</div>
-        <p className="text-gray-400">Aucune construction en cours</p>
-        <p className="text-xs text-gray-500 mt-1">
+        <p className="text-slate-300">Aucune construction en cours</p>
+        <p className="text-xs text-slate-500 mt-1">
           Sélectionnez un bâtiment pour commencer la construction
         </p>
       </div>
@@ -118,7 +118,7 @@ export function BuildQueue({ queue, onCancel }: BuildQueueProps) {
     <div className="space-y-3">
       <h3 className="text-lg font-semibold text-white flex items-center gap-2">
         🔨 File de construction
-        <span className="rounded bg-blue-500/20 px-2 py-0.5 text-xs text-blue-400">
+        <span className="rounded-full bg-blue-500/20 px-2 py-0.5 text-xs text-blue-300">
           {queue.length} en cours
         </span>
       </h3>
