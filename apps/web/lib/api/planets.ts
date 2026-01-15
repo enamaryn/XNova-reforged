@@ -34,3 +34,13 @@ export async function getUserPlanets(): Promise<Planet[]> {
 export async function getPlanet(planetId: string): Promise<Planet> {
   return await apiClient.get<Planet>(`/planets/${planetId}`);
 }
+
+/**
+ * Renommer une planète
+ */
+export async function renamePlanet(planetId: string, name: string) {
+  return await apiClient.put<{ id: string; name: string; galaxy: number; system: number; position: number }>(
+    `/planets/${planetId}`,
+    { name },
+  );
+}

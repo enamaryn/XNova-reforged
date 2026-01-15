@@ -6,11 +6,16 @@ import { usePlanetStore } from '@/lib/stores/planet-store';
 import { apiClient } from '@/lib/api/client';
 
 interface Resources {
-  metal: number;
-  crystal: number;
-  deuterium: number;
-  energy: number;
-  energyUsed: number;
+  metal?: number;
+  crystal?: number;
+  deuterium?: number;
+  energy?: number | { used: number; available: number };
+  energyUsed?: number;
+  resources?: {
+    metal: number;
+    crystal: number;
+    deuterium: number;
+  };
 }
 
 interface ResourceBarProps {
@@ -41,11 +46,14 @@ export function ResourceBar({ compact = false }: ResourceBarProps) {
     refetchInterval: 10000, // Actualiser toutes les 10s
   });
 
-  const metal = Number(resources?.metal ?? 0);
-  const crystal = Number(resources?.crystal ?? 0);
-  const deuterium = Number(resources?.deuterium ?? 0);
-  const energy = Number(resources?.energy ?? 0);
-  const energyUsed = Number(resources?.energyUsed ?? 0);
+  const resourcePayload = resources?.resources;
+  const metal = Number(resourcePayload?.metal ?? resources?.metal ?? 0);
+  const crystal = Number(resourcePayload?.crystal ?? resources?.crystal ?? 0);
+  const deuterium = Number(resourcePayload?.deuterium ?? resources?.deuterium ?? 0);
+  const energyPayload =
+    resources && typeof resources.energy === 'object' ? resources.energy : undefined;
+  const energy = Number(energyPayload?.available ?? resources?.energy ?? 0);
+  const energyUsed = Number(energyPayload?.used ?? resources?.energyUsed ?? 0);
   const safeEnergy = Number.isNaN(energy) ? 0 : energy;
   const safeEnergyUsed = Number.isNaN(energyUsed) ? 0 : energyUsed;
   const energyBalance = safeEnergy - safeEnergyUsed;

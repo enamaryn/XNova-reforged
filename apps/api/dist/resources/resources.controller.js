@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
 const current_user_decorator_1 = require("../common/decorators/current-user.decorator");
 const resources_service_1 = require("./resources.service");
+const rename_planet_dto_1 = require("./dto/rename-planet.dto");
 let ResourcesController = class ResourcesController {
     constructor(resourcesService) {
         this.resourcesService = resourcesService;
@@ -26,6 +27,9 @@ let ResourcesController = class ResourcesController {
     }
     getPlanetResources(planetId, userId) {
         return this.resourcesService.getPlanetResources(planetId, userId);
+    }
+    renamePlanet(planetId, dto, userId) {
+        return this.resourcesService.renamePlanet(planetId, userId, dto.name);
     }
 };
 exports.ResourcesController = ResourcesController;
@@ -45,6 +49,15 @@ __decorate([
     __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", void 0)
 ], ResourcesController.prototype, "getPlanetResources", null);
+__decorate([
+    (0, common_1.Put)(':planetId'),
+    __param(0, (0, common_1.Param)('planetId')),
+    __param(1, (0, common_1.Body)()),
+    __param(2, (0, current_user_decorator_1.CurrentUser)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, rename_planet_dto_1.RenamePlanetDto, String]),
+    __metadata("design:returntype", void 0)
+], ResourcesController.prototype, "renamePlanet", null);
 exports.ResourcesController = ResourcesController = __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Controller)('planets'),

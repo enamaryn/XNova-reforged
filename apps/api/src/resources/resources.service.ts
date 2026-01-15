@@ -50,6 +50,34 @@ export class ResourcesService {
     };
   }
 
+  async renamePlanet(planetId: string, userId: string, name: string) {
+    const planet = await this.database.planet.findUnique({
+      where: { id: planetId },
+    });
+
+    if (!planet) {
+      throw new NotFoundException('Planete introuvable');
+    }
+
+    if (planet.userId !== userId) {
+      throw new ForbiddenException('Acces refuse');
+    }
+
+    const updated = await this.database.planet.update({
+      where: { id: planetId },
+      data: { name },
+      select: {
+        id: true,
+        name: true,
+        galaxy: true,
+        system: true,
+        position: true,
+      },
+    });
+
+    return updated;
+  }
+
   private async refreshPlanet(planetId: string, userId: string) {
     const planet = await this.database.planet.findUnique({
       where: { id: planetId },

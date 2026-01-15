@@ -367,6 +367,46 @@ Traduire la catégorie "resource" en "Ressource" sur les cartes bâtiments.
 ### ⚠️ Note
 - Outil TodoWrite non disponible dans cet environnement
 
+---
+
+## 📅 SESSION 16 - Fleet/Galaxy + Renommage Planète (15 janvier 2026)
+
+### 🎯 Objectif de la session
+Finaliser les pages Fleet/Galaxy, corriger les ressources d’entête et activer le renommage planète.
+
+### ✅ Tâches accomplies
+- [x] Correction des ressources d’entête (mapping API front)
+- [x] Traduction des catégories technologies sur la fiche
+- [x] Création des pages `/fleet` et `/galaxy` (UI 2026)
+- [x] API renommage planète + intégration UI
+- [x] Mise à jour de la roadmap MVP
+
+### 📁 Fichiers créés
+- `apps/web/app/(game)/fleet/page.tsx` : page flotte
+- `apps/web/app/(game)/galaxy/page.tsx` : page galaxie
+- `apps/api/src/resources/dto/rename-planet.dto.ts` : DTO renommage planète
+
+### 📁 Fichiers modifiés
+- `apps/web/components/game/layout/ResourceBar.tsx` : mapping ressources
+- `apps/web/app/(game)/research/[techId]/page.tsx` : label catégorie
+- `apps/web/app/(game)/overview/page.tsx` : renommage planète branché
+- `apps/web/lib/api/planets.ts` : appel renommage
+- `apps/api/src/resources/resources.controller.ts` : endpoint rename
+- `apps/api/src/resources/resources.service.ts` : logique rename
+- `ROADMAP_MVP.md` : statut mis à jour
+
+### 🔎 État actuel du projet
+- Entête ressources cohérent avec la vue planète
+- Pages flotte/galaxie disponibles pour navigation
+- Renommage planète fonctionnel côté API
+
+### 🔜 Prochaines étapes
+- Ajouter les données réelles dans fleet/galaxy
+- Affiner les états mobiles
+
+### ⚠️ Note
+- Outil TodoWrite non disponible dans cet environnement
+
 - **redis** : Redis 7 Alpine
   - Port: 6379
   - Volume: redis_data

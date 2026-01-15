@@ -50,6 +50,29 @@ let ResourcesService = class ResourcesService {
             lastUpdate: planet.lastUpdate,
         };
     }
+    async renamePlanet(planetId, userId, name) {
+        const planet = await this.database.planet.findUnique({
+            where: { id: planetId },
+        });
+        if (!planet) {
+            throw new common_1.NotFoundException('Planete introuvable');
+        }
+        if (planet.userId !== userId) {
+            throw new common_1.ForbiddenException('Acces refuse');
+        }
+        const updated = await this.database.planet.update({
+            where: { id: planetId },
+            data: { name },
+            select: {
+                id: true,
+                name: true,
+                galaxy: true,
+                system: true,
+                position: true,
+            },
+        });
+        return updated;
+    }
     async refreshPlanet(planetId, userId) {
         const planet = await this.database.planet.findUnique({
             where: { id: planetId },

@@ -325,8 +325,8 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 - [x] Pages dédiées par bâtiment (fiche + actions)
 - [x] Pages dédiées par technologie (fiche + prérequis + recherche)
 - [ ] Parcours mobile-first pour navigation rapide
-- [ ] Carte commandant + panneau stats compte depuis l'overview
-- [ ] Renommage planète (UI + API)
+- [x] Carte commandant + panneau stats compte depuis l'overview
+- [x] Renommage planète (UI + API)
 
 #### Design system "XNova 2026"
 - [x] Palette et typographies cohérentes (futuriste, lisible)
@@ -338,8 +338,8 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 - [x] `/overview` (planète centrale + hubs d'accès)
 - [x] `/buildings` (liste + filtres + fiche bâtiment)
 - [x] `/research` (arbre techno + fiche recherche)
-- [ ] `/fleet` (navigation + préparation)
-- [ ] `/galaxy` (navigation + actions)
+- [x] `/fleet` (navigation + préparation)
+- [x] `/galaxy` (navigation + actions)
 
 **Livrables :**
 - ⏳ Navigation jeu testable de bout en bout

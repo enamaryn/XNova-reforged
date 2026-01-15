@@ -1,4 +1,5 @@
 import { ResourcesService } from './resources.service';
+import { RenamePlanetDto } from './dto/rename-planet.dto';
 export declare class ResourcesController {
     private readonly resourcesService;
     constructor(resourcesService: ResourcesService);
@@ -62,5 +63,12 @@ export declare class ResourcesController {
         };
         storage: import("@xnova/game-engine").StorageCapacity;
         lastUpdate: Date;
+    }>;
+    renamePlanet(planetId: string, dto: RenamePlanetDto, userId: string): Promise<{
+        id: string;
+        name: string;
+        galaxy: number;
+        system: number;
+        position: number;
     }>;
 }

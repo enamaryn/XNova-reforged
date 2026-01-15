@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { apiClient } from '@/lib/api/client';
 import { usePlanetResources } from '@/lib/hooks/use-planet-resources';
 import { ResourceDisplay } from '@/components/game/ResourceDisplay';
@@ -10,6 +10,7 @@ import { EnergyDisplay } from '@/components/game/EnergyDisplay';
 import { PlanetScene } from '@/components/game/PlanetScene';
 import { usePlanetStore } from '@/lib/stores/planet-store';
 import { useAuthStore } from '@/lib/stores/auth-store';
+import { renamePlanet } from '@/lib/api/planets';
 
 // Forcer le rendu côté client uniquement
 export const dynamic = 'force-dynamic';
@@ -24,6 +25,7 @@ interface Planet {
 
 export default function OverviewPage() {
   const { user } = useAuthStore();
+  const setUser = useAuthStore((state) => state.setUser);
   const { selectedPlanetId, setSelectedPlanetId } = usePlanetStore();
   const [showCommanderPanel, setShowCommanderPanel] = useState(false);
   const [isRenaming, setIsRenaming] = useState(false);
@@ -52,6 +54,20 @@ export default function OverviewPage() {
     error,
     isRealtimeConnected,
   } = usePlanetResources(selectedPlanetId);
+
+  const renameMutation = useMutation({
+    mutationFn: (name: string) => renamePlanet(selectedPlanetId!, name),
+    onSuccess: (updated) => {
+      if (user) {
+        const planets = user.planets?.map((planet) =>
+          planet.id === updated.id ? { ...planet, name: updated.name } : planet,
+        );
+        setUser({ ...user, planets });
+      }
+      setPlanetNameDraft(updated.name);
+      setIsRenaming(false);
+    },
+  });
 
   const selectedPlanet = planets?.find((p) => p.id === selectedPlanetId);
   const coordinates = selectedPlanet
@@ -201,14 +217,12 @@ export default function OverviewPage() {
                 <>
                   <div className="flex flex-col items-end gap-1">
                     <button
-                      onClick={() => setIsRenaming(false)}
-                      className="rounded-full border border-blue-500/50 px-3 py-1 text-xs uppercase tracking-[0.2em] text-blue-200 hover:border-blue-400"
+                      onClick={() => renameMutation.mutate(planetNameDraft)}
+                      disabled={renameMutation.isPending || !planetNameDraft.trim()}
+                      className="rounded-full border border-blue-500/50 px-3 py-1 text-xs uppercase tracking-[0.2em] text-blue-200 hover:border-blue-400 disabled:border-slate-800 disabled:text-slate-500"
                     >
-                      Enregistrer (local)
+                      {renameMutation.isPending ? 'Sauvegarde...' : 'Enregistrer'}
                     </button>
-                    <p className="text-[10px] text-slate-500">
-                      Sauvegarde serveur bientôt disponible.
-                    </p>
                   </div>
                   <button
                     onClick={() => {

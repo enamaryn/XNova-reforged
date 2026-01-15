@@ -65,6 +65,13 @@ export declare class ResourcesService {
         storage: import("@xnova/game-engine").StorageCapacity;
         lastUpdate: Date;
     }>;
+    renamePlanet(planetId: string, userId: string, name: string): Promise<{
+        id: string;
+        name: string;
+        galaxy: number;
+        system: number;
+        position: number;
+    }>;
     private refreshPlanet;
     private mapResources;
     private mapLevels;
