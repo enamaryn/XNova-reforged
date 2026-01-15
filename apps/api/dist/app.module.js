@@ -15,6 +15,7 @@ const database_module_1 = require("./database/database.module");
 const resources_module_1 = require("./resources/resources.module");
 const game_events_module_1 = require("./game-events/game-events.module");
 const buildings_module_1 = require("./buildings/buildings.module");
+const combat_module_1 = require("./combat/combat.module");
 const fleet_module_1 = require("./fleet/fleet.module");
 const galaxy_module_1 = require("./galaxy/galaxy.module");
 const research_module_1 = require("./research/research.module");
@@ -35,6 +36,7 @@ exports.AppModule = AppModule = __decorate([
             resources_module_1.ResourcesModule,
             game_events_module_1.GameEventsModule,
             buildings_module_1.BuildingsModule,
+            combat_module_1.CombatModule,
             fleet_module_1.FleetModule,
             galaxy_module_1.GalaxyModule,
             research_module_1.ResearchModule,

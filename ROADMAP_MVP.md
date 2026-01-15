@@ -607,7 +607,7 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 **Objectif :** Moteur de combat basique
 
 #### Backend - Module Combat
-- [ ] Schema Prisma
+- [x] Schema Prisma
   ```prisma
   model CombatReport {
     id          String   @id @default(uuid())
@@ -621,13 +621,13 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
     createdAt   DateTime @default(now())
   }
   ```
-- [ ] Service CombatEngine
+- [x] Service CombatEngine
   - Calcul puissances (attaque, défense, bouclier)
   - Simulation tour par tour (max 6 rounds)
   - Génération débris (30% coûts détruits)
   - Pillage ressources (50% max)
   - Rapport combat détaillé
-- [ ] Configuration combat
+- [x] Configuration combat
   ```typescript
   {
     202: { // Petit Transporteur
@@ -637,26 +637,26 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
     }
   }
   ```
-- [ ] Intégration avec FleetService
-  - Mission Attack
-  - Retour survivants
-  - Notification rapport
+- [x] Intégration avec FleetService
+  - [x] Mission Attack
+  - [x] Retour survivants
+  - [x] Notification rapport
 
 #### Frontend - UI Combat
-- [ ] Page `/reports`
-  - Liste rapports de combat
-  - Filtres (gagnés, perdus, tout)
-- [ ] Composant `CombatReport`
-  - Récapitulatif bataille
-  - Pertes des deux côtés
-  - Butin/débris
-  - Timeline rounds (optionnel)
+- [x] Page `/reports`
+  - [x] Liste rapports de combat
+  - [ ] Filtres (gagnés, perdus, tout)
+- [x] Composant `CombatReport`
+  - [x] Récapitulatif bataille
+  - [x] Pertes des deux côtés
+  - [x] Butin/débris
+  - [ ] Timeline rounds (optionnel)
 - [ ] Notifications combat
 
 **Livrables :**
 - ✅ Combats fonctionnels
 - ✅ Rapports détaillés
-- ✅ Équilibrage basique
+- ⏳ Équilibrage basique
 
 ---
 

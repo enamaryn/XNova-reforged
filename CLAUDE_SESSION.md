@@ -2248,3 +2248,90 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 - Vérifier que l’API Shipyard répond correctement
 
 **Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 27 - Sprint 7 : Combat (backend + rapports)
+
+**Date :** 15 janvier 2026
+**Objectif :** Implémenter le combat simplifié et l’interface de rapports.
+
+### ✅ Tâches réalisées
+- [x] Ajout du moteur de combat dans `game-engine` (6 rounds, boucliers, débris)
+- [x] Module Combat NestJS + endpoints `/reports`
+- [x] Intégration de la mission Attack à l’arrivée des flottes
+- [x] UI `/reports` + page détail rapport
+
+### 🔧 Fichiers créés/modifiés
+
+**Game Engine :**
+- `packages/game-engine/src/combat.ts` ✅ NEW
+- `packages/game-engine/src/index.ts`
+
+**Backend :**
+- `apps/api/src/combat/combat.service.ts` ✅ NEW
+- `apps/api/src/combat/combat.controller.ts` ✅ NEW
+- `apps/api/src/combat/combat.module.ts` ✅ NEW
+- `apps/api/src/fleet/fleet-cron.service.ts` (mission Attack)
+- `apps/api/src/fleet/fleet.module.ts` (import CombatModule)
+- `apps/api/src/app.module.ts` (import CombatModule)
+
+**Frontend :**
+- `apps/web/lib/api/reports.ts` ✅ NEW
+- `apps/web/components/game/CombatReportCard.tsx` ✅ NEW
+- `apps/web/app/(game)/reports/page.tsx` ✅ NEW
+- `apps/web/app/(game)/reports/[reportId]/page.tsx` ✅ NEW
+- `apps/web/components/game/layout/GameSidebar.tsx` (nav rapports)
+- `apps/web/lib/i18n/index.tsx` (labels rapports)
+
+**Documentation :**
+- `ROADMAP_MVP.md` (Sprint 7 avancé)
+
+### 📍 État actuel du projet
+
+**Sprint 7 :** ⏳ en cours (filtres + notifications à faire)
+
+### ⏭️ Prochaines étapes
+- Ajouter les filtres de rapports (gagnés/perdus)
+- Ajouter notifications combat côté UI
+- Ajuster l’équilibrage (valeurs)
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 28 - Fix exports combat engine
+
+**Date :** 15 janvier 2026
+**Objectif :** Corriger les exports du game-engine et la création des rapports combat.
+
+### ✅ Tâches réalisées
+- [x] Typage Prisma des champs JSON pour `CombatReport`
+- [x] Build du package `@xnova/game-engine` pour exposer `combat`
+
+### 🔧 Fichiers modifiés
+- `apps/api/src/combat/combat.service.ts`
+- `packages/game-engine/dist/*` (build)
+
+### ⏭️ Prochaines étapes
+- Relancer `npm run dev` et vérifier la compilation API
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 29 - Fix CombatReport location
+
+**Date :** 15 janvier 2026
+**Objectif :** Corriger la création des rapports de combat (coordonnées requises).
+
+### ✅ Tâches réalisées
+- [x] Ajout des champs `galaxy/system/position` lors de la création du CombatReport
+
+### 🔧 Fichiers modifiés
+- `apps/api/src/combat/combat.service.ts`
+
+### ⏭️ Prochaines étapes
+- Relancer `npm run dev` et vérifier que l’API compile
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.

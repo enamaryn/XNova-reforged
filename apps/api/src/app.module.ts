@@ -6,6 +6,7 @@ import { DatabaseModule } from './database/database.module';
 import { ResourcesModule } from './resources/resources.module';
 import { GameEventsModule } from './game-events/game-events.module';
 import { BuildingsModule } from './buildings/buildings.module';
+import { CombatModule } from './combat/combat.module';
 import { FleetModule } from './fleet/fleet.module';
 import { GalaxyModule } from './galaxy/galaxy.module';
 import { ResearchModule } from './research/research.module';
@@ -36,6 +37,9 @@ import { ShipyardModule } from './shipyard/shipyard.module';
 
     // Module batiments
     BuildingsModule,
+
+    // Module combat
+    CombatModule,
 
     // Module flotte
     FleetModule,

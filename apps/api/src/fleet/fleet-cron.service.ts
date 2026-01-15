@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { MissionType } from '@xnova/game-config';
+import { CombatService } from '../combat/combat.service';
 import { DatabaseService } from '../database/database.service';
 import { GameEventsGateway } from '../game-events/game-events.gateway';
 
@@ -11,6 +12,7 @@ export class FleetCronService {
   constructor(
     private readonly database: DatabaseService,
     private readonly gameEvents: GameEventsGateway,
+    private readonly combatService: CombatService,
   ) {}
 
   /**
@@ -37,36 +39,40 @@ export class FleetCronService {
     if (fleets.length === 0) return;
 
     for (const fleet of fleets) {
-      await this.database.$transaction(async (tx) => {
-        let cargoDelivered = false;
-        if (fleet.mission === MissionType.TRANSPORT || fleet.mission === MissionType.DEPLOY) {
-          const target = await tx.planet.findFirst({
-            where: {
-              galaxy: fleet.toGalaxy,
-              system: fleet.toSystem,
-              position: fleet.toPosition,
-            },
-          });
-
-          if (target) {
-            const cargo = fleet.cargo as Record<string, number>;
-            await tx.planet.update({
-              where: { id: target.id },
-              data: {
-                metal: { increment: Number(cargo.metal || 0) },
-                crystal: { increment: Number(cargo.crystal || 0) },
-                deuterium: { increment: Number(cargo.deuterium || 0) },
+      if (fleet.mission === MissionType.ATTACK) {
+        await this.combatService.resolveAttackMission(fleet);
+      } else {
+        await this.database.$transaction(async (tx) => {
+          let cargoDelivered = false;
+          if (fleet.mission === MissionType.TRANSPORT || fleet.mission === MissionType.DEPLOY) {
+            const target = await tx.planet.findFirst({
+              where: {
+                galaxy: fleet.toGalaxy,
+                system: fleet.toSystem,
+                position: fleet.toPosition,
               },
             });
-            cargoDelivered = true;
-          }
-        }
 
-        await tx.fleet.update({
-          where: { id: fleet.id },
-          data: cargoDelivered ? { status: 'returning', cargo: {} } : { status: 'returning' },
+            if (target) {
+              const cargo = fleet.cargo as Record<string, number>;
+              await tx.planet.update({
+                where: { id: target.id },
+                data: {
+                  metal: { increment: Number(cargo.metal || 0) },
+                  crystal: { increment: Number(cargo.crystal || 0) },
+                  deuterium: { increment: Number(cargo.deuterium || 0) },
+                },
+              });
+              cargoDelivered = true;
+            }
+          }
+
+          await tx.fleet.update({
+            where: { id: fleet.id },
+            data: cargoDelivered ? { status: 'returning', cargo: {} } : { status: 'returning' },
+          });
         });
-      });
+      }
 
       this.gameEvents.emitFleetArrived(fleet.userId, {
         fleetId: fleet.id,

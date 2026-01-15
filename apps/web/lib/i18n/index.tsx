@@ -27,6 +27,7 @@ const translations: Record<Locale, Dictionary> = {
       alliance: "Alliance",
       messages: "Messages",
       statistics: "Statistiques",
+      reports: "Rapports",
       options: "Options",
     },
     sidebar: {
@@ -117,6 +118,7 @@ const translations: Record<Locale, Dictionary> = {
       alliance: "Alliance",
       messages: "Messages",
       statistics: "Statistics",
+      reports: "Reports",
       options: "Options",
     },
     sidebar: {
@@ -207,6 +209,7 @@ const translations: Record<Locale, Dictionary> = {
       alliance: "Alianza",
       messages: "Mensajes",
       statistics: "Estadísticas",
+      reports: "Reportes",
       options: "Opciones",
     },
     sidebar: {
