@@ -10,9 +10,9 @@ export declare class JwtStrategy extends JwtStrategy_base {
         sub: string;
         username: string;
     }): Promise<{
-        id: string;
         username: string;
         email: string;
+        id: string;
         points: number;
         rank: number;
     }>;

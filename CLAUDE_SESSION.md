@@ -585,6 +585,67 @@ Finaliser l’arbre technologique et les états visuels.
 ### ⚠️ Note
 - Outil TodoWrite non disponible dans cet environnement
 
+---
+
+## 📅 SESSION 23 - Fix Prisma ResearchQueue (15 janvier 2026)
+
+### 🎯 Objectif de la session
+Corriger la relation Prisma ResearchQueue ↔ Planet pour débloquer db:push/generate.
+
+### ✅ Tâches accomplies
+- [x] Ajout de la relation inverse `researchQueue` sur `Planet`
+
+### 📁 Fichiers modifiés
+- `packages/database/prisma/schema.prisma` : relation ajoutée
+
+### 🔜 Prochaines étapes
+- Ajouter `DATABASE_URL` dans `.env`, puis `npm run db:push` et `npx prisma generate`
+
+### ⚠️ Note
+- Outil TodoWrite non disponible dans cet environnement
+
+---
+
+## 📅 SESSION 24 - Env Auto DB (15 janvier 2026)
+
+### 🎯 Objectif de la session
+Rendre le `db:push` automatique en exposant DATABASE_URL partout.
+
+### ✅ Tâches accomplies
+- [x] Ajout des variables PostgreSQL dans `.env`
+- [x] Docker Compose relié à `.env`
+- [x] `.env` ajouté dans `packages/database` pour Prisma
+
+### 📁 Fichiers modifiés
+- `.env` : variables Postgres
+- `docker-compose.yml` : env_file + vars
+- `packages/database/.env` : DATABASE_URL
+
+### 🔜 Prochaines étapes
+- Relancer `npm run db:push` puis `npx prisma generate`
+
+### ⚠️ Note
+- Outil TodoWrite non disponible dans cet environnement
+
+---
+
+## 📅 SESSION 25 - Fix Planet Selection (15 janvier 2026)
+
+### 🎯 Objectif de la session
+Corriger les erreurs de chargement dues à un planetId persistant invalide.
+
+### ✅ Tâches accomplies
+- [x] Reset automatique de la planète sélectionnée si elle n’appartient pas à l’utilisateur
+
+### 📁 Fichiers modifiés
+- `apps/web/components/auth/ProtectedRoute.tsx` : validation planetId
+
+### 🔎 État actuel du projet
+- Les pages overview/research/buildings ne tombent plus en erreur lors d’un nouveau compte
+
+### ⚠️ Note
+- Outil TodoWrite non disponible dans cet environnement
+
 - **redis** : Redis 7 Alpine
   - Port: 6379
   - Volume: redis_data

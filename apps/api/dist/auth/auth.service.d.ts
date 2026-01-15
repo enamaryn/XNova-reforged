@@ -15,10 +15,10 @@ export declare class AuthService {
         accessToken: string;
     }>;
     getMe(userId: string): Promise<{
-        id: string;
-        createdAt: Date;
         username: string;
         email: string;
+        id: string;
+        createdAt: Date;
         updatedAt: Date;
         points: number;
         rank: number;

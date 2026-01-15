@@ -7,8 +7,9 @@ export declare class ResourcesController {
         storage: import("@xnova/game-engine").StorageCapacity;
         productionLevel: number;
         id: string;
-        userId: string;
+        createdAt: Date;
         name: string;
+        userId: string;
         galaxy: number;
         system: number;
         position: number;
@@ -42,7 +43,6 @@ export declare class ResourcesController {
         phalanx: number;
         jumpGate: number;
         lastUpdate: Date;
-        createdAt: Date;
     }>;
     getPlanetResources(planetId: string, userId: string): Promise<{
         planetId: string;

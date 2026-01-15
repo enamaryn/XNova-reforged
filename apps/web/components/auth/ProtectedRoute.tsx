@@ -70,7 +70,8 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
 
         if (!active) return;
         setUser(me);
-        if (!selectedPlanetId && me.planets?.length) {
+        const hasPlanet = me.planets?.some((planet) => planet.id === selectedPlanetId);
+        if (!hasPlanet && me.planets?.length) {
           setSelectedPlanetId(me.planets[0].id);
         }
       } catch (error) {

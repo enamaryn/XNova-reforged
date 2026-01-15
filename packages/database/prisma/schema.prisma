@@ -104,6 +104,7 @@ model Planet {
 
   // Relations
   buildQueue BuildQueue[]
+  researchQueue ResearchQueue[]
   ships      Ship[]
   defenses   Defense[]
 

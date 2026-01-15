@@ -1,4 +1,7 @@
 {
   "/page": "app/page.js",
+  "/(game)/research/page": "app/(game)/research/page.js",
+  "/(game)/overview/page": "app/(game)/overview/page.js",
+  "/(game)/buildings/page": "app/(game)/buildings/page.js",
   "/(auth)/login/page": "app/(auth)/login/page.js"
 }

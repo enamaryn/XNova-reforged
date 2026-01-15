@@ -5,12 +5,14 @@ services:
   postgres:
     image: postgres:16-alpine
     container_name: xnova-postgres
+    env_file:
+      - .env
     environment:
-      POSTGRES_DB: xnova
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: dev_password_change_in_production
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -25,6 +27,8 @@ services:
   redis:
     image: redis:7-alpine
     container_name: xnova-redis
+    env_file:
+      - .env
     ports:
       - "6379:6379"
     volumes:
