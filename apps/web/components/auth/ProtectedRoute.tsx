@@ -12,14 +12,23 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const router = useRouter();
   const tokens = useAuthStore((state) => state.tokens);
   const setStatus = useAuthStore((state) => state.setStatus);
-  const [hydrated, setHydrated] = useState(
-    useAuthStore.persist.hasHydrated()
-  );
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = useAuthStore.persist.onFinishHydration(() => {
+    if (useAuthStore.persist?.hasHydrated?.()) {
+      setHydrated(true);
+      return;
+    }
+
+    const unsubscribe = useAuthStore.persist?.onFinishHydration?.(() => {
       setHydrated(true);
     });
+
+    if (!unsubscribe) {
+      setHydrated(true);
+      return;
+    }
+
     return unsubscribe;
   }, []);
 
