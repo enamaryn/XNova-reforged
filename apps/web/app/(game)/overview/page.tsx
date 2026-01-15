@@ -43,7 +43,7 @@ export default function OverviewPage() {
     if (planets && planets.length > 0 && !selectedPlanetId) {
       setSelectedPlanetId(planets[0].id);
     }
-  }, [planets, selectedPlanetId]);
+  }, [planets, selectedPlanetId, setSelectedPlanetId]);
 
   // Récupérer les ressources de la planète sélectionnée (avec WebSocket)
   const {
@@ -52,6 +52,18 @@ export default function OverviewPage() {
     error,
     isRealtimeConnected,
   } = usePlanetResources(selectedPlanetId);
+
+  const selectedPlanet = planets?.find((p) => p.id === selectedPlanetId);
+  const coordinates = selectedPlanet
+    ? `[${selectedPlanet.galaxy}:${selectedPlanet.system}:${selectedPlanet.position}]`
+    : '';
+  const commanderProgress = user?.points ? Math.min(100, (user.points % 1000) / 10) : 0;
+
+  useEffect(() => {
+    if (!isRenaming && selectedPlanet) {
+      setPlanetNameDraft(selectedPlanet.name);
+    }
+  }, [isRenaming, selectedPlanet]);
 
   if (planetsLoading) {
     return (
@@ -68,18 +80,6 @@ export default function OverviewPage() {
       </div>
     );
   }
-
-  const selectedPlanet = planets.find((p) => p.id === selectedPlanetId);
-  const coordinates = selectedPlanet
-    ? `[${selectedPlanet.galaxy}:${selectedPlanet.system}:${selectedPlanet.position}]`
-    : '';
-  const commanderProgress = user?.points ? Math.min(100, (user.points % 1000) / 10) : 0;
-
-  useEffect(() => {
-    if (!isRenaming && selectedPlanet) {
-      setPlanetNameDraft(selectedPlanet.name);
-    }
-  }, [isRenaming, selectedPlanet]);
 
   return (
     <div className="space-y-8">

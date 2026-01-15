@@ -297,6 +297,29 @@ Ajouter la carte commandant et la gestion du nom de planète sur l'overview.
 ### ⚠️ Note
 - Outil TodoWrite non disponible dans cet environnement
 
+---
+
+## 📅 SESSION 13 - Correction Hooks Overview (15 janvier 2026)
+
+### 🎯 Objectif de la session
+Corriger l'ordre des hooks sur la page overview pour éliminer l'erreur React.
+
+### ✅ Tâches accomplies
+- [x] Déplacement des hooks avant les retours conditionnels
+- [x] Ajustement des dépendances pour éviter les avertissements
+
+### 📁 Fichiers modifiés
+- `apps/web/app/(game)/overview/page.tsx` : hooks repositionnés et safe
+
+### 🔎 État actuel du projet
+- Erreur "Rendered more hooks than during the previous render" corrigée
+
+### 🔜 Prochaines étapes
+- Relancer le dev server et vérifier la console
+
+### ⚠️ Note
+- Outil TodoWrite non disponible dans cet environnement
+
 - **redis** : Redis 7 Alpine
   - Port: 6379
   - Volume: redis_data
