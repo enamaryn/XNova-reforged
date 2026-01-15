@@ -152,6 +152,8 @@ model Technology {
 model ResearchQueue {
   id        String   @id @default(uuid())
   userId    String
+  planetId  String
+  planet    Planet   @relation(fields: [planetId], references: [id], onDelete: Cascade)
 
   techId    Int
   level     Int
@@ -163,6 +165,7 @@ model ResearchQueue {
   createdAt DateTime @default(now())
 
   @@index([userId])
+  @@index([planetId])
   @@index([endTime])
 }
 

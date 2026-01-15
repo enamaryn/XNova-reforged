@@ -528,6 +528,63 @@ Clore Sprint 4 (construction bâtiments) et finaliser la roadmap MVP.
 ### ⚠️ Note
 - Outil TodoWrite non disponible dans cet environnement
 
+---
+
+## 📅 SESSION 21 - Sprint 5 Technologies (15 janvier 2026)
+
+### 🎯 Objectif de la session
+Démarrer et finaliser le backend recherche + brancher l’UI technologies.
+
+### ✅ Tâches accomplies
+- [x] Module Research (API + cron) côté backend
+- [x] File de recherche + prérequis + coûts
+- [x] UI technologies branchée (liste + file)
+- [x] Roadmap MVP mise à jour
+
+### 📁 Fichiers créés
+- `apps/api/src/research/research.module.ts` : module recherche
+- `apps/api/src/research/research.controller.ts` : endpoints recherche
+- `apps/api/src/research/research.service.ts` : logique recherche
+- `apps/api/src/research/research-cron.service.ts` : cron recherche
+- `apps/api/src/research/dto/start-research.dto.ts` : DTO
+- `apps/web/lib/api/research.ts` : client API recherche
+
+### 📁 Fichiers modifiés
+- `apps/api/src/app.module.ts` : import ResearchModule
+- `packages/database/prisma/schema.prisma` : ajout planetId sur ResearchQueue
+- `apps/web/app/(game)/research/page.tsx` : UI connectée
+- `ROADMAP_MVP.md` : Sprint 5 en cours
+
+### 🔎 État actuel du projet
+- Backend recherche fonctionnel, endpoints disponibles
+- UI recherche branchée (liste + queue + cancel)
+
+### ⚠️ Note
+- Outil TodoWrite non disponible dans cet environnement
+
+---
+
+## 📅 SESSION 22 - Sprint 5 Finalisation (15 janvier 2026)
+
+### 🎯 Objectif de la session
+Finaliser l’arbre technologique et les états visuels.
+
+### ✅ Tâches accomplies
+- [x] Arbre techno interactif (colonnes + connexions visuelles)
+- [x] États de recherche (disponible/verrouillé/en cours)
+- [x] Tooltips prérequis + glow sur disponibles
+- [x] Roadmap MVP mise à jour (Sprint 5 terminé)
+
+### 📁 Fichiers modifiés
+- `apps/web/app/(game)/research/page.tsx` : arbre techno + tooltips
+- `ROADMAP_MVP.md` : Sprint 5 terminé
+
+### 🔎 État actuel du projet
+- Sprint 5 complété à 100%
+
+### ⚠️ Note
+- Outil TodoWrite non disponible dans cet environnement
+
 - **redis** : Redis 7 Alpine
   - Port: 6379
   - Volume: redis_data

@@ -421,12 +421,12 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 
 ---
 
-### Sprint 5 : Technologies
+### Sprint 5 : Technologies ✅ TERMINÉ
 
 **Objectif :** Arbre technologique et recherche
 
 #### Backend - Module Research
-- [ ] Schema Prisma
+- [x] Schema Prisma
   ```prisma
   model Technology {
     id       String @id @default(uuid())
@@ -439,7 +439,7 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
   model ResearchQueue {
     id        String   @id @default(uuid())
     userId    String
-    user      User     @relation(fields: [userId], references: [id])
+    planetId  String
     techId    Int
     level     Int
     startTime DateTime
@@ -447,7 +447,7 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
     completed Boolean  @default(false)
   }
   ```
-- [ ] Configuration technologies
+- [x] Configuration technologies
   ```typescript
   {
     1: { // Espionnage
@@ -457,29 +457,31 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
     }
   }
   ```
-- [ ] Service ResearchService
+- [x] Service ResearchService
   - Vérification prérequis (bâtiments requis)
   - Une seule recherche à la fois
   - Calcul durée
-- [ ] Endpoints :
+- [x] Endpoints :
   - `GET /technologies`
   - `POST /research`
   - `GET /research-queue`
   - `DELETE /research-queue/:id`
 
 #### Frontend - UI Technologies
-- [ ] Page `/research`
-- [ ] Arbre technologique interactif
+- [x] Page `/research`
+- [x] Arbre technologique interactif
   - Nœuds connectés (lignes)
   - États : disponible, locked, en cours
   - Tooltips détaillés
-- [ ] Barre recherche en cours
-- [ ] Effets visuels (glow pour disponibles)
+- [x] Barre recherche en cours
+- [x] Effets visuels (glow pour disponibles)
 
 **Livrables :**
 - ✅ Système de recherche complet
 - ✅ Arbre tech visuel
 - ✅ Prérequis fonctionnels
+
+**Complété le :** 15 janvier 2026 (Session 22)
 
 ---
 

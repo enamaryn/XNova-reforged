@@ -8,6 +8,7 @@ import { GameEventsModule } from './game-events/game-events.module';
 import { BuildingsModule } from './buildings/buildings.module';
 import { FleetModule } from './fleet/fleet.module';
 import { GalaxyModule } from './galaxy/galaxy.module';
+import { ResearchModule } from './research/research.module';
 
 @Module({
   imports: [
@@ -40,6 +41,9 @@ import { GalaxyModule } from './galaxy/galaxy.module';
 
     // Module galaxie
     GalaxyModule,
+
+    // Module recherche
+    ResearchModule,
   ],
   controllers: [],
   providers: [],
