@@ -14,6 +14,7 @@ export default function BuildingsPage() {
   const { selectedPlanetId, setSelectedPlanetId } = usePlanetStore();
   const { socket } = useSocket();
   const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Initialiser la planète sélectionnée
   useEffect(() => {
@@ -68,6 +69,12 @@ export default function BuildingsPage() {
     },
   });
 
+  const pushToast = useCallback((message: string) => {
+    setToastMessage(message);
+    const timeout = setTimeout(() => setToastMessage(null), 4000);
+    return () => clearTimeout(timeout);
+  }, []);
+
   // Écouter les événements WebSocket
   useEffect(() => {
     if (!socket || !planetId) return;
@@ -79,17 +86,24 @@ export default function BuildingsPage() {
       refetchQueue();
     };
 
+    const handleCompleted = (payload?: { buildingName?: string; newLevel?: number }) => {
+      handleUpdate();
+      const name = payload?.buildingName || 'Bâtiment';
+      const level = payload?.newLevel ? ` niv. ${payload.newLevel}` : '';
+      pushToast(`Construction terminée : ${name}${level}`);
+    };
+
     socket.on('building:started', handleUpdate);
-    socket.on('building:completed', handleUpdate);
+    socket.on('building:completed', handleCompleted);
     socket.on('building:cancelled', handleUpdate);
 
     return () => {
       socket.emit('unsubscribe:planet', { planetId });
       socket.off('building:started', handleUpdate);
-      socket.off('building:completed', handleUpdate);
+      socket.off('building:completed', handleCompleted);
       socket.off('building:cancelled', handleUpdate);
     };
-  }, [socket, planetId, refetchBuildings, refetchQueue]);
+  }, [socket, planetId, refetchBuildings, refetchQueue, pushToast]);
 
   const handleBuild = useCallback(
     async (buildingId: number) => {
@@ -210,13 +224,19 @@ export default function BuildingsPage() {
           </p>
         </div>
       )}
+
+      {toastMessage && (
+        <div className="fixed bottom-4 left-4 max-w-sm rounded-lg border border-emerald-400/40 bg-emerald-500/10 px-4 py-3 text-emerald-200 shadow-lg backdrop-blur-sm">
+          <p className="text-sm">{toastMessage}</p>
+        </div>
+      )}
     </div>
   );
 }
 
 function getCategoryLabel(category: string): string {
   const labels: Record<string, string> = {
-    resource: 'Ressources',
+    resource: 'Ressource',
     facility: 'Installations',
     station: 'Stations',
     defense: 'Défense',

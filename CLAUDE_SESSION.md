@@ -506,6 +506,28 @@ Clore Sprint 3.5 avec navigation mobile et animations sobres.
 ### ⚠️ Note
 - Outil TodoWrite non disponible dans cet environnement
 
+---
+
+## 📅 SESSION 20 - Sprint 4 Finalisation (15 janvier 2026)
+
+### 🎯 Objectif de la session
+Clore Sprint 4 (construction bâtiments) et finaliser la roadmap MVP.
+
+### ✅ Tâches accomplies
+- [x] Notification “build terminé” sur la page bâtiments
+- [x] Ajustement libellé “Ressource”
+- [x] Roadmap MVP mise à jour (Sprint 4 terminé)
+
+### 📁 Fichiers modifiés
+- `apps/web/app/(game)/buildings/page.tsx` : toast build terminé
+- `ROADMAP_MVP.md` : Sprint 4 terminé
+
+### 🔎 État actuel du projet
+- Sprint 4 complété, boucle de construction opérationnelle
+
+### ⚠️ Note
+- Outil TodoWrite non disponible dans cet environnement
+
 - **redis** : Redis 7 Alpine
   - Port: 6379
   - Volume: redis_data

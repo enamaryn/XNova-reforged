@@ -351,7 +351,7 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 
 ---
 
-### Sprint 4 : Construction de Bâtiments ⏳ EN COURS
+### Sprint 4 : Construction de Bâtiments ✅ TERMINÉ
 
 **Objectif :** Système de construction avec file d'attente
 
@@ -380,38 +380,39 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
   - Fonction `checkBuildingRequirements()` - Vérification prérequis
   - Fonction `getDemolitionRefund()` - Remboursement 25%
 
-- [ ] Service BuildingService
-  - [ ] Logique création construction
-  - [ ] Validation ressources disponibles
-  - [ ] Gestion file d'attente
-  - [ ] Application coûts et mise à jour ressources
+- [x] Service BuildingService
+  - [x] Logique création construction
+  - [x] Validation ressources disponibles
+  - [x] Gestion file d'attente
+  - [x] Application coûts et mise à jour ressources
 
-- [ ] Cron job finalisation constructions
-- [ ] Endpoints :
-  - [ ] `GET /buildings` - Liste des bâtiments
-  - [ ] `POST /planets/:id/build` - Démarrer construction
-  - [ ] `GET /planets/:id/build-queue` - Voir file d'attente
-  - [ ] `DELETE /planets/:id/build-queue/:queueId` - Annuler construction
+- [x] Cron job finalisation constructions
+- [x] Endpoints :
+  - [x] `GET /buildings` - Liste des bâtiments
+  - [x] `POST /planets/:id/build` - Démarrer construction
+  - [x] `GET /planets/:id/build-queue` - Voir file d'attente
+  - [x] `DELETE /planets/:id/build-queue/:queueId` - Annuler construction
 
 #### Frontend - UI Buildings
-- [ ] Page `/buildings`
-- [ ] Liste bâtiments disponibles
+- [x] Page `/buildings`
+- [x] Liste bâtiments disponibles
   - Nom, niveau actuel, coûts
   - Temps construction
   - Bouton build (disabled si pas assez ressources)
-- [ ] File d'attente visuelle
+- [x] File d'attente visuelle
   - Countdown timer
   - Progression
-- [ ] Notifications build terminé (toast)
+- [x] Notifications build terminé (toast)
 
 **Livrables :**
-- ⏳ Construction bâtiments fonctionnelle (en cours)
-- ⏳ File d'attente (en cours)
+- ✅ Construction bâtiments fonctionnelle
+- ✅ File d'attente
 - ✅ Système de coûts équilibré (formules implémentées)
 
-**Progression actuelle :** 2/5 tâches backend complétées (40%)
+**Progression actuelle :** 5/5 tâches backend complétées (100%)
 
 **Commencé le :** 14 janvier 2026 (Session 9)
+**Complété le :** 15 janvier 2026 (Session 20)
 
 **Fichiers modifiés cette session :**
 - `packages/game-config/src/buildings.ts` - Ajout fonctions de calcul
