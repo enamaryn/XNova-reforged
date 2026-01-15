@@ -9,11 +9,11 @@ export declare class ResourcesService {
         productionLevel: number;
         name: string;
         id: string;
-        userId: string;
-        createdAt: Date;
         galaxy: number;
         system: number;
         position: number;
+        createdAt: Date;
+        userId: string;
         planetType: string;
         metal: number;
         crystal: number;

@@ -243,6 +243,7 @@ export class CombatService {
       defenderLosses: params.combat.defenderLosses as Prisma.InputJsonValue,
       result: params.combat.result,
       rounds: params.combat.rounds,
+      timeline: params.combat.timeline as Prisma.InputJsonValue,
       loot: params.loot as Prisma.InputJsonValue,
       debris: params.combat.debris as Prisma.InputJsonValue,
       galaxy: params.location.galaxy,

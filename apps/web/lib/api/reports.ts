@@ -21,6 +21,13 @@ export interface CombatReportDetail {
   defenderDefs: Record<string, number>;
   result: CombatResult;
   rounds: number;
+  timeline?: {
+    round: number;
+    attackerRemaining: Record<string, number>;
+    defenderRemaining: Record<string, number>;
+    attackerLosses: Record<string, number>;
+    defenderLosses: Record<string, number>;
+  }[];
   loot: {
     metal: number;
     crystal: number;

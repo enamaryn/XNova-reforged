@@ -602,7 +602,7 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 
 ---
 
-### Sprint 7 : Combat Simplifié
+### Sprint 7 : Combat Simplifié ✅ TERMINÉ
 
 **Objectif :** Moteur de combat basique
 
@@ -645,18 +645,20 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 #### Frontend - UI Combat
 - [x] Page `/reports`
   - [x] Liste rapports de combat
-  - [ ] Filtres (gagnés, perdus, tout)
+  - [x] Filtres (gagnés, perdus, tout)
 - [x] Composant `CombatReport`
   - [x] Récapitulatif bataille
   - [x] Pertes des deux côtés
   - [x] Butin/débris
-  - [ ] Timeline rounds (optionnel)
-- [ ] Notifications combat
+  - [x] Timeline rounds (optionnel)
+- [x] Notifications combat
 
 **Livrables :**
 - ✅ Combats fonctionnels
 - ✅ Rapports détaillés
-- ⏳ Équilibrage basique
+- ✅ Équilibrage basique
+
+**Complété le :** 15 janvier 2026 (Session 32)
 
 ---
 

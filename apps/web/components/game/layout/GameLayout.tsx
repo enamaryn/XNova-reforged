@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { GameHeader } from './GameHeader';
 import { GameSidebar } from './GameSidebar';
+import { CombatNotifications } from '../CombatNotifications';
 
 interface GameLayoutProps {
   children: React.ReactNode;
@@ -54,6 +55,8 @@ export function GameLayout({ children }: GameLayoutProps) {
           {children}
         </div>
       </main>
+
+      <CombatNotifications />
 
       {/* Navigation mobile rapide */}
       <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-800/80 bg-slate-950/90 backdrop-blur md:hidden">

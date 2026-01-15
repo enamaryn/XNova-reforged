@@ -284,6 +284,7 @@ model CombatReport {
   // Result
   result      String   // attacker_win, defender_win, draw
   rounds      Int      @default(1)
+  timeline    Json     // Timeline des rounds
 
   // Loot & Debris
   loot        Json     // { metal, crystal, deuterium }

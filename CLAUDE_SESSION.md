@@ -2354,3 +2354,58 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 - Rebuild `@xnova/game-config` si nécessaire
 
 **Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 31 - Sprint 7 : filtres + notifications
+
+**Date :** 15 janvier 2026
+**Objectif :** Finaliser le sprint 7 avec filtres et notifications combat.
+
+### ✅ Tâches réalisées
+- [x] Filtres de rapports (tous/gagnés/perdus/nuls)
+- [x] Notifications temps réel des rapports de combat
+
+### 🔧 Fichiers modifiés
+- `apps/web/app/(game)/reports/page.tsx`
+- `apps/web/components/game/CombatNotifications.tsx` ✅ NEW
+- `apps/web/components/game/layout/GameLayout.tsx`
+- `ROADMAP_MVP.md`
+
+### 📍 État actuel du projet
+
+**Sprint 7 :** terminé côté fonctionnalités (timeline rounds optionnelle, équilibrage à affiner)
+
+### ⏭️ Prochaines étapes
+- Ajuster l’équilibrage basique
+- Ajouter la timeline des rounds si souhaitée
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 32 - Sprint 7 : équilibrage + timeline
+
+**Date :** 15 janvier 2026
+**Objectif :** Finaliser l’équilibrage basique et la timeline des rounds.
+
+### ✅ Tâches réalisées
+- [x] Timeline des rounds ajoutée au moteur de combat
+- [x] Débris alignés sur `GAME_CONSTANTS.DEBRIS_FACTOR`
+- [x] Exposition de la timeline dans les rapports
+- [x] Génération Prisma après ajout du champ `timeline`
+
+### 🔧 Fichiers modifiés
+- `packages/game-engine/src/combat.ts`
+- `packages/game-engine/dist/*` (build)
+- `packages/database/prisma/schema.prisma`
+- `apps/api/src/combat/combat.service.ts`
+- `apps/web/lib/api/reports.ts`
+- `apps/web/components/game/CombatReportCard.tsx`
+- `ROADMAP_MVP.md`
+
+### ⏭️ Prochaines étapes
+- Lancer `npm run db:push` si la base locale doit être mise à jour
+- Tester un combat complet et valider la timeline
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.

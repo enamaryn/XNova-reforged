@@ -11,16 +11,16 @@ export declare class AuthController {
         accessToken: string;
     }>;
     getMe(userId: string): Promise<{
-        username: string;
-        email: string;
         id: string;
         createdAt: Date;
+        username: string;
+        email: string;
         updatedAt: Date;
         points: number;
         rank: number;
         planets: {
-            id: string;
             name: string;
+            id: string;
             galaxy: number;
             system: number;
             position: number;

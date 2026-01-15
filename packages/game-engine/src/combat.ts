@@ -1,4 +1,4 @@
-import { SHIPS } from '@xnova/game-config';
+import { GAME_CONSTANTS, SHIPS } from '@xnova/game-config';
 
 export interface CombatTechBonuses {
   weapon: number;
@@ -13,10 +13,19 @@ export interface CombatResultSummary {
   defenderRemaining: Record<number, number>;
   attackerLosses: Record<number, number>;
   defenderLosses: Record<number, number>;
+  timeline: CombatRoundSummary[];
   debris: {
     metal: number;
     crystal: number;
   };
+}
+
+export interface CombatRoundSummary {
+  round: number;
+  attackerRemaining: Record<number, number>;
+  defenderRemaining: Record<number, number>;
+  attackerLosses: Record<number, number>;
+  defenderLosses: Record<number, number>;
 }
 
 interface CombatUnit {
@@ -112,10 +121,11 @@ function computeDebris(
 
   accumulate(attackerLosses);
   accumulate(defenderLosses);
+  const factor = GAME_CONSTANTS.DEBRIS_FACTOR ?? 0.3;
 
   return {
-    metal: Math.floor(lostMetal * 0.3),
-    crystal: Math.floor(lostCrystal * 0.3),
+    metal: Math.floor(lostMetal * factor),
+    crystal: Math.floor(lostCrystal * factor),
   };
 }
 
@@ -126,11 +136,15 @@ export function simulateCombat(params: {
   defenderTech: CombatTechBonuses;
   maxRounds?: number;
 }): CombatResultSummary {
-  const maxRounds = params.maxRounds ?? 6;
+  const maxRounds =
+    params.maxRounds ?? GAME_CONSTANTS.MAX_COMBAT_ROUNDS ?? 6;
   const attackerUnits = createUnits(params.attackerShips, params.attackerTech);
   const defenderUnits = createUnits(params.defenderShips, params.defenderTech);
+  const timeline: CombatRoundSummary[] = [];
 
   let rounds = 0;
+  let previousAttacker = countByShip(attackerUnits);
+  let previousDefender = countByShip(defenderUnits);
 
   while (
     rounds < maxRounds &&
@@ -194,6 +208,22 @@ export function simulateCombat(params: {
 
     recoverShield(attackerUnits);
     recoverShield(defenderUnits);
+
+    const attackerRemaining = countByShip(attackerUnits);
+    const defenderRemaining = countByShip(defenderUnits);
+    const attackerLosses = computeLosses(previousAttacker, attackerRemaining);
+    const defenderLosses = computeLosses(previousDefender, defenderRemaining);
+
+    timeline.push({
+      round: rounds,
+      attackerRemaining,
+      defenderRemaining,
+      attackerLosses,
+      defenderLosses,
+    });
+
+    previousAttacker = attackerRemaining;
+    previousDefender = defenderRemaining;
   }
 
   const attackerRemaining = countByShip(attackerUnits);
@@ -215,6 +245,7 @@ export function simulateCombat(params: {
     defenderRemaining,
     attackerLosses,
     defenderLosses,
+    timeline,
     debris: computeDebris(attackerLosses, defenderLosses),
   };
 }
