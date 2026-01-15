@@ -447,6 +447,42 @@ Brancher les pages flotte/galaxie sur l'API et préparer la roadmap multi-langue
 ### ⚠️ Note
 - Outil TodoWrite non disponible dans cet environnement
 
+---
+
+## 📅 SESSION 18 - i18n + UX erreurs (15 janvier 2026)
+
+### 🎯 Objectif de la session
+Ajouter un système i18n (FR/EN/ES) et renforcer l’UX d’erreurs sur Fleet/Galaxy.
+
+### ✅ Tâches accomplies
+- [x] Provider i18n avec persistance locale
+- [x] Sélecteur de langue (drapeau) dans le header
+- [x] Traductions nav + fleet/galaxy + catégories techno
+- [x] États de chargement/erreur sur Fleet et Galaxy
+
+### 📁 Fichiers créés
+- `apps/web/lib/i18n/index.tsx` : provider + dictionnaires
+
+### 📁 Fichiers modifiés
+- `apps/web/app/providers.tsx` : ajout I18nProvider
+- `apps/web/components/game/layout/GameHeader.tsx` : sélecteur langue
+- `apps/web/components/game/layout/GameSidebar.tsx` : nav traduite
+- `apps/web/app/(game)/fleet/page.tsx` : i18n + erreurs
+- `apps/web/app/(game)/galaxy/page.tsx` : i18n + erreurs
+- `apps/web/app/(game)/research/page.tsx` : catégories traduites
+- `apps/web/app/(game)/research/[techId]/page.tsx` : catégories traduites
+
+### 🔎 État actuel du projet
+- Langues FR/EN/ES disponibles via le header
+- Fleet/Galaxy affichent des feedbacks UX clairs
+
+### 🔜 Prochaines étapes
+- Étendre les traductions à l’ensemble de l’UI
+- Ajouter gestion i18n côté backend si nécessaire
+
+### ⚠️ Note
+- Outil TodoWrite non disponible dans cet environnement
+
 - **redis** : Redis 7 Alpine
   - Port: 6379
   - Volume: redis_data

@@ -3,12 +3,14 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getGalaxySystem } from '@/lib/api/galaxy';
+import { useI18n } from '@/lib/i18n';
 
 export default function GalaxyPage() {
   const [galaxy, setGalaxy] = useState(1);
   const [system, setSystem] = useState(1);
+  const { t } = useI18n();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['galaxy', galaxy, system],
     queryFn: () => getGalaxySystem(galaxy, system),
   });
@@ -22,9 +24,9 @@ export default function GalaxyPage() {
     <div className="space-y-6">
       <div>
         <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">Exploration</p>
-        <h1 className="mt-2 text-2xl font-semibold text-white">Galaxie</h1>
+        <h1 className="mt-2 text-2xl font-semibold text-white">{t('galaxy.title')}</h1>
         <p className="text-sm text-slate-400">
-          Naviguez dans l’univers et repérez les systèmes disponibles.
+          {t('galaxy.subtitle')}
         </p>
       </div>
 
@@ -54,14 +56,19 @@ export default function GalaxyPage() {
             disabled
             className="rounded-full border border-slate-800 px-4 py-2 text-xs uppercase tracking-[0.2em] text-slate-500"
           >
-            Scanner (bientôt)
+            {t('galaxy.scanSoon')}
           </button>
         </div>
 
         <div className="mt-6 grid gap-2">
           {isLoading && (
             <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 px-4 py-3 text-sm text-slate-400">
-              Chargement du système...
+              {t('galaxy.loading')}
+            </div>
+          )}
+          {error && (
+            <div className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+              {t('common.error')}
             </div>
           )}
           {slots.map((slot) => (
@@ -78,11 +85,11 @@ export default function GalaxyPage() {
                     {slot.name} · {slot.owner}
                   </span>
                 ) : (
-                  <span className="text-slate-400">Position libre</span>
+                  <span className="text-slate-400">{t('galaxy.freeSlot')}</span>
                 )}
               </div>
               <div className="text-xs text-slate-500">
-                {slot.occupied ? (slot.isOwn ? 'Vous' : 'Contact') : '--'}
+                {slot.occupied ? (slot.isOwn ? t('common.you') : t('common.contact')) : '--'}
               </div>
             </div>
           ))}

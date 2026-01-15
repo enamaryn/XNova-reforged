@@ -1,5 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import { TECHNOLOGIES, getTechnologyCost } from '@xnova/game-config';
+import { useI18n } from '@/lib/i18n';
 
 interface ResearchDetailPageProps {
   params: { techId: string };
@@ -8,6 +11,7 @@ interface ResearchDetailPageProps {
 export default function ResearchDetailPage({ params }: ResearchDetailPageProps) {
   const techId = Number(params.techId);
   const tech = TECHNOLOGIES[techId];
+  const { t } = useI18n();
 
   if (!tech) {
     return (
@@ -53,7 +57,7 @@ export default function ResearchDetailPage({ params }: ResearchDetailPageProps) 
           <div className="mt-4 grid gap-3 text-sm text-slate-400">
             <div className="flex items-center justify-between rounded-xl bg-slate-900/60 px-4 py-3">
               <span>Catégorie</span>
-              <span className="font-mono text-slate-200">{getCategoryLabel(tech.category)}</span>
+              <span className="font-mono text-slate-200">{t(`techCategory.${tech.category}`)}</span>
             </div>
             <div className="flex items-center justify-between rounded-xl bg-slate-900/60 px-4 py-3">
               <span>Facteur</span>
@@ -110,14 +114,4 @@ export default function ResearchDetailPage({ params }: ResearchDetailPageProps) 
       </div>
     </div>
   );
-}
-
-function getCategoryLabel(category: string): string {
-  const labels: Record<string, string> = {
-    basic: 'Fondations',
-    drive: 'Propulsions',
-    advanced: 'Avancé',
-    combat: 'Combat',
-  };
-  return labels[category] || category;
 }

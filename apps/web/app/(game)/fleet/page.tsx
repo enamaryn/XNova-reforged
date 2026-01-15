@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { usePlanetStore } from '@/lib/stores/planet-store';
 import { getActiveFleets, getAvailableShips } from '@/lib/api/fleet';
+import { useI18n } from '@/lib/i18n';
 
 function formatCountdown(dateValue?: string | Date | null) {
   if (!dateValue) return '--';
@@ -20,15 +21,24 @@ export default function FleetPage() {
   const [mission, setMission] = useState('transport');
   const { user } = useAuthStore();
   const { selectedPlanetId } = usePlanetStore();
+  const { t } = useI18n();
   const planetId = selectedPlanetId || user?.planets?.[0]?.id;
 
-  const { data: shipsData } = useQuery({
+  const {
+    data: shipsData,
+    isLoading: shipsLoading,
+    error: shipsError,
+  } = useQuery({
     queryKey: ['fleet-available', planetId],
     queryFn: () => getAvailableShips(planetId!),
     enabled: !!planetId,
   });
 
-  const { data: activeFleets } = useQuery({
+  const {
+    data: activeFleets,
+    isLoading: fleetsLoading,
+    error: fleetsError,
+  } = useQuery({
     queryKey: ['fleet-active'],
     queryFn: () => getActiveFleets(),
   });
@@ -39,22 +49,32 @@ export default function FleetPage() {
     <div className="space-y-6">
       <div>
         <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">Commandement</p>
-        <h1 className="mt-2 text-2xl font-semibold text-white">Flotte</h1>
+        <h1 className="mt-2 text-2xl font-semibold text-white">{t('fleet.title')}</h1>
         <p className="text-sm text-slate-400">
-          Préparez vos mouvements et missions. Interface complète en cours.
+          {t('fleet.subtitle')}
         </p>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
         <div className="rounded-3xl border border-slate-800/80 bg-slate-950/60 p-6">
           <h2 className="text-xs uppercase tracking-[0.3em] text-slate-500">
-            Composer une flotte
+            {t('fleet.compose')}
           </h2>
           <div className="mt-4 grid gap-4">
             <div className="rounded-2xl bg-slate-900/60 p-4">
-              <p className="text-sm text-slate-300">Vaisseaux disponibles</p>
+              <p className="text-sm text-slate-300">{t('fleet.availableShips')}</p>
               <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                {ships.length === 0 && (
+                {shipsLoading && (
+                  <div className="rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-slate-400">
+                    {t('common.loading')}
+                  </div>
+                )}
+                {shipsError && (
+                  <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-300">
+                    {t('common.error')}
+                  </div>
+                )}
+                {!shipsLoading && !shipsError && ships.length === 0 && (
                   <div className="rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-slate-400">
                     Aucun vaisseau disponible.
                   </div>
@@ -72,13 +92,13 @@ export default function FleetPage() {
             </div>
 
             <div className="rounded-2xl bg-slate-900/60 p-4">
-              <p className="text-sm text-slate-300">Mission</p>
+              <p className="text-sm text-slate-300">{t('fleet.mission')}</p>
               <div className="mt-3 flex flex-wrap gap-2">
                 {[
-                  { id: 'transport', label: 'Transport' },
-                  { id: 'attaque', label: 'Attaque' },
-                  { id: 'espionnage', label: 'Espionnage' },
-                  { id: 'colonisation', label: 'Colonisation' },
+                  { id: 'transport', label: t('fleet.missions.transport') },
+                  { id: 'attaque', label: t('fleet.missions.attack') },
+                  { id: 'espionnage', label: t('fleet.missions.spy') },
+                  { id: 'colonisation', label: t('fleet.missions.colonize') },
                 ].map((item) => (
                   <button
                     key={item.id}
@@ -96,7 +116,7 @@ export default function FleetPage() {
             </div>
 
             <div className="rounded-2xl bg-slate-900/60 p-4">
-              <p className="text-sm text-slate-300">Destination</p>
+              <p className="text-sm text-slate-300">{t('fleet.destination')}</p>
               <div className="mt-3 grid gap-3 sm:grid-cols-3">
                 {['Galaxie', 'Système', 'Position'].map((label) => (
                   <label key={label} className="text-xs uppercase tracking-[0.2em] text-slate-500">
@@ -117,16 +137,26 @@ export default function FleetPage() {
             disabled
             className="mt-6 w-full rounded-xl bg-slate-800 py-3 text-sm font-semibold text-slate-500"
           >
-            Envoyer la flotte (bientôt)
+            {t('fleet.sendSoon')}
           </button>
         </div>
 
         <div className="rounded-3xl border border-slate-800/80 bg-slate-950/60 p-6">
           <h2 className="text-xs uppercase tracking-[0.3em] text-slate-500">
-            Flottes en cours
+            {t('fleet.active')}
           </h2>
           <div className="mt-4 space-y-3 text-sm text-slate-400">
-            {activeFleets && activeFleets.length > 0 ? (
+            {fleetsLoading && (
+              <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-4">
+                {t('common.loading')}
+              </div>
+            )}
+            {fleetsError && (
+              <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-red-300">
+                {t('common.error')}
+              </div>
+            )}
+            {!fleetsLoading && !fleetsError && activeFleets && activeFleets.length > 0 ? (
               activeFleets.map((fleet) => (
                 <div
                   key={fleet.id}
@@ -147,16 +177,16 @@ export default function FleetPage() {
                   </div>
                 </div>
               ))
-            ) : (
+            ) : !fleetsLoading && !fleetsError ? (
               <>
                 <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-4">
-                  Aucune flotte en déplacement.
+                  {t('fleet.none')}
                 </div>
                 <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-4">
-                  Dernière mission : aucune.
+                  {t('fleet.last')}
                 </div>
               </>
-            )}
+            ) : null}
           </div>
         </div>
       </div>

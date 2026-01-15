@@ -1,15 +1,12 @@
+'use client';
+
 import Link from 'next/link';
 import { TECHNOLOGIES } from '@xnova/game-config';
-
-const categoryLabels: Record<string, string> = {
-  basic: 'Fondations',
-  drive: 'Propulsions',
-  advanced: 'Avancé',
-  combat: 'Combat',
-};
+import { useI18n } from '@/lib/i18n';
 
 export default function ResearchPage() {
   const technologies = Object.values(TECHNOLOGIES);
+  const { t } = useI18n();
 
   return (
     <div className="space-y-6">
@@ -31,7 +28,7 @@ export default function ResearchPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-[10px] uppercase tracking-[0.25em] text-slate-500">
-                  {categoryLabels[tech.category] || tech.category}
+                  {t(`techCategory.${tech.category}`)}
                 </p>
                 <h2 className="mt-2 text-lg font-semibold text-white">{tech.name}</h2>
                 <p className="mt-2 text-sm text-slate-400 line-clamp-2">

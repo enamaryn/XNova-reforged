@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { ResourceBar } from './ResourceBar';
 import { PlanetSelector } from './PlanetSelector';
+import { useI18n } from '@/lib/i18n';
 
 interface GameHeaderProps {
   onMenuToggle: () => void;
@@ -13,6 +14,8 @@ interface GameHeaderProps {
 export function GameHeader({ onMenuToggle }: GameHeaderProps) {
   const { user, reset } = useAuthStore();
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showLangMenu, setShowLangMenu] = useState(false);
+  const { locale, setLocale, t } = useI18n();
 
   const handleLogout = () => {
     reset();
@@ -48,10 +51,10 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
         <div className="hidden md:flex items-center gap-6">
           <nav className="flex items-center gap-2 text-xs text-slate-300">
             {[
-              { href: '/overview', label: 'Vue' },
-              { href: '/buildings', label: 'Bâtiments' },
-              { href: '/research', label: 'Recherche' },
-              { href: '/galaxy', label: 'Galaxie' },
+              { href: '/overview', label: t('nav.overview') },
+              { href: '/buildings', label: t('nav.buildings') },
+              { href: '/research', label: t('nav.research') },
+              { href: '/galaxy', label: t('nav.galaxy') },
             ].map((item) => (
               <Link
                 key={item.href}
@@ -68,6 +71,51 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
         {/* Droite: Planète + Utilisateur */}
         <div className="flex items-center gap-3">
           <PlanetSelector />
+
+          <div className="relative">
+            <button
+              onClick={() => setShowLangMenu(!showLangMenu)}
+              className="flex items-center gap-2 rounded-full border border-slate-800 px-3 py-1.5 text-xs text-slate-300 hover:border-slate-600 hover:text-white transition-colors"
+              aria-label={t('common.language')}
+            >
+              <span className="text-base">
+                {locale === 'fr' ? '🇫🇷' : locale === 'en' ? '🇬🇧' : '🇪🇸'}
+              </span>
+              <span className="hidden sm:block uppercase tracking-[0.2em]">{locale}</span>
+            </button>
+
+            {showLangMenu && (
+              <>
+                <div
+                  className="fixed inset-0 z-10"
+                  onClick={() => setShowLangMenu(false)}
+                />
+                <div className="absolute right-0 top-full z-20 mt-2 w-40 rounded-2xl border border-slate-800 bg-slate-950/95 py-2 shadow-xl">
+                  {[
+                    { code: 'fr', label: 'Français', flag: '🇫🇷' },
+                    { code: 'en', label: 'English', flag: '🇬🇧' },
+                    { code: 'es', label: 'Español', flag: '🇪🇸' },
+                  ].map((item) => (
+                    <button
+                      key={item.code}
+                      onClick={() => {
+                        setLocale(item.code as typeof locale);
+                        setShowLangMenu(false);
+                      }}
+                      className={`flex w-full items-center gap-2 px-3 py-2 text-sm transition-colors ${
+                        locale === item.code
+                          ? 'text-blue-300 bg-blue-500/10'
+                          : 'text-slate-300 hover:bg-slate-900'
+                      }`}
+                    >
+                      <span>{item.flag}</span>
+                      <span>{item.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
 
           {/* Menu utilisateur */}
           <div className="relative">
