@@ -819,9 +819,9 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 - [x] Tests E2E Playwright
   - [x] Parcours inscription → connexion
   - [x] Correctif Playwright (regex URL `/overview`)
-  - [ ] Parcours build bâtiment
-  - [ ] Parcours envoi flotte
-  - [ ] Parcours combat
+  - [x] Parcours build bâtiment
+  - [x] Parcours envoi flotte
+  - [x] Parcours combat
 - [ ] Pré-requis Playwright (deps système Fedora via `dnf`)
 - [ ] Tests unitaires critiques
   - Services calculs (ressources, combat)

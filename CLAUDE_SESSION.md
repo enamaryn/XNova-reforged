@@ -2156,6 +2156,30 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 
 ---
 
+## ✅ Session 38 - Sprint 10 : E2E restants
+
+**Date :** 16/01/2026
+**Objectif :** Ajouter les E2E build, flotte et combat pour le sprint 10.
+
+### ✅ Tâches réalisées
+- [x] Test E2E construction bâtiment
+- [x] Test E2E envoi flotte (seed Prisma)
+- [x] Test E2E rapport combat (seed Prisma)
+
+### 🔧 Fichiers créés/modifiés
+- `tests/e2e/buildings.spec.ts`
+- `tests/e2e/fleet.spec.ts`
+- `tests/e2e/combat.spec.ts`
+- `ROADMAP_MVP.md`
+
+### ⏭️ Prochaines étapes
+- Relancer `npx playwright test --browser=chromium`
+- Régler la dépendance WebKit (`libjpeg.so.8`) ou rester Chromium-only
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
 ## ✅ Session 36 - Sprint 10 : correctif Playwright
 
 **Date :** 16/01/2026
