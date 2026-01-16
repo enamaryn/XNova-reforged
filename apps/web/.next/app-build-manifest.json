@@ -31,10 +31,15 @@
       "static/chunks/main-app.js",
       "static/chunks/app/(game)/overview/page.js"
     ],
-    "/(game)/buildings/page": [
+    "/(game)/alliance/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(game)/buildings/page.js"
+      "static/chunks/app/(game)/alliance/page.js"
+    ],
+    "/(game)/messages/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(game)/messages/page.js"
     ]
   }
 }

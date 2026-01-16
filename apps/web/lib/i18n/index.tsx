@@ -29,6 +29,7 @@ const translations: Record<Locale, Dictionary> = {
       statistics: "Statistiques",
       reports: "Rapports",
       options: "Options",
+      admin: "Admin",
     },
     sidebar: {
       principal: "Principal",
@@ -220,6 +221,7 @@ const translations: Record<Locale, Dictionary> = {
       statistics: "Statistics",
       reports: "Reports",
       options: "Options",
+      admin: "Admin",
     },
     sidebar: {
       principal: "Main",
@@ -411,6 +413,7 @@ const translations: Record<Locale, Dictionary> = {
       statistics: "Estadísticas",
       reports: "Reportes",
       options: "Opciones",
+      admin: "Admin",
     },
     sidebar: {
       principal: "Principal",

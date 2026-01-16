@@ -152,6 +152,15 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
                   >
                     Paramètres
                   </Link>
+                  {user?.role?.toUpperCase() === 'ADMIN' && (
+                    <Link
+                      href="/admin"
+                      className="block px-3 py-2 text-sm text-slate-300 hover:bg-slate-700 transition-colors"
+                      onClick={() => setShowUserMenu(false)}
+                    >
+                      Administration
+                    </Link>
+                  )}
                   <Link
                     href="/messages"
                     className="block px-3 py-2 text-sm text-slate-300 hover:bg-slate-700 transition-colors"

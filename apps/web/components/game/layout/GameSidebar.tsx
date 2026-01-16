@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useI18n } from '@/lib/i18n';
+import { useAuthStore } from '@/lib/stores/auth-store';
 
 interface GameSidebarProps {
   isOpen: boolean;
@@ -39,11 +40,14 @@ const navItems: NavItem[] = [
   { href: '/statistics', label: 'nav.statistics', icon: '📊', category: 'autre' },
   { href: '/reports', label: 'nav.reports', icon: '⚔️', category: 'autre' },
   { href: '/options', label: 'nav.options', icon: '⚙️', category: 'autre' },
+  { href: '/admin', label: 'nav.admin', icon: '🛠️', category: 'autre' },
 ];
 
 export function GameSidebar({ isOpen, onClose }: GameSidebarProps) {
   const pathname = usePathname();
   const { t } = useI18n();
+  const { user } = useAuthStore();
+  const isAdmin = user?.role?.toUpperCase() === 'ADMIN';
 
   const categoryLabels: Record<string, string> = {
     principal: t('sidebar.principal'),
@@ -54,7 +58,9 @@ export function GameSidebar({ isOpen, onClose }: GameSidebarProps) {
   };
 
   // Grouper par catégorie
-  const groupedItems = navItems.reduce((acc, item) => {
+  const groupedItems = navItems
+    .filter((item) => (item.href === '/admin' ? isAdmin : true))
+    .reduce((acc, item) => {
     const cat = item.category || 'autre';
     if (!acc[cat]) acc[cat] = [];
     acc[cat].push(item);
@@ -118,6 +124,7 @@ export function GameSidebar({ isOpen, onClose }: GameSidebarProps) {
               <ul className="space-y-1">
                 {items.map((item) => {
                   const isActive = pathname === item.href;
+                  const showAdminBadge = item.href === '/admin';
                   return (
                     <li key={item.href}>
                       <Link
@@ -131,8 +138,17 @@ export function GameSidebar({ isOpen, onClose }: GameSidebarProps) {
                       >
                         <span className="text-lg w-6 text-center">{item.icon}</span>
                         <span>{t(item.label)}</span>
-                        {isActive && (
-                          <div className="ml-auto h-1.5 w-1.5 rounded-full bg-blue-400 shadow-[0_0_6px_rgba(59,130,246,0.8)]" />
+                        {(showAdminBadge || isActive) && (
+                          <div className="ml-auto flex items-center gap-2">
+                            {showAdminBadge && (
+                              <span className="rounded-full border border-amber-400/40 bg-amber-500/10 px-2 py-0.5 text-[10px] uppercase tracking-[0.2em] text-amber-200">
+                                Admin
+                              </span>
+                            )}
+                            {isActive && (
+                              <div className="h-1.5 w-1.5 rounded-full bg-blue-400 shadow-[0_0_6px_rgba(59,130,246,0.8)]" />
+                            )}
+                          </div>
                         )}
                       </Link>
                     </li>

@@ -2430,6 +2430,75 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 
 ---
 
+## ✅ Session 43 - Promotion admin
+
+**Date :** 16 janvier 2026
+**Objectif :** Promouvoir l’utilisateur "basic" en ADMIN.
+
+### ✅ Tâches réalisées
+- [x] Mise à jour du role de l’utilisateur "basic" en ADMIN via SQL
+
+### 🔧 Fichiers modifiés
+- Aucun (mise à jour DB)
+
+### 📍 État actuel du projet
+
+**Sprint 9.5 :** terminé.
+
+### ⏭️ Prochaines étapes
+- Redémarrer l’API si besoin pour refléter le role en session
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 44 - Lien admin UI
+
+**Date :** 16 janvier 2026
+**Objectif :** Afficher l’accès admin dans l’UI pour les comptes ADMIN.
+
+### ✅ Tâches réalisées
+- [x] Ajout du lien admin dans la sidebar et le menu utilisateur
+- [x] Ajout des traductions nav pour "Admin"
+
+### 🔧 Fichiers modifiés
+- `apps/web/components/game/layout/GameSidebar.tsx`
+- `apps/web/components/game/layout/GameHeader.tsx`
+- `apps/web/lib/i18n/index.tsx`
+
+### 📍 État actuel du projet
+
+**Sprint 9.5 :** terminé.
+
+### ⏭️ Prochaines étapes
+- Recharger la session pour récupérer le role admin côté client
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 45 - Badge admin sidebar
+
+**Date :** 16 janvier 2026
+**Objectif :** Ajouter un badge admin dans la sidebar.
+
+### ✅ Tâches réalisées
+- [x] Badge "Admin" affiché sur l’entrée sidebar dédiée
+
+### 🔧 Fichiers modifiés
+- `apps/web/components/game/layout/GameSidebar.tsx`
+
+### 📍 État actuel du projet
+
+**Sprint 9.5 :** terminé.
+
+### ⏭️ Prochaines étapes
+- Recharger la session pour confirmer l’affichage du badge admin
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
 ## ✅ Session 24 - Roadmap admin + nettoyage + clôture Sprint 6
 
 **Date :** 15 janvier 2026

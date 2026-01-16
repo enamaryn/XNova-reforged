@@ -1,6 +1,7 @@
 {
   "/page": "app/page.js",
-  "/(auth)/login/page": "app/(auth)/login/page.js",
   "/(game)/overview/page": "app/(game)/overview/page.js",
-  "/(game)/buildings/page": "app/(game)/buildings/page.js"
+  "/(game)/alliance/page": "app/(game)/alliance/page.js",
+  "/(game)/messages/page": "app/(game)/messages/page.js",
+  "/(auth)/login/page": "app/(auth)/login/page.js"
 }
