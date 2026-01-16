@@ -6,6 +6,7 @@ import { useAuthStore } from '@/lib/stores/auth-store';
 import { ResourceBar } from './ResourceBar';
 import { PlanetSelector } from './PlanetSelector';
 import { useI18n } from '@/lib/i18n';
+import { hasAdminAccess } from '@/lib/roles';
 
 interface GameHeaderProps {
   onMenuToggle: () => void;
@@ -152,7 +153,7 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
                   >
                     Paramètres
                   </Link>
-                  {user?.role?.toUpperCase() === 'ADMIN' && (
+                  {hasAdminAccess(user?.role) && (
                     <Link
                       href="/admin"
                       className="block px-3 py-2 text-sm text-slate-300 hover:bg-slate-700 transition-colors"

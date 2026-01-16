@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useI18n } from '@/lib/i18n';
 import { useAuthStore } from '@/lib/stores/auth-store';
+import { hasAdminAccess } from '@/lib/roles';
 
 interface GameSidebarProps {
   isOpen: boolean;
@@ -47,7 +48,7 @@ export function GameSidebar({ isOpen, onClose }: GameSidebarProps) {
   const pathname = usePathname();
   const { t } = useI18n();
   const { user } = useAuthStore();
-  const isAdmin = user?.role?.toUpperCase() === 'ADMIN';
+  const isAdmin = hasAdminAccess(user?.role);
 
   const categoryLabels: Record<string, string> = {
     principal: t('sidebar.principal'),

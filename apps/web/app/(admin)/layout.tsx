@@ -4,11 +4,12 @@ import Link from 'next/link';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { useI18n } from '@/lib/i18n';
+import { hasAdminAccess } from '@/lib/roles';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const { user } = useAuthStore();
   const { t } = useI18n();
-  const isAdmin = user?.role?.toUpperCase() === 'ADMIN';
+  const isAdmin = hasAdminAccess(user?.role);
 
   return (
     <ProtectedRoute>

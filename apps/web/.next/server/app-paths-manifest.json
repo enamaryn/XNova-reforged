@@ -1,6 +1,8 @@
 {
+  "/page": "app/page.js",
   "/(auth)/login/page": "app/(auth)/login/page.js",
   "/(game)/overview/page": "app/(game)/overview/page.js",
-  "/(game)/buildings/page": "app/(game)/buildings/page.js",
-  "/(game)/research/page": "app/(game)/research/page.js"
+  "/(game)/options/page": "app/(game)/options/page.js",
+  "/(admin)/admin/page": "app/(admin)/admin/page.js",
+  "/(game)/settings/page": "app/(game)/settings/page.js"
 }

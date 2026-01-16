@@ -2636,6 +2636,56 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 
 ---
 
+## ✅ Session 51 - Acces super admin UI
+
+**Date :** 16 janvier 2026
+**Objectif :** Corriger les checks UI pour SUPER_ADMIN.
+
+### ✅ Tâches réalisées
+- [x] Sidebar + menu user + layout admin autorisent SUPER_ADMIN
+
+### 🔧 Fichiers modifiés
+- `apps/web/components/game/layout/GameSidebar.tsx`
+- `apps/web/components/game/layout/GameHeader.tsx`
+- `apps/web/app/(admin)/layout.tsx`
+
+### 📍 État actuel du projet
+
+**Sprint 9.5 :** terminé.
+
+### ⏭️ Prochaines étapes
+- Recharger l’app web pour vérifier l’accès admin
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 52 - Helper roles admin
+
+**Date :** 16 janvier 2026
+**Objectif :** Centraliser la verification d’accès admin côté UI.
+
+### ✅ Tâches réalisées
+- [x] Helper `hasAdminAccess` ajouté
+- [x] Sidebar, header et layout admin raccordés
+
+### 🔧 Fichiers créés/modifiés
+- `apps/web/lib/roles.ts` ✅ NEW
+- `apps/web/components/game/layout/GameSidebar.tsx`
+- `apps/web/components/game/layout/GameHeader.tsx`
+- `apps/web/app/(admin)/layout.tsx`
+
+### 📍 État actuel du projet
+
+**Sprint 9.5 :** terminé.
+
+### ⏭️ Prochaines étapes
+- Redemarrer le web si le cache persiste
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
 ## ✅ Session 24 - Roadmap admin + nettoyage + clôture Sprint 6
 
 **Date :** 15 janvier 2026
