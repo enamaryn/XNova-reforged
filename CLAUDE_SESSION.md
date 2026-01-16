@@ -2185,6 +2185,101 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 
 ---
 
+## ✅ Session 36 - Roadmaps : multi-langue JSON
+
+**Date :** 15 janvier 2026
+**Objectif :** Ajouter l’option multi-langue via fichiers JSON dans les roadmaps.
+
+### ✅ Tâches réalisées
+- [x] Ajout de la tâche multi-langue (JSON) dans la roadmap MVP
+- [x] Ajout du détail JSON dans la roadmap complète
+
+### 🔧 Fichiers modifiés
+- `ROADMAP_MVP.md`
+- `ROADMAP_COMPLET.md`
+
+### 📍 État actuel du projet
+
+**Sprint 8 :** terminé (galaxie/colonisation/scan).
+
+### ⏭️ Prochaines étapes
+- Démarrer le sprint 9 (messagerie/alliances)
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ⏳ Session 37 - Démarrage Sprint 9
+
+**Date :** 15 janvier 2026
+**Objectif :** Lancer le sprint 9 (messagerie + alliances).
+
+### ✅ Tâches réalisées
+- [x] Passage du sprint 9 en cours dans la roadmap MVP
+
+### 🔧 Fichiers modifiés
+- `ROADMAP_MVP.md`
+
+### 📍 État actuel du projet
+
+**Sprint 9 :** en cours.
+
+### ⏭️ Prochaines étapes
+- Commencer par le schéma Prisma (Message, Alliance, AllianceMember)
+- Ajouter endpoints messagerie/alliances
+- Construire l’UI `/messages` puis `/alliance`
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ⏳ Session 38 - Sprint 9 : messages + alliances
+
+**Date :** 15 janvier 2026
+**Objectif :** Avancer le sprint 9 (messagerie + alliances).
+
+### ✅ Tâches réalisées
+- [x] Module social API (messages + alliances)
+- [x] Endpoints messagerie/alliances
+- [x] UI `/messages` et `/alliance`
+- [x] Traductions FR/EN/ES pour messages + alliances
+- [x] Roadmap mise à jour pour le sprint 9
+
+### 🔧 Fichiers créés/modifiés
+
+**Backend :**
+- `apps/api/src/social/alliances.controller.ts` ✅ NEW
+- `apps/api/src/social/alliances.service.ts` ✅ NEW
+- `apps/api/src/social/messages.controller.ts` ✅ NEW
+- `apps/api/src/social/messages.service.ts` ✅ NEW
+- `apps/api/src/social/social.module.ts` ✅ NEW
+- `apps/api/src/social/dto/create-alliance.dto.ts` ✅ NEW
+- `apps/api/src/social/dto/invite-alliance.dto.ts` ✅ NEW
+- `apps/api/src/social/dto/send-message.dto.ts` ✅ NEW
+- `apps/api/src/app.module.ts`
+
+**Frontend :**
+- `apps/web/lib/api/messages.ts` ✅ NEW
+- `apps/web/lib/api/alliances.ts` ✅ NEW
+- `apps/web/app/(game)/messages/page.tsx` ✅ NEW
+- `apps/web/app/(game)/alliance/page.tsx` ✅ NEW
+- `apps/web/lib/i18n/index.tsx`
+
+**Documentation :**
+- `ROADMAP_MVP.md`
+
+### 📍 État actuel du projet
+
+**Sprint 9 :** en cours (page `/statistics` restante).
+
+### ⏭️ Prochaines étapes
+- Implémenter `/statistics` (classements joueurs + alliances)
+- Ajouter des tests basiques d’API si besoin
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
 ## ✅ Session 24 - Roadmap admin + nettoyage + clôture Sprint 6
 
 **Date :** 15 janvier 2026

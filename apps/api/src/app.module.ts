@@ -11,6 +11,7 @@ import { FleetModule } from './fleet/fleet.module';
 import { GalaxyModule } from './galaxy/galaxy.module';
 import { ResearchModule } from './research/research.module';
 import { ShipyardModule } from './shipyard/shipyard.module';
+import { SocialModule } from './social/social.module';
 
 @Module({
   imports: [
@@ -52,6 +53,9 @@ import { ShipyardModule } from './shipyard/shipyard.module';
 
     // Module chantier spatial
     ShipyardModule,
+
+    // Module social (messages + alliances)
+    SocialModule,
   ],
   controllers: [],
   providers: [],

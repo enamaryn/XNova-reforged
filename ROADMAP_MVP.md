@@ -701,12 +701,12 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 
 ## 📅 PHASE 4 : Social & Polish (Semaine 13-16)
 
-### Sprint 9 : Système Social
+### Sprint 9 : Système Social ⏳ EN COURS
 
 **Objectif :** Messagerie et alliances
 
 #### Backend - Module Social
-- [ ] Schema Prisma
+- [x] Schema Prisma
   ```prisma
   model Message {
     id         String   @id @default(uuid())
@@ -739,29 +739,29 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
     joinedAt   DateTime @default(now())
   }
   ```
-- [ ] Endpoints messagerie :
-  - `GET /messages/inbox`
-  - `GET /messages/:id`
-  - `POST /messages/send`
-  - `DELETE /messages/:id`
-- [ ] Endpoints alliances :
-  - `POST /alliances/create`
-  - `POST /alliances/:id/invite`
-  - `POST /alliances/:id/join`
-  - `GET /alliances/:id`
-  - `DELETE /alliances/:id/leave`
+- [x] Endpoints messagerie :
+  - [x] `GET /messages/inbox`
+  - [x] `GET /messages/:id`
+  - [x] `POST /messages/send`
+  - [x] `DELETE /messages/:id`
+- [x] Endpoints alliances :
+  - [x] `POST /alliances/create`
+  - [x] `POST /alliances/:id/invite`
+  - [x] `POST /alliances/:id/join`
+  - [x] `GET /alliances/:id`
+  - [x] `DELETE /alliances/:id/leave`
 
 #### Frontend - UI Social
-- [ ] Page `/messages`
-  - Inbox (non lus en gras)
-  - Nouveau message
-  - Lecture message
-  - Suppression
-- [ ] Page `/alliance`
-  - Création alliance
-  - Liste membres
-  - Invitations
-  - Description
+- [x] Page `/messages`
+  - [x] Inbox (non lus en gras)
+  - [x] Nouveau message
+  - [x] Lecture message
+  - [x] Suppression
+- [x] Page `/alliance`
+  - [x] Création alliance
+  - [x] Liste membres
+  - [x] Invitations
+  - [x] Description
 - [ ] Page `/statistics`
   - Classements joueurs
   - Top alliances
@@ -839,6 +839,7 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 - [ ] Durées constructions
 
 #### UI/UX Polish
+- [ ] Multi-langue via fichiers JSON par langue (dossier `locales/`)
 - [ ] Design system cohérent
 - [ ] Animations fluides
 - [ ] États de chargement partout

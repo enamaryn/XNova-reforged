@@ -806,6 +806,7 @@ Cette roadmap étend le MVP avec des fonctionnalités avancées pour créer un M
   - Bouton drapeau FR en haut à droite
   - Langues disponibles : Français, Anglais, Espagnol
   - Traductions UI complètes
+  - Fichiers JSON par langue (dossier `locales/`)
 - [ ] Thèmes customisables
   - Dark mode / Light mode
   - Thèmes presets (Cyber, Space, Classic)
