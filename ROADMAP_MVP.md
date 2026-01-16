@@ -662,35 +662,35 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 
 ---
 
-### Sprint 8 : Galaxie & Exploration
+### Sprint 8 : Galaxie & Exploration ✅ TERMINÉ
 
 **Objectif :** Vue galaxie et colonisation
 
 #### Backend - Module Galaxy
-- [ ] Génération galaxie au démarrage
+- [x] Génération galaxie au démarrage
   - 9 galaxies
   - 499 systèmes par galaxie
   - 15 positions par système
   - Planètes joueurs + planètes abandonnées
-- [ ] Endpoints :
-  - `GET /galaxy/:galaxy/:system`
-  - `POST /planets/colonize`
-  - `GET /planets/scan/:id` (scan ressources)
+- [x] Endpoints :
+  - [x] `GET /galaxy/:galaxy/:system`
+  - [x] `POST /planets/colonize`
+  - [x] `GET /planets/scan/:id` (scan ressources)
 
 #### Frontend - UI Galaxy
-- [ ] Page `/galaxy`
-  - Sélecteurs galaxie/système
-  - Tableau 15 positions
-  - Infos planètes :
-    - Nom joueur
-    - Alliance
-    - Activité (dernière connexion)
-    - Lune
-  - Boutons actions (espionner, attaquer, transporter)
-- [ ] UI colonisation
-  - Vaisseau colon requis
-  - Choix position libre
-  - Nom planète
+- [x] Page `/galaxy`
+  - [x] Sélecteurs galaxie/système
+  - [x] Tableau 15 positions
+  - [x] Infos planètes :
+    - [x] Nom joueur
+    - [x] Alliance
+    - [x] Activité
+    - [x] Lune
+  - [x] Boutons actions (espionner, attaquer, transporter)
+- [x] UI colonisation
+  - [x] Vaisseau colon requis
+  - [x] Choix position libre
+  - [x] Nom planète
 
 **Livrables :**
 - ✅ Vue galaxie fonctionnelle

@@ -7,13 +7,12 @@ export declare class ResourcesService {
     getPlanet(planetId: string, userId: string): Promise<{
         storage: import("@xnova/game-engine").StorageCapacity;
         productionLevel: number;
-        name: string;
         id: string;
+        userId: string;
+        name: string;
         galaxy: number;
         system: number;
         position: number;
-        createdAt: Date;
-        userId: string;
         planetType: string;
         metal: number;
         crystal: number;
@@ -44,6 +43,7 @@ export declare class ResourcesService {
         phalanx: number;
         jumpGate: number;
         lastUpdate: Date;
+        createdAt: Date;
     }>;
     getPlanetResources(planetId: string, userId: string): Promise<{
         planetId: string;
@@ -66,11 +66,39 @@ export declare class ResourcesService {
         lastUpdate: Date;
     }>;
     renamePlanet(planetId: string, userId: string, name: string): Promise<{
-        name: string;
         id: string;
+        name: string;
         galaxy: number;
         system: number;
         position: number;
+    }>;
+    scanPlanet(planetId: string): Promise<{
+        id: string;
+        name: string;
+        galaxy: number;
+        system: number;
+        position: number;
+        owner: string;
+        resources: {
+            metal: number;
+            crystal: number;
+            deuterium: number;
+        };
+    }>;
+    colonizePlanet(params: {
+        userId: string;
+        originPlanetId: string;
+        galaxy: number;
+        system: number;
+        position: number;
+        name: string;
+    }): Promise<{
+        success: boolean;
+        planetId: string;
+        galaxy: number;
+        system: number;
+        position: number;
+        name: string;
     }>;
     private refreshPlanet;
     private mapResources;

@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { ResourcesService } from './resources.service';
+import { ColonizePlanetDto } from './dto/colonize-planet.dto';
 import { RenamePlanetDto } from './dto/rename-planet.dto';
 
 @UseGuards(JwtAuthGuard)
@@ -23,6 +24,26 @@ export class ResourcesController {
     @CurrentUser('id') userId: string,
   ) {
     return this.resourcesService.getPlanetResources(planetId, userId);
+  }
+
+  @Get('scan/:planetId')
+  scanPlanet(@Param('planetId') planetId: string) {
+    return this.resourcesService.scanPlanet(planetId);
+  }
+
+  @Post('colonize')
+  colonizePlanet(
+    @Body() dto: ColonizePlanetDto,
+    @CurrentUser('id') userId: string,
+  ) {
+    return this.resourcesService.colonizePlanet({
+      userId,
+      originPlanetId: dto.originPlanetId,
+      galaxy: dto.galaxy,
+      system: dto.system,
+      position: dto.position,
+      name: dto.name,
+    });
   }
 
   @Put(':planetId')

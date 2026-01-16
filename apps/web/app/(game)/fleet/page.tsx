@@ -9,6 +9,7 @@ import {
   calculateFlightDurationSeconds,
   calculateFuelConsumption,
 } from '@xnova/game-engine';
+import { useSearchParams } from 'next/navigation';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { usePlanetStore } from '@/lib/stores/planet-store';
 import { getActiveFleets, getAvailableShips, sendFleet } from '@/lib/api/fleet';
@@ -45,6 +46,7 @@ export default function FleetPage() {
   const [destination, setDestination] = useState({ galaxy: 1, system: 1, position: 1 });
   const [nowMs, setNowMs] = useState(Date.now());
   const queryClient = useQueryClient();
+  const searchParams = useSearchParams();
   const { user } = useAuthStore();
   const { selectedPlanetId } = usePlanetStore();
   const { t } = useI18n();
@@ -54,6 +56,32 @@ export default function FleetPage() {
     const interval = setInterval(() => setNowMs(Date.now()), 1000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    const missionParam = searchParams.get('mission');
+    const galaxyParam = searchParams.get('galaxy');
+    const systemParam = searchParams.get('system');
+    const positionParam = searchParams.get('position');
+
+    if (missionParam) {
+      if (missionParam === 'attack') setMission('attaque');
+      if (missionParam === 'transport') setMission('transport');
+      if (missionParam === 'spy') setMission('espionnage');
+      if (missionParam === 'colonize') setMission('colonisation');
+    }
+
+    const galaxyValue = galaxyParam ? Number(galaxyParam) : null;
+    const systemValue = systemParam ? Number(systemParam) : null;
+    const positionValue = positionParam ? Number(positionParam) : null;
+
+    if (galaxyValue || systemValue || positionValue) {
+      setDestination((prev) => ({
+        galaxy: galaxyValue ?? prev.galaxy,
+        system: systemValue ?? prev.system,
+        position: positionValue ?? prev.position,
+      }));
+    }
+  }, [searchParams]);
 
   const {
     data: shipsData,

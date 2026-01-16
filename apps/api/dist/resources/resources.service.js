@@ -13,6 +13,7 @@ exports.ResourcesService = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const game_engine_1 = require("@xnova/game-engine");
+const game_config_1 = require("@xnova/game-config");
 const database_service_1 = require("../database/database.service");
 let ResourcesService = class ResourcesService {
     constructor(database, configService) {
@@ -72,6 +73,109 @@ let ResourcesService = class ResourcesService {
             },
         });
         return updated;
+    }
+    async scanPlanet(planetId) {
+        const planet = await this.database.planet.findUnique({
+            where: { id: planetId },
+            include: {
+                user: { select: { id: true, username: true } },
+            },
+        });
+        if (!planet) {
+            throw new common_1.NotFoundException('Planete introuvable');
+        }
+        return {
+            id: planet.id,
+            name: planet.name,
+            galaxy: planet.galaxy,
+            system: planet.system,
+            position: planet.position,
+            owner: planet.user?.username ?? 'Inconnu',
+            resources: {
+                metal: planet.metal,
+                crystal: planet.crystal,
+                deuterium: planet.deuterium,
+            },
+        };
+    }
+    async colonizePlanet(params) {
+        const { userId, originPlanetId, galaxy, system, position, name } = params;
+        if (galaxy < 1 ||
+            galaxy > game_config_1.GAME_CONSTANTS.MAX_GALAXIES ||
+            system < 1 ||
+            system > game_config_1.GAME_CONSTANTS.MAX_SYSTEMS ||
+            position < 1 ||
+            position > game_config_1.GAME_CONSTANTS.MAX_POSITIONS) {
+            throw new common_1.BadRequestException('Coordonnees invalides');
+        }
+        const planetCount = await this.database.planet.count({
+            where: { userId },
+        });
+        if (planetCount >= game_config_1.GAME_CONSTANTS.MAX_PLAYER_PLANETS) {
+            throw new common_1.BadRequestException('Nombre maximal de planetes atteint');
+        }
+        const origin = await this.database.planet.findUnique({
+            where: { id: originPlanetId },
+        });
+        if (!origin) {
+            throw new common_1.NotFoundException('Planete d\'origine introuvable');
+        }
+        if (origin.userId !== userId) {
+            throw new common_1.ForbiddenException('Acces refuse');
+        }
+        const existing = await this.database.planet.findUnique({
+            where: {
+                galaxy_system_position: {
+                    galaxy,
+                    system,
+                    position,
+                },
+            },
+        });
+        if (existing) {
+            throw new common_1.BadRequestException('Position deja occupee');
+        }
+        const colonizer = await this.database.ship.findUnique({
+            where: {
+                planetId_shipId: {
+                    planetId: originPlanetId,
+                    shipId: 208,
+                },
+            },
+        });
+        if (!colonizer || colonizer.amount < 1) {
+            throw new common_1.BadRequestException('Vaisseau de colonisation requis');
+        }
+        const planetName = name?.trim() || 'Colonie';
+        const [createdPlanet] = await this.database.$transaction([
+            this.database.planet.create({
+                data: {
+                    userId,
+                    name: planetName,
+                    galaxy,
+                    system,
+                    position,
+                    planetType: 'normal',
+                    metal: game_config_1.GAME_CONSTANTS.STARTING_METAL,
+                    crystal: game_config_1.GAME_CONSTANTS.STARTING_CRYSTAL,
+                    deuterium: game_config_1.GAME_CONSTANTS.STARTING_DEUTERIUM,
+                    fieldsMax: game_config_1.GAME_CONSTANTS.INITIAL_FIELDS,
+                    fieldsUsed: 0,
+                },
+            }),
+            this.database.ship.update({
+                where: { planetId_shipId: { planetId: originPlanetId, shipId: 208 } },
+                data: { amount: { decrement: 1 } },
+            }),
+        ]);
+        return {
+            success: true,
+            planetId: createdPlanet.id,
+            galaxy,
+            system,
+            position,
+            name: createdPlanet.name,
+        };
     }
     async refreshPlanet(planetId, userId) {
         const planet = await this.database.planet.findUnique({

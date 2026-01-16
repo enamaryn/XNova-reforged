@@ -90,6 +90,9 @@ const translations: Record<Locale, Dictionary> = {
       scanSoon: "Scanner (bientôt)",
       freeSlot: "Position libre",
       loading: "Chargement du système...",
+      activity: "Activité",
+      activeNow: "Actif",
+      moon: "Lune",
     },
     common: {
       language: "Langue",
@@ -181,6 +184,9 @@ const translations: Record<Locale, Dictionary> = {
       scanSoon: "Scan (soon)",
       freeSlot: "Empty slot",
       loading: "Loading system...",
+      activity: "Activity",
+      activeNow: "Online",
+      moon: "Moon",
     },
     common: {
       language: "Language",
@@ -272,6 +278,9 @@ const translations: Record<Locale, Dictionary> = {
       scanSoon: "Escanear (pronto)",
       freeSlot: "Posición libre",
       loading: "Cargando sistema...",
+      activity: "Actividad",
+      activeNow: "Activo",
+      moon: "Luna",
     },
     common: {
       language: "Idioma",

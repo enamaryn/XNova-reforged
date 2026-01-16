@@ -2156,6 +2156,35 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 
 ---
 
+## ✅ Session 35 - Sprint 8 : génération galaxie + infos
+
+**Date :** 15 janvier 2026
+**Objectif :** Implémenter la génération de galaxie et enrichir la vue (alliance, activité, lune).
+
+### ✅ Tâches réalisées
+- [x] Génération de planètes abandonnées au démarrage
+- [x] Exposition alliance/activité/lune dans la réponse galaxie
+- [x] Affichage alliance/activité/lune côté UI
+- [x] Mise à jour des types et traductions
+
+### 🔧 Fichiers modifiés
+- `apps/api/src/galaxy/galaxy.service.ts`
+- `apps/web/lib/api/galaxy.ts`
+- `apps/web/app/(game)/galaxy/page.tsx`
+- `apps/web/lib/i18n/index.tsx`
+- `ROADMAP_MVP.md`
+
+### 📍 État actuel du projet
+
+**Sprint 8 :** terminé (galaxie/colonisation/scan).
+
+### ⏭️ Prochaines étapes
+- Démarrer le sprint 9 (messagerie/alliances)
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
 ## ✅ Session 24 - Roadmap admin + nettoyage + clôture Sprint 6
 
 **Date :** 15 janvier 2026
@@ -2422,5 +2451,42 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 
 ### 🔧 Fichiers modifiés
 - `apps/api/src/combat/combat.service.ts`
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 34 - Sprint 8 : Galaxy & Colonisation (démarrage)
+
+**Date :** 15 janvier 2026
+**Objectif :** Ajouter colonisation + scan et actions de galaxie.
+
+### ✅ Tâches réalisées
+- [x] Endpoint `POST /planets/colonize` (validation + conso vaisseau colon)
+- [x] Endpoint `GET /planets/scan/:id`
+- [x] UI galaxie : espionner + attaquer/transport (prérempli) + coloniser
+
+### 🔧 Fichiers créés/modifiés
+
+**Backend :**
+- `apps/api/src/resources/resources.service.ts`
+- `apps/api/src/resources/resources.controller.ts`
+- `apps/api/src/resources/dto/colonize-planet.dto.ts` ✅ NEW
+
+**Frontend :**
+- `apps/web/lib/api/galaxy.ts`
+- `apps/web/app/(game)/galaxy/page.tsx`
+- `apps/web/app/(game)/fleet/page.tsx`
+
+**Documentation :**
+- `ROADMAP_MVP.md`
+
+### 📍 État actuel du projet
+
+**Sprint 8 :** ⏳ génération galaxie au démarrage encore à faire
+
+### ⏭️ Prochaines étapes
+- Implémenter la génération galaxie au démarrage (données persistées ou générées)
+- Ajuster la vue galaxie (alliance/activité/lune)
 
 **Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.

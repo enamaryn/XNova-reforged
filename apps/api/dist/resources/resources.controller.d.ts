@@ -1,4 +1,5 @@
 import { ResourcesService } from './resources.service';
+import { ColonizePlanetDto } from './dto/colonize-planet.dto';
 import { RenamePlanetDto } from './dto/rename-planet.dto';
 export declare class ResourcesController {
     private readonly resourcesService;
@@ -6,13 +7,12 @@ export declare class ResourcesController {
     getPlanet(planetId: string, userId: string): Promise<{
         storage: import("@xnova/game-engine").StorageCapacity;
         productionLevel: number;
-        name: string;
         id: string;
+        userId: string;
+        name: string;
         galaxy: number;
         system: number;
         position: number;
-        createdAt: Date;
-        userId: string;
         planetType: string;
         metal: number;
         crystal: number;
@@ -43,6 +43,7 @@ export declare class ResourcesController {
         phalanx: number;
         jumpGate: number;
         lastUpdate: Date;
+        createdAt: Date;
     }>;
     getPlanetResources(planetId: string, userId: string): Promise<{
         planetId: string;
@@ -64,9 +65,30 @@ export declare class ResourcesController {
         storage: import("@xnova/game-engine").StorageCapacity;
         lastUpdate: Date;
     }>;
-    renamePlanet(planetId: string, dto: RenamePlanetDto, userId: string): Promise<{
-        name: string;
+    scanPlanet(planetId: string): Promise<{
         id: string;
+        name: string;
+        galaxy: number;
+        system: number;
+        position: number;
+        owner: string;
+        resources: {
+            metal: number;
+            crystal: number;
+            deuterium: number;
+        };
+    }>;
+    colonizePlanet(dto: ColonizePlanetDto, userId: string): Promise<{
+        success: boolean;
+        planetId: string;
+        galaxy: number;
+        system: number;
+        position: number;
+        name: string;
+    }>;
+    renamePlanet(planetId: string, dto: RenamePlanetDto, userId: string): Promise<{
+        id: string;
+        name: string;
         galaxy: number;
         system: number;
         position: number;

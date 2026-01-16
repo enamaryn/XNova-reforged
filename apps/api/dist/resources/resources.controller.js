@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
 const current_user_decorator_1 = require("../common/decorators/current-user.decorator");
 const resources_service_1 = require("./resources.service");
+const colonize_planet_dto_1 = require("./dto/colonize-planet.dto");
 const rename_planet_dto_1 = require("./dto/rename-planet.dto");
 let ResourcesController = class ResourcesController {
     constructor(resourcesService) {
@@ -27,6 +28,19 @@ let ResourcesController = class ResourcesController {
     }
     getPlanetResources(planetId, userId) {
         return this.resourcesService.getPlanetResources(planetId, userId);
+    }
+    scanPlanet(planetId) {
+        return this.resourcesService.scanPlanet(planetId);
+    }
+    colonizePlanet(dto, userId) {
+        return this.resourcesService.colonizePlanet({
+            userId,
+            originPlanetId: dto.originPlanetId,
+            galaxy: dto.galaxy,
+            system: dto.system,
+            position: dto.position,
+            name: dto.name,
+        });
     }
     renamePlanet(planetId, dto, userId) {
         return this.resourcesService.renamePlanet(planetId, userId, dto.name);
@@ -49,6 +63,21 @@ __decorate([
     __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", void 0)
 ], ResourcesController.prototype, "getPlanetResources", null);
+__decorate([
+    (0, common_1.Get)('scan/:planetId'),
+    __param(0, (0, common_1.Param)('planetId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], ResourcesController.prototype, "scanPlanet", null);
+__decorate([
+    (0, common_1.Post)('colonize'),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, current_user_decorator_1.CurrentUser)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [colonize_planet_dto_1.ColonizePlanetDto, String]),
+    __metadata("design:returntype", void 0)
+], ResourcesController.prototype, "colonizePlanet", null);
 __decorate([
     (0, common_1.Put)(':planetId'),
     __param(0, (0, common_1.Param)('planetId')),
