@@ -796,6 +796,15 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
   - [x] Multiplicateurs ressources de base
 - [x] Écran “Vue générale” (statut serveur)
 
+#### Extensions admin (addons)
+- [x] Gestion des rôles (MODERATOR/ADMIN/SUPER_ADMIN) + promotion joueur
+- [x] Modération : bannir/débannir + historique
+- [x] Audit log détaillé consultable
+- [ ] Mode maintenance (message global + whitelist admin)
+- [ ] Profil joueur avancé (stats, IP, activité)
+- [ ] Anti-cheat basique (alertes seuils)
+- [ ] Macros admin (reset éco, recalc points)
+
 **Livrables :**
 - ✅ Paramètres globaux modifiables en live
 - ✅ Traçabilité des changements

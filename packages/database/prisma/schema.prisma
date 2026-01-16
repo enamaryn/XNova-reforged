@@ -16,7 +16,9 @@ datasource db {
 
 enum UserRole {
   PLAYER
+  MODERATOR
   ADMIN
+  SUPER_ADMIN
 }
 
 // ============================================
@@ -29,6 +31,9 @@ model User {
   email     String   @unique
   password  String   // Hashed with Argon2
   role      UserRole @default(PLAYER)
+  bannedUntil DateTime?
+  banReason String?
+  bannedAt  DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -42,6 +47,8 @@ model User {
   sentMessages  Message[]      @relation("SentMessages")
   allianceMember AllianceMember?
   adminLogs     AdminAuditLog[]
+  banLogs       UserBanLog[] @relation("UserBanLogTarget")
+  banActorLogs  UserBanLog[] @relation("UserBanLogActor")
 
   // Stats
   points        Int      @default(0)
@@ -402,5 +409,21 @@ model AdminAuditLog {
   createdAt DateTime @default(now())
 
   @@index([userId])
+  @@index([createdAt])
+}
+
+model UserBanLog {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation("UserBanLogTarget", fields: [userId], references: [id], onDelete: Cascade)
+  actorId   String
+  actor     User     @relation("UserBanLogActor", fields: [actorId], references: [id], onDelete: Cascade)
+  action    String
+  reason    String?
+  expiresAt DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([actorId])
   @@index([createdAt])
 }

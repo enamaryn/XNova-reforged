@@ -1,7 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 import { ServerConfigService } from '../server-config/server-config.service';
 import { UpdateConfigDto } from './dto/update-config.dto';
+import { UpdateRoleDto } from './dto/update-role.dto';
+import { BanUserDto } from './dto/ban-user.dto';
+import { UnbanUserDto } from './dto/unban-user.dto';
 
 @Injectable()
 export class AdminService {
@@ -16,6 +19,187 @@ export class AdminService {
 
   async updateConfig(userId: string, dto: UpdateConfigDto) {
     return this.serverConfig.updateConfig(userId, dto);
+  }
+
+  async updateUserRole(actorId: string, dto: UpdateRoleDto) {
+    const user = await this.database.user.findUnique({
+      where: { username: dto.username },
+      select: { id: true, username: true, role: true },
+    });
+
+    if (!user) {
+      throw new NotFoundException('Utilisateur introuvable');
+    }
+
+    if (user.role === dto.role) {
+      return { id: user.id, username: user.username, role: user.role };
+    }
+
+    const updated = await this.database.user.update({
+      where: { id: user.id },
+      data: { role: dto.role },
+      select: { id: true, username: true, role: true },
+    });
+
+    await this.database.adminAuditLog.create({
+      data: {
+        userId: actorId,
+        action: 'update_role',
+        changes: {
+          targetId: user.id,
+          targetUsername: user.username,
+          before: user.role,
+          after: dto.role,
+        },
+      },
+    });
+
+    return updated;
+  }
+
+  async banUser(actorId: string, dto: BanUserDto) {
+    const target = await this.database.user.findUnique({
+      where: { username: dto.username },
+      select: { id: true, username: true, bannedUntil: true },
+    });
+
+    if (!target) {
+      throw new NotFoundException('Utilisateur introuvable');
+    }
+
+    const durationMinutes =
+      (dto.days ?? 0) * 24 * 60 + (dto.hours ?? 0) * 60 + (dto.minutes ?? 0);
+
+    if (durationMinutes < 0) {
+      throw new BadRequestException('Duree invalide');
+    }
+
+    const expiresAt = durationMinutes > 0 ? new Date(Date.now() + durationMinutes * 60000) : null;
+    const now = new Date();
+
+    await this.database.$transaction([
+      this.database.user.update({
+        where: { id: target.id },
+        data: {
+          bannedUntil: expiresAt,
+          banReason: dto.reason?.trim() || null,
+          bannedAt: now,
+        },
+      }),
+      this.database.userBanLog.create({
+        data: {
+          userId: target.id,
+          actorId,
+          action: 'ban',
+          reason: dto.reason?.trim() || null,
+          expiresAt,
+        },
+      }),
+      this.database.adminAuditLog.create({
+        data: {
+          userId: actorId,
+          action: 'ban_user',
+          changes: {
+            targetId: target.id,
+            targetUsername: target.username,
+            expiresAt,
+            reason: dto.reason?.trim() || null,
+          },
+        },
+      }),
+    ]);
+
+    return { success: true, expiresAt };
+  }
+
+  async unbanUser(actorId: string, dto: UnbanUserDto) {
+    const target = await this.database.user.findUnique({
+      where: { username: dto.username },
+      select: { id: true, username: true },
+    });
+
+    if (!target) {
+      throw new NotFoundException('Utilisateur introuvable');
+    }
+
+    await this.database.$transaction([
+      this.database.user.update({
+        where: { id: target.id },
+        data: {
+          bannedUntil: null,
+          banReason: null,
+          bannedAt: null,
+        },
+      }),
+      this.database.userBanLog.create({
+        data: {
+          userId: target.id,
+          actorId,
+          action: 'unban',
+          reason: dto.reason?.trim() || null,
+        },
+      }),
+      this.database.adminAuditLog.create({
+        data: {
+          userId: actorId,
+          action: 'unban_user',
+          changes: {
+            targetId: target.id,
+            targetUsername: target.username,
+            reason: dto.reason?.trim() || null,
+          },
+        },
+      }),
+    ]);
+
+    return { success: true };
+  }
+
+  async getAuditLogs(limit = 50) {
+    const safeLimit = Math.min(Math.max(limit, 1), 200);
+    return this.database.adminAuditLog.findMany({
+      take: safeLimit,
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        action: true,
+        changes: true,
+        createdAt: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+      },
+    });
+  }
+
+  async getBanLogs(limit = 50) {
+    const safeLimit = Math.min(Math.max(limit, 1), 200);
+    return this.database.userBanLog.findMany({
+      take: safeLimit,
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        action: true,
+        reason: true,
+        expiresAt: true,
+        createdAt: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+        actor: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+      },
+    });
   }
 
   async getOverview() {

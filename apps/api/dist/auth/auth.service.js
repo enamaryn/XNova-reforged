@@ -108,6 +108,20 @@ let AuthService = class AuthService {
         if (!user) {
             throw new common_1.UnauthorizedException('Identifiants incorrects');
         }
+        const now = new Date();
+        if (user.bannedAt && (!user.bannedUntil || user.bannedUntil > now)) {
+            throw new common_1.UnauthorizedException('Compte suspendu temporairement');
+        }
+        if (user.bannedUntil && user.bannedUntil <= now && user.bannedAt) {
+            await this.database.user.update({
+                where: { id: user.id },
+                data: {
+                    bannedUntil: null,
+                    banReason: null,
+                    bannedAt: null,
+                },
+            });
+        }
         const isPasswordValid = await argon2.verify(user.password, password);
         if (!isPasswordValid) {
             throw new common_1.UnauthorizedException('Identifiants incorrects');

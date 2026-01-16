@@ -10,6 +10,7 @@ export declare class ResourcesController {
         id: string;
         name: string;
         userId: string;
+        createdAt: Date;
         galaxy: number;
         system: number;
         position: number;
@@ -43,7 +44,6 @@ export declare class ResourcesController {
         phalanx: number;
         jumpGate: number;
         lastUpdate: Date;
-        createdAt: Date;
     }>;
     getPlanetResources(planetId: string, userId: string): Promise<{
         planetId: string;

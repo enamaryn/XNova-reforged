@@ -2499,6 +2499,95 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 
 ---
 
+## ✅ Session 46 - Propositions panneau admin
+
+**Date :** 16 janvier 2026
+**Objectif :** Proposer des améliorations et addons pour le panneau admin XNova Reforged.
+
+### ✅ Tâches réalisées
+- [x] Propositions fonctionnelles et UX pour le futur panneau admin
+
+### 🔧 Fichiers modifiés
+- Aucun (proposition uniquement)
+
+### 📍 État actuel du projet
+
+**Sprint 9.5 :** terminé.
+
+### ⏭️ Prochaines étapes
+- Valider les modules admin prioritaires à implémenter
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 47 - Extensions admin (roles/moderation/audit)
+
+**Date :** 16 janvier 2026
+**Objectif :** Ajouter les extensions admin (roles, moderation, audit).
+
+### ✅ Tâches réalisées
+- [x] Roles MODERATOR/ADMIN/SUPER_ADMIN + RBAC
+- [x] Promotion de joueur (endpoint + UI)
+- [x] Ban/deban + historique
+- [x] Audit log consultable
+- [x] Roadmap mise a jour (addons admin)
+
+### 🔧 Fichiers créés/modifiés
+
+**Backend :**
+- `packages/database/prisma/schema.prisma`
+- `apps/api/src/common/decorators/roles.decorator.ts` ✅ NEW
+- `apps/api/src/common/guards/roles.guard.ts` ✅ NEW
+- `apps/api/src/admin/admin.controller.ts`
+- `apps/api/src/admin/admin.service.ts`
+- `apps/api/src/admin/dto/update-role.dto.ts` ✅ NEW
+- `apps/api/src/admin/dto/ban-user.dto.ts` ✅ NEW
+- `apps/api/src/admin/dto/unban-user.dto.ts` ✅ NEW
+- `apps/api/src/auth/auth.service.ts`
+
+**Frontend :**
+- `apps/web/lib/api/admin.ts`
+- `apps/web/app/(admin)/admin/page.tsx`
+- `apps/web/lib/i18n/index.tsx`
+
+**Documentation :**
+- `ROADMAP_MVP.md`
+
+### 📍 État actuel du projet
+
+**Sprint 9.5 :** terminé (extensions ajoutées).
+
+### ⏭️ Prochaines étapes
+- Lancer `npm run db:push` + `npx prisma generate`
+- Tester /admin (roles, ban, logs)
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 48 - Promotion super admin
+
+**Date :** 16 janvier 2026
+**Objectif :** Passer l’utilisateur "basic" en SUPER_ADMIN.
+
+### ✅ Tâches réalisées
+- [x] Mise à jour du role de "basic" en SUPER_ADMIN via SQL
+
+### 🔧 Fichiers modifiés
+- Aucun (mise à jour DB)
+
+### 📍 État actuel du projet
+
+**Sprint 9.5 :** terminé.
+
+### ⏭️ Prochaines étapes
+- Se reconnecter pour charger le nouveau role
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
 ## ✅ Session 24 - Roadmap admin + nettoyage + clôture Sprint 6
 
 **Date :** 15 janvier 2026
