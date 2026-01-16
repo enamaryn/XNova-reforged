@@ -8,8 +8,8 @@ export declare class ResourcesController {
         storage: import("@xnova/game-engine").StorageCapacity;
         productionLevel: number;
         id: string;
-        userId: string;
         name: string;
+        userId: string;
         galaxy: number;
         system: number;
         position: number;

@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
 import { DatabaseService } from '../database/database.service';
+import { ServerConfigService } from '../server-config/server-config.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { AuthResponseDto } from './dto/auth-response.dto';
@@ -18,6 +19,7 @@ export class AuthService {
     private readonly database: DatabaseService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly serverConfig: ServerConfigService,
   ) {}
 
   /**
@@ -71,6 +73,7 @@ export class AuthService {
         email: user.email,
         points: user.points,
         rank: user.rank,
+        role: user.role,
         createdAt: user.createdAt,
       },
       tokens,
@@ -120,6 +123,7 @@ export class AuthService {
         email: user.email,
         points: user.points,
         rank: user.rank,
+        role: user.role,
         createdAt: user.createdAt,
       },
       tokens,
@@ -175,6 +179,7 @@ export class AuthService {
         email: true,
         points: true,
         rank: true,
+        role: true,
         createdAt: true,
         updatedAt: true,
         planets: {
@@ -250,6 +255,8 @@ export class AuthService {
     }
 
     // Créer la planète avec ressources de départ
+    const config = await this.serverConfig.getConfig();
+
     await this.database.planet.create({
       data: {
         userId,
@@ -261,7 +268,7 @@ export class AuthService {
         metal: 500,
         crystal: 500,
         deuterium: 0,
-        fieldsMax: 163,
+        fieldsMax: config.planetSize,
         fieldsUsed: 0,
       },
     });

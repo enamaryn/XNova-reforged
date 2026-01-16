@@ -5,6 +5,7 @@ export class AuthResponseDto {
     email: string;
     points: number;
     rank: number;
+    role: string;
     createdAt: Date;
   };
 

@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ServerConfigService } from '../server-config/server-config.service';
 import {
   BUILDINGS,
   getBuildingCost,
@@ -41,7 +41,7 @@ const BUILDING_FIELD_MAP: Record<number, string> = {
 export class BuildingsService {
   constructor(
     private readonly database: DatabaseService,
-    private readonly configService: ConfigService,
+    private readonly serverConfig: ServerConfigService,
     private readonly gameEvents: GameEventsGateway,
   ) {}
 
@@ -195,7 +195,7 @@ export class BuildingsService {
     });
 
     // Appliquer le game speed
-    const gameSpeed = this.getNumber('GAME_SPEED', 1);
+    const { gameSpeed } = await this.serverConfig.getConfig();
     const adjustedTime = Math.max(1, Math.floor(buildTimeSeconds / gameSpeed));
 
     const now = new Date();
@@ -457,10 +457,4 @@ export class BuildingsService {
     };
   }
 
-  private getNumber(key: string, fallback: number): number {
-    const rawValue = this.configService.get<string>(key);
-    if (!rawValue) return fallback;
-    const parsed = Number(rawValue);
-    return Number.isNaN(parsed) ? fallback : parsed;
-  }
 }

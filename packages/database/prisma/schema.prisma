@@ -11,6 +11,15 @@ datasource db {
 }
 
 // ============================================
+// ENUMS
+// ============================================
+
+enum UserRole {
+  PLAYER
+  ADMIN
+}
+
+// ============================================
 // USER & AUTHENTICATION
 // ============================================
 
@@ -19,6 +28,7 @@ model User {
   username  String   @unique
   email     String   @unique
   password  String   // Hashed with Argon2
+  role      UserRole @default(PLAYER)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -31,6 +41,7 @@ model User {
   messages      Message[]      @relation("ReceivedMessages")
   sentMessages  Message[]      @relation("SentMessages")
   allianceMember AllianceMember?
+  adminLogs     AdminAuditLog[]
 
   // Stats
   points        Int      @default(0)
@@ -376,4 +387,20 @@ model GameConfig {
   value String
 
   @@index([key])
+}
+
+// ============================================
+// ADMIN AUDIT LOGS
+// ============================================
+
+model AdminAuditLog {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action    String
+  changes   Json
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
 }

@@ -4,7 +4,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import {
   updateResources,
   type ResourceConfig,
@@ -13,12 +12,13 @@ import {
 } from '@xnova/game-engine';
 import { GAME_CONSTANTS } from '@xnova/game-config';
 import { DatabaseService } from '../database/database.service';
+import { ServerConfigService } from '../server-config/server-config.service';
 
 @Injectable()
 export class ResourcesService {
   constructor(
     private readonly database: DatabaseService,
-    private readonly configService: ConfigService,
+    private readonly serverConfig: ServerConfigService,
   ) {}
 
   async getPlanet(planetId: string, userId: string) {
@@ -177,6 +177,7 @@ export class ResourcesService {
     }
 
     const planetName = name?.trim() || 'Colonie';
+    const config = await this.serverConfig.getConfig();
 
     const [createdPlanet] = await this.database.$transaction([
       this.database.planet.create({
@@ -190,7 +191,7 @@ export class ResourcesService {
           metal: GAME_CONSTANTS.STARTING_METAL,
           crystal: GAME_CONSTANTS.STARTING_CRYSTAL,
           deuterium: GAME_CONSTANTS.STARTING_DEUTERIUM,
-          fieldsMax: GAME_CONSTANTS.INITIAL_FIELDS,
+          fieldsMax: config.planetSize,
           fieldsUsed: 0,
         },
       }),
@@ -228,7 +229,7 @@ export class ResourcesService {
       levels: this.mapLevels(planet),
       lastUpdate: planet.lastUpdate,
       now: new Date(),
-      config: this.buildConfig(),
+      config: await this.buildConfig(),
     });
 
     const updatedPlanet = await this.database.planet.update({
@@ -286,25 +287,7 @@ export class ResourcesService {
     };
   }
 
-  private buildConfig(): ResourceConfig {
-    return {
-      baseIncome: {
-        metal: 20,
-        crystal: 10,
-        deuterium: 0,
-      },
-      resourceMultiplier: this.getNumber('RESOURCE_MULTIPLIER', 1),
-      gameSpeed: this.getNumber('GAME_SPEED', 1),
-      storageBase: 1_000_000,
-      storageFactor: 1.5,
-      storageOverflow: 1.1,
-    };
-  }
-
-  private getNumber(key: string, fallback: number) {
-    const rawValue = this.configService.get<string>(key);
-    if (!rawValue) return fallback;
-    const parsed = Number(rawValue);
-    return Number.isNaN(parsed) ? fallback : parsed;
+  private buildConfig(): Promise<ResourceConfig> {
+    return this.serverConfig.getResourceConfig();
   }
 }

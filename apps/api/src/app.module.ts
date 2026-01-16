@@ -13,6 +13,8 @@ import { ResearchModule } from './research/research.module';
 import { ShipyardModule } from './shipyard/shipyard.module';
 import { SocialModule } from './social/social.module';
 import { StatisticsModule } from './statistics/statistics.module';
+import { AdminModule } from './admin/admin.module';
+import { ServerConfigModule } from './server-config/server-config.module';
 
 @Module({
   imports: [
@@ -60,6 +62,12 @@ import { StatisticsModule } from './statistics/statistics.module';
 
     // Module statistiques
     StatisticsModule,
+
+    // Module configuration serveur (partagé)
+    ServerConfigModule,
+
+    // Module administration
+    AdminModule,
   ],
   controllers: [],
   providers: [],

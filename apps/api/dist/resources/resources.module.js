@@ -12,12 +12,13 @@ const resources_controller_1 = require("./resources.controller");
 const resources_service_1 = require("./resources.service");
 const resources_cron_service_1 = require("./resources-cron.service");
 const game_events_module_1 = require("../game-events/game-events.module");
+const server_config_module_1 = require("../server-config/server-config.module");
 let ResourcesModule = class ResourcesModule {
 };
 exports.ResourcesModule = ResourcesModule;
 exports.ResourcesModule = ResourcesModule = __decorate([
     (0, common_1.Module)({
-        imports: [game_events_module_1.GameEventsModule],
+        imports: [game_events_module_1.GameEventsModule, server_config_module_1.ServerConfigModule],
         controllers: [resources_controller_1.ResourcesController],
         providers: [resources_service_1.ResourcesService, resources_cron_service_1.ResourcesCronService],
         exports: [resources_service_1.ResourcesService],

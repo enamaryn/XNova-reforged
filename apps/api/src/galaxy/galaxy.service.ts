@@ -1,6 +1,7 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { GAME_CONSTANTS } from '@xnova/game-config';
 import { DatabaseService } from '../database/database.service';
+import { ServerConfigService } from '../server-config/server-config.service';
 
 const MAX_POSITIONS = GAME_CONSTANTS.MAX_POSITIONS;
 const ABANDONED_USER = {
@@ -13,7 +14,10 @@ const ABANDONED_PLANETS = 200;
 export class GalaxyService implements OnModuleInit {
   private readonly logger = new Logger(GalaxyService.name);
 
-  constructor(private readonly database: DatabaseService) {}
+  constructor(
+    private readonly database: DatabaseService,
+    private readonly serverConfig: ServerConfigService,
+  ) {}
 
   async onModuleInit() {
     await this.seedGalaxy();
@@ -116,6 +120,8 @@ export class GalaxyService implements OnModuleInit {
       occupied.add(`${planet.galaxy}:${planet.system}:${planet.position}`);
     });
 
+    const config = await this.serverConfig.getConfig();
+
     const planets: {
       userId: string;
       name: string;
@@ -155,7 +161,7 @@ export class GalaxyService implements OnModuleInit {
         metal: 0,
         crystal: 0,
         deuterium: 0,
-        fieldsMax: GAME_CONSTANTS.INITIAL_FIELDS,
+        fieldsMax: config.planetSize,
         fieldsUsed: 0,
       });
     }

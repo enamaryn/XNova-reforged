@@ -58,6 +58,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
           email: string;
           points: number;
           rank: number;
+          role?: string;
           createdAt: string;
           planets?: Array<{
             id: string;

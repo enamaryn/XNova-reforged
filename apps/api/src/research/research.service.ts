@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ServerConfigService } from '../server-config/server-config.service';
 import {
   BUILDINGS,
   TECHNOLOGIES,
@@ -17,7 +17,7 @@ import { GameEventsGateway } from '../game-events/game-events.gateway';
 export class ResearchService {
   constructor(
     private readonly database: DatabaseService,
-    private readonly configService: ConfigService,
+    private readonly serverConfig: ServerConfigService,
     private readonly gameEvents: GameEventsGateway,
   ) {}
 
@@ -141,7 +141,7 @@ export class ResearchService {
       cost,
       labLevel: planet.researchLab,
     });
-    const gameSpeed = this.getNumber('GAME_SPEED', 1);
+    const { gameSpeed } = await this.serverConfig.getConfig();
     const adjustedTime = Math.max(1, Math.floor(buildTimeSeconds / gameSpeed));
 
     const now = new Date();
@@ -402,10 +402,4 @@ export class ResearchService {
     return Math.max(1, Math.floor(base / divisor));
   }
 
-  private getNumber(key: string, fallback: number): number {
-    const rawValue = this.configService.get<string>(key);
-    if (!rawValue) return fallback;
-    const parsed = Number(rawValue);
-    return Number.isNaN(parsed) ? fallback : parsed;
-  }
 }

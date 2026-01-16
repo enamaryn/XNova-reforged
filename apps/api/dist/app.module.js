@@ -20,6 +20,10 @@ const fleet_module_1 = require("./fleet/fleet.module");
 const galaxy_module_1 = require("./galaxy/galaxy.module");
 const research_module_1 = require("./research/research.module");
 const shipyard_module_1 = require("./shipyard/shipyard.module");
+const social_module_1 = require("./social/social.module");
+const statistics_module_1 = require("./statistics/statistics.module");
+const admin_module_1 = require("./admin/admin.module");
+const server_config_module_1 = require("./server-config/server-config.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -41,6 +45,10 @@ exports.AppModule = AppModule = __decorate([
             galaxy_module_1.GalaxyModule,
             research_module_1.ResearchModule,
             shipyard_module_1.ShipyardModule,
+            social_module_1.SocialModule,
+            statistics_module_1.StatisticsModule,
+            server_config_module_1.ServerConfigModule,
+            admin_module_1.AdminModule,
         ],
         controllers: [],
         providers: [],

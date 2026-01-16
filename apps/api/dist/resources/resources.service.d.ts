@@ -1,15 +1,15 @@
-import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '../database/database.service';
+import { ServerConfigService } from '../server-config/server-config.service';
 export declare class ResourcesService {
     private readonly database;
-    private readonly configService;
-    constructor(database: DatabaseService, configService: ConfigService);
+    private readonly serverConfig;
+    constructor(database: DatabaseService, serverConfig: ServerConfigService);
     getPlanet(planetId: string, userId: string): Promise<{
         storage: import("@xnova/game-engine").StorageCapacity;
         productionLevel: number;
         id: string;
-        userId: string;
         name: string;
+        userId: string;
         galaxy: number;
         system: number;
         position: number;
@@ -104,5 +104,4 @@ export declare class ResourcesService {
     private mapResources;
     private mapLevels;
     private buildConfig;
-    private getNumber;
 }

@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ServerConfigService } from '../server-config/server-config.service';
 import { BUILDINGS, SHIPS, TECHNOLOGIES, type ShipCost } from '@xnova/game-config';
 import { DatabaseService } from '../database/database.service';
 
@@ -12,7 +12,7 @@ import { DatabaseService } from '../database/database.service';
 export class ShipyardService {
   constructor(
     private readonly database: DatabaseService,
-    private readonly configService: ConfigService,
+    private readonly serverConfig: ServerConfigService,
   ) {}
 
   async getShipyard(planetId: string, userId: string) {
@@ -146,7 +146,7 @@ export class ShipyardService {
     });
 
     const totalTimeSeconds = timePerUnit * safeAmount;
-    const gameSpeed = this.getNumber('GAME_SPEED', 1);
+    const { gameSpeed } = await this.serverConfig.getConfig();
     const adjustedTime = Math.max(1, Math.floor(totalTimeSeconds / gameSpeed));
 
     const now = new Date();
@@ -458,10 +458,4 @@ export class ShipyardService {
     };
   }
 
-  private getNumber(key: string, fallback: number): number {
-    const rawValue = this.configService.get<string>(key);
-    if (!rawValue) return fallback;
-    const parsed = Number(rawValue);
-    return Number.isNaN(parsed) ? fallback : parsed;
-  }
 }

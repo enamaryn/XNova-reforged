@@ -15,12 +15,13 @@ export declare class AuthController {
         createdAt: Date;
         username: string;
         email: string;
+        role: import(".prisma/client").$Enums.UserRole;
         updatedAt: Date;
         points: number;
         rank: number;
         planets: {
-            name: string;
             id: string;
+            name: string;
             galaxy: number;
             system: number;
             position: number;

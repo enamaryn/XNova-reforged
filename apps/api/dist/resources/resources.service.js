@@ -11,14 +11,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResourcesService = void 0;
 const common_1 = require("@nestjs/common");
-const config_1 = require("@nestjs/config");
 const game_engine_1 = require("@xnova/game-engine");
 const game_config_1 = require("@xnova/game-config");
 const database_service_1 = require("../database/database.service");
+const server_config_service_1 = require("../server-config/server-config.service");
 let ResourcesService = class ResourcesService {
-    constructor(database, configService) {
+    constructor(database, serverConfig) {
         this.database = database;
-        this.configService = configService;
+        this.serverConfig = serverConfig;
     }
     async getPlanet(planetId, userId) {
         const { planet, calculation } = await this.refreshPlanet(planetId, userId);
@@ -147,6 +147,7 @@ let ResourcesService = class ResourcesService {
             throw new common_1.BadRequestException('Vaisseau de colonisation requis');
         }
         const planetName = name?.trim() || 'Colonie';
+        const config = await this.serverConfig.getConfig();
         const [createdPlanet] = await this.database.$transaction([
             this.database.planet.create({
                 data: {
@@ -159,7 +160,7 @@ let ResourcesService = class ResourcesService {
                     metal: game_config_1.GAME_CONSTANTS.STARTING_METAL,
                     crystal: game_config_1.GAME_CONSTANTS.STARTING_CRYSTAL,
                     deuterium: game_config_1.GAME_CONSTANTS.STARTING_DEUTERIUM,
-                    fieldsMax: game_config_1.GAME_CONSTANTS.INITIAL_FIELDS,
+                    fieldsMax: config.planetSize,
                     fieldsUsed: 0,
                 },
             }),
@@ -192,7 +193,7 @@ let ResourcesService = class ResourcesService {
             levels: this.mapLevels(planet),
             lastUpdate: planet.lastUpdate,
             now: new Date(),
-            config: this.buildConfig(),
+            config: await this.buildConfig(),
         });
         const updatedPlanet = await this.database.planet.update({
             where: { id: planet.id },
@@ -233,31 +234,13 @@ let ResourcesService = class ResourcesService {
         };
     }
     buildConfig() {
-        return {
-            baseIncome: {
-                metal: 20,
-                crystal: 10,
-                deuterium: 0,
-            },
-            resourceMultiplier: this.getNumber('RESOURCE_MULTIPLIER', 1),
-            gameSpeed: this.getNumber('GAME_SPEED', 1),
-            storageBase: 1_000_000,
-            storageFactor: 1.5,
-            storageOverflow: 1.1,
-        };
-    }
-    getNumber(key, fallback) {
-        const rawValue = this.configService.get(key);
-        if (!rawValue)
-            return fallback;
-        const parsed = Number(rawValue);
-        return Number.isNaN(parsed) ? fallback : parsed;
+        return this.serverConfig.getResourceConfig();
     }
 };
 exports.ResourcesService = ResourcesService;
 exports.ResourcesService = ResourcesService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [database_service_1.DatabaseService,
-        config_1.ConfigService])
+        server_config_service_1.ServerConfigService])
 ], ResourcesService);
 //# sourceMappingURL=resources.service.js.map

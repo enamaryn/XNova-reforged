@@ -2318,6 +2318,96 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 
 ---
 
+## ⏳ Session 40 - Démarrage Sprint 9.5
+
+**Date :** 15 janvier 2026
+**Objectif :** Lancer le sprint 9.5 (administration serveur).
+
+### ✅ Tâches réalisées
+- [x] Passage du sprint 9.5 en cours dans la roadmap MVP
+
+### 🔧 Fichiers modifiés
+- `ROADMAP_MVP.md`
+
+### 📍 État actuel du projet
+
+**Sprint 9.5 :** en cours.
+
+### ⏭️ Prochaines étapes
+- Définir les écrans admin (config serveur, vitesses, tailles)
+- Ajouter endpoints admin + UI
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 41 - Sprint 9.5 : admin config
+
+**Date :** 15 janvier 2026
+**Objectif :** Implémenter l’administration serveur (config + vue générale).
+
+### ✅ Tâches réalisées
+- [x] RBAC admin (role + guard)
+- [x] Endpoints `/admin/config` et `/admin/overview`
+- [x] Service de configuration serveur + audit log
+- [x] Paramètres live branchés (vitesses/prod/tailles)
+- [x] UI `/admin` (vue générale + configuration)
+- [x] Roadmap mise à jour (sprint 9.5 terminé)
+
+### 🔧 Fichiers créés/modifiés
+
+**Backend :**
+- `packages/database/prisma/schema.prisma`
+- `apps/api/src/common/guards/admin.guard.ts` ✅ NEW
+- `apps/api/src/server-config/server-config.service.ts` ✅ NEW
+- `apps/api/src/server-config/server-config.module.ts` ✅ NEW
+- `apps/api/src/admin/admin.controller.ts` ✅ NEW
+- `apps/api/src/admin/admin.service.ts` ✅ NEW
+- `apps/api/src/admin/admin.module.ts` ✅ NEW
+- `apps/api/src/admin/dto/update-config.dto.ts` ✅ NEW
+- `apps/api/src/app.module.ts`
+- `apps/api/src/auth/auth.service.ts`
+- `apps/api/src/auth/auth.module.ts`
+- `apps/api/src/auth/dto/auth-response.dto.ts`
+- `apps/api/src/auth/strategies/jwt.strategy.ts`
+- `apps/api/src/resources/resources.service.ts`
+- `apps/api/src/resources/resources-cron.service.ts`
+- `apps/api/src/resources/resources.module.ts`
+- `apps/api/src/buildings/buildings.service.ts`
+- `apps/api/src/buildings/buildings.module.ts`
+- `apps/api/src/research/research.service.ts`
+- `apps/api/src/research/research.module.ts`
+- `apps/api/src/shipyard/shipyard.service.ts`
+- `apps/api/src/shipyard/shipyard.module.ts`
+- `apps/api/src/fleet/fleet.service.ts`
+- `apps/api/src/fleet/fleet.module.ts`
+- `apps/api/src/galaxy/galaxy.service.ts`
+- `apps/api/src/galaxy/galaxy.module.ts`
+
+**Frontend :**
+- `apps/web/lib/api/admin.ts` ✅ NEW
+- `apps/web/app/(admin)/layout.tsx` ✅ NEW
+- `apps/web/app/(admin)/admin/page.tsx` ✅ NEW
+- `apps/web/lib/i18n/index.tsx`
+- `apps/web/lib/api/types.ts`
+- `apps/web/lib/stores/auth-store.ts`
+- `apps/web/components/auth/ProtectedRoute.tsx`
+
+**Documentation :**
+- `ROADMAP_MVP.md`
+
+### 📍 État actuel du projet
+
+**Sprint 9.5 :** terminé.
+
+### ⏭️ Prochaines étapes
+- Démarrer le sprint 10 (polish & tests)
+- Ajouter un chemin pour promouvoir un user en admin (via DB)
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
 ## ✅ Session 24 - Roadmap admin + nettoyage + clôture Sprint 6
 
 **Date :** 15 janvier 2026

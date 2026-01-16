@@ -48,11 +48,13 @@ const config_1 = require("@nestjs/config");
 const jwt_1 = require("@nestjs/jwt");
 const argon2 = __importStar(require("argon2"));
 const database_service_1 = require("../database/database.service");
+const server_config_service_1 = require("../server-config/server-config.service");
 let AuthService = class AuthService {
-    constructor(database, jwtService, configService) {
+    constructor(database, jwtService, configService, serverConfig) {
         this.database = database;
         this.jwtService = jwtService;
         this.configService = configService;
+        this.serverConfig = serverConfig;
     }
     async register(registerDto) {
         const { username, email, password } = registerDto;
@@ -87,6 +89,7 @@ let AuthService = class AuthService {
                 email: user.email,
                 points: user.points,
                 rank: user.rank,
+                role: user.role,
                 createdAt: user.createdAt,
             },
             tokens,
@@ -121,6 +124,7 @@ let AuthService = class AuthService {
                 email: user.email,
                 points: user.points,
                 rank: user.rank,
+                role: user.role,
                 createdAt: user.createdAt,
             },
             tokens,
@@ -159,6 +163,7 @@ let AuthService = class AuthService {
                 email: true,
                 points: true,
                 rank: true,
+                role: true,
                 createdAt: true,
                 updatedAt: true,
                 planets: {
@@ -213,6 +218,7 @@ let AuthService = class AuthService {
         if (existingPlanet) {
             return this.createStarterPlanet(userId);
         }
+        const config = await this.serverConfig.getConfig();
         await this.database.planet.create({
             data: {
                 userId,
@@ -224,7 +230,7 @@ let AuthService = class AuthService {
                 metal: 500,
                 crystal: 500,
                 deuterium: 0,
-                fieldsMax: 163,
+                fieldsMax: config.planetSize,
                 fieldsUsed: 0,
             },
         });
@@ -235,6 +241,7 @@ exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [database_service_1.DatabaseService,
         jwt_1.JwtService,
-        config_1.ConfigService])
+        config_1.ConfigService,
+        server_config_service_1.ServerConfigService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

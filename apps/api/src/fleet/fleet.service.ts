@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ServerConfigService } from '../server-config/server-config.service';
 import { SHIPS, getShipSpeed } from '@xnova/game-config';
 import {
   calculateDistance,
@@ -19,7 +19,7 @@ import { SendFleetDto } from './dto/send-fleet.dto';
 export class FleetService {
   constructor(
     private readonly database: DatabaseService,
-    private readonly configService: ConfigService,
+    private readonly serverConfig: ServerConfigService,
   ) {}
 
   async getAvailableShips(planetId: string, userId: string) {
@@ -202,7 +202,7 @@ export class FleetService {
       throw new BadRequestException('Ressources insuffisantes');
     }
 
-    const gameSpeed = this.getNumber('FLEET_SPEED', 1);
+    const { fleetSpeed: gameSpeed } = await this.serverConfig.getConfig();
     const adjustedDuration = Math.max(
       1,
       Math.floor(durationSeconds / gameSpeed),
@@ -306,10 +306,4 @@ export class FleetService {
     };
   }
 
-  private getNumber(key: string, fallback: number): number {
-    const rawValue = this.configService.get<string>(key);
-    if (!rawValue) return fallback;
-    const parsed = Number(rawValue);
-    return Number.isNaN(parsed) ? fallback : parsed;
-  }
 }

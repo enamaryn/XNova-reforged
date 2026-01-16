@@ -15,6 +15,7 @@ export interface AuthUser {
   email: string;
   points: number;
   rank: number;
+  role?: string;
   createdAt: string;
   planets?: Planet[];
 }

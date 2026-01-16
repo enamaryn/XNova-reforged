@@ -10,6 +10,7 @@ export interface AuthUserDto {
   email: string;
   points: number;
   rank: number;
+  role: string;
   createdAt: string;
 }
 

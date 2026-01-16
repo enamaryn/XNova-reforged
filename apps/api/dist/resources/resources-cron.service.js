@@ -13,14 +13,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResourcesCronService = void 0;
 const common_1 = require("@nestjs/common");
 const schedule_1 = require("@nestjs/schedule");
-const config_1 = require("@nestjs/config");
 const database_service_1 = require("../database/database.service");
 const game_events_gateway_1 = require("../game-events/game-events.gateway");
+const server_config_service_1 = require("../server-config/server-config.service");
 const game_engine_1 = require("@xnova/game-engine");
 let ResourcesCronService = ResourcesCronService_1 = class ResourcesCronService {
-    constructor(database, configService, gameEventsGateway) {
+    constructor(database, serverConfig, gameEventsGateway) {
         this.database = database;
-        this.configService = configService;
+        this.serverConfig = serverConfig;
         this.gameEventsGateway = gameEventsGateway;
         this.logger = new common_1.Logger(ResourcesCronService_1.name);
     }
@@ -47,7 +47,7 @@ let ResourcesCronService = ResourcesCronService_1 = class ResourcesCronService {
             });
             this.logger.debug(`Found ${activePlanets.length} active planets to update`);
             const now = new Date();
-            const config = this.buildConfig();
+            const config = await this.buildConfig();
             const updatePromises = activePlanets.map(async (planet) => {
                 try {
                     const calculation = (0, game_engine_1.updateResources)({
@@ -122,7 +122,7 @@ let ResourcesCronService = ResourcesCronService_1 = class ResourcesCronService {
             });
             this.logger.debug(`Found ${inactivePlanets.length} inactive planets to update`);
             const now = new Date();
-            const config = this.buildConfig();
+            const config = await this.buildConfig();
             for (const planet of inactivePlanets) {
                 try {
                     const calculation = (0, game_engine_1.updateResources)({
@@ -177,25 +177,7 @@ let ResourcesCronService = ResourcesCronService_1 = class ResourcesCronService {
         };
     }
     buildConfig() {
-        return {
-            baseIncome: {
-                metal: 20,
-                crystal: 10,
-                deuterium: 0,
-            },
-            resourceMultiplier: this.getNumber('RESOURCE_MULTIPLIER', 1),
-            gameSpeed: this.getNumber('GAME_SPEED', 1),
-            storageBase: 1_000_000,
-            storageFactor: 1.5,
-            storageOverflow: 1.1,
-        };
-    }
-    getNumber(key, fallback) {
-        const rawValue = this.configService.get(key);
-        if (!rawValue)
-            return fallback;
-        const parsed = Number(rawValue);
-        return Number.isNaN(parsed) ? fallback : parsed;
+        return this.serverConfig.getResourceConfig();
     }
 };
 exports.ResourcesCronService = ResourcesCronService;
@@ -214,7 +196,7 @@ __decorate([
 exports.ResourcesCronService = ResourcesCronService = ResourcesCronService_1 = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [database_service_1.DatabaseService,
-        config_1.ConfigService,
+        server_config_service_1.ServerConfigService,
         game_events_gateway_1.GameEventsGateway])
 ], ResourcesCronService);
 //# sourceMappingURL=resources-cron.service.js.map

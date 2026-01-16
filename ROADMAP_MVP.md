@@ -774,27 +774,27 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 
 ---
 
-### Sprint 9.5 : Administration Serveur
+### Sprint 9.5 : Administration Serveur ✅ TERMINÉ
 
 **Objectif :** Interface admin pour régler les paramètres globaux du jeu
 
 #### Backend - Configuration
-- [ ] Modèle `GameConfig` (vitesses, tailles planètes, multiplicateurs)
-- [ ] Endpoints admin sécurisés (RBAC)
-  - [ ] `GET /admin/config`
-  - [ ] `PUT /admin/config`
-- [ ] Validation stricte des valeurs (bornes, types)
-- [ ] Journalisation des modifications (audit log)
+- [x] Modèle `GameConfig` (vitesses, tailles planètes, multiplicateurs)
+- [x] Endpoints admin sécurisés (RBAC)
+  - [x] `GET /admin/config`
+  - [x] `PUT /admin/config`
+- [x] Validation stricte des valeurs (bornes, types)
+- [x] Journalisation des modifications (audit log)
 
 #### Frontend - UI Admin
-- [ ] Page `/admin` (layout dédié)
-- [ ] Écran “Configuration serveur”
-  - [ ] Vitesse du jeu
-  - [ ] Vitesse des flottes
-  - [ ] Vitesse de production
-  - [ ] Taille planète / cases disponibles
-  - [ ] Multiplicateurs ressources de base
-- [ ] Écran “Vue générale” (statut serveur)
+- [x] Page `/admin` (layout dédié)
+- [x] Écran “Configuration serveur”
+  - [x] Vitesse du jeu
+  - [x] Vitesse des flottes
+  - [x] Vitesse de production
+  - [x] Taille planète / cases disponibles
+  - [x] Multiplicateurs ressources de base
+- [x] Écran “Vue générale” (statut serveur)
 
 **Livrables :**
 - ✅ Paramètres globaux modifiables en live

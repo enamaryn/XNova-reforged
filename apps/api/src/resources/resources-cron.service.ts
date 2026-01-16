@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '../database/database.service';
 import { GameEventsGateway } from '../game-events/game-events.gateway';
+import { ServerConfigService } from '../server-config/server-config.service';
 import {
   updateResources,
   type ResourceConfig,
@@ -24,7 +24,7 @@ export class ResourcesCronService {
 
   constructor(
     private readonly database: DatabaseService,
-    private readonly configService: ConfigService,
+    private readonly serverConfig: ServerConfigService,
     private readonly gameEventsGateway: GameEventsGateway,
   ) {}
 
@@ -62,7 +62,7 @@ export class ResourcesCronService {
       this.logger.debug(`Found ${activePlanets.length} active planets to update`);
 
       const now = new Date();
-      const config = this.buildConfig();
+      const config = await this.buildConfig();
 
       // Mettre à jour chaque planète
       const updatePromises = activePlanets.map(async (planet) => {
@@ -163,7 +163,7 @@ export class ResourcesCronService {
       this.logger.debug(`Found ${inactivePlanets.length} inactive planets to update`);
 
       const now = new Date();
-      const config = this.buildConfig();
+      const config = await this.buildConfig();
 
       for (const planet of inactivePlanets) {
         try {
@@ -237,25 +237,7 @@ export class ResourcesCronService {
     };
   }
 
-  private buildConfig(): ResourceConfig {
-    return {
-      baseIncome: {
-        metal: 20,
-        crystal: 10,
-        deuterium: 0,
-      },
-      resourceMultiplier: this.getNumber('RESOURCE_MULTIPLIER', 1),
-      gameSpeed: this.getNumber('GAME_SPEED', 1),
-      storageBase: 1_000_000,
-      storageFactor: 1.5,
-      storageOverflow: 1.1,
-    };
-  }
-
-  private getNumber(key: string, fallback: number) {
-    const rawValue = this.configService.get<string>(key);
-    if (!rawValue) return fallback;
-    const parsed = Number(rawValue);
-    return Number.isNaN(parsed) ? fallback : parsed;
+  private buildConfig(): Promise<ResourceConfig> {
+    return this.serverConfig.getResourceConfig();
   }
 }
