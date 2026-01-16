@@ -701,7 +701,7 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 
 ## 📅 PHASE 4 : Social & Polish (Semaine 13-16)
 
-### Sprint 9 : Système Social ⏳ EN COURS
+### Sprint 9 : Système Social ✅ TERMINÉ
 
 **Objectif :** Messagerie et alliances
 
@@ -762,10 +762,10 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
   - [x] Liste membres
   - [x] Invitations
   - [x] Description
-- [ ] Page `/statistics`
-  - Classements joueurs
-  - Top alliances
-  - Statistiques personnelles
+- [x] Page `/statistics`
+  - [x] Classements joueurs
+  - [x] Top alliances
+  - [x] Statistiques personnelles
 
 **Livrables :**
 - ✅ Messagerie complète

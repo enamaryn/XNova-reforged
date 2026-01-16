@@ -2280,6 +2280,44 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 
 ---
 
+## ✅ Session 39 - Sprint 9 : statistiques
+
+**Date :** 15 janvier 2026
+**Objectif :** Finaliser le sprint 9 avec la page statistiques.
+
+### ✅ Tâches réalisées
+- [x] Endpoint `GET /statistics` (classements + stats perso)
+- [x] Page `/statistics` côté web
+- [x] Traductions FR/EN/ES pour statistiques
+- [x] Sprint 9 marqué terminé dans la roadmap MVP
+
+### 🔧 Fichiers créés/modifiés
+
+**Backend :**
+- `apps/api/src/statistics/statistics.controller.ts` ✅ NEW
+- `apps/api/src/statistics/statistics.service.ts` ✅ NEW
+- `apps/api/src/statistics/statistics.module.ts` ✅ NEW
+- `apps/api/src/app.module.ts`
+
+**Frontend :**
+- `apps/web/lib/api/statistics.ts` ✅ NEW
+- `apps/web/app/(game)/statistics/page.tsx` ✅ NEW
+- `apps/web/lib/i18n/index.tsx`
+
+**Documentation :**
+- `ROADMAP_MVP.md`
+
+### 📍 État actuel du projet
+
+**Sprint 9 :** terminé.
+
+### ⏭️ Prochaines étapes
+- Démarrer le sprint 9.5 (administration serveur)
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
 ## ✅ Session 24 - Roadmap admin + nettoyage + clôture Sprint 6
 
 **Date :** 15 janvier 2026

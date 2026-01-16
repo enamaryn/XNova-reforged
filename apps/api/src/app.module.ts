@@ -12,6 +12,7 @@ import { GalaxyModule } from './galaxy/galaxy.module';
 import { ResearchModule } from './research/research.module';
 import { ShipyardModule } from './shipyard/shipyard.module';
 import { SocialModule } from './social/social.module';
+import { StatisticsModule } from './statistics/statistics.module';
 
 @Module({
   imports: [
@@ -56,6 +57,9 @@ import { SocialModule } from './social/social.module';
 
     // Module social (messages + alliances)
     SocialModule,
+
+    // Module statistiques
+    StatisticsModule,
   ],
   controllers: [],
   providers: [],
