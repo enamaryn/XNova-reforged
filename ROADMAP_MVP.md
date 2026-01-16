@@ -811,16 +811,18 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 
 ---
 
-### Sprint 10 : Polish & Tests
+### Sprint 10 : Polish & Tests ⏳ EN COURS
 
 **Objectif :** Finaliser le MVP pour alpha testing
 
 #### Tests
-- [ ] Tests E2E Playwright
-  - Parcours inscription → connexion
-  - Parcours build bâtiment
-  - Parcours envoi flotte
-  - Parcours combat
+- [x] Tests E2E Playwright
+  - [x] Parcours inscription → connexion
+  - [x] Correctif Playwright (regex URL `/overview`)
+  - [ ] Parcours build bâtiment
+  - [ ] Parcours envoi flotte
+  - [ ] Parcours combat
+- [ ] Pré-requis Playwright (deps système Fedora via `dnf`)
 - [ ] Tests unitaires critiques
   - Services calculs (ressources, combat)
   - Guards auth

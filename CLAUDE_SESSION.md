@@ -2156,6 +2156,48 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 
 ---
 
+## ✅ Session 36 - Sprint 10 : correctif Playwright
+
+**Date :** 16/01/2026
+**Objectif :** Corriger le test E2E Playwright bloquant.
+
+### ✅ Tâches réalisées
+- [x] Correction du regex URL dans le test E2E d’inscription
+
+### 🔧 Fichiers modifiés
+- `tests/e2e/auth.spec.ts`
+- `ROADMAP_MVP.md`
+
+### ⏭️ Prochaines étapes
+- Relancer `npx playwright test --browser=chromium`
+- Ajouter les parcours E2E restants (build, flotte, combat)
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 35 - Sprint 10 : relance + consignes admin email
+
+**Date :** 16/01/2026
+**Objectif :** Relancer le sprint 10 et intégrer les consignes email admin dans la roadmap complète.
+
+### ✅ Tâches réalisées
+- [x] Ajout des exigences email admin (IMAP/POP3, éditeur HTML/texte) dans la roadmap complète
+- [x] Ajout du prérequis Playwright Fedora dans la roadmap MVP
+
+### 🔧 Fichiers modifiés
+- `ROADMAP_COMPLET.md`
+- `ROADMAP_MVP.md`
+
+### ⏭️ Prochaines étapes
+- Installer les dépendances Playwright via `dnf` et lancer les E2E
+- Écrire les parcours E2E restants (build, flotte, combat)
+- Démarrer les optimisations perf (indexes Prisma, cache Redis)
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
 ## ✅ Session 35 - Sprint 8 : génération galaxie + infos
 
 **Date :** 15 janvier 2026
@@ -2681,6 +2723,124 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 
 ### ⏭️ Prochaines étapes
 - Redemarrer le web si le cache persiste
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 53 - Roadmap panel admin complet
+
+**Date :** 16 janvier 2026
+**Objectif :** Ajouter la consigne de parité avec le panel admin XNova 0.8.
+
+### ✅ Tâches réalisées
+- [x] Mention explicite de l’intégralité du panel admin dans la roadmap complète
+
+### 🔧 Fichiers modifiés
+- `ROADMAP_COMPLET.md`
+
+### 📍 État actuel du projet
+
+**Sprint 9.5 :** terminé.
+
+### ⏭️ Prochaines étapes
+- Définir les sections admin prioritaires à implémenter
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 54 - Decoupage panel admin
+
+**Date :** 16 janvier 2026
+**Objectif :** Ajouter le decoupage detaille du panel admin XNova 0.8.
+
+### ✅ Tâches réalisées
+- [x] Liste des sections admin historiques ajoutee a la roadmap
+
+### 🔧 Fichiers modifiés
+- `ROADMAP_COMPLET.md`
+
+### 📍 État actuel du projet
+
+**Sprint 9.5 :** terminé.
+
+### ⏭️ Prochaines étapes
+- Prioriser les sections admin a implementer
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 56 - Roadmap mail admin
+
+**Date :** 16 janvier 2026
+**Objectif :** Ajouter la communication email au panel admin complet.
+
+### ✅ Tâches réalisées
+- [x] Ajout IMAP/POP3 + envoi massif + templates dans la roadmap complète
+
+### 🔧 Fichiers modifiés
+- `ROADMAP_COMPLET.md`
+
+### 📍 État actuel du projet
+
+**Sprint 10 :** en cours.
+
+### ⏭️ Prochaines étapes
+- Lancer le setup Playwright pour les tests E2E
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 57 - Sprint 10 : tests E2E
+
+**Date :** 16 janvier 2026
+**Objectif :** Démarrer les tests E2E Playwright.
+
+### ✅ Tâches réalisées
+- [x] Installation Playwright
+- [x] Configuration Playwright + premier test E2E
+- [x] Script `test:e2e` ajouté
+- [x] Roadmap MVP mise à jour (E2E inscription)
+
+### 🔧 Fichiers créés/modifiés
+- `playwright.config.ts` ✅ NEW
+- `tests/e2e/auth.spec.ts` ✅ NEW
+- `package.json`
+- `ROADMAP_MVP.md`
+
+### 📍 État actuel du projet
+
+**Sprint 10 :** en cours.
+
+### ⏭️ Prochaines étapes
+- Installer les navigateurs Playwright (`npx playwright install`)
+- Ajouter les parcours build flotte/combat
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ⏳ Session 55 - Démarrage Sprint 10
+
+**Date :** 16 janvier 2026
+**Objectif :** Lancer le sprint 10 (tests, performance, polish, docs).
+
+### ✅ Tâches réalisées
+- [x] Sprint 10 marqué en cours dans la roadmap MVP
+
+### 🔧 Fichiers modifiés
+- `ROADMAP_MVP.md`
+
+### 📍 État actuel du projet
+
+**Sprint 10 :** en cours.
+
+### ⏭️ Prochaines étapes
+- Mettre en place les tests E2E Playwright
+- Définir la stratégie d’optimisation perf et d’équilibrage
 
 **Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
 

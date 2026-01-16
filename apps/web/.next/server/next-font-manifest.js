@@ -1,1 +1,1 @@
-self.__NEXT_FONT_MANIFEST="{\"pages\":{},\"app\":{\"/home/didrod/Documents/projet GITHUB/XNova-reforged/apps/web/app/layout\":[\"static/media/36966cca54120369-s.p.woff2\",\"static/media/cf1398c533b7af5b-s.p.woff2\"]},\"appUsingSizeAdjust\":true,\"pagesUsingSizeAdjust\":false}"
+self.__NEXT_FONT_MANIFEST="{\"pages\":{},\"app\":{},\"appUsingSizeAdjust\":false,\"pagesUsingSizeAdjust\":false}"

@@ -944,6 +944,7 @@ Cette roadmap étend le MVP avec des fonctionnalités avancées pour créer un M
 ### Administration
 
 **Objectif :** Outils admin complets
+**Note :** Reproduire l'intégralité du panel admin XNova 0.8 (menus, écrans, modules).
 
 #### Backend - Admin Module
 - [ ] Schema Prisma
@@ -982,6 +983,34 @@ Cette roadmap étend le MVP avec des fonctionnalités avancées pour créer un M
   - Statistiques serveur
   - Graphiques temps réel
   - Alertes (pics CPU, erreurs)
+- [ ] Parité panel XNova 0.8 (toutes sections admin historiques)
+  - [ ] Vue generale (infos serveur, version, online)
+  - [ ] Configuration serveur (vitesses, taille planetes, production)
+  - [ ] Remise a zero (reset joueurs/serveur)
+  - [ ] Liste des joueurs
+  - [ ] Chercher un joueur (profil + stats)
+  - [ ] Ajout de ressources
+  - [ ] Liste des planetes
+  - [ ] Planetes actives
+  - [ ] Liste des lunes
+  - [ ] Ajout de lunes
+  - [ ] Flottes en vol
+  - [ ] Bannir un joueur
+  - [ ] Debannir un joueur
+  - [ ] Administration chat
+  - [ ] Actualiser points
+  - [ ] Liste des messages
+  - [ ] Outil cryptage
+  - [ ] Queue fabrication
+  - [ ] Erreurs
+  - [ ] Forum d'aide
+- [ ] Communication email admin
+  - [ ] Ajout d'adresse expéditeur (IMAP/POP3)
+  - [ ] Configuration boite mail (IMAP/POP3)
+  - [ ] Templates mails (texte + HTML)
+  - [ ] Éditeur message (HTML collable ou texte simple)
+  - [ ] Notifications auto (inscription, nouveautés, maintenance)
+  - [ ] Envoi massif (admins / modérateurs / joueurs)
 - [ ] Gestion utilisateurs
   - Liste complète
   - Recherche avancée
