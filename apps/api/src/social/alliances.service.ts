@@ -130,8 +130,12 @@ export class AlliancesService {
       }),
       this.database.allianceMember.create({
         data: {
-          userId,
           rank: 'founder',
+          user: {
+            connect: {
+              id: userId,
+            },
+          },
           alliance: {
             connect: {
               tag: normalizedTag,

@@ -2408,6 +2408,28 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 
 ---
 
+## ✅ Session 42 - Fix Prisma alliance
+
+**Date :** 15 janvier 2026
+**Objectif :** Corriger l’erreur Prisma sur la creation d’alliance.
+
+### ✅ Tâches réalisées
+- [x] Correction du create AllianceMember (relation user connect)
+
+### 🔧 Fichiers modifiés
+- `apps/api/src/social/alliances.service.ts`
+
+### 📍 État actuel du projet
+
+**Sprint 9.5 :** terminé.
+
+### ⏭️ Prochaines étapes
+- Relancer `@xnova/api` pour valider la compilation
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
 ## ✅ Session 24 - Roadmap admin + nettoyage + clôture Sprint 6
 
 **Date :** 15 janvier 2026
