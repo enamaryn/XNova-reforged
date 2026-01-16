@@ -1,4 +1,5 @@
-import { IsIn, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsEnum, IsString, MaxLength, MinLength } from 'class-validator';
+import { UserRole } from '@prisma/client';
 
 export class UpdateRoleDto {
   @IsString({ message: 'Le nom doit etre une chaine de caracteres' })
@@ -6,9 +7,6 @@ export class UpdateRoleDto {
   @MaxLength(20, { message: 'Le nom ne peut pas depasser 20 caracteres' })
   username: string;
 
-  @IsString({ message: 'Le role doit etre une chaine de caracteres' })
-  @IsIn(['PLAYER', 'MODERATOR', 'ADMIN', 'SUPER_ADMIN'], {
-    message: 'Role invalide',
-  })
-  role: string;
+  @IsEnum(UserRole, { message: 'Role invalide' })
+  role: UserRole;
 }

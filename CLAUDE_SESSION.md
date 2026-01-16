@@ -2588,6 +2588,54 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 
 ---
 
+## ✅ Session 49 - Fix type role admin
+
+**Date :** 16 janvier 2026
+**Objectif :** Corriger l’erreur TS sur la mise a jour du role admin.
+
+### ✅ Tâches réalisées
+- [x] DTO role typé sur l'enum UserRole
+
+### 🔧 Fichiers modifiés
+- `apps/api/src/admin/dto/update-role.dto.ts`
+
+### 📍 État actuel du projet
+
+**Sprint 9.5 :** terminé.
+
+### ⏭️ Prochaines étapes
+- Relancer `@xnova/api` pour valider la compilation
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 50 - Page paramètres
+
+**Date :** 16 janvier 2026
+**Objectif :** Corriger l’accès aux paramètres et rétablir la page.
+
+### ✅ Tâches réalisées
+- [x] Page `/settings` ajoutée
+- [x] Route `/options` reliée à `/settings`
+- [x] Traductions pour la page paramètres
+
+### 🔧 Fichiers créés/modifiés
+- `apps/web/app/(game)/settings/page.tsx` ✅ NEW
+- `apps/web/app/(game)/options/page.tsx` ✅ NEW
+- `apps/web/lib/i18n/index.tsx`
+
+### 📍 État actuel du projet
+
+**Sprint 9.5 :** terminé.
+
+### ⏭️ Prochaines étapes
+- Reconnexion pour recharger le role admin côté client
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
 ## ✅ Session 24 - Roadmap admin + nettoyage + clôture Sprint 6
 
 **Date :** 15 janvier 2026
