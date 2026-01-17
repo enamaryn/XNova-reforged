@@ -42,6 +42,7 @@ export class ResearchService {
     });
 
     const queueBlocked = queue.length > 0;
+    const { maxTechnologyLevel } = await this.serverConfig.getConfig();
 
     const technologies = Object.values(TECHNOLOGIES).map((tech) => {
       const currentLevel = techLevels[tech.id] || 0;
@@ -62,6 +63,7 @@ export class ResearchService {
         planet.deuterium >= cost.deuterium;
 
       const inQueue = queue.find((q) => q.techId === tech.id);
+      const isMaxLevel = currentLevel >= maxTechnologyLevel;
 
       return {
         id: tech.id,
@@ -69,9 +71,12 @@ export class ResearchService {
         description: tech.description,
         category: tech.category,
         currentLevel,
+        maxLevel: maxTechnologyLevel,
+        isMaxLevel,
         cost,
         buildTime,
-        canResearch: requirements.canResearch && canAfford && !inQueue && !queueBlocked,
+        canResearch:
+          requirements.canResearch && canAfford && !inQueue && !queueBlocked && !isMaxLevel,
         canAfford,
         inQueue: !!inQueue,
         queueEndTime: inQueue?.endTime,
@@ -115,6 +120,11 @@ export class ResearchService {
     });
 
     const currentLevel = techLevels[techId] || 0;
+    const { gameSpeed, maxTechnologyLevel } = await this.serverConfig.getConfig();
+
+    if (currentLevel >= maxTechnologyLevel) {
+      throw new BadRequestException('Niveau max atteint');
+    }
 
     const requirements = this.checkTechRequirements(
       techId,
@@ -141,7 +151,6 @@ export class ResearchService {
       cost,
       labLevel: planet.researchLab,
     });
-    const { gameSpeed } = await this.serverConfig.getConfig();
     const adjustedTime = Math.max(1, Math.floor(buildTimeSeconds / gameSpeed));
 
     const now = new Date();

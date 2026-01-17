@@ -5,6 +5,8 @@ export interface AdminConfig {
   fleetSpeed: number;
   resourceMultiplier: number;
   planetSize: number;
+  maxBuildingLevel: number;
+  maxTechnologyLevel: number;
   baseMetal: number;
   baseCrystal: number;
   baseDeuterium: number;
@@ -70,7 +72,8 @@ export interface BoostDevelopmentPayload {
 export interface BoostDevelopmentResult {
   success: boolean;
   username: string;
-  level: number;
+  buildingLevel: number;
+  technologyLevel: number;
   planetsUpdated: number;
   technologiesUpdated: number;
 }

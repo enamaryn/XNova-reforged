@@ -3467,6 +3467,46 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 
 ---
 
+## ✅ Session 68 - Plafond niveaux configurable
+
+**Date :** 17 janvier 2026
+**Objectif :** Ajouter un plafond officiel configurable et l’afficher dans l’UI.
+
+### ✅ Taches realisees
+- [x] Plafond max batiments/technologies dans la config serveur
+- [x] Validation + blocage construction/recherche au niveau max
+- [x] UI admin pour regler les plafonds
+- [x] Message "Niveau max atteint" + bouton grise sur batiments/technos
+- [x] Roadmap MVP mise a jour
+
+### 🔧 Fichiers modifies
+- `apps/api/src/server-config/server-config.service.ts`
+- `apps/api/src/admin/dto/update-config.dto.ts`
+- `apps/api/src/buildings/buildings.service.ts`
+- `apps/api/src/research/research.service.ts`
+- `apps/api/src/admin/admin.service.ts`
+- `apps/web/lib/api/admin.ts`
+- `apps/web/lib/api/buildings.ts`
+- `apps/web/lib/api/research.ts`
+- `apps/web/app/(admin)/admin/page.tsx`
+- `apps/web/app/(game)/research/page.tsx`
+- `apps/web/components/game/BuildingCard.tsx`
+- `apps/web/lib/i18n/index.tsx`
+- `.env.example`
+- `ROADMAP_MVP.md`
+
+### 📍 Etat actuel du projet
+
+**Sprint 10 :** en cours (polish + configuration admin avancee).
+
+### ⏭️ Prochaines etapes
+- Ajuster les plafonds via le panneau admin et verifier l affichage.
+- Continuer sur tests integration API ou optimisation Prisma.
+
+**Note :** suivi via update_plan.
+
+---
+
 ## ✅ Session 67 - Macro admin boost developpement
 
 **Date :** 17 janvier 2026

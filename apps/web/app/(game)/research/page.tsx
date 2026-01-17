@@ -171,10 +171,13 @@ export default function ResearchPage() {
                     const missing = tech.missingRequirements.length > 0;
                     const inQueue = tech.inQueue;
                     const available = tech.canResearch;
+                    const isMaxLevel = tech.isMaxLevel;
                     const glow = available && !inQueue;
                     const stateLabel = inQueue
                       ? 'En cours'
-                      : missing
+                      : isMaxLevel
+                        ? 'Niveau max'
+                        : missing
                         ? 'Verrouillée'
                         : available
                           ? 'Disponible'
@@ -285,6 +288,12 @@ export default function ResearchPage() {
               </div>
             )}
 
+            {tech.isMaxLevel && (
+              <div className="mt-3 rounded-xl bg-slate-800/70 p-2 text-xs text-slate-300">
+                Niveau max atteint
+              </div>
+            )}
+
             <div className="mt-4 flex items-center gap-2">
               <button
                 onClick={() => startMutation.mutate(tech.id)}
@@ -297,9 +306,11 @@ export default function ResearchPage() {
               >
                 {tech.inQueue
                   ? 'En cours'
-                  : tech.queueBlocked
-                    ? 'File occupée'
-                    : 'Lancer la recherche'}
+                  : tech.isMaxLevel
+                    ? '⛔ Niveau max atteint'
+                    : tech.queueBlocked
+                      ? 'File occupée'
+                      : 'Lancer la recherche'}
               </button>
               <Link
                 href={`/research/${tech.id}`}

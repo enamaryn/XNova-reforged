@@ -7,8 +7,6 @@ import { UpdateRoleDto } from './dto/update-role.dto';
 import { BanUserDto } from './dto/ban-user.dto';
 import { UnbanUserDto } from './dto/unban-user.dto';
 import { BoostDevelopmentDto } from './dto/boost-development.dto';
-
-const MAX_DEVELOPMENT_LEVEL = 100;
 const BUILDING_FIELDS = [
   'metalMine',
   'crystalMine',
@@ -91,6 +89,8 @@ export class AdminService {
       throw new NotFoundException('Utilisateur introuvable');
     }
 
+    const { maxBuildingLevel, maxTechnologyLevel } = await this.serverConfig.getConfig();
+
     const planets = await this.database.planet.findMany({
       where: { userId: target.id },
       select: { id: true, fieldsMax: true },
@@ -101,7 +101,7 @@ export class AdminService {
       this.database.planet.update({
         where: { id: planet.id },
         data: {
-          ...this.buildMaxDevelopmentData(),
+          ...this.buildMaxDevelopmentData(maxBuildingLevel),
           fieldsUsed: planet.fieldsMax,
         },
       }),
@@ -111,8 +111,8 @@ export class AdminService {
     const techUpserts = techIds.map((techId) =>
       this.database.technology.upsert({
         where: { userId_techId: { userId: target.id, techId } },
-        update: { level: MAX_DEVELOPMENT_LEVEL },
-        create: { userId: target.id, techId, level: MAX_DEVELOPMENT_LEVEL },
+        update: { level: maxTechnologyLevel },
+        create: { userId: target.id, techId, level: maxTechnologyLevel },
       }),
     );
 
@@ -136,7 +136,8 @@ export class AdminService {
           changes: {
             targetId: target.id,
             targetUsername: target.username,
-            level: MAX_DEVELOPMENT_LEVEL,
+            buildingLevel: maxBuildingLevel,
+            technologyLevel: maxTechnologyLevel,
             planets: planets.length,
             technologies: techIds.length,
           },
@@ -149,15 +150,16 @@ export class AdminService {
     return {
       success: true,
       username: target.username,
-      level: MAX_DEVELOPMENT_LEVEL,
+      buildingLevel: maxBuildingLevel,
+      technologyLevel: maxTechnologyLevel,
       planetsUpdated: planets.length,
       technologiesUpdated: techIds.length,
     };
   }
 
-  private buildMaxDevelopmentData() {
+  private buildMaxDevelopmentData(maxLevel: number) {
     return BUILDING_FIELDS.reduce<Record<string, number>>((acc, field) => {
-      acc[field] = MAX_DEVELOPMENT_LEVEL;
+      acc[field] = maxLevel;
       return acc;
     }, {});
   }

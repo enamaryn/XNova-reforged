@@ -32,6 +32,20 @@ export class UpdateConfigDto {
 
   @IsOptional()
   @Type(() => Number)
+  @IsInt({ message: 'Le niveau max des batiments doit etre un entier' })
+  @Min(1, { message: 'Le niveau max des batiments doit etre positif' })
+  @Max(10000, { message: 'Le niveau max des batiments est trop eleve' })
+  maxBuildingLevel?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt({ message: 'Le niveau max des technologies doit etre un entier' })
+  @Min(1, { message: 'Le niveau max des technologies doit etre positif' })
+  @Max(10000, { message: 'Le niveau max des technologies est trop eleve' })
+  maxTechnologyLevel?: number;
+
+  @IsOptional()
+  @Type(() => Number)
   @IsNumber({}, { message: 'Le revenu metal doit etre un nombre' })
   @Min(0, { message: 'Le revenu metal doit etre positif' })
   @Max(1000, { message: 'Le revenu metal est trop eleve' })

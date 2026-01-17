@@ -8,9 +8,9 @@ export declare class ResourcesController {
         storage: import("@xnova/game-engine").StorageCapacity;
         productionLevel: number;
         id: string;
+        createdAt: Date;
         name: string;
         userId: string;
-        createdAt: Date;
         galaxy: number;
         system: number;
         position: number;

@@ -122,6 +122,12 @@ export function BuildingCard({ building, onBuild, isBuilding }: BuildingCardProp
         </div>
       )}
 
+      {building.isMaxLevel && (
+        <div className="mb-3 rounded-xl bg-slate-800/70 p-2 text-xs text-slate-300">
+          Niveau max atteint
+        </div>
+      )}
+
       {/* En construction */}
       {building.inQueue && (
         <div className="mb-3 rounded-xl bg-blue-500/10 p-2 text-center text-sm text-blue-200">
@@ -144,6 +150,8 @@ export function BuildingCard({ building, onBuild, isBuilding }: BuildingCardProp
             '⏳ Construction...'
           ) : building.inQueue ? (
             '🔨 En file'
+          ) : building.isMaxLevel ? (
+            '⛔ Niveau max atteint'
           ) : !building.canAfford ? (
             '💰 Ressources insuffisantes'
           ) : building.missingRequirements.length > 0 ? (

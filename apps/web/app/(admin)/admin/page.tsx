@@ -246,6 +246,26 @@ export default function AdminPage() {
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
+            {t('admin.maxBuildingLevel')}
+            <input
+              type="number"
+              step="1"
+              value={form.maxBuildingLevel}
+              onChange={(event) => handleChange('maxBuildingLevel')(event.target.value)}
+              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+            />
+          </label>
+          <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
+            {t('admin.maxTechnologyLevel')}
+            <input
+              type="number"
+              step="1"
+              value={form.maxTechnologyLevel}
+              onChange={(event) => handleChange('maxTechnologyLevel')(event.target.value)}
+              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+            />
+          </label>
+          <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
             {t('admin.baseMetal')}
             <input
               type="number"
@@ -478,8 +498,9 @@ export default function AdminPage() {
               </div>
               <div className="mt-2 text-sm text-emerald-100">
                 {boostResult.username} • {boostResult.planetsUpdated} {t('admin.boostPlanets')} •{' '}
-                {boostResult.technologiesUpdated} {t('admin.boostTechs')} • {t('admin.boostLevel')}{' '}
-                {boostResult.level}
+                {boostResult.technologiesUpdated} {t('admin.boostTechs')} •{' '}
+                {t('admin.boostBuildingLevel')} {boostResult.buildingLevel} •{' '}
+                {t('admin.boostTechnologyLevel')} {boostResult.technologyLevel}
               </div>
             </div>
           )}

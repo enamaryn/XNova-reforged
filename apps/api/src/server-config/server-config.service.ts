@@ -9,6 +9,8 @@ export interface ServerConfigValues {
   fleetSpeed: number;
   resourceMultiplier: number;
   planetSize: number;
+  maxBuildingLevel: number;
+  maxTechnologyLevel: number;
   baseMetal: number;
   baseCrystal: number;
   baseDeuterium: number;
@@ -19,6 +21,8 @@ const CONFIG_KEYS: Record<keyof ServerConfigValues, string> = {
   fleetSpeed: 'fleetSpeed',
   resourceMultiplier: 'resourceMultiplier',
   planetSize: 'planetSize',
+  maxBuildingLevel: 'maxBuildingLevel',
+  maxTechnologyLevel: 'maxTechnologyLevel',
   baseMetal: 'baseMetal',
   baseCrystal: 'baseCrystal',
   baseDeuterium: 'baseDeuterium',
@@ -59,6 +63,8 @@ export class ServerConfigService {
       fleetSpeed: fromDb[CONFIG_KEYS.fleetSpeed] ?? defaults.fleetSpeed,
       resourceMultiplier: fromDb[CONFIG_KEYS.resourceMultiplier] ?? defaults.resourceMultiplier,
       planetSize: fromDb[CONFIG_KEYS.planetSize] ?? defaults.planetSize,
+      maxBuildingLevel: fromDb[CONFIG_KEYS.maxBuildingLevel] ?? defaults.maxBuildingLevel,
+      maxTechnologyLevel: fromDb[CONFIG_KEYS.maxTechnologyLevel] ?? defaults.maxTechnologyLevel,
       baseMetal: fromDb[CONFIG_KEYS.baseMetal] ?? defaults.baseMetal,
       baseCrystal: fromDb[CONFIG_KEYS.baseCrystal] ?? defaults.baseCrystal,
       baseDeuterium: fromDb[CONFIG_KEYS.baseDeuterium] ?? defaults.baseDeuterium,
@@ -134,6 +140,8 @@ export class ServerConfigService {
       fleetSpeed: this.getEnvNumber('FLEET_SPEED', 1),
       resourceMultiplier: this.getEnvNumber('RESOURCE_MULTIPLIER', 1),
       planetSize: GAME_CONSTANTS.INITIAL_FIELDS,
+      maxBuildingLevel: this.getEnvNumber('MAX_BUILDING_LEVEL', 100),
+      maxTechnologyLevel: this.getEnvNumber('MAX_TECH_LEVEL', 100),
       baseMetal: 20,
       baseCrystal: 10,
       baseDeuterium: 0,

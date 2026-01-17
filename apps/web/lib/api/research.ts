@@ -13,6 +13,8 @@ export interface TechnologyInfo {
   description: string;
   category: 'basic' | 'drive' | 'advanced' | 'combat';
   currentLevel: number;
+  maxLevel: number;
+  isMaxLevel: boolean;
   cost: ResearchCost;
   buildTime: number;
   canResearch: boolean;

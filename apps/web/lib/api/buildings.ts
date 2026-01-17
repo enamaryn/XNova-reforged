@@ -14,6 +14,8 @@ export interface BuildingInfo {
   description: string;
   category: 'resource' | 'facility' | 'station' | 'defense' | 'moon';
   currentLevel: number;
+  maxLevel: number;
+  isMaxLevel: boolean;
   cost: BuildingCost;
   buildTime: number; // en secondes
   canBuild: boolean;

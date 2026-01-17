@@ -67,6 +67,8 @@ export class BuildingsService {
       orderBy: { endTime: 'asc' },
     });
 
+    const { maxBuildingLevel } = await this.serverConfig.getConfig();
+
     const buildingsInfo = Object.values(BUILDINGS).map((building) => {
       const currentLevel = planetBuildings[building.id] || 0;
       const cost = getBuildingCost(building.id, currentLevel);
@@ -92,6 +94,7 @@ export class BuildingsService {
 
       // Verifier si deja en construction
       const inQueue = queue.find((q) => q.buildingId === building.id);
+      const isMaxLevel = currentLevel >= maxBuildingLevel;
 
       return {
         id: building.id,
@@ -99,9 +102,11 @@ export class BuildingsService {
         description: building.description,
         category: building.category,
         currentLevel,
+        maxLevel: maxBuildingLevel,
+        isMaxLevel,
         cost,
         buildTime: time, // en secondes
-        canBuild: requirements.canBuild && canAfford && !inQueue,
+        canBuild: requirements.canBuild && canAfford && !inQueue && !isMaxLevel,
         canAfford,
         inQueue: !!inQueue,
         queueEndTime: inQueue?.endTime,
@@ -145,6 +150,11 @@ export class BuildingsService {
     // Recuperer le niveau actuel
     const planetBuildings = this.extractBuildingLevels(planet);
     const currentLevel = planetBuildings[buildingId] || 0;
+    const { gameSpeed, maxBuildingLevel } = await this.serverConfig.getConfig();
+
+    if (currentLevel >= maxBuildingLevel) {
+      throw new BadRequestException('Niveau max atteint');
+    }
 
     // Verifier les prerequis
     const userTechs = await this.database.technology.findMany({
@@ -194,8 +204,6 @@ export class BuildingsService {
       naniteLevel: planet.naniteFactory,
     });
 
-    // Appliquer le game speed
-    const { gameSpeed } = await this.serverConfig.getConfig();
     const adjustedTime = Math.max(1, Math.floor(buildTimeSeconds / gameSpeed));
 
     const now = new Date();

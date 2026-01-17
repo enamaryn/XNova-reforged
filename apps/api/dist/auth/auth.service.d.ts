@@ -18,10 +18,10 @@ export declare class AuthService {
     }>;
     getMe(userId: string): Promise<{
         id: string;
-        createdAt: Date;
         username: string;
         email: string;
         role: import(".prisma/client").$Enums.UserRole;
+        createdAt: Date;
         updatedAt: Date;
         points: number;
         rank: number;
