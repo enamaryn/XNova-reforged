@@ -5,7 +5,10 @@ Tests end-to-end avec Playwright sur Chromium.
 ## Prérequis
 
 ```bash
-# Installer les dépendances Playwright
+# Installer les dependances systeme + Chromium (auto-detect OS)
+./scripts/install-playwright-deps.sh
+
+# Ou uniquement Chromium (si deps déjà présentes)
 npx playwright install chromium
 
 # S'assurer que Docker est lancé (PostgreSQL + Redis)

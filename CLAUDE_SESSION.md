@@ -3489,3 +3489,88 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 - Continuer avec tests unitaires ou optimisation Prisma.
 
 **Note :** l'outil TodoWrite n'est pas disponible dans cette session, suivi effectue via la roadmap.
+
+---
+
+## ✅ Session 63 - Tests E2E restants + deps Playwright
+
+**Date :** 17 janvier 2026
+**Objectif :** Completer les parcours E2E manquants et ajouter l'installation des dependances systeme Playwright.
+
+### ✅ Taches realisees
+- [x] Ajout helper de connexion Playwright
+- [x] Parcours inscription -> connexion en E2E
+- [x] Script d'installation des dependances systeme Playwright
+- [x] Documentation E2E mise a jour
+- [x] Roadmap MVP mise a jour (E2E + deps)
+
+### 🔧 Fichiers modifies
+- `tests/e2e/helpers.ts`
+- `tests/e2e/auth.spec.ts`
+- `tests/e2e/README.md`
+- `scripts/install-playwright-deps.sh` ✅ NEW
+- `ROADMAP_MVP.md`
+
+### 📍 Etat actuel du projet
+
+**Sprint 10 :** en cours (tests E2E couverts + deps Playwright documentees).
+
+### ⏭️ Prochaines etapes
+- Lancer `npm run test:e2e` pour valider les nouveaux parcours.
+- Enchainer sur tests unitaires ou optimisation Prisma.
+
+**Note :** l'outil TodoWrite n'est pas disponible dans cette session, suivi effectue via la roadmap.
+
+---
+
+## ✅ Session 64 - Script Playwright multi-OS
+
+**Date :** 17 janvier 2026
+**Objectif :** Adapter l'installation des dependances Playwright selon l'OS/distro.
+
+### ✅ Taches realisees
+- [x] Detection OS/distro + gestion sudo/PATH
+- [x] Support Linux/macOS, message explicite Windows
+- [x] Documentation E2E ajustee
+- [x] Roadmap MVP mise a jour
+
+### 🔧 Fichiers modifies
+- `scripts/install-playwright-deps.sh`
+- `tests/e2e/README.md`
+- `ROADMAP_MVP.md`
+
+### 📍 Etat actuel du projet
+
+**Sprint 10 :** en cours (E2E deps Playwright multi-OS).
+
+### ⏭️ Prochaines etapes
+- Lancer `bash scripts/install-playwright-deps.sh` puis `npm run test:e2e`.
+
+**Note :** l'outil TodoWrite n'est pas disponible dans cette session, suivi effectue via la roadmap.
+
+---
+
+## ✅ Session 65 - Script Playwright Fedora
+
+**Date :** 17 janvier 2026
+**Objectif :** Adapter l'installation des dependances Playwright pour Fedora/RHEL.
+
+### ✅ Taches realisees
+- [x] Detection distro (ID/ID_LIKE) et branche Fedora
+- [x] Installation deps via dnf/yum pour Chromium
+- [x] Documentation E2E ajustee
+- [x] Roadmap MVP mise a jour
+
+### 🔧 Fichiers modifies
+- `scripts/install-playwright-deps.sh`
+- `tests/e2e/README.md`
+- `ROADMAP_MVP.md`
+
+### 📍 Etat actuel du projet
+
+**Sprint 10 :** en cours (deps Playwright Fedora supportees).
+
+### ⏭️ Prochaines etapes
+- Relancer `./scripts/install-playwright-deps.sh` sur Fedora pour valider.
+
+**Note :** l'outil TodoWrite n'est pas disponible dans cette session, suivi effectue via la roadmap.

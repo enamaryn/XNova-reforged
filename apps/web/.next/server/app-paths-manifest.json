@@ -1,6 +1,16 @@
 {
+  "/(auth)/register/page": "app/(auth)/register/page.js",
   "/(game)/overview/page": "app/(game)/overview/page.js",
-  "/(game)/buildings/page": "app/(game)/buildings/page.js",
   "/(admin)/admin/page": "app/(admin)/admin/page.js",
-  "/(game)/galaxy/page": "app/(game)/galaxy/page.js"
+  "/(game)/alliance/page": "app/(game)/alliance/page.js",
+  "/(game)/buildings/page": "app/(game)/buildings/page.js",
+  "/(game)/galaxy/page": "app/(game)/galaxy/page.js",
+  "/(game)/reports/page": "app/(game)/reports/page.js",
+  "/(game)/fleet/page": "app/(game)/fleet/page.js",
+  "/(auth)/login/page": "app/(auth)/login/page.js",
+  "/(game)/messages/page": "app/(game)/messages/page.js",
+  "/(game)/reports/[reportId]/page": "app/(game)/reports/[reportId]/page.js",
+  "/(game)/research/page": "app/(game)/research/page.js",
+  "/(game)/shipyard/page": "app/(game)/shipyard/page.js",
+  "/(game)/statistics/page": "app/(game)/statistics/page.js"
 }

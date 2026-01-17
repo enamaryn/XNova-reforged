@@ -816,18 +816,18 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 **Objectif :** Finaliser le MVP pour alpha testing
 
 #### Tests
-- [ ] Tests E2E Playwright
-  - [ ] Parcours inscription → connexion
+- [x] Tests E2E Playwright
+  - [x] Parcours inscription → connexion
   - [x] Correctif Playwright (regex URL `/overview`)
   - [x] Ajustement données E2E (username/email validés)
   - [x] Remplacement des sélecteurs par IDs pour l’inscription E2E
-  - [ ] Parcours build bâtiment
-  - [ ] Parcours envoi flotte
-  - [ ] Parcours combat
+  - [x] Parcours build bâtiment
+  - [x] Parcours envoi flotte
+  - [x] Parcours combat
   - [x] Ajustement timeouts Playwright (navigation + attentes)
   - [x] Playwright Chromium-only + webServer API/Web séparés
   - [x] Script `test:e2e` forcé sur Chromium
-- [ ] Pré-requis Playwright (deps système Fedora via `dnf`)
+- [x] Pré-requis Playwright (script multi-OS + Fedora)
 - [ ] Tests unitaires critiques
   - Services calculs (ressources, combat)
   - Guards auth

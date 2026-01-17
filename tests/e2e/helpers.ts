@@ -43,3 +43,28 @@ export async function registerUser(
   // Attendre la redirection vers /overview
   await page.waitForURL(/\/overview$/);
 }
+
+/**
+ * Connexion d'un utilisateur existant.
+ */
+export async function loginUser(
+  page: Page,
+  credentials: { identifier: string; password?: string }
+) {
+  const { identifier, password = 'Test1234' } = credentials;
+
+  await page.goto('/login');
+
+  const identifierInput = page.locator('#identifier');
+  await identifierInput.waitFor({ state: 'visible' });
+  await page.waitForFunction(() => {
+    const input = document.querySelector('#identifier') as HTMLInputElement;
+    return input && !input.disabled;
+  });
+
+  await identifierInput.fill(identifier);
+  await page.locator('#password').fill(password);
+
+  await page.getByRole('button', { name: 'Se connecter' }).click();
+  await page.waitForURL(/\/overview$/);
+}
