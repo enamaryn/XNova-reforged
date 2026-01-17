@@ -453,9 +453,10 @@ export default function AdminPage() {
                 type="text"
                 placeholder={t('admin.usernamePlaceholder')}
                 value={boostForm.username}
-                onChange={(event) =>
-                  setBoostForm((prev) => ({ ...prev, username: event.target.value }))
-                }
+                onChange={(event) => {
+                  setBoostResult(null);
+                  setBoostForm((prev) => ({ ...prev, username: event.target.value }));
+                }}
                 className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
               />
             </label>

@@ -800,6 +800,7 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 - [x] Gestion des rôles (MODERATOR/ADMIN/SUPER_ADMIN) + promotion joueur
 - [x] Modération : bannir/débannir + historique
 - [x] Audit log détaillé consultable
+- [x] Macro admin : boost développement total (SUPER_ADMIN)
 - [ ] Mode maintenance (message global + whitelist admin)
 - [ ] Profil joueur avancé (stats, IP, activité)
 - [ ] Anti-cheat basique (alertes seuils)

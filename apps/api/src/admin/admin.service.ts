@@ -107,7 +107,7 @@ export class AdminService {
       }),
     );
 
-    const techIds = Object.keys(TECHNOLOGIES).map((entry) => Number(entry));
+    const techIds = Object.values(TECHNOLOGIES).map((tech) => tech.id);
     const techUpserts = techIds.map((techId) =>
       this.database.technology.upsert({
         where: { userId_techId: { userId: target.id, techId } },

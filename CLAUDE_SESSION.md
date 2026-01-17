@@ -3467,6 +3467,39 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 
 ---
 
+## ✅ Session 67 - Macro admin boost developpement
+
+**Date :** 17 janvier 2026
+**Objectif :** Ajouter un boost de developpement total pour SUPER_ADMIN.
+
+### ✅ Taches realisees
+- [x] Endpoint admin `boost-development` reserve SUPER_ADMIN
+- [x] Mise a niveau globale batiments/technologies + purge des files
+- [x] UI admin + i18n pour declencher le boost
+- [x] Roadmap MVP mise a jour
+
+### 🔧 Fichiers modifies
+- `apps/api/src/admin/admin.controller.ts`
+- `apps/api/src/admin/admin.service.ts`
+- `apps/api/src/admin/dto/boost-development.dto.ts` ✅ NEW
+- `apps/web/lib/api/admin.ts`
+- `apps/web/lib/roles.ts`
+- `apps/web/app/(admin)/admin/page.tsx`
+- `apps/web/lib/i18n/index.tsx`
+- `ROADMAP_MVP.md`
+
+### 📍 Etat actuel du projet
+
+**Sprint 10 :** en cours (tests unitaires critiques + macros admin).
+
+### ⏭️ Prochaines etapes
+- Tester le boost depuis le compte SUPER_ADMIN.
+- Continuer sur tests integration API ou optimisation Prisma.
+
+**Note :** suivi via update_plan.
+
+---
+
 ## ✅ Session 61 - LAN dev origins + overview mobile
 
 **Date :** 17 janvier 2026
