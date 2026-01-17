@@ -63,6 +63,18 @@ export interface UnbanUserPayload {
   reason?: string;
 }
 
+export interface BoostDevelopmentPayload {
+  username: string;
+}
+
+export interface BoostDevelopmentResult {
+  success: boolean;
+  username: string;
+  level: number;
+  planetsUpdated: number;
+  technologiesUpdated: number;
+}
+
 export function getAdminConfig() {
   return apiClient.get<AdminConfig>("/admin/config");
 }
@@ -80,6 +92,10 @@ export function updateUserRole(payload: UpdateRolePayload) {
     "/admin/roles",
     payload,
   );
+}
+
+export function boostDevelopment(payload: BoostDevelopmentPayload) {
+  return apiClient.put<BoostDevelopmentResult>("/admin/boost-development", payload);
 }
 
 export function banUser(payload: BanUserPayload) {

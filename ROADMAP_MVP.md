@@ -828,10 +828,10 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
   - [x] Playwright Chromium-only + webServer API/Web séparés
   - [x] Script `test:e2e` forcé sur Chromium
 - [x] Pré-requis Playwright (script multi-OS + Fedora)
-- [ ] Tests unitaires critiques
-  - Services calculs (ressources, combat)
-  - Guards auth
-  - Validations
+- [x] Tests unitaires critiques
+  - [x] Services calculs (ressources, combat)
+  - [x] Guards auth
+  - [x] Validations
 - [ ] Tests intégration API
   - Tous les endpoints critiques
 

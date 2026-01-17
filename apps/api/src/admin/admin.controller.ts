@@ -8,6 +8,7 @@ import { UpdateConfigDto } from './dto/update-config.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { BanUserDto } from './dto/ban-user.dto';
 import { UnbanUserDto } from './dto/unban-user.dto';
+import { BoostDevelopmentDto } from './dto/boost-development.dto';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('admin')
@@ -42,6 +43,15 @@ export class AdminController {
     @CurrentUser('id') userId: string,
   ) {
     return this.adminService.updateUserRole(userId, dto);
+  }
+
+  @Put('boost-development')
+  @Roles('SUPER_ADMIN')
+  boostDevelopment(
+    @Body() dto: BoostDevelopmentDto,
+    @CurrentUser('id') userId: string,
+  ) {
+    return this.adminService.boostUserDevelopment(userId, dto);
   }
 
   @Put('ban')

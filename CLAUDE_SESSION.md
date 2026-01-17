@@ -3432,6 +3432,41 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 
 ---
 
+## ✅ Session 66 - Tests unitaires services critiques
+
+**Date :** 17 janvier 2026
+**Objectif :** Cibler les services ressources/combat, guards et validations.
+
+### ✅ Taches realisees
+- [x] Ajout Jest/ts-jest + config + script test API
+- [x] Tests unitaires ResourcesService + CombatService
+- [x] Tests guards (RolesGuard/AdminGuard) et validations DTO
+- [x] Roadmap MVP mise a jour
+
+### 🔧 Fichiers modifies
+- `apps/api/package.json`
+- `package.json`
+- `apps/api/jest.config.cjs` ✅ NEW
+- `apps/api/test/jest.setup.ts` ✅ NEW
+- `apps/api/test/resources.service.spec.ts` ✅ NEW
+- `apps/api/test/combat.service.spec.ts` ✅ NEW
+- `apps/api/test/guards.spec.ts` ✅ NEW
+- `apps/api/test/resources.dto.spec.ts` ✅ NEW
+- `ROADMAP_MVP.md`
+
+### 📍 Etat actuel du projet
+
+**Sprint 10 :** en cours (tests unitaires critiques couverts).
+
+### ⏭️ Prochaines etapes
+- Lancer `npm install` pour recuperer les dependances Jest.
+- Executer `npm run test` ou `npm --workspace @xnova/api test`.
+- Continuer avec tests integration API ou optimisation Prisma.
+
+**Note :** suivi via update_plan.
+
+---
+
 ## ✅ Session 61 - LAN dev origins + overview mobile
 
 **Date :** 17 janvier 2026

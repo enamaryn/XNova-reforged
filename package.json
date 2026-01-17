@@ -17,6 +17,7 @@
     "docker:down": "docker-compose down",
     "db:push": "cd packages/database && npx prisma db push",
     "db:studio": "cd packages/database && npx prisma studio",
+    "test": "npm --workspace @xnova/api test",
     "test:e2e": "playwright test --project=chromium",
     "test:e2e:headed": "playwright test --project=chromium --headed",
     "test:e2e:debug": "playwright test --project=chromium --debug",

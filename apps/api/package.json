@@ -7,7 +7,9 @@
     "build": "nest build",
     "start": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
-    "format": "prettier --write \"src/**/*.ts\""
+    "format": "prettier --write \"src/**/*.ts\"",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -35,6 +37,9 @@
     "@nestjs/schematics": "^11.0.9",
     "@types/node": "^20.0.0",
     "@types/passport-jwt": "^4.0.0",
+    "@types/jest": "^29.5.14",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
     "typescript": "^5.3.0"
   }
 }

@@ -1,10 +1,34 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { TECHNOLOGIES } from '@xnova/game-config';
 import { DatabaseService } from '../database/database.service';
 import { ServerConfigService } from '../server-config/server-config.service';
 import { UpdateConfigDto } from './dto/update-config.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { BanUserDto } from './dto/ban-user.dto';
 import { UnbanUserDto } from './dto/unban-user.dto';
+import { BoostDevelopmentDto } from './dto/boost-development.dto';
+
+const MAX_DEVELOPMENT_LEVEL = 100;
+const BUILDING_FIELDS = [
+  'metalMine',
+  'crystalMine',
+  'deuteriumMine',
+  'solarPlant',
+  'fusionPlant',
+  'roboticsFactory',
+  'naniteFactory',
+  'shipyard',
+  'metalStorage',
+  'crystalStorage',
+  'deuteriumStorage',
+  'researchLab',
+  'terraformer',
+  'allianceDepot',
+  'missileSilo',
+  'moonBase',
+  'phalanx',
+  'jumpGate',
+] as const;
 
 @Injectable()
 export class AdminService {
@@ -55,6 +79,87 @@ export class AdminService {
     });
 
     return updated;
+  }
+
+  async boostUserDevelopment(actorId: string, dto: BoostDevelopmentDto) {
+    const target = await this.database.user.findUnique({
+      where: { username: dto.username },
+      select: { id: true, username: true },
+    });
+
+    if (!target) {
+      throw new NotFoundException('Utilisateur introuvable');
+    }
+
+    const planets = await this.database.planet.findMany({
+      where: { userId: target.id },
+      select: { id: true, fieldsMax: true },
+    });
+
+    const planetIds = planets.map((planet) => planet.id);
+    const planetUpdates = planets.map((planet) =>
+      this.database.planet.update({
+        where: { id: planet.id },
+        data: {
+          ...this.buildMaxDevelopmentData(),
+          fieldsUsed: planet.fieldsMax,
+        },
+      }),
+    );
+
+    const techIds = Object.keys(TECHNOLOGIES).map((entry) => Number(entry));
+    const techUpserts = techIds.map((techId) =>
+      this.database.technology.upsert({
+        where: { userId_techId: { userId: target.id, techId } },
+        update: { level: MAX_DEVELOPMENT_LEVEL },
+        create: { userId: target.id, techId, level: MAX_DEVELOPMENT_LEVEL },
+      }),
+    );
+
+    const transactions = [
+      ...(planetIds.length
+        ? [
+            this.database.buildQueue.deleteMany({
+              where: { planetId: { in: planetIds }, completed: false },
+            }),
+          ]
+        : []),
+      this.database.researchQueue.deleteMany({
+        where: { userId: target.id, completed: false },
+      }),
+      ...planetUpdates,
+      ...techUpserts,
+      this.database.adminAuditLog.create({
+        data: {
+          userId: actorId,
+          action: 'boost_development',
+          changes: {
+            targetId: target.id,
+            targetUsername: target.username,
+            level: MAX_DEVELOPMENT_LEVEL,
+            planets: planets.length,
+            technologies: techIds.length,
+          },
+        },
+      }),
+    ];
+
+    await this.database.$transaction(transactions);
+
+    return {
+      success: true,
+      username: target.username,
+      level: MAX_DEVELOPMENT_LEVEL,
+      planetsUpdated: planets.length,
+      technologiesUpdated: techIds.length,
+    };
+  }
+
+  private buildMaxDevelopmentData() {
+    return BUILDING_FIELDS.reduce<Record<string, number>>((acc, field) => {
+      acc[field] = MAX_DEVELOPMENT_LEVEL;
+      return acc;
+    }, {});
   }
 
   async banUser(actorId: string, dto: BanUserDto) {

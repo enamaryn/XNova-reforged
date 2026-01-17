@@ -12,11 +12,17 @@ import {
   updateUserRole,
   banUser,
   unbanUser,
+  boostDevelopment,
+  type BoostDevelopmentResult,
 } from '@/lib/api/admin';
 import { useI18n } from '@/lib/i18n';
+import { useAuthStore } from '@/lib/stores/auth-store';
+import { isSuperAdmin } from '@/lib/roles';
 
 export default function AdminPage() {
   const { t } = useI18n();
+  const { user } = useAuthStore();
+  const isSuperAdminUser = isSuperAdmin(user?.role);
   const queryClient = useQueryClient();
   const [form, setForm] = useState<AdminConfig | null>(null);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
@@ -29,6 +35,8 @@ export default function AdminPage() {
     minutes: 0,
   });
   const [unbanForm, setUnbanForm] = useState({ username: '', reason: '' });
+  const [boostForm, setBoostForm] = useState({ username: '' });
+  const [boostResult, setBoostResult] = useState<BoostDevelopmentResult | null>(null);
 
   const configQuery = useQuery({
     queryKey: ['admin', 'config'],
@@ -87,6 +95,15 @@ export default function AdminPage() {
     onSuccess: () => {
       setUnbanForm({ username: '', reason: '' });
       banLogsQuery.refetch();
+      auditQuery.refetch();
+    },
+  });
+
+  const boostMutation = useMutation({
+    mutationFn: boostDevelopment,
+    onSuccess: (data) => {
+      setBoostForm({ username: '' });
+      setBoostResult(data);
       auditQuery.refetch();
     },
   });
@@ -424,6 +441,49 @@ export default function AdminPage() {
           </div>
         </div>
       </div>
+
+      {isSuperAdminUser && (
+        <div className="rounded-3xl border border-slate-800/80 bg-slate-950/60 p-6">
+          <h2 className="text-sm font-semibold text-white">{t('admin.boostTitle')}</h2>
+          <p className="text-xs text-slate-500">{t('admin.boostHint')}</p>
+          <div className="mt-4 grid gap-3 md:grid-cols-[1fr_auto] md:items-end">
+            <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
+              {t('admin.usernameLabel')}
+              <input
+                type="text"
+                placeholder={t('admin.usernamePlaceholder')}
+                value={boostForm.username}
+                onChange={(event) =>
+                  setBoostForm((prev) => ({ ...prev, username: event.target.value }))
+                }
+                className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+              />
+            </label>
+            <button
+              onClick={() =>
+                boostForm.username &&
+                boostMutation.mutate({ username: boostForm.username })
+              }
+              disabled={boostMutation.isPending}
+              className="rounded-full border border-amber-500/60 px-5 py-2 text-xs uppercase tracking-[0.2em] text-amber-200 hover:bg-amber-500/10 disabled:opacity-60"
+            >
+              {boostMutation.isPending ? t('admin.boostProcessing') : t('admin.boostAction')}
+            </button>
+          </div>
+          {boostResult && (
+            <div className="mt-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-xs text-emerald-200">
+              <div className="text-[11px] uppercase tracking-[0.2em] text-emerald-200">
+                {t('admin.boostSuccess')}
+              </div>
+              <div className="mt-2 text-sm text-emerald-100">
+                {boostResult.username} • {boostResult.planetsUpdated} {t('admin.boostPlanets')} •{' '}
+                {boostResult.technologiesUpdated} {t('admin.boostTechs')} • {t('admin.boostLevel')}{' '}
+                {boostResult.level}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
         <div className="rounded-3xl border border-slate-800/80 bg-slate-950/60 p-6">
