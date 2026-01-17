@@ -3429,3 +3429,63 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 - Poursuivre avec les tests unitaires ou l'optimisation Prisma.
 
 **Note :** l'outil TodoWrite n'est pas disponible dans cette session, suivi effectue via la roadmap.
+
+---
+
+## ✅ Session 61 - LAN dev origins + overview mobile
+
+**Date :** 17 janvier 2026
+**Objectif :** Autoriser l'acces LAN en dev et corriger la largeur mobile de l'overview.
+
+### ✅ Taches realisees
+- [x] allowedDevOrigins auto (IPs LAN detectees) + variable DEV_ALLOWED_ORIGINS
+- [x] ResourceBar compact passe en grille 2x2 sur mobile
+- [x] Overview mobile ajuste (progression + renommage en pile)
+- [x] Roadmap MVP mise a jour
+
+### 🔧 Fichiers modifies
+- `apps/web/next.config.mjs`
+- `apps/web/components/game/layout/ResourceBar.tsx`
+- `apps/web/app/(game)/overview/page.tsx`
+- `.env.example`
+- `ROADMAP_MVP.md`
+
+### 📍 Etat actuel du projet
+
+**Sprint 10 :** en cours (responsive mobile stabilise).
+
+### ⏭️ Prochaines etapes
+- Verifier en mobile iPhone (overview + connexion LAN)
+- Enchainement sur tests unitaires ou optimisation Prisma
+
+**Note :** l'outil TodoWrite n'est pas disponible dans cette session, suivi effectue via la roadmap.
+
+---
+
+## ✅ Session 62 - Correction tronquage overview mobile
+
+**Date :** 17 janvier 2026
+**Objectif :** Eliminer le debordement horizontal sur mobile dans l'overview.
+
+### ✅ Taches realisees
+- [x] Blocage du debordement horizontal global
+- [x] Game layout et header rendus plus flexibles (min-w-0, gap)
+- [x] Planet selector compact avec troncature mobile
+- [x] Roadmap MVP mise a jour
+
+### 🔧 Fichiers modifies
+- `apps/web/app/globals.css`
+- `apps/web/components/game/layout/GameLayout.tsx`
+- `apps/web/components/game/layout/GameHeader.tsx`
+- `apps/web/components/game/layout/PlanetSelector.tsx`
+- `ROADMAP_MVP.md`
+
+### 📍 Etat actuel du projet
+
+**Sprint 10 :** en cours (responsive mobile consolide).
+
+### ⏭️ Prochaines etapes
+- Verifier l'overview sur iPhone 14 apres redemarrage du dev server.
+- Continuer avec tests unitaires ou optimisation Prisma.
+
+**Note :** l'outil TodoWrite n'est pas disponible dans cette session, suivi effectue via la roadmap.

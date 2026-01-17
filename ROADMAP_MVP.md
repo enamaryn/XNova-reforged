@@ -860,7 +860,7 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 - [ ] Animations fluides
 - [ ] États de chargement partout
 - [ ] Gestion erreurs user-friendly
-- [x] Responsive mobile (auth + home + pages principales)
+- [x] Responsive mobile (auth + home + pages principales + overview + fix overflow)
 - [ ] Accessibilité (ARIA labels)
 
 #### Documentation

@@ -1,3 +1,6 @@
 {
-  "/page": "app/page.js"
+  "/(game)/overview/page": "app/(game)/overview/page.js",
+  "/(game)/buildings/page": "app/(game)/buildings/page.js",
+  "/(admin)/admin/page": "app/(admin)/admin/page.js",
+  "/(game)/galaxy/page": "app/(game)/galaxy/page.js"
 }

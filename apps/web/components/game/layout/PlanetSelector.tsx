@@ -31,7 +31,7 @@ export function PlanetSelector() {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 rounded-full border border-slate-800 bg-slate-950/60 px-3 py-1.5 text-sm transition-colors hover:border-slate-600"
+        className="flex max-w-[160px] min-w-0 items-center gap-2 overflow-hidden rounded-full border border-slate-800 bg-slate-950/60 px-3 py-1.5 text-sm transition-colors hover:border-slate-600 sm:max-w-none"
       >
         <span className="text-lg">🌍</span>
         <div className="text-left hidden sm:block">
@@ -40,7 +40,7 @@ export function PlanetSelector() {
             [{currentPlanet?.galaxy}:{currentPlanet?.system}:{currentPlanet?.position}]
           </div>
         </div>
-        <div className="sm:hidden text-white font-medium">
+        <div className="sm:hidden truncate text-white font-medium">
           {currentPlanet?.name?.substring(0, 8) || 'Planète'}
         </div>
         {planets.length > 1 && (

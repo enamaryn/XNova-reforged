@@ -13,7 +13,7 @@ export function GameLayout({ children }: GameLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen bg-slate-950 overflow-x-hidden">
       {/* Fond spatial */}
       <div
         className="fixed inset-0 z-0"
@@ -46,12 +46,12 @@ export function GameLayout({ children }: GameLayoutProps) {
       <GameSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       {/* Contenu principal */}
-      <main className="relative z-10 pt-14 lg:pl-64">
+      <main className="relative z-10 w-full min-w-0 pt-14 lg:pl-64">
         {/* Zone de ressources mobile */}
         <div className="md:hidden h-10" />
 
         {/* Contenu */}
-        <div className="page-fade p-4 pb-20 md:p-6 lg:p-8">
+        <div className="page-fade min-w-0 p-4 pb-20 md:p-6 lg:p-8">
           {children}
         </div>
       </main>

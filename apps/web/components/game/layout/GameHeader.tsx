@@ -25,7 +25,7 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-14 border-b border-slate-800/60 bg-slate-950/80 backdrop-blur-md">
-      <div className="flex h-full items-center justify-between px-4">
+      <div className="flex h-full min-w-0 items-center justify-between gap-2 px-4">
         {/* Gauche: Menu burger + Logo */}
         <div className="flex items-center gap-3">
           <button
@@ -70,7 +70,7 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
         </div>
 
         {/* Droite: Planète + Utilisateur */}
-        <div className="flex items-center gap-3">
+        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
           <PlanetSelector />
 
           <div className="relative">

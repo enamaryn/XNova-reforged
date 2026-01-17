@@ -138,7 +138,7 @@ export default function OverviewPage() {
                 Rang #{user?.rank ?? '-'} · {user?.points ?? 0} points
               </p>
             </div>
-            <div className="ml-auto min-w-[160px]">
+            <div className="w-full sm:ml-auto sm:min-w-[160px] sm:max-w-[220px]">
               <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.2em] text-slate-500">
                 <span>Progression</span>
                 <span>{commanderProgress.toFixed(0)}%</span>
@@ -212,14 +212,14 @@ export default function OverviewPage() {
                 <p className="text-xs text-slate-400">{coordinates}</p>
               </div>
             )}
-            <div className="ml-auto flex items-center gap-2">
+            <div className="flex w-full flex-col gap-2 sm:ml-auto sm:w-auto sm:flex-row sm:items-center">
               {isRenaming ? (
                 <>
-                  <div className="flex flex-col items-end gap-1">
+                  <div className="flex flex-col gap-1 sm:items-end">
                     <button
                       onClick={() => renameMutation.mutate(planetNameDraft)}
                       disabled={renameMutation.isPending || !planetNameDraft.trim()}
-                      className="rounded-full border border-blue-500/50 px-3 py-1 text-xs uppercase tracking-[0.2em] text-blue-200 hover:border-blue-400 disabled:border-slate-800 disabled:text-slate-500"
+                      className="w-full rounded-full border border-blue-500/50 px-3 py-1 text-xs uppercase tracking-[0.2em] text-blue-200 hover:border-blue-400 disabled:border-slate-800 disabled:text-slate-500 sm:w-auto"
                     >
                       {renameMutation.isPending ? 'Sauvegarde...' : 'Enregistrer'}
                     </button>
@@ -229,7 +229,7 @@ export default function OverviewPage() {
                       setPlanetNameDraft(selectedPlanet?.name || '');
                       setIsRenaming(false);
                     }}
-                    className="text-xs text-slate-400 hover:text-white"
+                    className="w-full text-xs text-slate-400 hover:text-white sm:w-auto"
                   >
                     Annuler
                   </button>
@@ -237,7 +237,7 @@ export default function OverviewPage() {
               ) : (
                 <button
                   onClick={() => setIsRenaming(true)}
-                  className="rounded-full border border-slate-800 px-3 py-1 text-xs uppercase tracking-[0.2em] text-slate-300 hover:border-slate-600 hover:text-white"
+                  className="w-full rounded-full border border-slate-800 px-3 py-1 text-xs uppercase tracking-[0.2em] text-slate-300 hover:border-slate-600 hover:text-white sm:w-auto"
                 >
                   Renommer
                 </button>
