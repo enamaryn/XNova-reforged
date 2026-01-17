@@ -67,17 +67,21 @@ export class BuildingsService {
       orderBy: { endTime: 'asc' },
     });
 
-    const { maxBuildingLevel } = await this.serverConfig.getConfig();
+    const { maxBuildingLevel, buildingCostMultiplier } =
+      await this.serverConfig.getConfig();
+    const costFactor = buildingCostMultiplier > 0 ? buildingCostMultiplier : 1;
 
     const buildingsInfo = Object.values(BUILDINGS).map((building) => {
       const currentLevel = planetBuildings[building.id] || 0;
-      const cost = getBuildingCost(building.id, currentLevel);
-      const time = getBuildingTime({
+      const rawCost = getBuildingCost(building.id, currentLevel);
+      const cost = this.applyCostMultiplier(rawCost, costFactor);
+      const baseTime = getBuildingTime({
         buildingId: building.id,
         currentLevel,
         roboticsLevel: planet.roboticsFactory,
         naniteLevel: planet.naniteFactory,
       });
+      const time = Math.max(1, Math.floor(baseTime * costFactor));
 
       // Verifier les prerequis
       const requirements = checkBuildingRequirements(
@@ -150,7 +154,9 @@ export class BuildingsService {
     // Recuperer le niveau actuel
     const planetBuildings = this.extractBuildingLevels(planet);
     const currentLevel = planetBuildings[buildingId] || 0;
-    const { gameSpeed, maxBuildingLevel } = await this.serverConfig.getConfig();
+    const { gameSpeed, maxBuildingLevel, buildingCostMultiplier } =
+      await this.serverConfig.getConfig();
+    const costFactor = buildingCostMultiplier > 0 ? buildingCostMultiplier : 1;
 
     if (currentLevel >= maxBuildingLevel) {
       throw new BadRequestException('Niveau max atteint');
@@ -177,7 +183,8 @@ export class BuildingsService {
     }
 
     // Calculer le cout
-    const cost = getBuildingCost(buildingId, currentLevel);
+    const rawCost = getBuildingCost(buildingId, currentLevel);
+    const cost = this.applyCostMultiplier(rawCost, costFactor);
 
     // Verifier les ressources
     if (
@@ -197,12 +204,13 @@ export class BuildingsService {
     }
 
     // Calculer la duree de construction
-    const buildTimeSeconds = getBuildingTime({
+    const baseBuildTimeSeconds = getBuildingTime({
       buildingId,
       currentLevel,
       roboticsLevel: planet.roboticsFactory,
       naniteLevel: planet.naniteFactory,
     });
+    const buildTimeSeconds = Math.max(1, Math.floor(baseBuildTimeSeconds * costFactor));
 
     const adjustedTime = Math.max(1, Math.floor(buildTimeSeconds / gameSpeed));
 
@@ -462,6 +470,19 @@ export class BuildingsService {
       41: planet.moonBase,
       42: planet.phalanx,
       43: planet.jumpGate,
+    };
+  }
+
+  private applyCostMultiplier(
+    cost: BuildingCost,
+    multiplier: number,
+  ): BuildingCost {
+    const factor = multiplier > 0 ? multiplier : 1;
+    return {
+      metal: Math.floor(cost.metal * factor),
+      crystal: Math.floor(cost.crystal * factor),
+      deuterium: Math.floor(cost.deuterium * factor),
+      energy: cost.energy ? Math.floor(cost.energy * factor) : 0,
     };
   }
 

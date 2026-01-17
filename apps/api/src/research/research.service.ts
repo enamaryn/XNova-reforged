@@ -42,11 +42,13 @@ export class ResearchService {
     });
 
     const queueBlocked = queue.length > 0;
-    const { maxTechnologyLevel } = await this.serverConfig.getConfig();
+    const { maxTechnologyLevel, researchCostMultiplier } =
+      await this.serverConfig.getConfig();
 
     const technologies = Object.values(TECHNOLOGIES).map((tech) => {
       const currentLevel = techLevels[tech.id] || 0;
-      const cost = getTechnologyCost(tech.id, currentLevel);
+      const rawCost = getTechnologyCost(tech.id, currentLevel);
+      const cost = this.applyCostMultiplier(rawCost, researchCostMultiplier);
       const buildTime = this.getResearchTimeSeconds({
         cost,
         labLevel: planet.researchLab,
@@ -120,7 +122,8 @@ export class ResearchService {
     });
 
     const currentLevel = techLevels[techId] || 0;
-    const { gameSpeed, maxTechnologyLevel } = await this.serverConfig.getConfig();
+    const { gameSpeed, maxTechnologyLevel, researchCostMultiplier } =
+      await this.serverConfig.getConfig();
 
     if (currentLevel >= maxTechnologyLevel) {
       throw new BadRequestException('Niveau max atteint');
@@ -138,7 +141,8 @@ export class ResearchService {
       );
     }
 
-    const cost = getTechnologyCost(techId, currentLevel);
+    const rawCost = getTechnologyCost(techId, currentLevel);
+    const cost = this.applyCostMultiplier(rawCost, researchCostMultiplier);
     if (
       planet.metal < cost.metal ||
       planet.crystal < cost.crystal ||
@@ -399,6 +403,19 @@ export class ResearchService {
     return {
       canResearch: missing.length === 0,
       missingRequirements: missing,
+    };
+  }
+
+  private applyCostMultiplier(
+    cost: { metal: number; crystal: number; deuterium: number; energy?: number },
+    multiplier: number,
+  ) {
+    const factor = multiplier > 0 ? multiplier : 1;
+    return {
+      metal: Math.floor(cost.metal * factor),
+      crystal: Math.floor(cost.crystal * factor),
+      deuterium: Math.floor(cost.deuterium * factor),
+      energy: cost.energy ? Math.floor(cost.energy * factor) : undefined,
     };
   }
 

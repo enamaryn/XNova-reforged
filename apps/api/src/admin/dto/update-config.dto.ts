@@ -25,6 +25,27 @@ export class UpdateConfigDto {
 
   @IsOptional()
   @Type(() => Number)
+  @IsNumber({}, { message: 'Le multiplicateur des batiments doit etre un nombre' })
+  @Min(0.1, { message: 'Le multiplicateur des batiments doit etre superieur a 0' })
+  @Max(10000, { message: 'Le multiplicateur des batiments est trop eleve' })
+  buildingCostMultiplier?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber({}, { message: 'Le multiplicateur des recherches doit etre un nombre' })
+  @Min(0.1, { message: 'Le multiplicateur des recherches doit etre superieur a 0' })
+  @Max(10000, { message: 'Le multiplicateur des recherches est trop eleve' })
+  researchCostMultiplier?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber({}, { message: 'Le multiplicateur des vaisseaux doit etre un nombre' })
+  @Min(0.1, { message: 'Le multiplicateur des vaisseaux doit etre superieur a 0' })
+  @Max(10000, { message: 'Le multiplicateur des vaisseaux est trop eleve' })
+  shipCostMultiplier?: number;
+
+  @IsOptional()
+  @Type(() => Number)
   @IsInt({ message: 'La taille de planete doit etre un entier' })
   @Min(50, { message: 'La taille de planete est trop petite' })
   @Max(500, { message: 'La taille de planete est trop grande' })

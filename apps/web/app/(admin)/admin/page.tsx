@@ -236,6 +236,42 @@ export default function AdminPage() {
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
+            {t('admin.buildingCostMultiplier')}
+            <input
+              type="number"
+              step="0.1"
+              value={form.buildingCostMultiplier}
+              onChange={(event) =>
+                handleChange('buildingCostMultiplier')(event.target.value)
+              }
+              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+            />
+          </label>
+          <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
+            {t('admin.researchCostMultiplier')}
+            <input
+              type="number"
+              step="0.1"
+              value={form.researchCostMultiplier}
+              onChange={(event) =>
+                handleChange('researchCostMultiplier')(event.target.value)
+              }
+              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+            />
+          </label>
+          <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
+            {t('admin.shipCostMultiplier')}
+            <input
+              type="number"
+              step="0.1"
+              value={form.shipCostMultiplier}
+              onChange={(event) =>
+                handleChange('shipCostMultiplier')(event.target.value)
+              }
+              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+            />
+          </label>
+          <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
             {t('admin.planetSize')}
             <input
               type="number"

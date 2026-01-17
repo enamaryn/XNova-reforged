@@ -45,9 +45,10 @@ export class ShipyardService {
     });
 
     const inQueue = new Set(queue.map((entry) => entry.shipId));
+    const { shipCostMultiplier } = await this.serverConfig.getConfig();
 
     const ships = Object.values(SHIPS).map((ship) => {
-      const cost = ship.cost;
+      const cost = this.applyCostMultiplier(ship.cost, shipCostMultiplier);
       const buildTime = this.getShipBuildTimeSeconds({
         cost,
         shipyardLevel: planet.shipyard,
@@ -125,10 +126,13 @@ export class ShipyardService {
       );
     }
 
+    const { gameSpeed, shipCostMultiplier } = await this.serverConfig.getConfig();
+    const unitCost = this.applyCostMultiplier(ship.cost, shipCostMultiplier);
+
     const totalCost = {
-      metal: ship.cost.metal * safeAmount,
-      crystal: ship.cost.crystal * safeAmount,
-      deuterium: ship.cost.deuterium * safeAmount,
+      metal: unitCost.metal * safeAmount,
+      crystal: unitCost.crystal * safeAmount,
+      deuterium: unitCost.deuterium * safeAmount,
     };
 
     if (
@@ -140,13 +144,12 @@ export class ShipyardService {
     }
 
     const timePerUnit = this.getShipBuildTimeSeconds({
-      cost: ship.cost,
+      cost: unitCost,
       shipyardLevel: planet.shipyard,
       naniteLevel: planet.naniteFactory,
     });
 
     const totalTimeSeconds = timePerUnit * safeAmount;
-    const { gameSpeed } = await this.serverConfig.getConfig();
     const adjustedTime = Math.max(1, Math.floor(totalTimeSeconds / gameSpeed));
 
     const now = new Date();
@@ -241,10 +244,12 @@ export class ShipyardService {
       throw new BadRequestException('Vaisseau invalide');
     }
 
+    const { shipCostMultiplier } = await this.serverConfig.getConfig();
+    const unitCost = this.applyCostMultiplier(ship.cost, shipCostMultiplier);
     const refund = {
-      metal: ship.cost.metal * queueEntry.amount,
-      crystal: ship.cost.crystal * queueEntry.amount,
-      deuterium: ship.cost.deuterium * queueEntry.amount,
+      metal: unitCost.metal * queueEntry.amount,
+      crystal: unitCost.crystal * queueEntry.amount,
+      deuterium: unitCost.deuterium * queueEntry.amount,
     };
 
     const [updatedPlanet] = await this.database.$transaction([
@@ -361,6 +366,15 @@ export class ShipyardService {
     const baseDivisor = 2500 * (1 + shipyardLevel) * Math.pow(2, naniteLevel);
     const buildTime = (cost.metal + cost.crystal) / baseDivisor;
     return Math.max(1, Math.floor(buildTime));
+  }
+
+  private applyCostMultiplier(cost: ShipCost, multiplier: number): ShipCost {
+    const factor = multiplier > 0 ? multiplier : 1;
+    return {
+      metal: Math.floor(cost.metal * factor),
+      crystal: Math.floor(cost.crystal * factor),
+      deuterium: Math.floor(cost.deuterium * factor),
+    };
   }
 
   private checkShipRequirements(

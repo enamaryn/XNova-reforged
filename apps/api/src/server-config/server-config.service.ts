@@ -3,11 +3,15 @@ import { ConfigService } from '@nestjs/config';
 import { GAME_CONSTANTS } from '@xnova/game-config';
 import { type ResourceConfig } from '@xnova/game-engine';
 import { DatabaseService } from '../database/database.service';
+import { RedisService } from '../redis/redis.service';
 
 export interface ServerConfigValues {
   gameSpeed: number;
   fleetSpeed: number;
   resourceMultiplier: number;
+  buildingCostMultiplier: number;
+  researchCostMultiplier: number;
+  shipCostMultiplier: number;
   planetSize: number;
   maxBuildingLevel: number;
   maxTechnologyLevel: number;
@@ -20,6 +24,9 @@ const CONFIG_KEYS: Record<keyof ServerConfigValues, string> = {
   gameSpeed: 'gameSpeed',
   fleetSpeed: 'fleetSpeed',
   resourceMultiplier: 'resourceMultiplier',
+  buildingCostMultiplier: 'buildingCostMultiplier',
+  researchCostMultiplier: 'researchCostMultiplier',
+  shipCostMultiplier: 'shipCostMultiplier',
   planetSize: 'planetSize',
   maxBuildingLevel: 'maxBuildingLevel',
   maxTechnologyLevel: 'maxTechnologyLevel',
@@ -32,15 +39,26 @@ const CONFIG_KEYS: Record<keyof ServerConfigValues, string> = {
 export class ServerConfigService {
   private cache: { value: ServerConfigValues; loadedAt: number } | null = null;
   private readonly cacheTtlMs = 30_000;
+  private readonly cacheTtlSeconds = 30;
+  private readonly cacheKey = 'xnova:server-config';
 
   constructor(
     private readonly database: DatabaseService,
     private readonly configService: ConfigService,
+    private readonly redis: RedisService,
   ) {}
 
   async getConfig(force = false): Promise<ServerConfigValues> {
     if (!force && this.cache && Date.now() - this.cache.loadedAt < this.cacheTtlMs) {
       return this.cache.value;
+    }
+
+    if (!force) {
+      const cached = await this.redis.getJson<ServerConfigValues>(this.cacheKey);
+      if (cached) {
+        this.cache = { value: cached, loadedAt: Date.now() };
+        return cached;
+      }
     }
 
     const defaults = this.getDefaults();
@@ -62,6 +80,11 @@ export class ServerConfigService {
       gameSpeed: fromDb[CONFIG_KEYS.gameSpeed] ?? defaults.gameSpeed,
       fleetSpeed: fromDb[CONFIG_KEYS.fleetSpeed] ?? defaults.fleetSpeed,
       resourceMultiplier: fromDb[CONFIG_KEYS.resourceMultiplier] ?? defaults.resourceMultiplier,
+      buildingCostMultiplier:
+        fromDb[CONFIG_KEYS.buildingCostMultiplier] ?? defaults.buildingCostMultiplier,
+      researchCostMultiplier:
+        fromDb[CONFIG_KEYS.researchCostMultiplier] ?? defaults.researchCostMultiplier,
+      shipCostMultiplier: fromDb[CONFIG_KEYS.shipCostMultiplier] ?? defaults.shipCostMultiplier,
       planetSize: fromDb[CONFIG_KEYS.planetSize] ?? defaults.planetSize,
       maxBuildingLevel: fromDb[CONFIG_KEYS.maxBuildingLevel] ?? defaults.maxBuildingLevel,
       maxTechnologyLevel: fromDb[CONFIG_KEYS.maxTechnologyLevel] ?? defaults.maxTechnologyLevel,
@@ -71,6 +94,7 @@ export class ServerConfigService {
     };
 
     this.cache = { value: config, loadedAt: Date.now() };
+    await this.redis.setJson(this.cacheKey, config, this.cacheTtlSeconds);
     return config;
   }
 
@@ -115,6 +139,7 @@ export class ServerConfigService {
     ]);
 
     this.cache = null;
+    await this.redis.del(this.cacheKey);
     return this.getConfig(true);
   }
 
@@ -139,6 +164,9 @@ export class ServerConfigService {
       gameSpeed: this.getEnvNumber('GAME_SPEED', 1),
       fleetSpeed: this.getEnvNumber('FLEET_SPEED', 1),
       resourceMultiplier: this.getEnvNumber('RESOURCE_MULTIPLIER', 1),
+      buildingCostMultiplier: this.getEnvNumber('BUILDING_COST_MULTIPLIER', 1),
+      researchCostMultiplier: this.getEnvNumber('RESEARCH_COST_MULTIPLIER', 1),
+      shipCostMultiplier: this.getEnvNumber('SHIP_COST_MULTIPLIER', 1),
       planetSize: GAME_CONSTANTS.INITIAL_FIELDS,
       maxBuildingLevel: this.getEnvNumber('MAX_BUILDING_LEVEL', 100),
       maxTechnologyLevel: this.getEnvNumber('MAX_TECH_LEVEL', 100),

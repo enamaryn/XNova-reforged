@@ -57,6 +57,8 @@ model User {
   @@index([username])
   @@index([email])
   @@index([lastActive]) // Index pour les requêtes de planètes actives
+  @@index([points])
+  @@index([rank])
 }
 
 // ============================================
@@ -129,6 +131,8 @@ model Planet {
 
   @@unique([galaxy, system, position])
   @@index([userId])
+  @@index([galaxy, system])
+  @@index([userId, galaxy, system, position])
 }
 
 // ============================================
@@ -151,6 +155,8 @@ model BuildQueue {
 
   @@index([planetId])
   @@index([endTime])
+  @@index([planetId, completed])
+  @@index([completed, endTime])
 }
 
 // ============================================
@@ -187,6 +193,8 @@ model ResearchQueue {
   @@index([userId])
   @@index([planetId])
   @@index([endTime])
+  @@index([userId, completed])
+  @@index([completed, endTime])
 }
 
 // ============================================
@@ -222,6 +230,8 @@ model ShipQueue {
   @@index([planetId])
   @@index([endTime])
   @@index([completed])
+  @@index([planetId, completed])
+  @@index([completed, endTime])
 }
 
 model Defense {
@@ -278,6 +288,9 @@ model Fleet {
   @@index([arrivalTime])
   @@index([returnTime])
   @@index([status])
+  @@index([userId, status])
+  @@index([status, arrivalTime])
+  @@index([status, returnTime])
 }
 
 // ============================================
@@ -318,6 +331,8 @@ model CombatReport {
   @@index([attackerId])
   @@index([defenderId])
   @@index([createdAt])
+  @@index([attackerId, createdAt])
+  @@index([defenderId, createdAt])
 }
 
 // ============================================
@@ -382,6 +397,7 @@ model Message {
 
   @@index([toId, read])
   @@index([createdAt])
+  @@index([toId, createdAt])
 }
 
 // ============================================

@@ -24,6 +24,7 @@ const social_module_1 = require("./social/social.module");
 const statistics_module_1 = require("./statistics/statistics.module");
 const admin_module_1 = require("./admin/admin.module");
 const server_config_module_1 = require("./server-config/server-config.module");
+const redis_module_1 = require("./redis/redis.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -36,6 +37,7 @@ exports.AppModule = AppModule = __decorate([
             }),
             schedule_1.ScheduleModule.forRoot(),
             database_module_1.DatabaseModule,
+            redis_module_1.RedisModule,
             auth_module_1.AuthModule,
             resources_module_1.ResourcesModule,
             game_events_module_1.GameEventsModule,

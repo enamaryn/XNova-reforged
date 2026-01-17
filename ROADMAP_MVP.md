@@ -838,18 +838,19 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
   - Tous les endpoints critiques
 
 #### Performance
-- [ ] Optimisation queries Prisma
-  - Indexes sur colonnes fréquentes
-  - Select minimal (pas de `select *`)
-- [ ] Cache Redis
-  - Configuration bâtiments/vaisseaux
-  - Classements
+- [x] Optimisation queries Prisma
+  - [x] Indexes sur colonnes frequentes
+  - [ ] Select minimal (pas de `select *`)
+- [x] Cache Redis
+  - [x] Configuration serveur
+  - [x] Classements
 - [ ] Frontend optimization
   - Code splitting
   - Lazy loading images
   - Memoization composants
 
 #### Balance du jeu
+- [x] Multiplicateurs d equilibrage configurables (batiments/technos/vaisseaux)
 - [ ] Équilibrage coûts bâtiments
 - [ ] Équilibrage vitesses vaisseaux
 - [ ] Équilibrage combat

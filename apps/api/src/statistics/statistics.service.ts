@@ -1,12 +1,35 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
+import { RedisService } from '../redis/redis.service';
+
+const TOP_PLAYERS_CACHE_KEY = 'xnova:stats:top-players';
+const TOP_ALLIANCES_CACHE_KEY = 'xnova:stats:top-alliances';
+const STATS_CACHE_TTL_SECONDS = 60;
+
+type TopPlayer = {
+  id: string;
+  username: string;
+  points: number;
+  rank: number;
+};
+
+type TopAlliance = {
+  id: string;
+  tag: string;
+  name: string;
+  members: number;
+  points: number;
+};
 
 @Injectable()
 export class StatisticsService {
-  constructor(private readonly database: DatabaseService) {}
+  constructor(
+    private readonly database: DatabaseService,
+    private readonly redis: RedisService,
+  ) {}
 
   async getOverview(userId: string) {
-    const [user, topPlayers, alliances] = await Promise.all([
+    const [user, cachedPlayers, cachedAlliances] = await Promise.all([
       this.database.user.findUnique({
         where: { id: userId },
         select: {
@@ -33,7 +56,17 @@ export class StatisticsService {
           },
         },
       }),
-      this.database.user.findMany({
+      this.redis.getJson<TopPlayer[]>(TOP_PLAYERS_CACHE_KEY),
+      this.redis.getJson<TopAlliance[]>(TOP_ALLIANCES_CACHE_KEY),
+    ]);
+
+    if (!user) {
+      throw new NotFoundException('Utilisateur introuvable');
+    }
+
+    let topPlayers = cachedPlayers;
+    if (!topPlayers) {
+      topPlayers = await this.database.user.findMany({
         orderBy: { points: 'desc' },
         take: 20,
         select: {
@@ -42,8 +75,13 @@ export class StatisticsService {
           points: true,
           rank: true,
         },
-      }),
-      this.database.alliance.findMany({
+      });
+      await this.redis.setJson(TOP_PLAYERS_CACHE_KEY, topPlayers, STATS_CACHE_TTL_SECONDS);
+    }
+
+    let topAlliances = cachedAlliances;
+    if (!topAlliances) {
+      const alliances = await this.database.alliance.findMany({
         select: {
           id: true,
           tag: true,
@@ -58,31 +96,29 @@ export class StatisticsService {
             },
           },
         },
-      }),
-    ]);
+      });
 
-    if (!user) {
-      throw new NotFoundException('Utilisateur introuvable');
+      topAlliances = alliances
+        .map((alliance) => {
+          const members = alliance.members.length;
+          const points = alliance.members.reduce(
+            (total, member) => total + member.user.points,
+            0,
+          );
+
+          return {
+            id: alliance.id,
+            tag: alliance.tag,
+            name: alliance.name,
+            members,
+            points,
+          };
+        })
+        .sort((a, b) => b.points - a.points)
+        .slice(0, 10);
+
+      await this.redis.setJson(TOP_ALLIANCES_CACHE_KEY, topAlliances, STATS_CACHE_TTL_SECONDS);
     }
-
-    const topAlliances = alliances
-      .map((alliance) => {
-        const members = alliance.members.length;
-        const points = alliance.members.reduce(
-          (total, member) => total + member.user.points,
-          0,
-        );
-
-        return {
-          id: alliance.id,
-          tag: alliance.tag,
-          name: alliance.name,
-          members,
-          points,
-        };
-      })
-      .sort((a, b) => b.points - a.points)
-      .slice(0, 10);
 
     return {
       personal: {

@@ -4,6 +4,9 @@ export interface AdminConfig {
   gameSpeed: number;
   fleetSpeed: number;
   resourceMultiplier: number;
+  buildingCostMultiplier: number;
+  researchCostMultiplier: number;
+  shipCostMultiplier: number;
   planetSize: number;
   maxBuildingLevel: number;
   maxTechnologyLevel: number;

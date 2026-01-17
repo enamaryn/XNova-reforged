@@ -15,6 +15,7 @@ import { SocialModule } from './social/social.module';
 import { StatisticsModule } from './statistics/statistics.module';
 import { AdminModule } from './admin/admin.module';
 import { ServerConfigModule } from './server-config/server-config.module';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
@@ -29,6 +30,9 @@ import { ServerConfigModule } from './server-config/server-config.module';
 
     // Module de base de données
     DatabaseModule,
+
+    // Module Redis (cache)
+    RedisModule,
 
     // Module d'authentification
     AuthModule,

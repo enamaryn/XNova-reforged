@@ -3467,6 +3467,47 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 
 ---
 
+## ✅ Session 69 - Prisma + Redis + equilibrage
+
+**Date :** 17 janvier 2026
+**Objectif :** Optimiser Prisma, activer le cache Redis et ajouter un equilibrage configurable.
+
+### ✅ Taches realisees
+- [x] Indexes Prisma pour requetes frequentes
+- [x] Cache Redis pour config serveur + classements
+- [x] Multiplicateurs d equilibrage (batiments/technos/vaisseaux)
+- [x] Roadmap MVP mise a jour
+
+### 🔧 Fichiers modifies
+- `apps/api/src/redis/redis.module.ts` ✅ NEW
+- `apps/api/src/redis/redis.service.ts` ✅ NEW
+- `apps/api/src/app.module.ts`
+- `apps/api/src/server-config/server-config.service.ts`
+- `apps/api/src/admin/dto/update-config.dto.ts`
+- `apps/api/src/statistics/statistics.service.ts`
+- `apps/api/src/buildings/buildings.service.ts`
+- `apps/api/src/research/research.service.ts`
+- `apps/api/src/shipyard/shipyard.service.ts`
+- `packages/database/prisma/schema.prisma`
+- `apps/web/lib/api/admin.ts`
+- `apps/web/app/(admin)/admin/page.tsx`
+- `apps/web/lib/i18n/index.tsx`
+- `.env.example`
+- `ROADMAP_MVP.md`
+
+### 📍 Etat actuel du projet
+
+**Sprint 10 :** en cours (performance + balance outillees).
+
+### ⏭️ Prochaines etapes
+- Appliquer les indexes Prisma (`npm run db:push` ou migration).
+- Ajuster les multiplicateurs depuis le panneau admin si besoin.
+- Continuer sur tests integration API.
+
+**Note :** suivi via update_plan.
+
+---
+
 ## ✅ Session 68 - Plafond niveaux configurable
 
 **Date :** 17 janvier 2026
