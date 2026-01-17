@@ -4,7 +4,7 @@ import { LoginForm } from "@/components/auth/LoginForm";
 
 export default function LoginPage() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 sm:space-y-6">
       <AuthHeader
         eyebrow="Authentification"
         title="Reprendre le controle."

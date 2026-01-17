@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { useAuthStore } from '../stores/auth-store';
+import { getApiBaseUrl } from '../api/client';
 
 interface SocketContextType {
   socket: Socket | null;
@@ -53,7 +54,7 @@ export function SocketProvider({ children }: SocketProviderProps) {
     }
 
     // URL de l'API WebSocket
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+    const apiUrl = getApiBaseUrl();
 
     // Créer la connexion Socket.io
     const newSocket = io(`${apiUrl}/game`, {

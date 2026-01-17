@@ -6,8 +6,13 @@ const config_1 = require("@nestjs/config");
 const app_module_1 = require("./app.module");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
+    const webOrigins = (process.env.WEB_ORIGINS || process.env.WEB_ORIGIN || '')
+        .split(',')
+        .map((origin) => origin.trim())
+        .filter(Boolean);
+    const isProd = process.env.NODE_ENV === 'production';
     app.enableCors({
-        origin: 'http://localhost:3000',
+        origin: isProd && webOrigins.length > 0 ? webOrigins : true,
         credentials: true,
     });
     app.useGlobalPipes(new common_1.ValidationPipe({

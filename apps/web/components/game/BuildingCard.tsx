@@ -83,7 +83,7 @@ export function BuildingCard({ building, onBuild, isBuilding }: BuildingCardProp
       <p className="mb-3 text-sm text-slate-400 line-clamp-2">{building.description}</p>
 
       {/* Coûts */}
-      <div className="mb-3 grid grid-cols-3 gap-2 text-xs">
+      <div className="mb-3 grid grid-cols-2 gap-2 text-xs sm:grid-cols-3">
         <div className={`rounded-xl bg-slate-950/40 p-2 ${building.cost.metal > 0 ? '' : 'opacity-50'}`}>
           <div className="text-slate-500">Métal</div>
           <div className={`font-mono font-semibold ${building.canAfford ? 'text-amber-300' : 'text-red-400'}`}>
@@ -96,7 +96,7 @@ export function BuildingCard({ building, onBuild, isBuilding }: BuildingCardProp
             {formatNumber(building.cost.crystal)}
           </div>
         </div>
-        <div className={`rounded-xl bg-slate-950/40 p-2 ${building.cost.deuterium > 0 ? '' : 'opacity-50'}`}>
+        <div className={`col-span-2 rounded-xl bg-slate-950/40 p-2 sm:col-span-1 ${building.cost.deuterium > 0 ? '' : 'opacity-50'}`}>
           <div className="text-slate-500">Deutérium</div>
           <div className={`font-mono font-semibold ${building.canAfford ? 'text-blue-300' : 'text-red-400'}`}>
             {formatNumber(building.cost.deuterium)}
@@ -130,7 +130,7 @@ export function BuildingCard({ building, onBuild, isBuilding }: BuildingCardProp
       )}
 
       {/* Bouton construire */}
-      <div className="flex items-center gap-2">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
         <button
           onClick={handleBuild}
           disabled={!building.canBuild || loading || isBuilding}
@@ -154,7 +154,7 @@ export function BuildingCard({ building, onBuild, isBuilding }: BuildingCardProp
         </button>
         <Link
           href={`/buildings/${building.id}`}
-          className="rounded-xl border border-slate-700 px-3 py-2 text-xs text-slate-300 transition hover:border-slate-500 hover:text-white"
+          className="w-full rounded-xl border border-slate-700 px-3 py-2 text-center text-xs text-slate-300 transition hover:border-slate-500 hover:text-white sm:w-auto"
         >
           Détails
         </Link>

@@ -60,7 +60,7 @@ export function ResourceBar({ compact = false }: ResourceBarProps) {
 
   if (compact) {
     return (
-      <div className="flex items-center justify-around gap-4 text-xs">
+      <div className="flex items-center justify-around gap-2 text-[11px] sm:gap-4 sm:text-xs">
         <ResourceItem
           icon="⚙️"
           value={metal}

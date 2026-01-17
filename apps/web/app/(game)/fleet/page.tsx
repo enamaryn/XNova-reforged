@@ -269,7 +269,7 @@ export default function FleetPage() {
                 {ships.map((ship) => (
                   <div
                     key={ship.shipId}
-                    className="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-slate-400"
+                    className="flex flex-col gap-2 rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between"
                   >
                     <div>
                       <div className="text-slate-200">{ship.name}</div>
@@ -289,7 +289,7 @@ export default function FleetPage() {
                           ),
                         }))
                       }
-                      className="w-20 rounded-lg border border-slate-800 bg-slate-950/60 px-2 py-1 text-sm text-white"
+                      className="w-full rounded-lg border border-slate-800 bg-slate-950/60 px-2 py-1 text-sm text-white sm:w-20"
                     />
                   </div>
                 ))}
@@ -468,7 +468,7 @@ export default function FleetPage() {
                     key={fleet.id}
                     className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-4"
                   >
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                       <span className="text-xs uppercase tracking-[0.2em] text-slate-500">
                         Mission {fleet.mission}
                       </span>

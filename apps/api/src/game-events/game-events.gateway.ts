@@ -22,9 +22,15 @@ import { ConfigService } from '@nestjs/config';
  * - research:completed - Recherche terminée
  * - fleet:arrived - Flotte arrivée à destination
  */
+const webOrigins = (process.env.WEB_ORIGINS || process.env.WEB_ORIGIN || '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+const isProd = process.env.NODE_ENV === 'production';
+
 @WebSocketGateway({
   cors: {
-    origin: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
+    origin: isProd && webOrigins.length > 0 ? webOrigins : true,
     credentials: true,
   },
   namespace: '/game',

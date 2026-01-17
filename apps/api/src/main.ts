@@ -7,8 +7,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // Configuration CORS
+  const webOrigins = (process.env.WEB_ORIGINS || process.env.WEB_ORIGIN || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+  const isProd = process.env.NODE_ENV === 'production';
   app.enableCors({
-    origin: 'http://localhost:3000', // Frontend Next.js
+    origin: isProd && webOrigins.length > 0 ? webOrigins : true,
     credentials: true,
   });
 

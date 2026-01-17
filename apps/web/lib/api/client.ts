@@ -1,8 +1,32 @@
 import { useAuthStore } from "@/lib/stores/auth-store";
 import type { ApiErrorPayload } from "@/lib/api/types";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+const DEFAULT_API_BASE_URL = "http://localhost:3001";
+const ENV_API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
+
+export function getApiBaseUrl() {
+  if (ENV_API_BASE_URL) {
+    try {
+      const url = new URL(ENV_API_BASE_URL);
+      if (typeof window !== "undefined") {
+        const isLocalhost = url.hostname === "localhost" || url.hostname === "127.0.0.1";
+        if (isLocalhost) {
+          const port = url.port || "3001";
+          return `${url.protocol}//${window.location.hostname}:${port}`;
+        }
+      }
+      return ENV_API_BASE_URL;
+    } catch {
+      return ENV_API_BASE_URL;
+    }
+  }
+
+  if (typeof window !== "undefined") {
+    return `${window.location.protocol}//${window.location.hostname}:3001`;
+  }
+
+  return DEFAULT_API_BASE_URL;
+}
 
 export class ApiError extends Error {
   status: number;
@@ -40,7 +64,7 @@ async function refreshAccessToken() {
     return null;
   }
 
-  const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
+  const response = await fetch(`${getApiBaseUrl()}/auth/refresh`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -82,7 +106,7 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}) 
     }
   }
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const response = await fetch(`${getApiBaseUrl()}${path}`, {
     ...fetchOptions,
     headers,
   });

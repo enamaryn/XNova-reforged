@@ -1,124 +1,127 @@
-# 🚀 XNova Reforged
+# XNova Reforged
 
-> Modern space strategy MMORPG - Complete rewrite of XNova with cutting-edge technologies
+Refonte moderne de XNova, un MMORPG de stratégie spatiale. Monorepo NestJS + Next.js orienté temps réel, performance et évolutivité.
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org/)
-[![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
-[![NestJS](https://img.shields.io/badge/NestJS-10-red)](https://nestjs.com/)
-[![Prisma](https://img.shields.io/badge/Prisma-5-brightgreen)](https://www.prisma.io/)
+## Statut
 
-## 📖 Description
+MVP en cours (Sprint 10 - Polish & Tests). Détails dans `ROADMAP_MVP.md`.
 
-XNova Reforged est une refonte complète du jeu de stratégie spatial multijoueur XNova, utilisant les technologies web les plus modernes de 2026.
+## Stack technique
 
-## 🛠️ Stack Technique
+**Backend**
+- NestJS (TypeScript)
+- Prisma ORM
+- PostgreSQL 16
+- Redis 7
+- Socket.io
 
-### Backend
-- **NestJS** - Framework TypeScript enterprise
-- **Prisma** - ORM type-safe
-- **PostgreSQL 16** - Base de données
-- **Redis 7** - Cache et sessions
-- **Socket.io** - WebSocket temps réel
+**Frontend**
+- Next.js 15 (App Router)
+- TypeScript
+- TailwindCSS + shadcn/ui
+- Zustand
+- React Query
 
-### Frontend
-- **Next.js 15** - React framework avec App Router
-- **TypeScript** - Typage statique
-- **TailwindCSS** - Utility-first CSS
-- **shadcn/ui** - Composants UI modernes
-- **Zustand** - State management
-- **React Query** - Data fetching
+**DevOps**
+- Docker + Docker Compose
+- Turborepo
 
-### DevOps
-- **Docker** - Conteneurisation
-- **Turborepo** - Monorepo build system
-- **GitHub Actions** - CI/CD
+## Structure du projet
 
-## 📂 Structure du Projet
-
-\`\`\`
-XNova-Reforged/
+```
+XNova-reforged/
 ├── apps/
 │   ├── api/              # Backend NestJS
-│   ├── web/              # Frontend Next.js
-│   └── admin/            # Admin panel (à venir)
+│   └── web/              # Frontend Next.js
 ├── packages/
-│   ├── database/         # Prisma schema
-│   ├── game-config/      # Configuration du jeu
+│   ├── database/         # Prisma schema + client
+│   ├── game-config/      # Config statique du jeu
 │   ├── game-engine/      # Logique métier pure
 │   └── ui/               # Composants UI partagés
-├── docs/
-│   ├── GAME_FORMULAS.md  # Formules du jeu
-│   └── API.md            # Documentation API
+├── tests/                # Tests E2E Playwright
 ├── docker-compose.yml
-├── turbo.json
-└── package.json
-\`\`\`
+├── GETTING_STARTED.md
+└── README.md
+```
 
-## 🚀 Quick Start
+## Démarrage rapide
 
 ### Prérequis
-
 - Node.js >= 20
 - npm >= 10
-- Docker & Docker Compose
+- Docker + Docker Compose
 
 ### Installation
 
-\`\`\`bash
+```bash
 # Cloner le repo
 git clone <url>
-cd XNova-Reforged
+cd XNova-reforged
 
 # Installer les dépendances
 npm install
 
-# Démarrer les services (PostgreSQL, Redis)
+# Configurer l'environnement
+cp .env.example .env
+# Mettre à jour .env si besoin
+# IMPORTANT : garder DATABASE_URL cohérente avec packages/database/.env
+
+# Démarrer PostgreSQL + Redis
 npm run docker:up
 
-# Configurer la base de données
+# Initialiser la base de données
 npm run db:push
+cd packages/database && npm run db:generate
+cd ../..
 
 # Lancer en développement
 npm run dev
-\`\`\`
+```
 
-### URLs
+### URLs locales
+- Frontend : http://localhost:3000
+- API : http://localhost:3001
+- Prisma Studio : http://localhost:5555 (après `npm run db:studio`)
 
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:3001
-- **Prisma Studio**: http://localhost:5555 (après \`npm run db:studio\`)
+Pour une installation détaillée : `GETTING_STARTED.md`
 
-## 📚 Documentation
+## Documentation
 
-- [Roadmap MVP](../XNova - 0.8/ROADMAP_MVP.md)
-- [Roadmap Complète](../XNova - 0.8/ROADMAP_COMPLET.md)
-- [Stratégie d'Upgrade](../XNova - 0.8/STRATEGIE_UPGRADE.md)
-- [Formules de Jeu](../XNova - 0.8/GAME_FORMULAS.md)
+- `GETTING_STARTED.md` - Guide d'installation complet
+- `ROADMAP_MVP.md` - Roadmap MVP
+- `ROADMAP_COMPLET.md` - Roadmap long terme
+- `GAME_FORMULAS.md` - Formules de jeu (référence)
+- `STRATEGIE_UPGRADE.md` - Stratégie de refonte
 
-## 🎮 Features (MVP - 4 mois)
+## Tests
 
-- [x] Authentification sécurisée (JWT)
-- [ ] Gestion ressources temps réel
-- [ ] Construction bâtiments
-- [ ] Recherche technologies
-- [ ] Système de flottes
-- [ ] Combat basique
-- [ ] Exploration galaxie
-- [ ] Messagerie
-- [ ] Alliances
+```bash
+# Tests E2E Playwright
+npm run test:e2e
+npm run test:e2e:ui
+```
 
-## 🤝 Contribution
+## Scripts utiles
 
-Ce projet est en cours de développement actif. Les contributions sont les bienvenues !
+```bash
+npm run dev
+npm run build
+npm run lint
+npm run format
+npm run docker:up
+npm run docker:down
+npm run db:push
+npm run db:studio
+```
 
-## 📄 Licence
+## Contribution
 
-GNU GPL v2 - Voir [LICENCE.txt](../XNova - 0.8/LICENCE.txt)
+Les contributions sont bienvenues. Ouvrez une issue pour discuter d'une idée ou proposez une PR.
 
-## 🙏 Crédits
+## Licence
+
+GNU GPL v2 - voir `LICENSE`.
+
+## Crédits
 
 Basé sur le projet original [XNova](http://www.xnova.fr/) (2008) par la XNova Team.
-
----
-
-**Développé avec ❤️ en 2026**

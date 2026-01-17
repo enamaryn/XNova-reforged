@@ -97,7 +97,7 @@ export default function GalaxyPage() {
               min={1}
               value={galaxy}
               onChange={(event) => setGalaxy(Number(event.target.value))}
-              className="mt-2 w-28 rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60 sm:w-28"
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
@@ -107,12 +107,12 @@ export default function GalaxyPage() {
               min={1}
               value={system}
               onChange={(event) => setSystem(Number(event.target.value))}
-              className="mt-2 w-28 rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60 sm:w-28"
             />
           </label>
           <button
             disabled
-            className="rounded-full border border-slate-800 px-4 py-2 text-xs uppercase tracking-[0.2em] text-slate-500"
+            className="w-full rounded-full border border-slate-800 px-4 py-2 text-xs uppercase tracking-[0.2em] text-slate-500 sm:w-auto"
           >
             {t('galaxy.scanSoon')}
           </button>
@@ -135,14 +135,14 @@ export default function GalaxyPage() {
             return (
               <div
                 key={slot.position}
-                className="flex items-center justify-between rounded-2xl border border-slate-800/60 bg-slate-900/60 px-4 py-3 text-sm"
+                className="flex flex-col gap-3 rounded-2xl border border-slate-800/60 bg-slate-900/60 px-4 py-3 text-sm md:flex-row md:items-center md:justify-between"
               >
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col gap-1 md:flex-row md:items-center md:gap-4">
                   <span className="text-xs uppercase tracking-[0.2em] text-slate-500">
                     {galaxy}:{system}:{slot.position}
                   </span>
                   {slot.occupied ? (
-                    <span className="text-slate-200">
+                    <span className="text-slate-200 leading-relaxed">
                       {slot.name} · {slot.owner}
                       {slot.allianceTag && ` · [${slot.allianceTag}]`}
                       {activityLabel && ` · ${t('galaxy.activity')} ${activityLabel}`}
@@ -157,7 +157,7 @@ export default function GalaxyPage() {
                     </span>
                   )}
                 </div>
-                <div className="flex items-center gap-2 text-xs text-slate-500">
+                <div className="flex w-full flex-wrap items-center gap-2 text-xs text-slate-500 md:w-auto md:justify-end">
                   {slot.occupied ? (
                     <>
                       {slot.isOwn ? (
@@ -166,19 +166,19 @@ export default function GalaxyPage() {
                         <>
                           <button
                             onClick={() => slot.planetId && scanMutation.mutate(slot.planetId)}
-                            className="rounded-full border border-slate-700 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-slate-300 hover:border-slate-500"
+                            className="w-full rounded-full border border-slate-700 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-slate-300 hover:border-slate-500 sm:w-auto"
                           >
                             Espionner
                           </button>
                           <Link
                             href={`/fleet?mission=attack&galaxy=${galaxy}&system=${system}&position=${slot.position}`}
-                            className="rounded-full border border-slate-700 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-slate-300 hover:border-slate-500"
+                            className="w-full rounded-full border border-slate-700 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-slate-300 hover:border-slate-500 sm:w-auto"
                           >
                             Attaquer
                           </Link>
                           <Link
                             href={`/fleet?mission=transport&galaxy=${galaxy}&system=${system}&position=${slot.position}`}
-                            className="rounded-full border border-slate-700 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-slate-300 hover:border-slate-500"
+                            className="w-full rounded-full border border-slate-700 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-slate-300 hover:border-slate-500 sm:w-auto"
                           >
                             Transporter
                           </Link>
@@ -188,22 +188,22 @@ export default function GalaxyPage() {
                   ) : (
                     <>
                       {colonizeTarget === slot.position ? (
-                        <div className="flex items-center gap-2">
+                        <div className="flex w-full flex-wrap items-center gap-2">
                           <input
                             value={colonizeName}
                             onChange={(event) => setColonizeName(event.target.value)}
-                            className="w-32 rounded-lg border border-slate-800 bg-slate-950/60 px-2 py-1 text-xs text-white"
+                            className="w-full rounded-lg border border-slate-800 bg-slate-950/60 px-2 py-1 text-xs text-white sm:w-32"
                           />
                           <button
                             onClick={() => colonizeMutation.mutate(slot.position)}
                             disabled={!originPlanetId || colonizeMutation.isPending}
-                            className="rounded-full border border-blue-500/60 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-blue-200 hover:bg-blue-500/10"
+                            className="w-full rounded-full border border-blue-500/60 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-blue-200 hover:bg-blue-500/10 sm:w-auto"
                           >
                             Confirmer
                           </button>
                           <button
                             onClick={() => setColonizeTarget(null)}
-                            className="rounded-full border border-slate-700 px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-slate-400"
+                            className="w-full rounded-full border border-slate-700 px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-slate-400 sm:w-auto"
                           >
                             Annuler
                           </button>
@@ -212,7 +212,7 @@ export default function GalaxyPage() {
                         <button
                           onClick={() => setColonizeTarget(slot.position)}
                           disabled={!originPlanetId}
-                          className="rounded-full border border-emerald-500/60 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-emerald-200 hover:bg-emerald-500/10"
+                          className="w-full rounded-full border border-emerald-500/60 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-emerald-200 hover:bg-emerald-500/10 sm:w-auto"
                         >
                           Coloniser
                         </button>

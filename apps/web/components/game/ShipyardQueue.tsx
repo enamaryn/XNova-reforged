@@ -65,12 +65,12 @@ function QueueItem({
 
   return (
     <div className="rounded-2xl border border-blue-500/30 bg-slate-900/60 p-4 shadow-[0_0_24px_rgba(2,132,199,0.12)]">
-      <div className="flex items-center justify-between mb-2">
+      <div className="mb-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h4 className="font-semibold text-white">{item.shipName}</h4>
           <span className="text-xs text-slate-500">x{item.amount}</span>
         </div>
-        <div className="text-right">
+        <div className="text-left sm:text-right">
           <div className="font-mono text-lg font-bold text-blue-300">
             {formatTimeRemaining(remainingSeconds)}
           </div>
@@ -112,7 +112,7 @@ export function ShipyardQueue({ queue, onCancel }: ShipyardQueueProps) {
 
   return (
     <div className="space-y-3">
-      <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+      <h3 className="flex flex-wrap items-center gap-2 text-lg font-semibold text-white">
         🛠️ File du chantier
         <span className="rounded-full bg-blue-500/20 px-2 py-0.5 text-xs text-blue-300">
           {queue.length} en cours

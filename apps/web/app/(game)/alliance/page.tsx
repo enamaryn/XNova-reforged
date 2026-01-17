@@ -108,7 +108,7 @@ export default function AlliancePage() {
       {alliance ? (
         <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="rounded-3xl border border-slate-800/80 bg-slate-950/60 p-6">
-            <div className="flex items-start justify-between">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <div className="text-xs uppercase tracking-[0.2em] text-slate-500">
                   [{alliance.tag}]
@@ -164,7 +164,7 @@ export default function AlliancePage() {
               <h3 className="text-sm font-semibold text-white">
                 {t('alliance.invite')}
               </h3>
-              <div className="mt-4 flex items-center gap-2">
+              <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
                 <input
                   type="text"
                   placeholder={t('alliance.invitePlaceholder')}
@@ -179,7 +179,7 @@ export default function AlliancePage() {
                     inviteMutation.mutate({ allianceId: alliance.id, username: inviteUsername })
                   }
                   disabled={inviteMutation.isPending}
-                  className="rounded-full border border-blue-500/60 px-4 py-2 text-xs uppercase tracking-[0.2em] text-blue-200 hover:bg-blue-500/10 disabled:opacity-60"
+                  className="w-full rounded-full border border-blue-500/60 px-4 py-2 text-xs uppercase tracking-[0.2em] text-blue-200 hover:bg-blue-500/10 disabled:opacity-60 sm:w-auto"
                 >
                   {inviteMutation.isPending
                     ? t('alliance.inviting')
@@ -260,7 +260,7 @@ export default function AlliancePage() {
             <p className="mt-2 text-xs text-slate-500">
               {t('alliance.joinHint')}
             </p>
-            <div className="mt-4 flex items-center gap-2">
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
               <input
                 type="text"
                 placeholder={t('alliance.joinPlaceholder')}
@@ -271,7 +271,7 @@ export default function AlliancePage() {
               <button
                 onClick={() => joinId && joinMutation.mutate(joinId)}
                 disabled={joinMutation.isPending}
-                className="rounded-full border border-blue-500/60 px-4 py-2 text-xs uppercase tracking-[0.2em] text-blue-200 hover:bg-blue-500/10 disabled:opacity-60"
+                className="w-full rounded-full border border-blue-500/60 px-4 py-2 text-xs uppercase tracking-[0.2em] text-blue-200 hover:bg-blue-500/10 disabled:opacity-60 sm:w-auto"
               >
                 {joinMutation.isPending
                   ? t('alliance.joining')

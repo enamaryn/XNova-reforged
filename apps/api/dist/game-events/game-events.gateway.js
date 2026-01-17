@@ -19,6 +19,11 @@ const websockets_1 = require("@nestjs/websockets");
 const socket_io_1 = require("socket.io");
 const jwt_1 = require("@nestjs/jwt");
 const config_1 = require("@nestjs/config");
+const webOrigins = (process.env.WEB_ORIGINS || process.env.WEB_ORIGIN || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+const isProd = process.env.NODE_ENV === 'production';
 let GameEventsGateway = GameEventsGateway_1 = class GameEventsGateway {
     constructor(jwtService, configService) {
         this.jwtService = jwtService;
@@ -168,7 +173,7 @@ __decorate([
 exports.GameEventsGateway = GameEventsGateway = GameEventsGateway_1 = __decorate([
     (0, websockets_1.WebSocketGateway)({
         cors: {
-            origin: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
+            origin: isProd && webOrigins.length > 0 ? webOrigins : true,
             credentials: true,
         },
         namespace: '/game',

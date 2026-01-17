@@ -3326,3 +3326,106 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 - Ajuster la vue galaxie (alliance/activité/lune)
 
 **Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 58 - Documentation MVP (README + guide d'installation)
+
+**Date :** 17 janvier 2026
+**Objectif :** Rediger un README complet et un guide d'installation fiable pour le MVP.
+
+### ✅ Taches realisees
+- [x] README mis a jour (stack, demarrage rapide, scripts, docs)
+- [x] Guide d'installation mis a jour (env, base de donnees, commandes)
+- [x] Ajout de `.env.example`
+- [x] Roadmap MVP mise a jour (documentation cochee)
+
+### 🔧 Fichiers crees/modifies
+- `README.md`
+- `GETTING_STARTED.md`
+- `.env.example` ✅ NEW
+- `ROADMAP_MVP.md`
+
+### 📍 Etat actuel du projet
+
+**Sprint 10 :** en cours (documentation partielle completee).
+
+### ⏭️ Prochaines etapes
+- Demarrer le responsive mobile ou les tests unitaires selon priorite.
+
+---
+
+## ✅ Session 59 - Responsive mobile (UI basique)
+
+**Date :** 17 janvier 2026
+**Objectif :** Rendre les pages principales utilisables sur mobile (layouts et formulaires).
+
+### ✅ Tâches réalisées
+- [x] Ajustements responsive sur les listes et cartes (bâtiments, chantier)
+- [x] Réorganisation des lignes de galaxie pour mobile (actions en pile)
+- [x] Formulaires alliance et flotte adaptés aux petits écrans
+- [x] Taille et espacements mobile optimisés (planet scene, barres ressources)
+- [x] Roadmap MVP mise à jour (responsive mobile coché)
+
+### 🔧 Fichiers modifiés
+- `apps/web/components/game/PlanetScene.tsx`
+- `apps/web/components/game/BuildQueue.tsx`
+- `apps/web/components/game/ShipyardQueue.tsx`
+- `apps/web/components/game/BuildingCard.tsx`
+- `apps/web/components/game/layout/ResourceBar.tsx`
+- `apps/web/app/(game)/galaxy/page.tsx`
+- `apps/web/app/(game)/fleet/page.tsx`
+- `apps/web/app/(game)/alliance/page.tsx`
+- `ROADMAP_MVP.md`
+
+### 📍 État actuel du projet
+
+**Sprint 10 :** en cours (responsive mobile terminé).
+
+### ⏭️ Prochaines étapes
+- Lancer les tests unitaires des services critiques ou compléter l’optimisation Prisma.
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 60 - Mobile auth + connexion LAN
+
+**Date :** 17 janvier 2026
+**Objectif :** Corriger l'affichage mobile avant connexion et permettre la connexion depuis un mobile sur le reseau local.
+
+### ✅ Taches realisees
+- [x] Ajustements responsive sur la home et le header/footer
+- [x] Auth pages compactees (layout, titres, espaces)
+- [x] Base URL API dynamique pour le mobile (remplace localhost par l'IP du host)
+- [x] CORS API/WebSocket assoupli en dev pour acces LAN
+- [x] Viewport defini explicitement
+
+### 🔧 Fichiers modifies
+- `apps/web/app/layout.tsx`
+- `apps/web/app/page.tsx`
+- `apps/web/app/(auth)/layout.tsx`
+- `apps/web/app/(auth)/login/page.tsx`
+- `apps/web/app/(auth)/register/page.tsx`
+- `apps/web/app/(auth)/forgot-password/page.tsx`
+- `apps/web/components/auth/AuthHeader.tsx`
+- `apps/web/components/auth/LoginForm.tsx`
+- `apps/web/components/layout/Header.tsx`
+- `apps/web/components/layout/PrimaryNav.tsx`
+- `apps/web/components/layout/Footer.tsx`
+- `apps/web/lib/api/client.ts`
+- `apps/web/lib/providers/socket-provider.tsx`
+- `apps/api/src/main.ts`
+- `apps/api/src/game-events/game-events.gateway.ts`
+- `.env.example`
+- `ROADMAP_MVP.md`
+
+### 📍 Etat actuel du projet
+
+**Sprint 10 :** en cours (polish mobile + acces LAN corriges).
+
+### ⏭️ Prochaines etapes
+- Verifier la connexion mobile avec l'API en LAN.
+- Poursuivre avec les tests unitaires ou l'optimisation Prisma.
+
+**Note :** l'outil TodoWrite n'est pas disponible dans cette session, suivi effectue via la roadmap.

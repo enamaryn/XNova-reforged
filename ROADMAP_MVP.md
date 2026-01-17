@@ -860,12 +860,12 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 - [ ] Animations fluides
 - [ ] États de chargement partout
 - [ ] Gestion erreurs user-friendly
-- [ ] Responsive mobile
+- [x] Responsive mobile (auth + home + pages principales)
 - [ ] Accessibilité (ARIA labels)
 
 #### Documentation
-- [ ] README complet
-- [ ] Guide installation
+- [x] README complet
+- [x] Guide installation
 - [ ] Guide joueur (règles)
 - [ ] API documentation (Swagger)
 - [ ] Comments code critiques

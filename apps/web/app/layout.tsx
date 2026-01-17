@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Spline_Sans, Space_Grotesk } from "next/font/google";
 
 import "./globals.css";
@@ -19,6 +19,11 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: "XNova Reforged",
   description: "MMOSTR nouvelle génération inspiré de XNova.",
+};
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({

@@ -93,7 +93,7 @@ export function LoginForm() {
           ) : null}
         </div>
 
-        <div className="flex items-center justify-between text-sm text-slate-500">
+        <div className="flex flex-col gap-2 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
           <label className="flex items-center gap-2">
             <input
               type="checkbox"
