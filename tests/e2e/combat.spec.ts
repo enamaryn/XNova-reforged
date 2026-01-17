@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { prisma } from '@xnova/database';
+import { buildCredentials, registerUser } from './helpers';
 
 async function seedCombatReport(username: string, seed: number) {
   const user = await prisma.user.findUnique({
@@ -52,18 +53,11 @@ test.afterAll(async () => {
 
 test('rapport de combat', async ({ page }) => {
   const seed = Date.now();
-  const username = `e2e_combat_${seed}`;
-  const email = `e2e_${seed}@xnova.local`;
+  const credentials = buildCredentials('e2e_combat');
 
-  await page.goto('/register');
-  await page.fill('#username', username);
-  await page.fill('#email', email);
-  await page.fill('#password', 'Test1234');
-  await page.getByRole('button', { name: 'Creer mon compte' }).click();
+  await registerUser(page, credentials);
 
-  await expect(page).toHaveURL(/\/overview$/);
-
-  const reportId = await seedCombatReport(username, seed);
+  const reportId = await seedCombatReport(credentials.username, seed);
 
   await page.goto('/reports');
   await expect(page.locator('h1')).toContainText(/Rapports/);

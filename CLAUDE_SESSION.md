@@ -2156,6 +2156,157 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 
 ---
 
+## ✅ Session 45 - Sprint 10 : stabilisation inscription E2E
+
+**Date :** 17/01/2026
+**Objectif :** Corriger les échecs E2E sur la page d’inscription.
+
+### ✅ Tâches réalisées
+- [x] Retour aux sélecteurs `#username/#email/#password` pour fiabiliser les remplissages
+
+### 🔧 Fichiers modifiés
+- `tests/e2e/auth.spec.ts`
+- `tests/e2e/buildings.spec.ts`
+- `tests/e2e/fleet.spec.ts`
+- `tests/e2e/combat.spec.ts`
+- `ROADMAP_MVP.md`
+
+### ⏭️ Prochaines étapes
+- Relancer `npm run test:e2e` pour valider l’inscription
+- Partager les nouveaux error-context si échec persistant
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 42 - Sprint 10 : clôture demandée
+
+**Date :** 16/01/2026
+**Objectif :** Clôturer le sprint 10 à 100% sur demande.
+
+### ✅ Tâches réalisées
+- [x] Marquage du sprint 10 en terminé (toutes cases cochées)
+
+### 🔧 Fichiers modifiés
+- `ROADMAP_MVP.md`
+
+### ⏭️ Prochaines étapes
+- Optionnel : relancer `npm run test:e2e` pour vérifier la stabilité
+
+**Note :** clôture effectuée malgré les tests non finalisés, sur demande explicite.
+
+---
+
+## ✅ Session 43 - Sprint 10 : réouverture
+
+**Date :** 16/01/2026
+**Objectif :** Réouvrir le sprint 10 et ne marquer terminé que ce qui est réellement fini.
+
+### ✅ Tâches réalisées
+- [x] Sprint 10 repassé en cours (cases non terminées décochées)
+
+### 🔧 Fichiers modifiés
+- `ROADMAP_MVP.md`
+
+### ⏭️ Prochaines étapes
+- Stabiliser l’exécution E2E (serveurs + ports)
+- Compléter tests, perf, UI/UX et documentation
+
+**Note :** remise en état effectuée suite à la consigne utilisateur.
+
+---
+
+## ✅ Session 44 - Sprint 10 : correctifs E2E validation
+
+**Date :** 17/01/2026
+**Objectif :** Corriger les échecs E2E liés à la validation du formulaire d’inscription.
+
+### ✅ Tâches réalisées
+- [x] Génération d’identifiants E2E courts et valides
+- [x] Remplacement des sélecteurs par labels pour plus de stabilité
+
+### 🔧 Fichiers modifiés
+- `tests/e2e/helpers.ts` ✅ NEW
+- `tests/e2e/auth.spec.ts`
+- `tests/e2e/buildings.spec.ts`
+- `tests/e2e/fleet.spec.ts`
+- `tests/e2e/combat.spec.ts`
+- `ROADMAP_MVP.md`
+
+### ⏭️ Prochaines étapes
+- Relancer `npm run test:e2e`
+- Vérifier les 3 tests restants (build, flotte, combat)
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 41 - Sprint 10 : script E2E Chromium
+
+**Date :** 16/01/2026
+**Objectif :** Forcer l’exécution E2E sur Chromium via le script.
+
+### ✅ Tâches réalisées
+- [x] Script `test:e2e` forcé sur Chromium
+
+### 🔧 Fichiers modifiés
+- `package.json`
+- `ROADMAP_MVP.md`
+
+### ⏭️ Prochaines étapes
+- Lancer `npm run test:e2e`
+- Libérer le port 3001 si un serveur API tourne déjà
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 40 - Sprint 10 : Chromium-only Playwright
+
+**Date :** 16/01/2026
+**Objectif :** Forcer Chromium-only et stabiliser le démarrage des serveurs Playwright.
+
+### ✅ Tâches réalisées
+- [x] Configuration Playwright en Chromium-only
+- [x] Démarrage webServer séparé API/Web pour les E2E
+
+### 🔧 Fichiers modifiés
+- `playwright.config.ts`
+- `ROADMAP_MVP.md`
+
+### ⏭️ Prochaines étapes
+- Relancer `npx playwright test --browser=chromium`
+- Vérifier l’accès aux routes `/register` via le webServer
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
+## ✅ Session 39 - Sprint 10 : stabilisation Playwright
+
+**Date :** 16/01/2026
+**Objectif :** Réduire les timeouts E2E au chargement des pages.
+
+### ✅ Tâches réalisées
+- [x] Augmentation des timeouts Playwright (global + navigation)
+- [x] Navigation `domcontentloaded` sur les pages d’inscription E2E
+
+### 🔧 Fichiers modifiés
+- `playwright.config.ts`
+- `tests/e2e/auth.spec.ts`
+- `tests/e2e/buildings.spec.ts`
+- `tests/e2e/fleet.spec.ts`
+- `tests/e2e/combat.spec.ts`
+- `ROADMAP_MVP.md`
+
+### ⏭️ Prochaines étapes
+- Relancer `npx playwright test --browser=chromium`
+- Vérifier la stabilité des 4 tests E2E
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectué via la roadmap.
+
+---
+
 ## ✅ Session 38 - Sprint 10 : E2E restants
 
 **Date :** 16/01/2026
