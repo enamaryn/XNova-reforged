@@ -76,6 +76,7 @@ npm run test:e2e:ui            # Interface graphique Playwright
 | Fichier | Description |
 |---------|-------------|
 | `auth.integration.spec.ts` | Inscription, connexion, récupération planète |
+| `planets.integration.spec.ts` | Liste des bâtiments, file d'attente de construction, lancement + annulation |
 
 **Caractéristiques** :
 - Utilisent la vraie DB PostgreSQL via Docker

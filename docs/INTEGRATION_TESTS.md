@@ -26,7 +26,7 @@ cd apps/api
 npm run test:integration
 ```
 
-Le script utilise `jest.integration.config.cjs`, qui charge `<rootDir>/test/integration/**/*.spec.ts` et applique `ts-jest` (voir `apps/api/test/integration/auth.integration.spec.ts` pour un exemple : inscription, login, lecture de planète).
+Le script utilise `jest.integration.config.cjs`, qui charge `<rootDir>/test/integration/**/*.spec.ts` et applique `ts-jest` (voir `apps/api/test/integration/auth.integration.spec.ts` et `apps/api/test/integration/planets.integration.spec.ts` pour des exemples : inscription, login, lecture de planète, liste/build + annulation de la file).
 
 ## 🧵 Notes
 

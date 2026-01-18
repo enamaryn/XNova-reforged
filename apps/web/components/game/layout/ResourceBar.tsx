@@ -1,5 +1,6 @@
 'use client';
 
+import { memo, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { usePlanetStore } from '@/lib/stores/planet-store';
@@ -46,40 +47,48 @@ export function ResourceBar({ compact = false }: ResourceBarProps) {
     refetchInterval: 10000, // Actualiser toutes les 10s
   });
 
-  const resourcePayload = resources?.resources;
-  const metal = Number(resourcePayload?.metal ?? resources?.metal ?? 0);
-  const crystal = Number(resourcePayload?.crystal ?? resources?.crystal ?? 0);
-  const deuterium = Number(resourcePayload?.deuterium ?? resources?.deuterium ?? 0);
-  const energyPayload =
-    resources && typeof resources.energy === 'object' ? resources.energy : undefined;
-  const energy = Number(energyPayload?.available ?? resources?.energy ?? 0);
-  const energyUsed = Number(energyPayload?.used ?? resources?.energyUsed ?? 0);
-  const safeEnergy = Number.isNaN(energy) ? 0 : energy;
-  const safeEnergyUsed = Number.isNaN(energyUsed) ? 0 : energyUsed;
-  const energyBalance = safeEnergy - safeEnergyUsed;
+  const computedResources = useMemo(() => {
+    const resourcePayload = resources?.resources;
+    const metalValue = Number(resourcePayload?.metal ?? resources?.metal ?? 0);
+    const crystalValue = Number(resourcePayload?.crystal ?? resources?.crystal ?? 0);
+    const deuteriumValue = Number(resourcePayload?.deuterium ?? resources?.deuterium ?? 0);
+    const energyPayload =
+      resources && typeof resources.energy === 'object' ? resources.energy : undefined;
+    const energyValue = Number(energyPayload?.available ?? resources?.energy ?? 0);
+    const energyUsedValue = Number(energyPayload?.used ?? resources?.energyUsed ?? 0);
+    const safeEnergy = Number.isNaN(energyValue) ? 0 : energyValue;
+    const safeEnergyUsed = Number.isNaN(energyUsedValue) ? 0 : energyUsedValue;
+    return {
+      metal: metalValue,
+      crystal: crystalValue,
+      deuterium: deuteriumValue,
+      energyBalance: safeEnergy - safeEnergyUsed,
+    };
+  }, [resources]);
+  const { metal, crystal, deuterium, energyBalance } = computedResources;
 
   if (compact) {
     return (
       <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-[11px] sm:flex sm:items-center sm:justify-around sm:gap-4 sm:text-xs">
-        <ResourceItem
+        <MemoizedResourceItem
           icon="⚙️"
           value={metal}
           color="text-amber-400"
           compact
         />
-        <ResourceItem
+        <MemoizedResourceItem
           icon="💎"
           value={crystal}
           color="text-sky-300"
           compact
         />
-        <ResourceItem
+        <MemoizedResourceItem
           icon="🧪"
           value={deuterium}
           color="text-blue-300"
           compact
         />
-        <ResourceItem
+        <MemoizedResourceItem
           icon="⚡"
           value={energyBalance}
           color={energyBalance >= 0 ? 'text-green-400' : 'text-red-400'}
@@ -92,28 +101,28 @@ export function ResourceBar({ compact = false }: ResourceBarProps) {
 
   return (
     <div className="flex items-center gap-1">
-      <ResourceItem
+      <MemoizedResourceItem
         label="Métal"
         icon="⚙️"
         value={metal}
         color="text-amber-400"
       />
       <div className="w-px h-6 bg-slate-800" />
-      <ResourceItem
+      <MemoizedResourceItem
         label="Cristal"
         icon="💎"
         value={crystal}
         color="text-sky-300"
       />
       <div className="w-px h-6 bg-slate-800" />
-      <ResourceItem
+      <MemoizedResourceItem
         label="Deutérium"
         icon="🧪"
         value={deuterium}
         color="text-blue-300"
       />
       <div className="w-px h-6 bg-slate-800" />
-      <ResourceItem
+      <MemoizedResourceItem
         label="Énergie"
         icon="⚡"
         value={energyBalance}
@@ -160,3 +169,5 @@ function ResourceItem({ label, icon, value, color, compact, showSign }: Resource
     </div>
   );
 }
+
+const MemoizedResourceItem = memo(ResourceItem);

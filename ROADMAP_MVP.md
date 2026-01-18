@@ -880,6 +880,7 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 - [x] Guide installation
 - [ ] Guide joueur (règles)
 - [x] API documentation (Swagger)
+- [x] API reference (docs/API_ENDPOINTS.md)
 - [ ] Comments code critiques
 
 **Livrables :**

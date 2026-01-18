@@ -93,7 +93,9 @@ Pour une installation détaillée : `GETTING_STARTED.md`
 - `GAME_FORMULAS.md` - Formules de jeu (référence)
 - `STRATEGIE_UPGRADE.md` - Stratégie de refonte
 - `docs/PLAYER_GUIDE.md` - Guide joueur condensé (économie, combat, social, admin)
-- `docs/INTEGRATION_TESTS.md` - Mise en place des tests d’intégration NestJS
+- `docs/API_ENDPOINTS.md` - Référence des endpoints API (auth, planètes, bâtiments, etc.)
+- `docs/BALANCE.md` - Paramètres / multiplicateurs utilisés pour l’équilibrage
+- `docs/INTEGRATION_TESTS.md` - Mise en place des tests d'intégration NestJS
 - `SKILL.md` - **Guide complet des tests** (unitaires, intégration, E2E)
 
 ## Tests
@@ -115,6 +117,7 @@ npm run test:integration
 Notes rapides :
 - Tests unitaires : `apps/api/test/*.spec.ts` (mocks, logique métier)
 - Tests intégration : `apps/api/test/integration/` (vraie DB, requiert Docker)
+- Couverture intégration actuelle : `auth.integration.spec.ts` (auth + `GET /auth/me`) et `planets.integration.spec.ts` (liste bâtis + file build/cancel).
 - Tests E2E : `tests/e2e/` (Playwright, interface utilisateur)
 - **IMPORTANT** : Les noms d'utilisateur sont limités à 20 caractères
 - Si erreur Reflector : ajouter `Reflector` aux providers du module

@@ -18,11 +18,14 @@ Bienvenue dans la version moderne d’XNova. Ce guide condensé reprend les méc
 - **Formules** : coûts exponentiels (`baseCost × factor^niveau`), temps (basé sur `roboticsFactory`, `naniteFactory`, et `gameSpeed`), champs disponibles (sauf hangars). Un seul bâtiment peut être construit simultanément par planète (build queue).
 - **Fichier `buildings.ts`** : contient les définitions, les prérequis et les aides `getBuildingCost`, `checkBuildingRequirements`.
 - **Conseil** : avance la recherche (`ResearchLab`) avant d’essayer de débloquer usine nanites / base lunaire afin de réduire durations et respecter les prérequis (niveau 10, 14, etc.).
+- **Intégration** : `apps/api/test/integration/planets.integration.spec.ts` couvre la liste des bâtiments, le démarrage d’une construction et l’annulation de la queue.
 
 ## 🧠 Technologies et recherches
 - **Laboratoire** : plus son niveau est élevé, plus la recherche est rapide et coûte moins cher. `ResearchService` gère la file d’attente, l’application du multiplicateur et les validations.
 - **Arbre tech** : espionnage, propulsion, énergie, laser/ion/plasma, graviton, ainsi que des bonus (combat, bouclier). Chaque tech a des prérequis (bâtiments, niveau).
 - **Gestion** : une seule recherche à la fois, annulation partielle possible (remboursement complet). Utilise la page `/research` pour consulter les états `available`, `locked`, `in progress`.
+- **Besoin d’API** : toutes les routes décrites dans ce guide (auth, planètes, bâtiments, recherches, flottes, alliances) sont détaillées dans [`docs/API_ENDPOINTS.md`](docs/API_ENDPOINTS.md) si tu veux tester en ligne de commande ou aligner Swagger.
+- **Equilibrage** : les multiplicateurs (`gameSpeed`, `resourceMultiplier`, `buildingCostMultiplier`, etc.) et les formules critiques sont listés dans [`docs/BALANCE.md`](docs/BALANCE.md) pour ajuster les coûts et temps lors du polish.
 
 ## 🚀 Flottes & combats
 - **Shipyard** : construit via `ShipyardService`, avec file d’attente, coûts et temps. Chaque vaisseau a vitesse, cargo, puissance (cf. `packages/game-config/src/ships.ts`).
