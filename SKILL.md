@@ -267,6 +267,8 @@ describe('API integration - Feature', () => {
 });
 ```
 
+> La documentation vivante de cette procédure est disponible dans `docs/INTEGRATION_TESTS.md`, avec les commandes Docker/Prisma et l'astuce : la sandbox Codex bloque les sockets réseau (`Operation not permitted`), donc les tests d'intégration ne peuvent pas atteindre Postgres/Redis ici, il faut les lancer sur un poste/CI avec accès complet aux containers.
+
 ---
 
 ## Tests E2E Playwright

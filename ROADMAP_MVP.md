@@ -485,8 +485,6 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 
 ---
 
-## 📅 PHASE 3 : Combat & Flottes (Semaine 9-12)
-
 ### Sprint 6 : Système de Flottes ✅ TERMINÉ
 
 **Objectif :** Gestion et déplacement de flottes
@@ -840,6 +838,7 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
   - [x] Injection RolesGuard pour tests integration
   - [ ] Alignement versions NestJS (Swagger v7 + reinstall)
   - [ ] Tous les endpoints critiques
+- [x] Documenté la procédure (`docs/INTEGRATION_TESTS.md`) et rappelé que la sandbox bloque les sockets sortants (`Operation not permitted`) : relancer `npm run test:integration` sur un poste/CI capable d’atteindre Postgres/Redis.
 
 **Notes integration (recap)**
 - Config Jest: `apps/api/jest.integration.config.cjs` (mapping `.js` -> `.ts` + ts-jest transform)
@@ -874,7 +873,7 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 - [ ] Gestion erreurs user-friendly
 - [x] Responsive mobile (auth + home + pages principales + overview + fix overflow)
 - [x] Page Défense (placeholder)
-- [ ] Accessibilité (ARIA labels)
+- [x] Accessibilité (ARIA labels + menus de langue/user, ressources en temps réel)
 
 #### Documentation
 - [x] README complet

@@ -30,6 +30,9 @@ const translations: Record<Locale, Dictionary> = {
       reports: "Rapports",
       options: "Options",
       admin: "Admin",
+      label: "Navigation principale",
+      languageMenu: "Choix de la langue",
+      userMenu: "Menu utilisateur",
     },
     sidebar: {
       principal: "Principal",
@@ -275,6 +278,9 @@ const translations: Record<Locale, Dictionary> = {
       reports: "Reports",
       options: "Options",
       admin: "Admin",
+      label: "Main navigation",
+      languageMenu: "Language switcher",
+      userMenu: "User menu",
     },
     sidebar: {
       principal: "Main",
@@ -520,6 +526,9 @@ const translations: Record<Locale, Dictionary> = {
       reports: "Reportes",
       options: "Opciones",
       admin: "Admin",
+      label: "Navegación principal",
+      languageMenu: "Selector de idioma",
+      userMenu: "Menú de usuario",
     },
     sidebar: {
       principal: "Principal",

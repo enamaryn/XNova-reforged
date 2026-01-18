@@ -97,7 +97,12 @@ export function ResourceDisplay({
       </div>
 
       {/* Montant actuel */}
-      <div className="mb-2">
+      <div
+        className="mb-2"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
         <div className="font-mono text-3xl font-bold text-white">
           {formatNumber(currentAmount)}
         </div>
@@ -107,7 +112,15 @@ export function ResourceDisplay({
       </div>
 
       {/* Barre de progression du stockage */}
-      <div className="h-2 w-full overflow-hidden rounded-full bg-slate-800">
+      <div
+        className="h-2 w-full overflow-hidden rounded-full bg-slate-800"
+        role="progressbar"
+        aria-label={`${name} : stockage`}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={Math.round(storagePercent)}
+        aria-valuetext={`${storagePercent.toFixed(1)}% plein`}
+      >
         <div
           className={`h-full transition-all duration-500 ${colors[color as keyof typeof colors] || colors.blue}`}
           style={{ width: `${storagePercent}%` }}

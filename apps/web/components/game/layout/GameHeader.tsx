@@ -17,6 +17,8 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showLangMenu, setShowLangMenu] = useState(false);
   const { locale, setLocale, t } = useI18n();
+  const langMenuId = 'game-lang-menu';
+  const userMenuId = 'game-user-menu';
 
   const handleLogout = () => {
     reset();
@@ -50,7 +52,10 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
 
         {/* Centre: Ressources + accès rapide */}
         <div className="hidden md:flex items-center gap-6">
-          <nav className="flex items-center gap-2 text-xs text-slate-300">
+          <nav
+            className="flex items-center gap-2 text-xs text-slate-300"
+            aria-label={t('nav.label')}
+          >
             {[
               { href: '/overview', label: t('nav.overview') },
               { href: '/buildings', label: t('nav.buildings') },
@@ -78,6 +83,9 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
               onClick={() => setShowLangMenu(!showLangMenu)}
               className="flex items-center gap-2 rounded-full border border-slate-800 px-3 py-1.5 text-xs text-slate-300 hover:border-slate-600 hover:text-white transition-colors"
               aria-label={t('common.language')}
+              aria-haspopup="menu"
+              aria-expanded={showLangMenu}
+              aria-controls={langMenuId}
             >
               <span className="text-base">
                 {locale === 'fr' ? '🇫🇷' : locale === 'en' ? '🇬🇧' : '🇪🇸'}
@@ -92,27 +100,34 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
                   onClick={() => setShowLangMenu(false)}
                 />
                 <div className="absolute right-0 top-full z-20 mt-2 w-40 rounded-2xl border border-slate-800 bg-slate-950/95 py-2 shadow-xl">
-                  {[
-                    { code: 'fr', label: 'Français', flag: '🇫🇷' },
-                    { code: 'en', label: 'English', flag: '🇬🇧' },
-                    { code: 'es', label: 'Español', flag: '🇪🇸' },
-                  ].map((item) => (
-                    <button
-                      key={item.code}
-                      onClick={() => {
-                        setLocale(item.code as typeof locale);
-                        setShowLangMenu(false);
-                      }}
-                      className={`flex w-full items-center gap-2 px-3 py-2 text-sm transition-colors ${
-                        locale === item.code
-                          ? 'text-blue-300 bg-blue-500/10'
-                          : 'text-slate-300 hover:bg-slate-900'
-                      }`}
-                    >
-                      <span>{item.flag}</span>
-                      <span>{item.label}</span>
-                    </button>
-                  ))}
+                  <div
+                    id={langMenuId}
+                    role="menu"
+                    aria-label={t('nav.languageMenu')}
+                  >
+                    {[
+                      { code: 'fr', label: 'Français', flag: '🇫🇷' },
+                      { code: 'en', label: 'English', flag: '🇬🇧' },
+                      { code: 'es', label: 'Español', flag: '🇪🇸' },
+                    ].map((item) => (
+                      <button
+                        key={item.code}
+                        onClick={() => {
+                          setLocale(item.code as typeof locale);
+                          setShowLangMenu(false);
+                        }}
+                        className={`flex w-full items-center gap-2 px-3 py-2 text-sm transition-colors ${
+                          locale === item.code
+                            ? 'text-blue-300 bg-blue-500/10'
+                            : 'text-slate-300 hover:bg-slate-900'
+                          }`}
+                        role="menuitemradio"
+                        aria-checked={locale === item.code}
+                      >
+                        <span>{item.flag}</span>
+                        <span>{item.label}</span>
+                      </button>
+                    ))}
                 </div>
               </>
             )}
@@ -123,6 +138,10 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
             <button
               onClick={() => setShowUserMenu(!showUserMenu)}
               className="flex items-center gap-2 rounded-full border border-slate-800 px-3 py-1.5 text-sm text-slate-300 hover:border-slate-600 hover:text-white transition-colors"
+              aria-haspopup="menu"
+              aria-expanded={showUserMenu}
+              aria-controls={userMenuId}
+              aria-label={t('nav.userMenu')}
             >
               <div className="w-7 h-7 rounded-full bg-gradient-to-br from-slate-600 to-slate-400 flex items-center justify-center">
                 <span className="text-white text-xs font-bold">
@@ -142,39 +161,49 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
                   onClick={() => setShowUserMenu(false)}
                 />
                 <div className="absolute right-0 top-full mt-1 w-48 rounded-lg border border-slate-700 bg-slate-800 py-1 shadow-xl z-20">
-                  <div className="px-3 py-2 border-b border-slate-700">
-                    <p className="text-sm font-medium text-white">{user?.username}</p>
-                    <p className="text-xs text-slate-400">Rang #{user?.rank || '-'}</p>
-                  </div>
-                  <Link
-                    href="/settings"
-                    className="block px-3 py-2 text-sm text-slate-300 hover:bg-slate-700 transition-colors"
-                    onClick={() => setShowUserMenu(false)}
+                  <div
+                    id={userMenuId}
+                    role="menu"
+                    aria-label={t('nav.userMenu')}
                   >
-                    Paramètres
-                  </Link>
-                  {hasAdminAccess(user?.role) && (
+                    <div className="px-3 py-2 border-b border-slate-700">
+                      <p className="text-sm font-medium text-white">{user?.username}</p>
+                      <p className="text-xs text-slate-400">Rang #{user?.rank || '-'}</p>
+                    </div>
                     <Link
-                      href="/admin"
+                      href="/settings"
                       className="block px-3 py-2 text-sm text-slate-300 hover:bg-slate-700 transition-colors"
                       onClick={() => setShowUserMenu(false)}
+                      role="menuitem"
                     >
-                      Administration
+                      Paramètres
                     </Link>
-                  )}
-                  <Link
-                    href="/messages"
-                    className="block px-3 py-2 text-sm text-slate-300 hover:bg-slate-700 transition-colors"
-                    onClick={() => setShowUserMenu(false)}
-                  >
-                    Messages
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-slate-700 transition-colors"
-                  >
-                    Déconnexion
-                  </button>
+                    {hasAdminAccess(user?.role) && (
+                      <Link
+                        href="/admin"
+                        className="block px-3 py-2 text-sm text-slate-300 hover:bg-slate-700 transition-colors"
+                        onClick={() => setShowUserMenu(false)}
+                        role="menuitem"
+                      >
+                        Administration
+                      </Link>
+                    )}
+                    <Link
+                      href="/messages"
+                      className="block px-3 py-2 text-sm text-slate-300 hover:bg-slate-700 transition-colors"
+                      onClick={() => setShowUserMenu(false)}
+                      role="menuitem"
+                    >
+                      Messages
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-slate-700 transition-colors"
+                      role="menuitem"
+                    >
+                      Déconnexion
+                    </button>
+                  </div>
                 </div>
               </>
             )}

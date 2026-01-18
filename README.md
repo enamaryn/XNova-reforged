@@ -92,6 +92,8 @@ Pour une installation détaillée : `GETTING_STARTED.md`
 - `ROADMAP_COMPLET.md` - Roadmap long terme
 - `GAME_FORMULAS.md` - Formules de jeu (référence)
 - `STRATEGIE_UPGRADE.md` - Stratégie de refonte
+- `docs/PLAYER_GUIDE.md` - Guide joueur condensé (économie, combat, social, admin)
+- `docs/INTEGRATION_TESTS.md` - Mise en place des tests d’intégration NestJS
 - `SKILL.md` - **Guide complet des tests** (unitaires, intégration, E2E)
 
 ## Tests
@@ -108,7 +110,7 @@ npm run test:e2e:ui
 npm run test:integration
 ```
 
-**Pour un guide complet des tests, voir [`SKILL.md`](SKILL.md).**
+**Pour un guide complet des tests, voir [`SKILL.md`](SKILL.md) et [`docs/INTEGRATION_TESTS.md`](docs/INTEGRATION_TESTS.md).**
 
 Notes rapides :
 - Tests unitaires : `apps/api/test/*.spec.ts` (mocks, logique métier)

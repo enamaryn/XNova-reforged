@@ -3432,6 +3432,29 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 
 ---
 
+## ✅ Session 66 - Sprint 10 : documentation & tests (18 janvier 2026)
+
+**Date :** 18 janvier 2026  
+**Objectif :** Poursuivre le Sprint 10 en documentant l’expérience joueur et les tests d’intégration, puis valider les commandes clés malgré les limitations réseau du sandbox.
+
+### ✅ Taches realisees
+- [x] Création de `docs/PLAYER_GUIDE.md` pour lister onboarding, économie, bâtiments, recherches, flottes, combat, galaxie, social et administration avec renvoi vers `@xnova/game-config` et `ServerConfigService`.
+- [x] Rédaction de `docs/INTEGRATION_TESTS.md` détaillant Docker + Prisma + `npm run test:integration` et précisant que la sandbox bloque l’accès réseau (`Operation not permitted`).
+- [x] Mise à jour de `README.md` pour cataloguer ces nouveaux guides et rappeler la procédure de tests, avec lien explicite vers `docs/INTEGRATION_TESTS.md`.
+- [x] Tentative de `npm run test:integration` : les containers Postgres/Redis tournent mais NestJS échoue (`PrismaClientInitializationError: Can't reach database server at localhost:5432`) car l’environnement bloque les sockets réseau sortants.
+
+### 📍 Etat actuel du projet
+
+**Sprint 10 :** en cours (polish & tests). La a la documentation, puis l’équilibrage. Les tests d’intégration doivent être relancés sur une machine avec accès Réseau complet.
+
+### ⏭️ Prochaines etapes
+- Lancer `npm run test:integration` sur une machine/CI capable d’ouvrir une socket vers Postgres/Redis pour valider la suite.
+- Continuer les tâches Sprint 10 restantes (balance, UI/UX, accessibilité, documentation finale) en s’appuyant sur les guides ajoutés.
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectue via la roadmap.
+
+---
+
 ## ✅ Session 66 - Tests unitaires services critiques
 
 **Date :** 17 janvier 2026
