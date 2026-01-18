@@ -7,10 +7,10 @@ export declare class ResourcesController {
     getPlanet(planetId: string, userId: string): Promise<{
         storage: import("@xnova/game-engine").StorageCapacity;
         productionLevel: number;
-        id: string;
-        createdAt: Date;
         name: string;
+        id: string;
         userId: string;
+        createdAt: Date;
         galaxy: number;
         system: number;
         position: number;
@@ -87,8 +87,8 @@ export declare class ResourcesController {
         name: string;
     }>;
     renamePlanet(planetId: string, dto: RenamePlanetDto, userId: string): Promise<{
-        id: string;
         name: string;
+        id: string;
         galaxy: number;
         system: number;
         position: number;

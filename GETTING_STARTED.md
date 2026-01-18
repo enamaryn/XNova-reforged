@@ -89,6 +89,7 @@ npm run dev
 **URLs :**
 - Frontend (Next.js) : http://localhost:3000
 - Backend API (NestJS) : http://localhost:3001
+- Swagger (API docs) : http://localhost:3001/api/docs
 
 ## 8. Verification rapide
 

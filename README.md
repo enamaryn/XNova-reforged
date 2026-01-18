@@ -92,14 +92,30 @@ Pour une installation détaillée : `GETTING_STARTED.md`
 - `ROADMAP_COMPLET.md` - Roadmap long terme
 - `GAME_FORMULAS.md` - Formules de jeu (référence)
 - `STRATEGIE_UPGRADE.md` - Stratégie de refonte
+- `SKILL.md` - **Guide complet des tests** (unitaires, intégration, E2E)
 
 ## Tests
 
 ```bash
+# Tests unitaires API
+npm run test
+
 # Tests E2E Playwright
 npm run test:e2e
 npm run test:e2e:ui
+
+# Tests integration API (NestJS)
+npm run test:integration
 ```
+
+**Pour un guide complet des tests, voir [`SKILL.md`](SKILL.md).**
+
+Notes rapides :
+- Tests unitaires : `apps/api/test/*.spec.ts` (mocks, logique métier)
+- Tests intégration : `apps/api/test/integration/` (vraie DB, requiert Docker)
+- Tests E2E : `tests/e2e/` (Playwright, interface utilisateur)
+- **IMPORTANT** : Les noms d'utilisateur sont limités à 20 caractères
+- Si erreur Reflector : ajouter `Reflector` aux providers du module
 
 ## Scripts utiles
 

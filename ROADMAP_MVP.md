@@ -835,7 +835,16 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
   - [x] Guards auth
   - [x] Validations
 - [ ] Tests intégration API
-  - Tous les endpoints critiques
+  - [x] Auth + planètes (smoke)
+  - [x] Stabilisation Jest (imports .js + ts-jest + isolatedModules)
+  - [x] Injection RolesGuard pour tests integration
+  - [ ] Alignement versions NestJS (Swagger v7 + reinstall)
+  - [ ] Tous les endpoints critiques
+
+**Notes integration (recap)**
+- Config Jest: `apps/api/jest.integration.config.cjs` (mapping `.js` -> `.ts` + ts-jest transform)
+- Test smoke: `apps/api/test/integration/auth.integration.spec.ts`
+- Erreur Reflector = versions NestJS desynchronisees, aligner `@nestjs/swagger` en v7 puis refaire `npm install`
 
 #### Performance
 - [x] Optimisation queries Prisma
@@ -864,13 +873,14 @@ Créer une version jouable minimale mais complète du jeu XNova avec :
 - [ ] États de chargement partout
 - [ ] Gestion erreurs user-friendly
 - [x] Responsive mobile (auth + home + pages principales + overview + fix overflow)
+- [x] Page Défense (placeholder)
 - [ ] Accessibilité (ARIA labels)
 
 #### Documentation
 - [x] README complet
 - [x] Guide installation
 - [ ] Guide joueur (règles)
-- [ ] API documentation (Swagger)
+- [x] API documentation (Swagger)
 - [ ] Comments code critiques
 
 **Livrables :**

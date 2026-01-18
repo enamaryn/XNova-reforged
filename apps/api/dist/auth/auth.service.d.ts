@@ -17,17 +17,17 @@ export declare class AuthService {
         accessToken: string;
     }>;
     getMe(userId: string): Promise<{
-        id: string;
-        username: string;
-        email: string;
         role: import(".prisma/client").$Enums.UserRole;
+        username: string;
+        rank: number;
+        id: string;
         createdAt: Date;
+        email: string;
         updatedAt: Date;
         points: number;
-        rank: number;
         planets: {
-            id: string;
             name: string;
+            id: string;
             galaxy: number;
             system: number;
             position: number;

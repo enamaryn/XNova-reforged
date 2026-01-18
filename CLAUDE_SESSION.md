@@ -3467,6 +3467,143 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 
 ---
 
+## ✅ Session 74 - Recap tests integration (README + ROADMAP)
+
+**Date :** 17 janvier 2026
+**Objectif :** Clarifier l'etat des tests integration pour Claude Code.
+
+### ✅ Taches realisees
+- [x] Ajout recap tests integration dans le README
+- [x] Ajout notes integration dans la Roadmap MVP
+
+### 🔧 Fichiers modifies
+- `README.md`
+- `ROADMAP_MVP.md`
+
+### 📍 Etat actuel du projet
+
+**Sprint 10 :** en cours (tests integration documentes).
+
+### ⏭️ Prochaines etapes
+- Relancer `npm install` puis `npm run test:integration`.
+- Completer les tests d integration des endpoints critiques.
+
+**Note :** suivi via update_plan.
+
+---
+
+## ✅ Session 73 - Alignement deps NestJS (Swagger v7)
+
+**Date :** 17 janvier 2026
+**Objectif :** Aligner les versions NestJS pour supprimer le conflit Reflector.
+
+### ✅ Taches realisees
+- [x] Downgrade `@nestjs/swagger` vers v7 (compatible Nest 10)
+- [x] Roadmap MVP mise a jour (alignement deps)
+
+### ⚠️ Point d attention
+- `npm install` a echoue (registry npm inaccessible) : package-lock a mettre a jour des que possible.
+
+### 🔧 Fichiers modifies
+- `apps/api/package.json`
+- `ROADMAP_MVP.md`
+
+### 📍 Etat actuel du projet
+
+**Sprint 10 :** en cours (alignement deps en attente d install).
+
+### ⏭️ Prochaines etapes
+- Relancer `npm install` puis `npm run test:integration`.
+
+**Note :** suivi via update_plan.
+
+---
+
+## ✅ Session 72 - Fix DI RolesGuard (tests integration)
+
+**Date :** 17 janvier 2026
+**Objectif :** Corriger l'erreur Reflector lors des tests d integration API.
+
+### ✅ Taches realisees
+- [x] Enregistrement de RolesGuard dans AdminModule
+- [x] Roadmap MVP mise a jour (tests integration)
+
+### 🔧 Fichiers modifies
+- `apps/api/src/admin/admin.module.ts`
+- `ROADMAP_MVP.md`
+
+### 📍 Etat actuel du projet
+
+**Sprint 10 :** en cours (tests integration en voie de stabilisation).
+
+### ⏭️ Prochaines etapes
+- Relancer `npm run test:integration` pour valider.
+- Completer les tests d integration des endpoints critiques.
+
+**Note :** suivi via update_plan.
+
+---
+
+## ✅ Session 71 - Stabilisation tests integration (Jest)
+
+**Date :** 17 janvier 2026
+**Objectif :** Corriger les warnings ts-jest et stabiliser la resolution des imports .js.
+
+### ✅ Taches realisees
+- [x] Activation isolatedModules dans le tsconfig API
+- [x] Roadmap MVP mise a jour (tests integration stabilises)
+
+### 🔧 Fichiers modifies
+- `apps/api/tsconfig.json`
+- `ROADMAP_MVP.md`
+
+### 📍 Etat actuel du projet
+
+**Sprint 10 :** en cours (tests integration stabilises).
+
+### ⏭️ Prochaines etapes
+- Relancer `npm run test:integration` pour valider.
+- Completer les tests d integration des endpoints critiques.
+
+**Note :** suivi via update_plan.
+
+---
+
+## ✅ Session 70 - Integration API + Swagger + Defense
+
+**Date :** 17 janvier 2026
+**Objectif :** Ajouter des tests d integration, Swagger et la page Defense.
+
+### ✅ Taches realisees
+- [x] Swagger configure dans l API
+- [x] Tests d integration API (auth + planetes)
+- [x] Page Defense (placeholder)
+- [x] Roadmap MVP mise a jour
+
+### 🔧 Fichiers modifies
+- `apps/api/src/main.ts`
+- `apps/api/package.json`
+- `apps/api/jest.config.cjs`
+- `apps/api/jest.integration.config.cjs` ✅ NEW
+- `apps/api/test/integration/auth.integration.spec.ts` ✅ NEW
+- `package.json`
+- `GETTING_STARTED.md`
+- `apps/web/app/(game)/defense/page.tsx` ✅ NEW
+- `ROADMAP_MVP.md`
+
+### 📍 Etat actuel du projet
+
+**Sprint 10 :** en cours (integration API + Swagger lancees).
+
+### ⏭️ Prochaines etapes
+- Lancer `npm install`, puis `npm run test:integration`.
+- Completer les tests d integration pour les endpoints restants.
+- Implementer la vraie page Defense quand l API sera prete.
+
+**Note :** suivi via update_plan.
+
+---
+
 ## ✅ Session 69 - Prisma + Redis + equilibrage
 
 **Date :** 17 janvier 2026
