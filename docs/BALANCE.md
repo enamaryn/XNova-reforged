@@ -37,3 +37,16 @@ Ce guide rassemble les multiplicateurs et formules que l’équipe utilise penda
 - `packages/game-config/src/technologies.ts` et `ships.ts`.
 - `ServerConfigService` (cache + admin).
 - `docs/API_ENDPOINTS.md` pour retrouver l’endpoint `/admin/config`.
+
+## Valeurs appliquées (Sprint 10)
+
+| Clé | Valeur active (`.env` / admin) |
+|-----|-------------------------------|
+| `gameSpeed` | 2000 (accélération dosée) |
+| `fleetSpeed` | 2200 (voyages rapides mais contrôlés) |
+| `resourceMultiplier` | 1.25 (bonus production) |
+| `buildingCostMultiplier` | 1.15 (coûts légèrement plus élevés) |
+| `researchCostMultiplier` | 1.1 |
+| `shipCostMultiplier` | 1.2 |
+
+Ces valeurs peuvent être disparates dans `AdminController` (changer live) ou à travers `.env` / `ServerConfigService` (cache invalide). Pense à relancer `npm run test:integration` après chaque changement critique.

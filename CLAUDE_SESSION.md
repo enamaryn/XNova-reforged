@@ -3478,6 +3478,27 @@ Suite à l'analyse de l'avancement réel, les sprints ont été réorganisés po
 
 ---
 
+## ✅ Session 68 - Equilibrage & déploiement des multiplicateurs (?? janvier 2026)
+
+**Objectif :** Appliquer les multiplicateurs définis dans `docs/BALANCE.md` + finaliser les ajustements d’équilibrage pour Boucler le sprint 10.
+
+### ✅ Tâches réalisées
+- [x] Mise à jour des fichiers `.env` / `.env.example` pour fixer `gameSpeed=2000`, `fleetSpeed=2200`, et les multiplicateurs de ressources/coûts (1.25, 1.15, 1.1, 1.2) afin que `ServerConfigService` reflète la nouvelle balance par défaut.
+- [x] Documentation `docs/BALANCE.md` enrichie (valeurs appliquées, formules, référence admin) et les autres guides Redmi/PLAYER_GUIDE/README alignés sur la nouvelle phase.
+- [x] L’état de polish UI/UX + tests reste vérifié ; les suites d’intégration passent sur Docker et les logs montrent les events `building:started`/`building:cancelled`.
+
+### 📍 État actuel du projet
+
+**Sprint 10 :** terminaisons des ajustements d’équilibrage + tests. Les multiplicateurs par défaut sont déjà appliqués, les docs listent la procédure, et la suite de tests (auth + buildings) passe dans un environnement Docker complet.
+
+### ⏭️ Prochaines étapes
+- Lancer la suite complète (unitaires + integración + E2E) puis valider un build final.
+- Préparer la release/merge du sprint 10.
+
+**Note :** l’outil TodoWrite n’est pas disponible dans cette session, suivi effectue via la roadmap.
+
+---
+
 ## ✅ Session 66 - Tests unitaires services critiques
 
 **Date :** 17 janvier 2026
