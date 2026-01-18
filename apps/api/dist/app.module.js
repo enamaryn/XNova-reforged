@@ -25,6 +25,7 @@ const statistics_module_1 = require("./statistics/statistics.module");
 const admin_module_1 = require("./admin/admin.module");
 const server_config_module_1 = require("./server-config/server-config.module");
 const redis_module_1 = require("./redis/redis.module");
+const core_1 = require("@nestjs/core");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -53,7 +54,7 @@ exports.AppModule = AppModule = __decorate([
             admin_module_1.AdminModule,
         ],
         controllers: [],
-        providers: [],
+        providers: [core_1.Reflector],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

@@ -16,6 +16,7 @@ import { StatisticsModule } from './statistics/statistics.module';
 import { AdminModule } from './admin/admin.module';
 import { ServerConfigModule } from './server-config/server-config.module';
 import { RedisModule } from './redis/redis.module';
+import { Reflector } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -74,6 +75,6 @@ import { RedisModule } from './redis/redis.module';
     AdminModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [Reflector],
 })
 export class AppModule {}
