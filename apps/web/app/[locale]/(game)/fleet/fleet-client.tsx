@@ -246,7 +246,7 @@ export default function FleetClient() {
   });
 
   return (
-    <motion.div {...fadeInProps} className="space-y-6">
+    <motion.div initial={false} {...fadeInProps} className="space-y-6">
       <div>
         <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">Commandement</p>
         <h1 className="mt-2 text-2xl font-semibold text-white">{t('fleet.title')}</h1>

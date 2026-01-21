@@ -98,6 +98,22 @@ export default function ResearchClient() {
     };
   }, [socket, refetchTech, refetchQueue, pushToast]);
 
+  // Calculs dérivés - DOIVENT être avant les returns conditionnels
+  // Utiliser techData entier comme dépendance, pas techData.technologies
+  const technologies = useMemo(
+    () => techData?.technologies || [],
+    [techData]
+  );
+  const queue = queueData || [];
+  const grouped = useMemo(() => {
+    return technologies.reduce((acc, tech) => {
+      acc[tech.category] = acc[tech.category] || [];
+      acc[tech.category].push(tech);
+      return acc;
+    }, {} as Record<string, typeof technologies>);
+  }, [technologies]);
+
+  // États de chargement et erreur - APRÈS tous les hooks
   if (!planetId) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -137,18 +153,8 @@ export default function ResearchClient() {
     );
   }
 
-  const technologies = techData?.technologies || [];
-  const queue = queueData || [];
-  const grouped = useMemo(() => {
-    return technologies.reduce((acc, tech) => {
-      acc[tech.category] = acc[tech.category] || [];
-      acc[tech.category].push(tech);
-      return acc;
-    }, {} as Record<string, typeof technologies>);
-  }, [technologies]);
-
   return (
-    <motion.div {...fadeInProps} className="space-y-6">
+    <motion.div initial={false} {...fadeInProps} className="space-y-6">
       <div>
         <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">Laboratoire</p>
         <h1 className="mt-2 text-2xl font-semibold text-white">Technologies</h1>

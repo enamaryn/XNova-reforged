@@ -15,14 +15,6 @@ export default function BuildingsClient() {
   const shouldReduceMotion = useReducedMotion();
   const fadeInProps: MotionProps = shouldReduceMotion ? {} : designTokens.animations.fadeIn;
   const slideUpProps: MotionProps = shouldReduceMotion ? {} : designTokens.animations.slideUp;
-  const listVariants = {
-    hidden: { opacity: 0 },
-    show: { opacity: 1, transition: { staggerChildren: 0.05 } },
-  };
-  const itemVariants = {
-    hidden: { opacity: 0, y: 16 },
-    show: { opacity: 1, y: 0 },
-  };
 
   const { user } = useAuthStore();
   const { selectedPlanetId, setSelectedPlanetId } = usePlanetStore();
@@ -133,7 +125,27 @@ export default function BuildingsClient() {
     [cancelMutation]
   );
 
-  // États de chargement et erreur
+  // Calculs dérivés - DOIVENT être avant les returns conditionnels
+  // Utiliser buildingsData entier comme dépendance, pas buildingsData.buildings
+  const buildings = useMemo(
+    () => buildingsData?.buildings || [],
+    [buildingsData]
+  );
+  const queue = queueData || [];
+
+  const categories = useMemo(
+    () => ['all', ...new Set(buildings.map((building) => building.category))],
+    [buildings],
+  );
+  const filteredBuildings = useMemo(
+    () =>
+      activeCategory === 'all'
+        ? buildings
+        : buildings.filter((building) => building.category === activeCategory),
+    [activeCategory, buildings],
+  );
+
+  // États de chargement et erreur - APRÈS tous les hooks
   if (!planetId) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -173,23 +185,8 @@ export default function BuildingsClient() {
     );
   }
 
-  const buildings = buildingsData?.buildings || [];
-  const queue = queueData || [];
-
-  const categories = useMemo(
-    () => ['all', ...new Set(buildings.map((building) => building.category))],
-    [buildings],
-  );
-  const filteredBuildings = useMemo(
-    () =>
-      activeCategory === 'all'
-        ? buildings
-        : buildings.filter((building) => building.category === activeCategory),
-    [activeCategory, buildings],
-  );
-
   return (
-    <motion.div {...fadeInProps} className="space-y-6">
+    <motion.div initial={false} {...fadeInProps} className="space-y-6">
       {/* Header de page */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -205,9 +202,9 @@ export default function BuildingsClient() {
       </div>
 
       {/* File de construction */}
-      <motion.div {...slideUpProps}>
+      <div>
         <BuildQueue queue={queue} onCancel={handleCancel} />
-      </motion.div>
+      </div>
 
       {/* Filtres par catégorie */}
       <div className="flex flex-wrap gap-2">
@@ -227,22 +224,17 @@ export default function BuildingsClient() {
       </div>
 
       {/* Liste des bâtiments */}
-      <motion.div
-        variants={shouldReduceMotion ? undefined : listVariants}
-        initial={shouldReduceMotion ? undefined : 'hidden'}
-        animate={shouldReduceMotion ? undefined : 'show'}
-        className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3"
-      >
+      <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
         {filteredBuildings.map((building) => (
-          <motion.div key={building.id} variants={shouldReduceMotion ? undefined : itemVariants}>
+          <div key={building.id}>
             <BuildingCard
               building={building}
               onBuild={handleBuild}
               isBuilding={buildMutation.isPending}
             />
-          </motion.div>
+          </div>
         ))}
-      </motion.div>
+      </div>
 
       {/* Message d'erreur flottant */}
       {(buildMutation.error || cancelMutation.error) && (

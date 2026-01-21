@@ -8,7 +8,7 @@ export default function DefensePage() {
   const fadeInProps: MotionProps = shouldReduceMotion ? {} : designTokens.animations.fadeIn;
 
   return (
-    <motion.div {...fadeInProps} className="space-y-6">
+    <motion.div initial={false} {...fadeInProps} className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">Infrastructure</p>
