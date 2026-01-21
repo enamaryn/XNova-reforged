@@ -1,0 +1,18 @@
+
+> @xnova/api@1.0.0 lint
+> eslint "{src,apps,libs,test}/**/*.ts"
+
+[1G[0K
+Oops! Something went wrong! :(
+
+ESLint: 8.57.1
+
+ESLint couldn't find a configuration file. To set up a configuration file for this project, please run:
+
+    npm init @eslint/config
+
+ESLint looked for configuration files in /home/didrod/Documents/projet GITHUB/XNova-Reforged/apps/api/src and its ancestors. If it found none, it then looked in your home directory.
+
+If you think you already have a configuration file or if you need more help, please stop by the ESLint Discord server: https://eslint.org/chat
+
+[1G[0K⠙

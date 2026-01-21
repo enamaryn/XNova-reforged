@@ -1,0 +1,445 @@
+// Prisma Schema for XNova Reforged
+// Based on OGame-like mechanics
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum UserRole {
+  PLAYER
+  MODERATOR
+  ADMIN
+  SUPER_ADMIN
+}
+
+// ============================================
+// USER & AUTHENTICATION
+// ============================================
+
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  email     String   @unique
+  password  String   // Hashed with Argon2
+  role      UserRole @default(PLAYER)
+  bannedUntil DateTime?
+  banReason String?
+  bannedAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  lastActive DateTime @default(now()) // Dernière activité (connexion, action)
+
+  // Relations
+  planets       Planet[]
+  fleets        Fleet[]
+  technologies  Technology[]
+  messages      Message[]      @relation("ReceivedMessages")
+  sentMessages  Message[]      @relation("SentMessages")
+  allianceMember AllianceMember?
+  adminLogs     AdminAuditLog[]
+  banLogs       UserBanLog[] @relation("UserBanLogTarget")
+  banActorLogs  UserBanLog[] @relation("UserBanLogActor")
+
+  // Stats
+  points        Int      @default(0)
+  rank          Int      @default(0)
+
+  @@index([username])
+  @@index([email])
+  @@index([lastActive]) // Index pour les requêtes de planètes actives
+  @@index([points])
+  @@index([rank])
+}
+
+// ============================================
+// PLANETS & RESOURCES
+// ============================================
+
+model Planet {
+  id       String @id @default(uuid())
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name     String
+  galaxy   Int
+  system   Int
+  position Int
+
+  // Planet type
+  planetType String @default("normal") // normal, desert, jungle, ice, volcanic
+
+  // Resources
+  metal      Float @default(500)
+  crystal    Float @default(500)
+  deuterium  Float @default(0)
+
+  // Production per hour (calculated)
+  metalProduction     Float @default(0)
+  crystalProduction   Float @default(0)
+  deuteriumProduction Float @default(0)
+
+  // Energy
+  energyUsed      Int @default(0)
+  energyAvailable Int @default(0)
+
+  // Fields
+  fieldsUsed      Int @default(0)
+  fieldsMax       Int @default(163)
+
+  // Buildings (levels)
+  metalMine          Int @default(0)
+  crystalMine        Int @default(0)
+  deuteriumMine      Int @default(0)
+  solarPlant         Int @default(0)
+  fusionPlant        Int @default(0)
+  roboticsFactory    Int @default(0)
+  naniteFactory      Int @default(0)
+  shipyard           Int @default(0)
+  metalStorage       Int @default(0)
+  crystalStorage     Int @default(0)
+  deuteriumStorage   Int @default(0)
+  researchLab        Int @default(0)
+  terraformer        Int @default(0)
+  allianceDepot      Int @default(0)
+  missileSilo        Int @default(0)
+
+  // Moon-only buildings
+  moonBase    Int @default(0)
+  phalanx     Int @default(0)
+  jumpGate    Int @default(0)
+
+  // Timestamps
+  lastUpdate DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  // Relations
+  buildQueue   BuildQueue[]
+  researchQueue ResearchQueue[]
+  shipQueue    ShipQueue[]
+  ships        Ship[]
+  defenses     Defense[]
+
+  @@unique([galaxy, system, position])
+  @@index([userId])
+  @@index([galaxy, system])
+  @@index([userId, galaxy, system, position])
+}
+
+// ============================================
+// CONSTRUCTION QUEUE
+// ============================================
+
+model BuildQueue {
+  id         String   @id @default(uuid())
+  planetId   String
+  planet     Planet   @relation(fields: [planetId], references: [id], onDelete: Cascade)
+
+  buildingId Int      // Building ID from game config
+  level      Int      // Target level
+
+  startTime  DateTime
+  endTime    DateTime
+  completed  Boolean  @default(false)
+
+  createdAt  DateTime @default(now())
+
+  @@index([planetId])
+  @@index([endTime])
+  @@index([planetId, completed])
+  @@index([completed, endTime])
+}
+
+// ============================================
+// TECHNOLOGIES
+// ============================================
+
+model Technology {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  techId Int    // Technology ID from game config
+  level  Int    @default(0)
+
+  @@unique([userId, techId])
+  @@index([userId])
+}
+
+model ResearchQueue {
+  id        String   @id @default(uuid())
+  userId    String
+  planetId  String
+  planet    Planet   @relation(fields: [planetId], references: [id], onDelete: Cascade)
+
+  techId    Int
+  level     Int
+
+  startTime DateTime
+  endTime   DateTime
+  completed Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([planetId])
+  @@index([endTime])
+  @@index([userId, completed])
+  @@index([completed, endTime])
+}
+
+// ============================================
+// SHIPS & DEFENSES
+// ============================================
+
+model Ship {
+  id       String @id @default(uuid())
+  planetId String
+  planet   Planet @relation(fields: [planetId], references: [id], onDelete: Cascade)
+
+  shipId   Int    // Ship ID from game config
+  amount   Int    @default(0)
+
+  @@unique([planetId, shipId])
+  @@index([planetId])
+}
+
+model ShipQueue {
+  id        String   @id @default(uuid())
+  planetId  String
+  planet    Planet   @relation(fields: [planetId], references: [id], onDelete: Cascade)
+
+  shipId    Int
+  amount    Int
+
+  startTime DateTime
+  endTime   DateTime
+  completed Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@index([planetId])
+  @@index([endTime])
+  @@index([completed])
+  @@index([planetId, completed])
+  @@index([completed, endTime])
+}
+
+model Defense {
+  id        String @id @default(uuid())
+  planetId  String
+  planet    Planet @relation(fields: [planetId], references: [id], onDelete: Cascade)
+
+  defenseId Int    // Defense ID from game config
+  amount    Int    @default(0)
+
+  @@unique([planetId, defenseId])
+  @@index([planetId])
+}
+
+// ============================================
+// FLEETS
+// ============================================
+
+model Fleet {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Origin
+  fromGalaxy      Int
+  fromSystem      Int
+  fromPosition    Int
+
+  // Destination
+  toGalaxy        Int
+  toSystem        Int
+  toPosition      Int
+
+  // Mission
+  mission         Int      // 1=Attack, 2=ACS, 3=Transport, 4=Deploy, 5=Hold, 6=Spy, 7=Colonize, 8=Recycle, 9=Destroy, 15=Expedition
+
+  // Ships (JSON: { "202": 10, "203": 5 })
+  ships           Json
+
+  // Cargo (JSON: { "metal": 1000, "crystal": 500, "deuterium": 0 })
+  cargo           Json     @default("{}")
+
+  // Timing
+  startTime       DateTime
+  arrivalTime     DateTime
+  returnTime      DateTime?
+
+  // Status
+  status          String   // traveling, arrived, returning, completed
+
+  createdAt       DateTime @default(now())
+
+  @@index([userId])
+  @@index([arrivalTime])
+  @@index([returnTime])
+  @@index([status])
+  @@index([userId, status])
+  @@index([status, arrivalTime])
+  @@index([status, returnTime])
+}
+
+// ============================================
+// COMBAT REPORTS
+// ============================================
+
+model CombatReport {
+  id          String   @id @default(uuid())
+
+  attackerId  String
+  defenderId  String
+
+  // Forces
+  attackerShips Json   // Before combat
+  defenderShips Json
+  defenderDefs  Json
+
+  // Losses
+  attackerLosses Json
+  defenderLosses Json
+
+  // Result
+  result      String   // attacker_win, defender_win, draw
+  rounds      Int      @default(1)
+  timeline    Json     // Timeline des rounds
+
+  // Loot & Debris
+  loot        Json     // { metal, crystal, deuterium }
+  debris      Json     // { metal, crystal }
+
+  // Location
+  galaxy      Int
+  system      Int
+  position    Int
+
+  createdAt   DateTime @default(now())
+
+  @@index([attackerId])
+  @@index([defenderId])
+  @@index([createdAt])
+  @@index([attackerId, createdAt])
+  @@index([defenderId, createdAt])
+}
+
+// ============================================
+// ALLIANCES
+// ============================================
+
+model Alliance {
+  id          String   @id @default(uuid())
+  tag         String   @unique
+  name        String
+
+  founderId   String
+
+  description String?
+  logo        String?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  members     AllianceMember[]
+
+  @@index([tag])
+}
+
+model AllianceMember {
+  id         String   @id @default(uuid())
+
+  allianceId String
+  alliance   Alliance @relation(fields: [allianceId], references: [id], onDelete: Cascade)
+
+  userId     String   @unique
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  rank       String   @default("member") // founder, leader, officer, member
+
+  joinedAt   DateTime @default(now())
+
+  @@index([allianceId])
+  @@index([userId])
+}
+
+// ============================================
+// MESSAGES
+// ============================================
+
+model Message {
+  id         String   @id @default(uuid())
+
+  fromId     String
+  from       User     @relation("SentMessages", fields: [fromId], references: [id], onDelete: Cascade)
+
+  toId       String
+  to         User     @relation("ReceivedMessages", fields: [toId], references: [id], onDelete: Cascade)
+
+  subject    String
+  body       String   @db.Text
+
+  read       Boolean  @default(false)
+
+  createdAt  DateTime @default(now())
+
+  @@index([toId, read])
+  @@index([createdAt])
+  @@index([toId, createdAt])
+}
+
+// ============================================
+// GAME CONFIG
+// ============================================
+
+model GameConfig {
+  id    String @id @default(uuid())
+  key   String @unique
+  value String
+
+  @@index([key])
+}
+
+// ============================================
+// ADMIN AUDIT LOGS
+// ============================================
+
+model AdminAuditLog {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action    String
+  changes   Json
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model UserBanLog {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation("UserBanLogTarget", fields: [userId], references: [id], onDelete: Cascade)
+  actorId   String
+  actor     User     @relation("UserBanLogActor", fields: [actorId], references: [id], onDelete: Cascade)
+  action    String
+  reason    String?
+  expiresAt DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([actorId])
+  @@index([createdAt])
+}

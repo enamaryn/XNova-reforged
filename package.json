@@ -1,0 +1,51 @@
+{
+  "name": "xnova-reforged",
+  "version": "1.0.0",
+  "private": true,
+  "description": "XNova Reforged - Modern space strategy MMORPG",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "db:push": "cd packages/database && npx prisma db push",
+    "db:studio": "cd packages/database && npx prisma studio",
+    "backup": "bash scripts/backup-db.sh",
+    "restore": "bash scripts/restore-db.sh",
+    "test": "npm --workspace @xnova/api test",
+    "test:integration": "npm --workspace @xnova/api run test:integration",
+    "test:e2e": "playwright test --project=chromium",
+    "test:e2e:headed": "playwright test --project=chromium --headed",
+    "test:e2e:debug": "playwright test --project=chromium --debug",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:report": "playwright show-report",
+    "test:e2e:auth": "playwright test tests/e2e/auth.spec.ts --project=chromium",
+    "test:e2e:buildings": "playwright test tests/e2e/buildings.spec.ts --project=chromium",
+    "test:e2e:research": "playwright test tests/e2e/research.spec.ts --project=chromium",
+    "test:e2e:shipyard": "playwright test tests/e2e/shipyard.spec.ts --project=chromium",
+    "test:e2e:fleet": "playwright test tests/e2e/fleet.spec.ts --project=chromium",
+    "test:e2e:combat": "playwright test tests/e2e/combat.spec.ts --project=chromium",
+    "test:e2e:galaxy": "playwright test tests/e2e/galaxy.spec.ts --project=chromium",
+    "test:e2e:messages": "playwright test tests/e2e/messages.spec.ts --project=chromium",
+    "test:e2e:alliance": "playwright test tests/e2e/alliance.spec.ts --project=chromium",
+    "test:e2e:statistics": "playwright test tests/e2e/statistics.spec.ts --project=chromium",
+    "test:e2e:admin": "playwright test tests/e2e/admin.spec.ts --project=chromium"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "prettier": "^3.2.0",
+    "turbo": "^1.12.0",
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}
