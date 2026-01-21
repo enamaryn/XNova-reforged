@@ -186,7 +186,7 @@ export default function BuildingsClient() {
   }
 
   return (
-    <motion.div initial={false} {...fadeInProps} className="space-y-6">
+    <div className="space-y-6">
       {/* Header de page */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -250,7 +250,7 @@ export default function BuildingsClient() {
           <p className="text-sm">{toastMessage}</p>
         </div>
       )}
-    </motion.div>
+    </div>
   );
 }
 

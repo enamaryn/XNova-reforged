@@ -154,7 +154,7 @@ export default function ResearchClient() {
   }
 
   return (
-    <motion.div initial={false} {...fadeInProps} className="space-y-6">
+    <div className="space-y-6">
       <div>
         <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">Laboratoire</p>
         <h1 className="mt-2 text-2xl font-semibold text-white">Technologies</h1>
@@ -180,23 +180,13 @@ export default function ResearchClient() {
 
         <div className="relative mt-6 overflow-x-auto">
           <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(148,163,184,0.08)_1px,transparent_1px)] bg-[size:160px_160px]" />
-          <motion.div
-            variants={shouldReduceMotion ? undefined : listVariants}
-            initial={shouldReduceMotion ? undefined : 'hidden'}
-            animate={shouldReduceMotion ? undefined : 'show'}
-            className="grid min-w-[720px] grid-cols-4 gap-6"
-          >
+          <div className="grid min-w-[720px] grid-cols-4 gap-6">
             {(['basic', 'drive', 'advanced', 'combat'] as const).map((category) => (
               <div key={category} className="space-y-4">
                 <div className="text-xs uppercase tracking-[0.3em] text-slate-500">
                   {t(`techCategory.${category}`)}
                 </div>
-                <motion.div
-                  variants={shouldReduceMotion ? undefined : listVariants}
-                  initial={shouldReduceMotion ? undefined : 'hidden'}
-                  animate={shouldReduceMotion ? undefined : 'show'}
-                  className="relative space-y-4"
-                >
+                <div className="relative space-y-4">
                   <div className="absolute left-3 top-0 h-full w-px bg-slate-800/80" />
                   {(grouped[category] || []).map((tech) => {
                     const missing = tech.missingRequirements.length > 0;
@@ -215,9 +205,8 @@ export default function ResearchClient() {
                           : 'Indisponible';
 
                     return (
-                      <motion.div
+                      <div
                         key={tech.id}
-                        variants={shouldReduceMotion ? undefined : itemVariants}
                         className="group relative pl-6"
                       >
                         <div
@@ -256,13 +245,13 @@ export default function ResearchClient() {
                             </ul>
                           )}
                         </div>
-                      </motion.div>
+                      </div>
                     );
                   })}
-                </motion.div>
+                </div>
               </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </div>
 
@@ -288,16 +277,10 @@ export default function ResearchClient() {
         </div>
       )}
 
-      <motion.div
-        variants={shouldReduceMotion ? undefined : listVariants}
-        initial={shouldReduceMotion ? undefined : 'hidden'}
-        animate={shouldReduceMotion ? undefined : 'show'}
-        className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3"
-      >
+      <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
         {technologies.map((tech) => (
-          <motion.div
+          <div
             key={tech.id}
-            variants={shouldReduceMotion ? undefined : itemVariants}
             className="rounded-2xl border border-slate-800/80 bg-slate-900/40 p-4"
           >
             <div className="flex items-center justify-between">
@@ -360,9 +343,9 @@ export default function ResearchClient() {
                 Détails
               </Link>
             </div>
-          </motion.div>
+          </div>
         ))}
-      </motion.div>
+      </div>
 
       {(startMutation.error || cancelMutation.error) && (
         <div className="fixed bottom-4 right-4 max-w-sm rounded-lg bg-red-500/90 px-4 py-3 text-white shadow-lg backdrop-blur-sm">
@@ -377,6 +360,6 @@ export default function ResearchClient() {
           <p className="text-sm">{toastMessage}</p>
         </div>
       )}
-    </motion.div>
+    </div>
   );
 }

@@ -246,7 +246,7 @@ export default function FleetClient() {
   });
 
   return (
-    <motion.div initial={false} {...fadeInProps} className="space-y-6">
+    <div className="space-y-6">
       <div>
         <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">Commandement</p>
         <h1 className="mt-2 text-2xl font-semibold text-white">{t('fleet.title')}</h1>
@@ -263,12 +263,7 @@ export default function FleetClient() {
           <div className="mt-4 grid gap-4">
             <div className="rounded-2xl bg-slate-900/60 p-4">
               <p className="text-sm text-slate-300">{t('fleet.availableShips')}</p>
-              <motion.div
-                variants={shouldReduceMotion ? undefined : listVariants}
-                initial={shouldReduceMotion ? undefined : 'hidden'}
-                animate={shouldReduceMotion ? undefined : 'show'}
-                className="mt-3 grid gap-2 sm:grid-cols-2"
-              >
+              <div className="mt-3 grid gap-2 sm:grid-cols-2">
                 {shipsLoading && (
                   <div className="rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-slate-400">
                     {t('common.loading')}
@@ -285,9 +280,8 @@ export default function FleetClient() {
                   </div>
                 )}
                 {ships.map((ship) => (
-                  <motion.div
+                  <div
                     key={ship.shipId}
-                    variants={shouldReduceMotion ? undefined : itemVariants}
                     className="flex flex-col gap-2 rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between"
                   >
                     <div>
@@ -310,9 +304,9 @@ export default function FleetClient() {
                       }
                       className="w-full rounded-lg border border-slate-800 bg-slate-950/60 px-2 py-1 text-sm text-white sm:w-20"
                     />
-                  </motion.div>
+                  </div>
                 ))}
-              </motion.div>
+              </div>
             </div>
 
             <div className="rounded-2xl bg-slate-900/60 p-4">
@@ -465,12 +459,7 @@ export default function FleetClient() {
           <h2 className="text-xs uppercase tracking-[0.3em] text-slate-500">
             {t('fleet.active')}
           </h2>
-          <motion.div
-            variants={shouldReduceMotion ? undefined : listVariants}
-            initial={shouldReduceMotion ? undefined : 'hidden'}
-            animate={shouldReduceMotion ? undefined : 'show'}
-            className="mt-4 space-y-3 text-sm text-slate-400"
-          >
+          <div className="mt-4 space-y-3 text-sm text-slate-400">
             {fleetsLoading && (
               <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-4">
                 {t('common.loading')}
@@ -488,9 +477,8 @@ export default function FleetClient() {
                 const countdownLabel = isReturning ? t('movement.backIn') : t('movement.arrivalIn');
 
                 return (
-                  <motion.div
+                  <div
                     key={fleet.id}
-                    variants={shouldReduceMotion ? undefined : itemVariants}
                     className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-4"
                   >
                     <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
@@ -506,7 +494,7 @@ export default function FleetClient() {
                     <div className="mt-2 text-xs text-slate-500">
                       {countdownLabel} {formatCountdown(targetTime, nowMs)}
                     </div>
-                  </motion.div>
+                  </div>
                 );
               })
             ) : !fleetsLoading && !fleetsError ? (
@@ -519,9 +507,9 @@ export default function FleetClient() {
                 </div>
               </>
             ) : null}
-          </motion.div>
+          </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

@@ -499,3 +499,38 @@
 - `apps/api/src/buildings/buildings.service.ts`
 - `apps/web/hooks/use-toast-mutations.ts`
 - `packages/game-config/src/buildings.ts`
+
+---
+
+## ✅ Session 72 - Correction pages blanches (Framer Motion)
+
+**Date :** 21 janvier 2026
+**Objectif :** Corriger les pages blanches causées par les animations Framer Motion
+
+### ✅ Problèmes identifiés
+
+1. **React Hooks Order Error** : Les hooks `useMemo` étaient appelés après des `return` conditionnels, violant les règles de React
+2. **Framer Motion `initial: { opacity: 0 }`** : L'animation initiale masquait le contenu sans jamais le révéler correctement
+3. **Erreurs de syntaxe JSX** : Un remplacement sed incomplet avait transformé certaines balises `</motion.div>` en `</div>` sans modifier les ouvrantes correspondantes
+
+### ✅ Tâches réalisées
+- [x] Correction ordre des hooks dans buildings-client.tsx et research-client.tsx
+- [x] Retrait des wrappers `<Suspense>` incompatibles avec les composants client useQuery
+- [x] Remplacement des `<motion.div>` par des `<div>` simples pour éviter les problèmes d'animation
+- [x] Correction des erreurs de syntaxe JSX dans tous les fichiers affectés
+
+### 🔧 Fichiers modifiés
+- `apps/web/app/[locale]/(game)/buildings/buildings-client.tsx`
+- `apps/web/app/[locale]/(game)/research/research-client.tsx`
+- `apps/web/app/[locale]/(game)/shipyard/page.tsx`
+- `apps/web/app/[locale]/(game)/movement/page.tsx`
+- `apps/web/app/[locale]/(game)/galaxy/galaxy-client.tsx`
+- `apps/web/app/[locale]/(game)/fleet/fleet-client.tsx`
+
+### 📊 Résultat
+- ✅ Build Next.js réussi (98 pages générées)
+- ✅ Toutes les pages de jeu s'affichent correctement
+- ✅ Pas d'erreurs de syntaxe JSX
+
+### ⏭️ Notes techniques
+Le problème principal était que Framer Motion avec `initial: { opacity: 0 }` ne déclenchait pas correctement l'animation `animate: { opacity: 1 }` dans certains contextes React Query. La solution la plus fiable a été de supprimer temporairement les animations sur les conteneurs problématiques.

@@ -81,7 +81,7 @@ export default function MovementPage() {
   const fleets = activeFleets ?? [];
 
   return (
-    <motion.div initial={false} {...fadeInProps} className="space-y-6">
+    <div className="space-y-6">
       <div>
         <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">
           {t('movement.kicker')}
@@ -103,12 +103,7 @@ export default function MovementPage() {
           <div className="text-xs text-slate-500">{t('movement.refresh')}</div>
         </div>
 
-        <motion.div
-          variants={shouldReduceMotion ? undefined : listVariants}
-          initial={shouldReduceMotion ? undefined : 'hidden'}
-          animate={shouldReduceMotion ? undefined : 'show'}
-          className="mt-6 space-y-3"
-        >
+        <div className="mt-6 space-y-3">
           {isLoading && (
             <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-4 text-sm text-slate-400">
               {t('common.loading')}
@@ -139,9 +134,8 @@ export default function MovementPage() {
               );
 
               return (
-                <motion.div
+                <div
                   key={fleet.id}
-                  variants={shouldReduceMotion ? undefined : itemVariants}
                   className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-4"
                 >
                   <div className="flex flex-wrap items-center justify-between gap-3">
@@ -181,11 +175,11 @@ export default function MovementPage() {
                       </button>
                     )}
                   </div>
-                </motion.div>
+                </div>
               );
             })}
-        </motion.div>
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

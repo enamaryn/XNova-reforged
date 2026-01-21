@@ -152,7 +152,7 @@ export default function ShipyardPage() {
   }
 
   return (
-    <motion.div initial={false} {...fadeInProps} className="space-y-6">
+    <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">Infrastructure</p>
@@ -166,21 +166,16 @@ export default function ShipyardPage() {
         </div>
       </div>
 
-      <motion.div initial={false} {...slideUpProps}>
+      <div>
         <ShipyardQueue
           queue={queue}
           onCancel={async (queueId) => {
             await cancelMutation.mutateAsync(queueId);
           }}
         />
-      </motion.div>
+      </div>
 
-      <motion.div
-        variants={shouldReduceMotion ? undefined : listVariants}
-        initial={shouldReduceMotion ? undefined : 'hidden'}
-        animate={shouldReduceMotion ? undefined : 'show'}
-        className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3"
-      >
+      <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
         {ships.map((ship) => {
           const amount = Math.max(1, Math.floor(amounts[ship.id] || 1));
           const totalCost = {
@@ -197,9 +192,8 @@ export default function ShipyardPage() {
           const canBuild = ship.canBuild && hasResources;
 
           return (
-            <motion.div
+            <div
               key={ship.id}
-              variants={shouldReduceMotion ? undefined : itemVariants}
               className="rounded-3xl border border-slate-800/80 bg-slate-950/60 p-6"
             >
               <div className="flex items-start justify-between gap-3">
@@ -274,10 +268,10 @@ export default function ShipyardPage() {
                   {buildMutation.isPending ? 'Construction...' : 'Construire'}
                 </button>
               </div>
-            </motion.div>
+            </div>
           );
         })}
-      </motion.div>
+      </div>
 
       {(buildMutation.error || cancelMutation.error) && (
         <div className="fixed bottom-4 right-4 max-w-sm rounded-lg bg-red-500/90 px-4 py-3 text-white shadow-lg backdrop-blur-sm">
@@ -286,6 +280,6 @@ export default function ShipyardPage() {
           </p>
         </div>
       )}
-    </motion.div>
+    </div>
   );
 }

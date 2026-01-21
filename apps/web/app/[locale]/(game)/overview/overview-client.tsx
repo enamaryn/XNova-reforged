@@ -109,7 +109,7 @@ export default function OverviewClient() {
   }
 
   return (
-    <motion.div initial={false} {...fadeInProps} className="space-y-8">
+    <motion.div {...fadeInProps} initial={false} className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">
@@ -278,7 +278,7 @@ export default function OverviewClient() {
       )}
 
       {selectedPlanet && (
-        <motion.div initial={false} {...slideUpProps}>
+        <motion.div {...slideUpProps} initial={false}>
           <PlanetScene
             planetName={selectedPlanet.name}
             coordinates={coordinates}

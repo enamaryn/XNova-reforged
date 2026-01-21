@@ -97,7 +97,7 @@ export default function GalaxyClient() {
   }, [data]);
 
   return (
-    <motion.div initial={false} {...fadeInProps} className="space-y-6">
+    <div className="space-y-6">
       <div>
         <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">Exploration</p>
         <h1 className="mt-2 text-2xl font-semibold text-white">{t('galaxy.title')}</h1>
@@ -136,12 +136,7 @@ export default function GalaxyClient() {
           </button>
         </div>
 
-        <motion.div
-          variants={shouldReduceMotion ? undefined : listVariants}
-          initial={shouldReduceMotion ? undefined : 'hidden'}
-          animate={shouldReduceMotion ? undefined : 'show'}
-          className="mt-6 grid gap-2"
-        >
+        <div className="mt-6 grid gap-2">
           {isLoading && (
             <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 px-4 py-3 text-sm text-slate-400">
               {t('galaxy.loading')}
@@ -156,9 +151,8 @@ export default function GalaxyClient() {
             const activityLabel = slot.occupied ? formatActivity(slot.activityMinutes) : '';
 
             return (
-              <motion.div
+              <div
                 key={slot.position}
-                variants={shouldReduceMotion ? undefined : itemVariants}
                 className="flex flex-col gap-3 rounded-2xl border border-slate-800/60 bg-slate-900/60 px-4 py-3 text-sm md:flex-row md:items-center md:justify-between"
               >
                 <div className="flex flex-col gap-1 md:flex-row md:items-center md:gap-4">
@@ -244,11 +238,11 @@ export default function GalaxyClient() {
                     </>
                   )}
                 </div>
-              </motion.div>
+              </div>
             );
           })}
-        </motion.div>
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
