@@ -2,6 +2,9 @@
 
 Refonte moderne de XNova, un MMORPG de stratégie spatiale. Monorepo NestJS + Next.js orienté temps réel, performance et évolutivité.
 
+## Codeur
+Entièrement généré par IA, Claude et Codex.
+
 ## Statut
 
 MVP en cours (Sprint 10 - Polish & Tests). Détails dans `ROADMAP_MVP.md`.
