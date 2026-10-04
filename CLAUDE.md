@@ -1,5 +1,9 @@
 # CLAUDE.md
 
+## État courant — 4 octobre 2026
+
+Le projet est une alpha privée en stabilisation, sans validation de sortie publique. Commencer par [ROADMAP_MVP.md](ROADMAP_MVP.md) et [docs/DOUBLE_AUDIT_2026-10.md](docs/DOUBLE_AUDIT_2026-10.md). Les déclarations historiques de complétion ne clôturent pas les constats. Distinguer exécutions rapportées par Claude, revue/reproduction Codex et journaux LXC du propriétaire. Aucun résultat de correction npm reçu. Redis fournit actuellement des caches ; rotation des refresh tokens et révocation des sessions serveur restent à implémenter.
+
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## ⚠️ MANDATORY RULES
@@ -194,9 +198,9 @@ When implementing game logic, always refer to these formulas to maintain compati
    - Event-driven architecture for fleet arrivals, combat results
 
 4. **Authentication Flow**
-   - JWT tokens with refresh token rotation
-   - Argon2 password hashing (security best practice)
-   - Session storage in Redis
+   - JWT access et refresh ; rotation/révocation non implémentées (SEC-03)
+   - Hachage des mots de passe avec Argon2
+   - Caches Redis ; stockage des sessions serveur à implémenter
 
 ## Important Development Notes
 
@@ -232,12 +236,12 @@ Building, ship, and technology definitions live in `packages/game-config/src/`:
 
 ## Project Status
 
-This is an early-stage project following the [ROADMAP_MVP.md](ROADMAP_MVP.md) with a planned 3-4 month development timeline. The infrastructure and database schema are in place, but most game features are still to be implemented.
+Le socle nominal du jeu est implémenté. Le travail courant est la correction et la validation selon [ROADMAP_MVP.md](ROADMAP_MVP.md), sans estimation globale en pourcentage. Consulter le registre pour les constats ouverts sur les accès, l'économie, le gameplay et l'exploitation.
 
-Current focus areas:
-- Authentication module implementation
-- Resource production system
-- Building construction queue
-- Basic UI components
+Priorités actuelles :
+- Dépendances et contrôles d'accès (SEC)
+- Conservation des ressources et concurrence (ECO)
+- Missions et arbitrages MVP (GAME/SCOPE)
+- Tests fiables, CI et restauration (QUAL/OPS)
 
 Refer to [ROADMAP_MVP.md](ROADMAP_MVP.md) for detailed sprint planning and [ROADMAP_COMPLET.md](ROADMAP_COMPLET.md) for post-MVP features.
