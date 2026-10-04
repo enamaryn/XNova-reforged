@@ -11,6 +11,19 @@
 
 Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DOUBLE_AUDIT_2026-10.md), [roadmap historique](docs/history/ROADMAP_MVP_AVANT_AUDIT.md).
 
+## Session de correction — GAME-04 (recherche et énergie)
+
+**Date :** 4 octobre 2026. **Objectif :** rendre le bouton de recherche actif et vérifier le seuil d'énergie du Graviton.
+
+- [x] `research.service.ts` : seuil d'énergie (énergie produite, non consommée) vérifié avant tout débit ; liste enrichie (`energyRequired`, `energyAvailable`, `hasEnoughEnergy`).
+- [x] `ResearchDetailClient.tsx` : bouton relié à `POST /research` avec état réel, énergie, prérequis et erreurs.
+- [x] Tests `game04-research-energy.integration.spec.ts` (4, tous en échec avant) ; unitaires 44/44, intégration 115/115 ; builds API et web (local).
+- [ ] Lien PR/commit ; confirmer la règle d'énergie (brute vs nette) ; test navigateur du bouton.
+
+**Prochaines étapes :** lot QUAL (QUAL-01 build/lint/CI, QUAL-02 tests), SCOPE-01 (décision de périmètre).
+
+---
+
 ## Session de correction — GAME-03 (cargo et moteur de combat)
 
 **Date :** 4 octobre 2026. **Objectif :** définir le sort du cargo en combat et tester le vrai moteur.

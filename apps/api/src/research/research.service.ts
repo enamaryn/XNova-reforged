@@ -10,6 +10,7 @@ import {
   TECHNOLOGIES,
   getTechnologyCost,
 } from '@xnova/game-config';
+import { calculateEnergyBalance } from '@xnova/game-engine';
 import { DatabaseService } from '../database/database.service';
 import { debitResources, lockUser } from '../common/atomic';
 import { GameEventsGateway } from '../game-events/game-events.gateway';
@@ -65,6 +66,15 @@ export class ResearchService {
         planet.crystal >= cost.crystal &&
         planet.deuterium >= cost.deuterium;
 
+      // Seuil d'énergie (ex. Graviton) : énergie produite par la planète, non consommée
+      const energy = this.checkEnergyRequirement(planet, cost.energy);
+      const missingRequirements = energy.ok
+        ? requirements.missingRequirements
+        : [
+            ...requirements.missingRequirements,
+            `Energie ${energy.required} requise (${energy.available} produite)`,
+          ];
+
       const inQueue = queue.find((q) => q.techId === tech.id);
       const isMaxLevel = currentLevel >= maxTechnologyLevel;
 
@@ -79,11 +89,19 @@ export class ResearchService {
         cost,
         buildTime,
         canResearch:
-          requirements.canResearch && canAfford && !inQueue && !queueBlocked && !isMaxLevel,
+          requirements.canResearch &&
+          energy.ok &&
+          canAfford &&
+          !inQueue &&
+          !queueBlocked &&
+          !isMaxLevel,
+        energyRequired: energy.required,
+        energyAvailable: energy.available,
+        hasEnoughEnergy: energy.ok,
         canAfford,
         inQueue: !!inQueue,
         queueEndTime: inQueue?.endTime,
-        missingRequirements: requirements.missingRequirements,
+        missingRequirements,
         queueBlocked,
       };
     });
@@ -144,6 +162,15 @@ export class ResearchService {
 
     const rawCost = getTechnologyCost(techId, currentLevel);
     const cost = this.applyCostMultiplier(rawCost, researchCostMultiplier);
+
+    // Seuil d'énergie (GAME-04) : vérifié avant tout débit, l'énergie n'est pas consommée
+    const energy = this.checkEnergyRequirement(planet, cost.energy);
+    if (!energy.ok) {
+      throw new BadRequestException(
+        `Energie insuffisante: ${energy.required} requis, ${energy.available} produite`,
+      );
+    }
+
     if (
       planet.metal < cost.metal ||
       planet.crystal < cost.crystal ||
@@ -359,6 +386,34 @@ export class ResearchService {
     }
 
     return planet;
+  }
+
+  /** Énergie produite par la planète (bâtiments) comparée au seuil exigé par la technologie. */
+  private checkEnergyRequirement(
+    planet: {
+      metalMine: number;
+      crystalMine: number;
+      deuteriumMine: number;
+      solarPlant: number;
+      fusionPlant: number;
+      metalStorage: number;
+      crystalStorage: number;
+      deuteriumStorage: number;
+    },
+    required: number | undefined,
+  ) {
+    const needed = required ?? 0;
+    const { available } = calculateEnergyBalance({
+      metalMine: planet.metalMine,
+      crystalMine: planet.crystalMine,
+      deuteriumMine: planet.deuteriumMine,
+      solarPlant: planet.solarPlant,
+      fusionPlant: planet.fusionPlant,
+      metalStorage: planet.metalStorage,
+      crystalStorage: planet.crystalStorage,
+      deuteriumStorage: planet.deuteriumStorage,
+    });
+    return { ok: available >= needed, required: needed, available };
   }
 
   private extractBuildingLevels(planet: {

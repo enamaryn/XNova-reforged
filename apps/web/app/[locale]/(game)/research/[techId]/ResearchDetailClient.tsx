@@ -1,10 +1,15 @@
 'use client';
 
+import { useEffect } from 'react';
 import Link from 'next/link';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { TECHNOLOGIES, getTechnologyCost } from '@xnova/game-config';
 import { motion, useReducedMotion, type MotionProps } from 'framer-motion';
 import { useI18n } from '@/lib/i18n';
 import { designTokens } from '@/lib/design-tokens';
+import { researchApi } from '@/lib/api/research';
+import { useAuthStore } from '@/lib/stores/auth-store';
+import { usePlanetStore } from '@/lib/stores/planet-store';
 
 export function ResearchDetailClient({ techId }: { techId: string }) {
   const shouldReduceMotion = useReducedMotion();
@@ -12,6 +17,34 @@ export function ResearchDetailClient({ techId }: { techId: string }) {
   const techIdNum = Number(techId);
   const tech = TECHNOLOGIES[techIdNum];
   const { t } = useI18n();
+  const queryClient = useQueryClient();
+  const { user } = useAuthStore();
+  const { selectedPlanetId, setSelectedPlanetId } = usePlanetStore();
+
+  useEffect(() => {
+    if (!selectedPlanetId && user?.planets?.length) {
+      setSelectedPlanetId(user.planets[0].id);
+    }
+  }, [user, selectedPlanetId, setSelectedPlanetId]);
+
+  const planetId = selectedPlanetId || user?.planets?.[0]?.id;
+
+  // Etat réel de la technologie pour la planète sélectionnée (niveau, coût, prérequis, énergie)
+  const { data: techData } = useQuery({
+    queryKey: ['technologies', planetId],
+    queryFn: () => researchApi.getTechnologies(planetId!),
+    enabled: !!planetId && !!tech,
+    refetchInterval: 30000,
+  });
+  const info = techData?.technologies.find((item) => item.id === techIdNum);
+
+  const startMutation = useMutation({
+    mutationFn: () => researchApi.startResearch(planetId!, techIdNum),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['technologies', planetId] });
+      queryClient.invalidateQueries({ queryKey: ['research-queue'] });
+    },
+  });
 
   if (!tech) {
     return (
@@ -104,12 +137,59 @@ export function ResearchDetailClient({ techId }: { techId: string }) {
             )}
           </div>
 
+          {info && (
+            <div className="mt-6 space-y-2 text-sm text-slate-400">
+              <div className="flex items-center justify-between">
+                <span>Niveau actuel</span>
+                <span className="font-mono text-slate-200">{info.currentLevel}</span>
+              </div>
+              {info.energyRequired ? (
+                <div className="flex items-center justify-between">
+                  <span>Énergie produite / requise</span>
+                  <span
+                    className={`font-mono ${info.hasEnoughEnergy ? 'text-emerald-300' : 'text-rose-300'}`}
+                  >
+                    {info.energyAvailable} / {info.energyRequired}
+                  </span>
+                </div>
+              ) : null}
+              {info.missingRequirements.length > 0 && (
+                <ul className="list-disc list-inside text-rose-300">
+                  {info.missingRequirements.map((missing) => (
+                    <li key={missing}>{missing}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+
           <button
-            disabled
-            className="mt-6 w-full rounded-xl bg-slate-800 py-3 text-sm font-semibold text-slate-500"
+            onClick={() => startMutation.mutate()}
+            disabled={!planetId || !info?.canResearch || startMutation.isPending}
+            className={`mt-6 w-full rounded-xl py-3 text-sm font-semibold ${
+              info?.canResearch && !startMutation.isPending
+                ? 'bg-blue-600 text-white hover:bg-blue-500'
+                : 'bg-slate-800 text-slate-500'
+            }`}
           >
-            Recherche bientôt disponible
+            {startMutation.isPending
+              ? 'Lancement...'
+              : info?.isMaxLevel
+                ? 'Niveau maximum atteint'
+                : info?.inQueue
+                  ? 'Recherche en cours'
+                  : 'Lancer la recherche'}
           </button>
+          {startMutation.isSuccess && (
+            <p className="mt-3 text-sm text-emerald-300">Recherche lancée.</p>
+          )}
+          {startMutation.isError && (
+            <p className="mt-3 text-sm text-rose-300">
+              {startMutation.error instanceof Error
+                ? startMutation.error.message
+                : 'Impossible de lancer la recherche.'}
+            </p>
+          )}
         </div>
       </div>
     </motion.div>
