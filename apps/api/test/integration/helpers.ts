@@ -1,6 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { randomBytes } from 'crypto';
+import { SchedulerRegistry } from '@nestjs/schedule';
 import request from 'supertest';
 import { AppModule } from '../../src/app.module';
 import { configureApp } from '../../src/app.setup';
@@ -44,6 +45,14 @@ export async function createIntegrationApp(): Promise<IntegrationApp> {
   configureApp(app);
   await app.init();
 
+  // Les tâches planifiées de l'application sont arrêtées : les suites appellent elles-mêmes les services
+  // de résolution (arrivées de flottes, files, production). Un cron concurrent prendrait en charge un
+  // événement pendant qu'une suite attend le sien, qui rendrait alors la main avant la validation de
+  // l'autre transaction (assertions lues trop tôt) et croiserait les suppressions de fin de suite.
+  app.get(SchedulerRegistry)
+    .getCronJobs()
+    .forEach((job) => job.stop());
+
   const database = app.get(DatabaseService);
   return { app, database };
 }
@@ -71,12 +80,35 @@ export async function registerAndLogin(app: INestApplication, testUser: ReturnTy
 /** Date de dernière activité qui exclut le compte de la production périodique des ressources. */
 export const DORMANT_SINCE = () => new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
 
+/**
+ * Les crons de l'application tournent pendant les tests : une suppression en cascade peut croiser
+ * leurs verrous de lignes (deadlock PostgreSQL 40P01, Prisma P2034). On la rejoue quelques fois.
+ */
+export async function retryOnDeadlock<T>(operation: () => Promise<T>, attempts = 6): Promise<T> {
+  for (let attempt = 1; ; attempt += 1) {
+    try {
+      return await operation();
+    } catch (error) {
+      const text = String((error as { message?: string; code?: string })?.message ?? error);
+      const code = (error as { code?: string })?.code;
+      const isDeadlock = code === 'P2034' || text.includes('40P01') || text.includes('deadlock detected');
+      if (!isDeadlock || attempt >= attempts) throw error;
+      await new Promise((resolve) => setTimeout(resolve, 100 * attempt));
+    }
+  }
+}
+
+export async function deleteUsersByIds(database: DatabaseService, ids: string[]) {
+  if (ids.length === 0) return;
+  await retryOnDeadlock(() => database.user.deleteMany({ where: { id: { in: ids } } }));
+}
+
 export async function cleanupTestUser(database: DatabaseService, username: string) {
   const existing = await database.user.findUnique({
     where: { username },
     select: { id: true },
   });
   if (existing) {
-    await database.user.delete({ where: { id: existing.id } });
+    await retryOnDeadlock(() => database.user.deleteMany({ where: { id: existing.id } }));
   }
 }

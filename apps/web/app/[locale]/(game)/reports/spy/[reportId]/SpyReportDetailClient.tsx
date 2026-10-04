@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { SHIPS, TECHNOLOGIES } from "@xnova/game-config";
+import { DEFENSES, SHIPS, TECHNOLOGIES } from "@xnova/game-config";
 import { getSpyReport } from "@/lib/api/fleet";
 
 const BUILDING_LABELS: Record<string, string> = {
@@ -49,7 +49,7 @@ export function SpyReportDetailClient({ reportId }: { reportId: string }) {
     );
   }
 
-  const { resources, ships, buildings, technologies } = data.data;
+  const { resources, ships, defenses, buildings, technologies } = data.data;
 
   return (
     <div className="space-y-6" data-testid="spy-report-detail">
@@ -100,6 +100,24 @@ export function SpyReportDetailClient({ reportId }: { reportId: string }) {
       ) : (
         <p className="text-xs text-slate-500">Flotte non révélée : envoyez plus de sondes ou améliorez votre technologie Espionnage.</p>
       )}
+
+      {defenses ? (
+        <section className="rounded-3xl border border-slate-800/80 bg-slate-950/60 p-6" data-testid="spy-defenses">
+          <h2 className="text-xs uppercase tracking-[0.3em] text-slate-500">Défenses</h2>
+          {Object.keys(defenses).length === 0 ? (
+            <p className="mt-3 text-sm text-slate-400">Aucune défense.</p>
+          ) : (
+            <ul className="mt-3 grid gap-2 text-sm text-slate-300 sm:grid-cols-2">
+              {Object.entries(defenses).map(([id, amount]) => (
+                <li key={id} className="rounded-xl bg-slate-900/60 px-4 py-2">
+                  {DEFENSES[Number(id)]?.name ?? `Défense ${id}`}
+                  <span className="float-right font-mono">{amount}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      ) : null}
 
       {buildings ? (
         <section className="rounded-3xl border border-slate-800/80 bg-slate-950/60 p-6">

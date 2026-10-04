@@ -19,6 +19,7 @@ export interface CombatReportDetail {
   attackerLosses: Record<string, number>;
   defenderLosses: Record<string, number>;
   defenderDefs: Record<string, number>;
+  defenderRepaired?: Record<string, number> | null;
   result: CombatResult;
   rounds: number;
   timeline?: {

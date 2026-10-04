@@ -37,6 +37,7 @@ export interface ShipyardQueueItem {
   startTime: string;
   endTime: string;
   remainingSeconds: number;
+  kind?: 'ship' | 'defense';
 }
 
 export interface StartShipBuildPayload {
@@ -83,4 +84,33 @@ export const shipyardApi = {
 
   cancelBuild: (queueId: string) =>
     apiClient.delete<CancelShipBuildResponse>(`/shipyard/queue/${queueId}`),
+};
+
+export interface DefenseItem {
+  id: number;
+  name: string;
+  description: string;
+  cost: ShipCost;
+  buildTime: number;
+  stats: { hull: number; shield: number; weapon: number };
+  currentAmount: number;
+  inQueue: number;
+  singleUnit: boolean;
+  canBuild: boolean;
+  canAfford: boolean;
+  missingRequirements: string[];
+}
+
+export interface DefenseResponse {
+  planetId: string;
+  defenses: DefenseItem[];
+  resources: ShipCost;
+}
+
+export const defenseApi = {
+  getDefenses: (planetId: string) =>
+    apiClient.get<DefenseResponse>(`/defense?planetId=${planetId}`),
+
+  startBuild: (payload: { planetId: string; defenseId: number; amount: number }) =>
+    apiClient.post<StartShipBuildResponse>('/defense/build', payload),
 };

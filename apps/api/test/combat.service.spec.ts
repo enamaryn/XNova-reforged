@@ -19,6 +19,9 @@ type MockDb = {
     findMany: jest.Mock;
     upsert: jest.Mock;
   };
+  defense: {
+    findMany: jest.Mock;
+  };
   technology: {
     findMany: jest.Mock;
   };
@@ -43,6 +46,9 @@ const createService = () => {
     ship: {
       findMany: jest.fn(),
       upsert: jest.fn(),
+    },
+    defense: {
+      findMany: jest.fn().mockResolvedValue([]),
     },
     technology: {
       findMany: jest.fn(),
@@ -89,6 +95,7 @@ const buildTx = (stock: { metal: number; crystal: number; deuterium: number }) =
     create: jest.fn().mockResolvedValue({ id: 'report-1', result: 'attacker_win' }),
   },
   ship: { updateMany: jest.fn().mockResolvedValue({ count: 1 }) },
+  defense: { updateMany: jest.fn().mockResolvedValue({ count: 1 }) },
 });
 
 const baseFleet = {
@@ -153,15 +160,15 @@ describe('CombatService', () => {
       rounds: 1,
       result: CombatResult.ATTACKER_WIN,
       attackerRemaining: { 202: 2 },
-      defenderRemaining: { 401: 0 },
+      defenderRemaining: { 204: 0 },
       attackerLosses: { 202: 1 },
-      defenderLosses: { 401: 2 },
+      defenderLosses: { 204: 2 },
       timeline: [],
       debris: { metal: 0, crystal: 0 },
     };
 
     database.planet.findFirst.mockResolvedValue(target);
-    database.ship.findMany.mockResolvedValue([{ shipId: 401, amount: 2 }]);
+    database.ship.findMany.mockResolvedValue([{ shipId: 204, amount: 2 }]);
     database.technology.findMany
       .mockResolvedValueOnce([{ techId: 109, level: 1 }])
       .mockResolvedValueOnce([{ techId: 109, level: 0 }]);
@@ -206,7 +213,7 @@ describe('CombatService', () => {
       },
     });
     expect(tx.ship.updateMany).toHaveBeenCalledWith({
-      where: { planetId: 'planet-2', shipId: 401, amount: { gte: 2 } },
+      where: { planetId: 'planet-2', shipId: 204, amount: { gte: 2 } },
       data: { amount: { decrement: 2 } },
     });
     expect(gameEvents.emitToUser).toHaveBeenCalledWith('user-1', 'combat:report', {

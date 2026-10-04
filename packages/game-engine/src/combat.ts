@@ -1,4 +1,4 @@
-import { GAME_CONSTANTS, SHIPS } from '@xnova/game-config';
+import { DEFENSES, GAME_CONSTANTS, SHIPS } from '@xnova/game-config';
 
 export interface CombatTechBonuses {
   weapon: number;
@@ -50,7 +50,8 @@ function createUnits(
   Object.entries(ships).forEach(([shipIdRaw, countRaw]) => {
     const shipId = Number(shipIdRaw);
     const count = Math.max(0, Math.floor(countRaw));
-    const ship = SHIPS[shipId];
+    // Les identifiants de défenses (4xx) et de vaisseaux (2xx) sont disjoints : une même table de combat
+    const ship = SHIPS[shipId] ?? DEFENSES[shipId];
     if (!ship || count === 0) return;
 
     const baseHull = applyTech(ship.stats.hull, tech.armor);

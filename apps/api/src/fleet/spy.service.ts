@@ -135,6 +135,11 @@ export class SpyService {
         data.ships = Object.fromEntries(ships.map((s) => [s.shipId, s.amount]));
       }
       if (infoLevel >= 2) {
+        const defenses = await tx.defense.findMany({
+          where: { planetId: target.id, amount: { gt: 0 } },
+          select: { defenseId: true, amount: true },
+        });
+        data.defenses = Object.fromEntries(defenses.map((d) => [d.defenseId, d.amount]));
         data.buildings = Object.fromEntries(
           BUILDING_FIELDS.map((field) => [field, target[field] as number]),
         );

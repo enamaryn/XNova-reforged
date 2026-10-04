@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { DatabaseService } from '../../src/database/database.service';
 import { FleetCronService } from '../../src/fleet/fleet-cron.service';
-import { DORMANT_SINCE, createIntegrationApp } from './helpers';
+import { DORMANT_SINCE, createIntegrationApp, deleteUsersByIds } from './helpers';
 
 /**
  * GAME-03 — combat complet avec le VRAI moteur via le cron de flotte : retour, pertes, cargaison
@@ -80,7 +80,7 @@ describe('API integration - Cargo et combat (GAME-03)', () => {
   });
 
   afterAll(async () => {
-    await database.user.deleteMany({ where: { id: { in: [attackerId, defenderId] } } });
+    await deleteUsersByIds(database, [attackerId, defenderId]);
     if (app) await app.close();
   });
 

@@ -789,3 +789,36 @@ Le problème principal était que Framer Motion avec `initial: { opacity: 0 }` n
 ### ⏭️ Prochaines étapes
 - Après fusion de la PR #14 : pousser la branche et ouvrir la PR du lot (a)
 - Lot (b) : défense complète ; lot (c) : comptes par email (choix du fournisseur)
+
+
+---
+
+## Session du 4 octobre 2026 — SCOPE-01 lot (b) : défense complète
+
+**Objectif :** défense constructible, combattante et réparée après combat.
+
+### ✅ Tâches réalisées
+- [x] API `/defense` (catalogue, construction) sur la file du chantier ; boucliers uniques ; missiles exclus
+- [x] Moteur de combat : défenses comme unités, sans débris ; réparation à 70 % ; migration `20261004170000_combat_defense_repairs`
+- [x] Espionnage niveau 2 : défenses révélées
+- [x] UI : page Défense, rapports de combat et d'espionnage
+- [x] 16 tests d'intégration + 1 E2E ; unitaires 38/38, intégration 168/168, E2E 18/18
+
+### ⏭️ Prochaines étapes
+- PR du lot (b) ; lot (c) comptes par email (fournisseur à choisir)
+
+
+---
+
+## Session du 4 octobre 2026 — SCOPE-01 lot (c), partie 1 : configuration SMTP
+
+**Objectif :** permettre au super admin de configurer SMTP depuis l'administration.
+
+### ✅ Tâches réalisées
+- [x] API `/admin/smtp` (lecture, mise à jour, test) réservée au `SUPER_ADMIN` ; mot de passe chiffré (AES-256-GCM), jamais renvoyé ni journalisé
+- [x] Service d'envoi `nodemailer` (module `mail`) ; onglet « Configurer SMTP » (page d'administration à onglets)
+- [x] 14 tests d'intégration (faux serveur SMTP) + 2 E2E
+- [x] Tests d'intégration : crons arrêtés (source des échecs intermittents de `game03`), suppressions rejouées en cas de deadlock ; 182/182 sur trois passes
+
+### ⏭️ Prochaines étapes
+- Emails de compte : mot de passe oublié, changement d'email et de mot de passe (révocation des autres sessions), vérification d'email
