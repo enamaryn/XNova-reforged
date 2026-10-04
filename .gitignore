@@ -52,9 +52,7 @@ dist/
 .DS_Store
 Thumbs.db
 
-# Prisma
-prisma/migrations/*
-!prisma/migrations/.gitkeep
+# Prisma : les migrations versionnées DOIVENT être suivies (OPS-01) ; voir l'exception sous « Backups »
 
 # Temporary files
 tmp/
@@ -64,10 +62,11 @@ temp/
 # Docker volumes
 data/
 
-# Backups
+# Backups et dumps SQL (jamais versionnés), sauf les migrations Prisma
 backups/
 *.sql
 *.sql.gz
+!packages/database/prisma/migrations/**/*.sql
 
 # Sentry
 .sentryclirc
