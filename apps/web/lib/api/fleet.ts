@@ -49,6 +49,7 @@ export interface SendFleetPayload {
     crystal?: number;
     deuterium?: number;
   };
+  planetName?: string;
 }
 
 export interface SendFleetResponse {
@@ -72,4 +73,34 @@ export interface RecallFleetResponse {
 
 export function recallFleet(fleetId: string) {
   return apiClient.delete<RecallFleetResponse>(`/fleet/${fleetId}`);
+}
+
+export interface SpyReportSummary {
+  id: string;
+  galaxy: number;
+  system: number;
+  position: number;
+  planetName: string;
+  probes: number;
+  infoLevel: number;
+  createdAt: string;
+}
+
+export interface SpyReportDetail extends SpyReportSummary {
+  attackerId: string;
+  defenderId: string;
+  data: {
+    resources: { metal: number; crystal: number; deuterium: number };
+    ships?: Record<string, number>;
+    buildings?: Record<string, number>;
+    technologies?: Record<string, number>;
+  };
+}
+
+export function getSpyReports() {
+  return apiClient.get<SpyReportSummary[]>('/spy-reports');
+}
+
+export function getSpyReport(reportId: string) {
+  return apiClient.get<SpyReportDetail>(`/spy-reports/${reportId}`);
 }

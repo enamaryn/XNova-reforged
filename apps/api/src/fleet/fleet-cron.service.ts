@@ -4,6 +4,8 @@ import { MissionType } from '@xnova/game-config';
 import { ALREADY_PROCESSED, CombatService } from '../combat/combat.service';
 import { DatabaseService } from '../database/database.service';
 import { GameEventsGateway } from '../game-events/game-events.gateway';
+import { ColonizationService } from './colonization.service';
+import { SpyService } from './spy.service';
 
 @Injectable()
 export class FleetCronService {
@@ -13,6 +15,8 @@ export class FleetCronService {
     private readonly database: DatabaseService,
     private readonly gameEvents: GameEventsGateway,
     private readonly combatService: CombatService,
+    private readonly spyService: SpyService,
+    private readonly colonizationService: ColonizationService,
   ) {}
 
   /**
@@ -43,6 +47,10 @@ export class FleetCronService {
       if (fleet.mission === MissionType.ATTACK) {
         const outcome = await this.combatService.resolveAttackMission(fleet);
         processed = outcome !== ALREADY_PROCESSED;
+      } else if (fleet.mission === MissionType.SPY) {
+        processed = await this.spyService.resolveSpyMission(fleet);
+      } else if (fleet.mission === MissionType.COLONIZE) {
+        processed = await this.colonizationService.resolveColonizeMission(fleet);
       } else {
         processed = await this.database.$transaction(async (tx) => {
           // Prise en charge atomique (ECO-04) : un seul worker traite cette arrivee

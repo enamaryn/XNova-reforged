@@ -128,7 +128,7 @@ export const SHIPS: Record<number, Ship> = {
     description: 'Espionne les planètes ennemies',
     cost: { metal: 0, crystal: 1000, deuterium: 0 },
     stats: { hull: 1000, shield: 0, weapon: 0 },
-    speed: 100000000, // Ultra-fast
+    speed: 50000, // Très rapide (100 000 000 en 2008 : la formule de carburant, qui dépend de la vitesse, rendait l'envoi impossible)
     cargo: 0,
     consumption: 1,
     requirements: { 21: 3, 115: 3, 106: 2 },

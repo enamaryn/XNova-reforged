@@ -109,7 +109,7 @@ describe('API integration - Validation des flottes et missions (GAME-01)', () =>
   });
 
   describe('missions', () => {
-    it.each([6, 7, 8, 999, 0, -1, 3.5])('refuse la mission %p sans débit', async (mission) => {
+    it.each([8, 9, 15, 999, 0, -1, 3.5])('refuse la mission %p sans débit', async (mission) => {
       await expectRefused(base({ mission }));
     });
 

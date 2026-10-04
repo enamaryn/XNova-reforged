@@ -276,7 +276,7 @@ baseSpeed = {
   207: 10000,   // Vaisseau Bataille
   208: 2500,    // Colon
   209: 2000,    // Recycleur
-  210: 100000000, // Sonde (ultra-rapide)
+  210: 50000, // Sonde (très rapide ; 100000000 en 2008, ajusté pour le carburant)
   // etc.
 }
 
