@@ -17,10 +17,8 @@ test('navigation galaxie', async ({ page }) => {
   const positions = page.locator('[class*="rounded-2xl"]').filter({ hasText: /1:1:/ });
   await expect(positions.first()).toBeVisible();
 
-  // Vérifier que le bouton Coloniser est présent pour une position libre
-  const colonizeButton = page.getByRole('button', { name: /Coloniser/ });
-  const colonizeCount = await colonizeButton.count();
-
-  // Il devrait y avoir au moins une position libre à coloniser
-  expect(colonizeCount).toBeGreaterThan(0);
+  // La colonisation est une mission : une position libre propose un lien vers le formulaire de flotte
+  const colonizeLink = page.getByRole('link', { name: /Coloniser/ });
+  expect(await colonizeLink.count()).toBeGreaterThan(0);
+  await expect(colonizeLink.first()).toHaveAttribute('href', /\/fleet\?mission=colonize&galaxy=/);
 });
