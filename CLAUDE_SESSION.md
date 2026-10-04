@@ -11,6 +11,20 @@
 
 Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DOUBLE_AUDIT_2026-10.md), [roadmap historique](docs/history/ROADMAP_MVP_AVANT_AUDIT.md).
 
+## Session de correction — SEC-01 (dépendances vulnérables)
+
+**Date :** 4 octobre 2026. **Objectif :** réduire les alertes npm sans migration majeure aveugle.
+
+- [x] Audits complets et production avant/après conservés dans `docs/audits/` ; analyse dans `docs/NPM_AUDIT_2026-10.md`.
+- [x] `npm audit fix --ignore-scripts` (lockfile seul) : 103 → 72 alertes, 0 critique ; production 60 → 34, 0 critique, 9 hautes.
+- [x] Validation locale : builds séquentiels config/engine/api/web, 35/35 unitaires, 62/62 intégration.
+- [ ] 9 hautes de production restantes : migration `@sentry/nextjs` 11.x, `picomatch` (override), `postcss` interne à Next ; décision sur la mesure compensatoire.
+- [ ] `npm run build` à froid (Turbo) toujours en échec (QUAL-01) ; lint web non configuré ; audit en CI.
+
+**Prochaines étapes :** GAME-01 (validation des flottes et missions), puis QUAL-01.
+
+---
+
 ## Session de correction — SEC-04 (protection de connexion et configuration)
 
 **Date :** 4 octobre 2026. **Objectif :** limiter les tentatives, exiger secrets et origines en production, durcir les en-têtes.

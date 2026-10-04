@@ -23,7 +23,7 @@ Socle jouable, MVP non validé pour ouverture publique. Priorités : dépendance
 - **Constat :** 103 alertes (2 critiques, 61 hautes, 37 modérées, 3 faibles). Next.js et Handlebars critiques ; aucune preuve de correction reçue.
 - **Périmètre :** `package-lock.json`, `apps/web/package.json`, `apps/api/package.json`.
 - **Acceptation :** Conserver audits complets et production avant/après ; corriger les critiques/hautes de production ou documenter précisément non-applicabilité, mesure compensatoire et échéance ; traiter aussi les outils de build. Valider compilation et parcours. Ne pas appliquer aveuglément les migrations Sentry/Jest/Tailwind/Turbo ni la rétrogradation ESLint proposée.
-- **État :** ouvert ; responsable à attribuer lors de la PR corrective. Clôture : lien PR/commit + test et résultat requis.
+- **État :** partiellement corrigé le 4 octobre 2026 (voir [NPM_AUDIT_2026-10.md](NPM_AUDIT_2026-10.md)). `npm audit fix` sans `--force` : 103 → 72 alertes, critiques 2 → 0 ; production 60 → 34, critiques 1 → 0, hautes 26 → 9. Il reste 9 hautes de production (outillage de build `@sentry/nextjs`, `postcss` interne à Next 15, `picomatch`), analysées comme non exploitables par un joueur mais **sans mesure compensatoire formelle acceptée ni échéance fixée** : migration `@sentry/nextjs` 11.x à planifier. Validation locale : builds séquentiels, 35/35 unitaires, 62/62 intégration ; E2E et lint non exécutés. Ouvert : critère « critiques/hautes de production traitées ou documentées » non satisfait tant que cette analyse n'est pas acceptée. Clôture : lien PR/commit + décision sur les 9 hautes.
 
 ### SEC-02 — Autorisation WebSocket
 
