@@ -9,7 +9,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
 
-export type RateLimitRoute = 'login' | 'register';
+export type RateLimitRoute = 'login' | 'register' | 'account';
 
 export const RATE_LIMIT_KEY = 'rate-limit-route';
 /** Soumet la route à la limitation de débit d'authentification (SEC-04). */
@@ -23,6 +23,8 @@ interface Bucket {
 const DEFAULTS: Record<RateLimitRoute, { max: number; windowMs: number }> = {
   login: { max: 10, windowMs: 60_000 },
   register: { max: 5, windowMs: 60_000 },
+  // Mot de passe oublié, réinitialisation, vérification, changements de compte
+  account: { max: 10, windowMs: 60_000 },
 };
 
 /**
@@ -62,6 +64,13 @@ export class RateLimitGuard implements CanActivate {
       const identifier = request.body?.identifier;
       if (typeof identifier === 'string' && identifier.length > 0) {
         keys.push(`${route}:id:${identifier.toLowerCase().slice(0, 100)}`);
+      }
+    }
+
+    if (route === 'account') {
+      const email = request.body?.email;
+      if (typeof email === 'string' && email.length > 0) {
+        keys.push(`${route}:email:${email.toLowerCase().slice(0, 100)}`);
       }
     }
 

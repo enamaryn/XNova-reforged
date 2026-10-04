@@ -4,6 +4,7 @@ import request from 'supertest';
 import { DatabaseService } from '../../src/database/database.service';
 import { decryptSecret, encryptSecret } from '../../src/common/security/secret-box';
 import {
+  acquireGlobalLock,
   buildTestUser,
   cleanupTestUser,
   createIntegrationApp,
@@ -95,7 +96,11 @@ describe('API integration - Configuration SMTP (administration)', () => {
       });
     });
 
+  let releaseLock: () => void = () => undefined;
+
   beforeAll(async () => {
+    // La configuration SMTP est un état global partagé avec l'autre suite SMTP
+    releaseLock = await acquireGlobalLock('smtp-config');
     const integration = await createIntegrationApp();
     app = integration.app;
     database = integration.database;
@@ -115,6 +120,7 @@ describe('API integration - Configuration SMTP (administration)', () => {
     await database.gameConfig.deleteMany({ where: { key: { startsWith: 'smtp.' } } });
     for (const username of usernames) await cleanupTestUser(database, username);
     if (app) await app.close();
+    releaseLock();
   });
 
   describe('contrôle d\'accès', () => {
@@ -265,8 +271,15 @@ describe('API integration - Configuration SMTP (administration)', () => {
         .expect(201);
       expect(res.body).toEqual({ success: true, to: 'dest@example.org' });
 
-      await new Promise((resolve) => setTimeout(resolve, 200));
-      const session = received.at(-1)!;
+      // D'autres suites inscrivent des joueurs pendant ce temps : leurs emails de confirmation arrivent
+      // aussi sur ce faux serveur (la configuration est globale). On cherche donc notre message.
+      let session: (typeof received)[number] | undefined;
+      for (let attempt = 0; attempt < 50 && !session; attempt += 1) {
+        session = received.find((entry) => entry.commands.some((c) => /RCPT TO:<dest@example.org>/i.test(c)));
+        if (!session) await new Promise((resolve) => setTimeout(resolve, 100));
+      }
+      expect(session).toBeDefined();
+      session = session!;
       expect(session.commands.join('\n')).toMatch(/RCPT TO:<dest@example.org>/i);
       expect(session.commands.join('\n')).toMatch(/MAIL FROM:<jeu@example.org>/i);
       expect(session.data).toMatch(/Subject: XNova Reforged/);

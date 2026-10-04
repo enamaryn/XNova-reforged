@@ -3,6 +3,7 @@
 import { motion, useReducedMotion, type MotionProps } from 'framer-motion';
 import { useI18n } from '@/lib/i18n';
 import { designTokens } from '@/lib/design-tokens';
+import { AccountSettings } from '@/components/settings/AccountSettings';
 
 export default function SettingsPage() {
   const { t } = useI18n();
@@ -27,8 +28,8 @@ export default function SettingsPage() {
           <p className="mt-2 text-xs text-slate-500">
             {t('settings.accountHint')}
           </p>
-          <div className="mt-4 rounded-2xl border border-slate-800/70 bg-slate-900/40 p-4 text-sm text-slate-300">
-            {t('settings.accountTodo')}
+          <div className="mt-4">
+            <AccountSettings />
           </div>
         </div>
 

@@ -51,3 +51,52 @@ function applyAuthResponse(data: AuthResponseDto) {
   store.setTokens(data.tokens);
   store.setStatus("authenticated");
 }
+
+export interface MessageResponse {
+  message: string;
+}
+
+export function forgotPassword(email: string) {
+  return apiRequest<MessageResponse>("/auth/forgot-password", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  });
+}
+
+export function resetPassword(token: string, password: string) {
+  return apiRequest<MessageResponse>("/auth/reset-password", {
+    method: "POST",
+    body: JSON.stringify({ token, password }),
+  });
+}
+
+export function verifyEmail(token: string) {
+  return apiRequest<MessageResponse & { type: "verify_email" | "change_email" }>(
+    "/auth/verify-email",
+    { method: "POST", body: JSON.stringify({ token }) },
+  );
+}
+
+export function resendVerification() {
+  return apiRequest<MessageResponse>("/auth/resend-verification", {
+    method: "POST",
+    auth: true,
+    retry: false,
+  });
+}
+
+export function changePassword(currentPassword: string, newPassword: string) {
+  return apiRequest<MessageResponse>("/auth/change-password", {
+    method: "POST",
+    auth: true,
+    body: JSON.stringify({ currentPassword, newPassword }),
+  });
+}
+
+export function changeEmail(currentPassword: string, newEmail: string) {
+  return apiRequest<MessageResponse>("/auth/change-email", {
+    method: "POST",
+    auth: true,
+    body: JSON.stringify({ currentPassword, newEmail }),
+  });
+}

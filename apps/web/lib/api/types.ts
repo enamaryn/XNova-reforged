@@ -12,6 +12,8 @@ export interface AuthUserDto {
   rank: number;
   role: string;
   createdAt: string;
+  /** Date de confirmation de l'adresse email ; absent ou null tant qu'elle n'est pas confirmée. */
+  emailVerifiedAt?: string | null;
 }
 
 export interface AuthTokensDto {

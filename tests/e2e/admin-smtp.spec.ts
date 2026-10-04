@@ -31,7 +31,7 @@ test('administration : le super admin configure SMTP', async ({ page }) => {
   await page.getByLabel('Identifiant SMTP').fill('mailer');
   await page.getByLabel('Mot de passe SMTP').fill('tres-secret-e2e');
   await page.getByLabel("Adresse d'expédition").fill('jeu@example.org');
-  await page.getByLabel("Activer l'envoi d'emails").check();
+  // L'envoi reste désactivé : un autre test E2E vérifie le refus sans SMTP actif (tests en parallèle)
   await page.getByRole('button', { name: 'Enregistrer' }).click();
 
   await expect(page.getByTestId('smtp-notice')).toContainText('Configuration SMTP enregistrée');
@@ -47,5 +47,5 @@ test('administration : le super admin configure SMTP', async ({ page }) => {
   await page.reload();
   await page.getByRole('tab', { name: 'Configurer SMTP' }).click();
   await expect(page.getByLabel('Hôte SMTP')).toHaveValue('smtp.example.org');
-  await expect(page.getByLabel("Activer l'envoi d'emails")).toBeChecked();
+  await expect(page.getByLabel("Activer l'envoi d'emails")).not.toBeChecked();
 });

@@ -255,6 +255,7 @@ export class AuthService {
         id: true,
         username: true,
         email: true,
+        emailVerifiedAt: true,
         points: true,
         rank: true,
         role: true,

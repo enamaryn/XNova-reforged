@@ -1,6 +1,9 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { randomBytes } from 'crypto';
+import { mkdirSync, rmdirSync, statSync } from 'fs';
+import { tmpdir } from 'os';
+import { join } from 'path';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import request from 'supertest';
 import { AppModule } from '../../src/app.module';
@@ -36,6 +39,7 @@ export async function createIntegrationApp(): Promise<IntegrationApp> {
   // Les suites créent de nombreux comptes depuis la même IP : limites très hautes sauf test dédié
   process.env.RATE_LIMIT_LOGIN_MAX = process.env.RATE_LIMIT_LOGIN_MAX || '100000';
   process.env.RATE_LIMIT_REGISTER_MAX = process.env.RATE_LIMIT_REGISTER_MAX || '100000';
+  process.env.RATE_LIMIT_ACCOUNT_MAX = process.env.RATE_LIMIT_ACCOUNT_MAX || '100000';
 
   const moduleRef = await Test.createTestingModule({
     imports: [AppModule],
@@ -110,5 +114,35 @@ export async function cleanupTestUser(database: DatabaseService, username: strin
   });
   if (existing) {
     await retryOnDeadlock(() => database.user.deleteMany({ where: { id: existing.id } }));
+  }
+}
+
+/**
+ * Verrou entre suites : les suites tournent en parallèle sur la même base ; celles qui modifient un état
+ * global (configuration SMTP dans `GameConfig`) doivent s'exécuter l'une après l'autre.
+ * Verrou par répertoire (création atomique), repris s'il date de plus de deux minutes (suite interrompue).
+ */
+export async function acquireGlobalLock(name: string): Promise<() => void> {
+  const dir = join(tmpdir(), `xnova-itest-lock-${name}`);
+  const deadline = Date.now() + 180_000;
+  for (;;) {
+    try {
+      mkdirSync(dir);
+      return () => {
+        try {
+          rmdirSync(dir);
+        } catch {
+          // déjà libéré
+        }
+      };
+    } catch {
+      try {
+        if (Date.now() - statSync(dir).mtimeMs > 120_000) rmdirSync(dir);
+      } catch {
+        // libéré entre-temps
+      }
+      if (Date.now() > deadline) throw new Error(`Verrou ${name} non obtenu`);
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
   }
 }
