@@ -11,6 +11,17 @@
 
 Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DOUBLE_AUDIT_2026-10.md), [roadmap historique](docs/history/ROADMAP_MVP_AVANT_AUDIT.md).
 
+## Session — mise à jour du registre et préparation de SCOPE-01
+
+**Date :** 4 octobre 2026. **Objectif :** refléter les clôtures prouvées dans le registre et la roadmap.
+
+- [x] Registre : tableau « Suivi des clôtures » (PR, tests, réserves, runs CI du `main`) ; 16 constats clos, 4 ouverts (SEC-01 partiel, SCOPE-01, SCOPE-02, OPS-03).
+- [x] Roadmap : cases cochées avec lien de PR et réserves ; critères de sortie remplis cochés ; tableau des vérifications actualisé.
+- [x] Preuves complétées avant clôture : test API d'interrogation fréquente (ECO-01, échoue à 500/500 avec l'ancienne troncature) ; E2E de la page détail de recherche (GAME-04 : lancement, finalisation, niveau visible, énergie insuffisante).
+- [ ] SCOPE-01 : décision du propriétaire (voir le document de décision).
+
+---
+
 ## Session de correction — OPS-02 (inscription atomique)
 
 **Date :** 4 octobre 2026. **Objectif :** aucune inscription partielle, collisions reprises de façon bornée.

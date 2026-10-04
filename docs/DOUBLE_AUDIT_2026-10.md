@@ -1,6 +1,6 @@
 # Double audit — registre de corrections
 
-Mise à jour : 4 octobre 2026. Référence de code : `09b31572275abf05d1db8cb834a27084c47b1b55`.
+Mise à jour : 4 octobre 2026 (suivi des clôtures ajouté). Référence de code : `09b31572275abf05d1db8cb834a27084c47b1b55`.
 
 ## Sources et niveau de preuve
 
@@ -13,7 +13,36 @@ Ce document est le registre des constats ; [ROADMAP_MVP.md](../ROADMAP_MVP.md) s
 
 ## Conclusion
 
-Socle jouable, MVP non validé pour ouverture publique. Priorités : dépendances, contrôles d'accès, intégrité économique et qualité des preuves, avant extensions. Cette PR documente le travail ; elle ne corrige ni le code ni les dépendances.
+Socle jouable, MVP non validé pour ouverture publique. Les constats de sécurité, d'intégrité économique, de règles de jeu, de qualité et d'exploitation ont reçu des correctifs (voir le suivi ci-dessous) ; restent ouverts SEC-01 (9 alertes hautes de production sans mesure compensatoire acceptée), les décisions de périmètre SCOPE-01/02 et la validation de sortie OPS-03.
+
+## Suivi des clôtures (4 octobre 2026)
+
+Règle de clôture : lien PR/commit + test + résultat de validation. « Preuve CI » = la suite de tests concernée s'exécute et passe dans la CI du `main` ([run n° 2](https://github.com/enamaryn/XNova-reforged/actions/runs/37206505533), [n° 5](https://github.com/enamaryn/XNova-reforged/actions/runs/37211390645), [n° 7](https://github.com/enamaryn/XNova-reforged/actions/runs/37212681615), [n° 9](https://github.com/enamaryn/XNova-reforged/actions/runs/37213207939) : tous verts, chacun incluant les tests des correctifs antérieurs). Les PR [#2](https://github.com/enamaryn/XNova-reforged/pull/2) à [#9](https://github.com/enamaryn/XNova-reforged/pull/9) ont été fusionnées avant l'existence de la CI : leurs tests ont d'abord tourné en local, puis dans la CI du `main` à partir du run n° 2.
+
+| ID | Statut | PR | Tests de validation | Réserves à connaître |
+|---|---|---|---|---|
+| SEC-01 | **Ouvert (partiel)** | [#5](https://github.com/enamaryn/XNova-reforged/pull/5) | audits avant/après (`docs/audits/`), builds, suites | 9 hautes de production restantes (outillage Sentry, `postcss` de Next, `picomatch`) : mesure compensatoire et échéance à accepter |
+| SEC-02 | Clos | [#4](https://github.com/enamaryn/XNova-reforged/pull/4) | `ws-planet-subscription` (deux comptes, vrais sockets) | autres événements ciblés par utilisateur non audités |
+| SEC-03 | Clos | [#5](https://github.com/enamaryn/XNova-reforged/pull/5) | `sec03-sessions` (6) | reconnexion obligatoire à la mise en service ; pas de liste de sessions |
+| SEC-04 | Clos | [#5](https://github.com/enamaryn/XNova-reforged/pull/5) | `sec04-hardening` (5), `env.validation` (10) | limiteur en mémoire (une instance) ; cookie `xnova_access` du web sans `Secure`/`HttpOnly` |
+| ECO-01 | Clos | [#2](https://github.com/enamaryn/XNova-reforged/pull/2), test API ajouté avec ce suivi | `resources-engine` (3), `eco01-polling` (360 interrogations sur PostgreSQL : 520/510 ; 500/500 avec l'ancienne troncature) | — |
+| ECO-02 | Clos | [#3](https://github.com/enamaryn/XNova-reforged/pull/3) | `resources-concurrency` (2) | plafond de stockage évalué sur l'instantané lu |
+| ECO-03 | Clos | [#3](https://github.com/enamaryn/XNova-reforged/pull/3) | `eco03-atomicity` (6) | contrôle des champs libres hors verrou |
+| ECO-04 | Clos | [#3](https://github.com/enamaryn/XNova-reforged/pull/3) | `eco04-single-execution` (6) | « workers » simulés dans un seul processus |
+| ECO-05 | Clos | [#4](https://github.com/enamaryn/XNova-reforged/pull/4) | `eco05-refund` (10) | entrées antérieures sans coût enregistré : remboursement de repli |
+| GAME-01 | Clos | [#6](https://github.com/enamaryn/XNova-reforged/pull/6) | `game01-fleet-validation` (40) | transport vers planète existante uniquement (décision par défaut) ; espionnage et colonisation exclus de l'UI en attendant SCOPE-01 |
+| GAME-02 | Clos | [#7](https://github.com/enamaryn/XNova-reforged/pull/7) | `game02-deploy` (5) | déploiement vers ses seules planètes (décision par défaut à confirmer) |
+| GAME-03 | Clos | [#8](https://github.com/enamaryn/XNova-reforged/pull/8) | `combat-cargo` (9, moteur réel), `game03-combat-cargo` (4) | reliquat de butin laissé à la cible ; pertes de cargo absentes du rapport |
+| GAME-04 | Clos | [#9](https://github.com/enamaryn/XNova-reforged/pull/9) + ce suivi | `game04-research-energy` (4), E2E page détail (lancement, finalisation, niveau visible, énergie insuffisante) | seuil comparé à l'énergie produite brute (à confirmer) |
+| SCOPE-01 | **Ouvert** | — | — | décision bloquante du propriétaire |
+| SCOPE-02 | **Ouvert** | — | — | équilibrage et langues non traités |
+| QUAL-01 | Clos | [#10](https://github.com/enamaryn/XNova-reforged/pull/10) | CI complète verte sur la PR et sur `main` | 105 avertissements ESLint ; seuil d'audit « hautes » à fixer |
+| QUAL-02 | Clos | [#11](https://github.com/enamaryn/XNova-reforged/pull/11) | E2E 17/17 en local et en CI ; intégration sur bases vierges | `combat.service.spec.ts` mocke le moteur (couvert par les tests GAME-03) ; couverture de code non mesurée |
+| OPS-01 | Clos | [#12](https://github.com/enamaryn/XNova-reforged/pull/12) | job CI `database` (28 contrôles) | sauvegardes planifiées non chiffrées ; baseline à exécuter sur les environnements existants ; aucune restauration d'une sauvegarde de production réelle |
+| OPS-02 | Clos | [#13](https://github.com/enamaryn/XNova-reforged/pull/13) | `ops02-registration` (9) | univers presque saturé : 503 après 10 tentatives |
+| OPS-03 | **Ouvert** | — | — | seuils de charge à fixer avant exécution |
+
+Un constat « clos » signifie : correctif fusionné, tests passant en CI, réserves listées. Les réserves et les décisions par défaut ne sont pas des preuves de conformité aux règles voulues ; elles restent à valider.
 
 ## Registre actionnable
 
