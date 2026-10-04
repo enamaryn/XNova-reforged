@@ -42,7 +42,7 @@ Les travaux de sécurité et d'intégrité économique peuvent avancer en parall
 
 **État : à réaliser / validation non reçue.**
 
-- [ ] **QUAL-01 (P1)** — Build propre, lint et CI. Preuve de clôture : à renseigner.
+- [~] **QUAL-01 (P1)** — Build propre, lint et CI. Correctif appliqué (4 oct. 2026) : `game-engine` déclare `@xnova/game-config`, `web` déclare `@xnova/game-engine`, `database` a un `build` (prisma generate, hors cache Turbo) ; scripts compilés obsolètes retirés ; ESLint configuré (racine + web), 0 erreur / 105 avertissements ; `.github/workflows/ci.yml` (build, lint, unitaires, intégration PostgreSQL, audit de production critiques) ; journaux `.turbo` retirés du suivi ; défaut de démarrage corrigé (semis de la galaxie en concurrence). Preuve sur **clone vierge local** (npm ci, build Turbo à froid 5/5, lint, 44/44 unitaires, 116/116 intégration sur 5 bases neuves consécutives). **Le workflow GitHub n'a pas encore tourné** : première exécution à constater sur la PR. Reste : lien PR/commit ; E2E hors CI ; seuil d'audit « hautes » ; avertissements ESLint (dette).
 - [ ] **QUAL-02 (P1)** — Tests qui détectent les échecs. Preuve de clôture : à renseigner.
 - [ ] **OPS-01 (P1 avant ouverture)** — Sauvegarde, restauration et migrations. Preuve de clôture : à renseigner.
 - [ ] **OPS-02 (P2)** — Inscription atomique. Preuve de clôture : à renseigner.

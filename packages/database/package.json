@@ -8,7 +8,8 @@
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
     "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate dev"
+    "db:migrate": "prisma migrate dev",
+    "build": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^5.8.0"

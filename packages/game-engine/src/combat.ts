@@ -159,7 +159,7 @@ export function simulateCombat(params: {
       const targetIndex = Math.floor(Math.random() * defenderUnits.length);
       const target = defenderUnits[targetIndex];
 
-      let damage = attacker.weapon;
+      const damage = attacker.weapon;
       if (target.shield > 0) {
         target.shield -= damage;
         if (target.shield < 0) {
@@ -181,7 +181,7 @@ export function simulateCombat(params: {
       const targetIndex = Math.floor(Math.random() * attackerUnits.length);
       const target = attackerUnits[targetIndex];
 
-      let damage = defender.weapon;
+      const damage = defender.weapon;
       if (target.shield > 0) {
         target.shield -= damage;
         if (target.shield < 0) {
@@ -260,7 +260,7 @@ export function distributeLoot(params: {
     deuterium: Math.max(0, Math.floor(params.maxLoot.deuterium)),
   };
 
-  let capacity = Math.max(0, Math.floor(params.capacity));
+  const capacity = Math.max(0, Math.floor(params.capacity));
   const totalLootable = maxLoot.metal + maxLoot.crystal + maxLoot.deuterium;
 
   if (capacity === 0 || totalLootable === 0) {

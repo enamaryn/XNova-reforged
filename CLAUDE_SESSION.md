@@ -11,6 +11,21 @@
 
 Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DOUBLE_AUDIT_2026-10.md), [roadmap historique](docs/history/ROADMAP_MVP_AVANT_AUDIT.md).
 
+## Session de correction — QUAL-01 (build propre, lint et CI)
+
+**Date :** 4 octobre 2026. **Objectif :** un clone vierge installe, compile, lint et teste ; la CI le vérifie.
+
+- [x] Dépendances de workspace déclarées, `database#build` (prisma generate), scripts compilés obsolètes retirés, `.turbo` retiré du suivi.
+- [x] ESLint configuré (racine et web) : 0 erreur ; navigation mobile en `Link`.
+- [x] `.github/workflows/ci.yml` : build, lint, unitaires, intégration PostgreSQL, audit de production (critiques).
+- [x] Défaut de fond corrigé : semis de la galaxie concurrent (verrou consultatif PostgreSQL, `skipDuplicates`), test `galaxy-seed-concurrency`.
+- [x] Preuve sur clone vierge local : `npm ci`, build Turbo à froid 5/5, lint, 44/44 unitaires, 116/116 intégration sur 5 bases neuves.
+- [ ] Première exécution du workflow sur GitHub à constater ; E2E hors CI ; seuil d'audit « hautes » ; 105 avertissements ESLint ; OPS-02.
+
+**Prochaines étapes :** QUAL-02 (tests qui détectent les échecs), OPS-01/OPS-02, SCOPE-01.
+
+---
+
 ## Session de correction — GAME-04 (recherche et énergie)
 
 **Date :** 4 octobre 2026. **Objectif :** rendre le bouton de recherche actif et vérifier le seuil d'énergie du Graviton.
