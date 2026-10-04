@@ -150,6 +150,8 @@ model BuildQueue {
   startTime  DateTime
   endTime    DateTime
   completed  Boolean  @default(false)
+  // Cout reellement debite { metal, crystal, deuterium } ; null pour les entrees anterieures (ECO-05)
+  paidCost   Json?
 
   createdAt  DateTime @default(now())
 
@@ -187,6 +189,8 @@ model ResearchQueue {
   startTime DateTime
   endTime   DateTime
   completed Boolean  @default(false)
+  // Cout reellement debite { metal, crystal, deuterium } ; null pour les entrees anterieures (ECO-05)
+  paidCost   Json?
 
   createdAt DateTime @default(now())
 
@@ -224,6 +228,8 @@ model ShipQueue {
   startTime DateTime
   endTime   DateTime
   completed Boolean  @default(false)
+  // Cout reellement debite { metal, crystal, deuterium } ; null pour les entrees anterieures (ECO-05)
+  paidCost   Json?
 
   createdAt DateTime @default(now())
 

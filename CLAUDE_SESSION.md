@@ -11,6 +11,31 @@
 
 Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DOUBLE_AUDIT_2026-10.md), [roadmap historique](docs/history/ROADMAP_MVP_AVANT_AUDIT.md).
 
+## Session de correction — SEC-02 (autorisation WebSocket)
+
+**Date :** 4 octobre 2026. **Objectif :** refuser l'abonnement aux rooms de planètes adverses.
+
+- [x] `game-events.gateway.ts` : `subscribe:planet` vérifie `planet.userId === client.data.userId`, valide l'identifiant, refuse avec `subscribe:refused` (réponse identique pour absente/adverse).
+- [x] Test `ws-planet-subscription.integration.spec.ts` : deux comptes, vrais sockets, aucun événement reçu par l'intrus, propriétaire servi ; échec avant, 25/25 unitaires et 51/51 intégration après (local).
+- [ ] Lien PR/commit ; audit des autres événements ciblés ; SEC-03/SEC-04 pour sockets bannis et origines.
+
+**Prochaines étapes :** SEC-03, SEC-04, SEC-01.
+
+---
+
+## Session de correction — ECO-05 (remboursement du montant réellement payé)
+
+**Date :** 4 octobre 2026. **Objectif :** l'annulation rembourse exactement ce qui a été débité.
+
+- [x] Schéma Prisma : `paidCost Json?` sur `BuildQueue`, `ResearchQueue`, `ShipQueue` (`db push` appliqué sur la base de test locale).
+- [x] Services bâtiments, recherche, chantier : coût enregistré au démarrage, remboursé tel quel ; repli pour les anciennes entrées.
+- [x] Tests `eco05-refund.integration.spec.ts` (10) : multiplicateurs 0,1/1/2,5 puis config à 7 avant annulation ; 7 échecs avant, 25/25 unitaires et 50/50 intégration après, en local.
+- [ ] Lien PR/commit ; migration versionnée (OPS-01) ; appliquer `db push` sur les environnements existants.
+
+**Prochaines étapes :** lot SEC (SEC-02 propriété des rooms WebSocket en premier, puis SEC-01, SEC-03, SEC-04), ou GAME-01.
+
+---
+
 ## Session de correction — ECO-04 (exécution unique des événements)
 
 **Date :** 4 octobre 2026. **Objectif :** un événement de flotte ou de file n'a d'effet qu'une fois, même traité en parallèle.

@@ -178,6 +178,11 @@ export class ShipyardService {
             amount: safeAmount,
             startTime,
             endTime,
+            paidCost: {
+              metal: totalCost.metal,
+              crystal: totalCost.crystal,
+              deuterium: totalCost.deuterium,
+            },
           },
         });
         const updatedPlanet = await tx.planet.findUniqueOrThrow({ where: { id: planetId } });
@@ -247,13 +252,27 @@ export class ShipyardService {
       throw new BadRequestException('Vaisseau invalide');
     }
 
-    const { shipCostMultiplier } = await this.serverConfig.getConfig();
-    const unitCost = this.applyCostMultiplier(ship.cost, shipCostMultiplier);
-    const refund = {
-      metal: unitCost.metal * queueEntry.amount,
-      crystal: unitCost.crystal * queueEntry.amount,
-      deuterium: unitCost.deuterium * queueEntry.amount,
-    };
+    // Rembourse exactement le montant debite (ECO-05), meme si le multiplicateur a change depuis
+    const paid = queueEntry.paidCost as
+      | Partial<Record<'metal' | 'crystal' | 'deuterium', number>>
+      | null;
+    let refund: { metal: number; crystal: number; deuterium: number };
+    if (paid && typeof paid === 'object') {
+      refund = {
+        metal: Number(paid.metal) || 0,
+        crystal: Number(paid.crystal) || 0,
+        deuterium: Number(paid.deuterium) || 0,
+      };
+    } else {
+      // Entrees anterieures a l'enregistrement du cout : meilleur effort avec la configuration courante
+      const { shipCostMultiplier } = await this.serverConfig.getConfig();
+      const unitCost = this.applyCostMultiplier(ship.cost, shipCostMultiplier);
+      refund = {
+        metal: unitCost.metal * queueEntry.amount,
+        crystal: unitCost.crystal * queueEntry.amount,
+        deuterium: unitCost.deuterium * queueEntry.amount,
+      };
+    }
 
     const updatedPlanet = await this.database.$transaction(async (tx) => {
       const claimed = await tx.shipQueue.deleteMany({
