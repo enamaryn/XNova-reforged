@@ -13,9 +13,11 @@ import { LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { GameEventsGateway } from '../game-events/game-events.gateway';
+import { RateLimit, RateLimitGuard } from '../common/security/rate-limit.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 
 @Controller('auth')
+@UseGuards(RateLimitGuard)
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
@@ -27,6 +29,7 @@ export class AuthController {
    * Inscription d'un nouvel utilisateur
    */
   @Post('register')
+  @RateLimit('register')
   @HttpCode(HttpStatus.CREATED)
   async register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);
@@ -37,6 +40,7 @@ export class AuthController {
    * Connexion d'un utilisateur existant
    */
   @Post('login')
+  @RateLimit('login')
   @HttpCode(HttpStatus.OK)
   async login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);

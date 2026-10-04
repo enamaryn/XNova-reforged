@@ -11,6 +11,20 @@
 
 Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DOUBLE_AUDIT_2026-10.md), [roadmap historique](docs/history/ROADMAP_MVP_AVANT_AUDIT.md).
 
+## Session de correction — SEC-04 (protection de connexion et configuration)
+
+**Date :** 4 octobre 2026. **Objectif :** limiter les tentatives, exiger secrets et origines en production, durcir les en-têtes.
+
+- [x] `common/security/rate-limit.guard.ts` : limitation login/register en mémoire (IP + compte visé), 429 + `Retry-After`, configurable (`RATE_LIMIT_*`).
+- [x] `config/env.validation.ts` : validation de production (secrets, `DATABASE_URL`, `WEB_ORIGINS`) et origines autorisées, utilisée par l'API HTTP et la passerelle WebSocket.
+- [x] `app.setup.ts` (`configureApp`) : en-têtes de sécurité, proxy de confiance, CORS, validation globale ; partagé par `main.ts` et les tests.
+- [x] Tests : `env.validation.spec.ts` (10), `sec04-hardening.integration.spec.ts` (5) ; unitaires 35/35 et intégration 62/62 en local.
+- [ ] Lien PR/commit ; limiteur partagé (Redis) ; cookie `xnova_access` ; durée de l'access token.
+
+**Prochaines étapes :** SEC-01 (dépendances), puis GAME-01.
+
+---
+
 ## Session de correction — SEC-03 (bannissement et révocation des sessions)
 
 **Date :** 4 octobre 2026. **Objectif :** un jeton émis avant un ban ou une déconnexion n'est plus accepté.

@@ -14,6 +14,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '../database/database.service';
 import { isBanned } from '../auth/ban.util';
+import { resolveAllowedOrigins } from '../config/env.validation';
 
 /**
  * Gateway WebSocket pour les événements de jeu en temps réel
@@ -24,15 +25,10 @@ import { isBanned } from '../auth/ban.util';
  * - research:completed - Recherche terminée
  * - fleet:arrived - Flotte arrivée à destination
  */
-const webOrigins = (process.env.WEB_ORIGINS || process.env.WEB_ORIGIN || '')
-  .split(',')
-  .map((origin) => origin.trim())
-  .filter(Boolean);
-const isProd = process.env.NODE_ENV === 'production';
-
 @WebSocketGateway({
   cors: {
-    origin: isProd && webOrigins.length > 0 ? webOrigins : true,
+    // Même politique d'origines que l'API HTTP (SEC-04)
+    origin: resolveAllowedOrigins(),
     credentials: true,
   },
   namespace: '/game',

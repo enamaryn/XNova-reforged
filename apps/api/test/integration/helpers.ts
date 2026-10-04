@@ -2,6 +2,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { AppModule } from '../../src/app.module';
+import { configureApp } from '../../src/app.setup';
 import { DatabaseService } from '../../src/database/database.service';
 
 export interface IntegrationApp {
@@ -23,19 +24,16 @@ export async function createIntegrationApp(): Promise<IntegrationApp> {
   process.env.JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'test-refresh-secret';
   process.env.JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1h';
   process.env.JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || '7d';
+  // Les suites créent de nombreux comptes depuis la même IP : limites très hautes sauf test dédié
+  process.env.RATE_LIMIT_LOGIN_MAX = process.env.RATE_LIMIT_LOGIN_MAX || '100000';
+  process.env.RATE_LIMIT_REGISTER_MAX = process.env.RATE_LIMIT_REGISTER_MAX || '100000';
 
   const moduleRef = await Test.createTestingModule({
     imports: [AppModule],
   }).compile();
 
   const app = moduleRef.createNestApplication();
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }),
-  );
+  configureApp(app);
   await app.init();
 
   const database = app.get(DatabaseService);

@@ -18,12 +18,14 @@ import { ServerConfigModule } from './server-config/server-config.module';
 import { RedisModule } from './redis/redis.module';
 import { HealthModule } from './health/health.module';
 import { MonitoringModule } from './monitoring/monitoring.module';
+import { validateEnv } from './config/env.validation';
 
 @Module({
   imports: [
     // Configuration des variables d'environnement
     ConfigModule.forRoot({
       isGlobal: true, // Rend le ConfigService disponible partout
+      validate: validateEnv, // SEC-04 : secrets et origines obligatoires en production
       envFilePath: '../../.env', // Chemin vers le .env à la racine du monorepo
     }),
 
