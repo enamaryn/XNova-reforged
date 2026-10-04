@@ -103,7 +103,7 @@ Socle jouable, MVP non validé pour ouverture publique. Priorités : dépendance
 - **Constat :** DEPLOY livre puis revient comme un transport.
 - **Périmètre :** `apps/api/src/fleet/fleet-cron.service.ts`.
 - **Acceptation :** Définir destination autorisée ; vaisseaux et cargo transférés une fois, aucun retour ; transport et rappel restent fonctionnels.
-- **État :** ouvert ; responsable à attribuer lors de la PR corrective. Clôture : lien PR/commit + test et résultat requis.
+- **État :** correctif appliqué le 4 octobre 2026. Destination autorisée : une planète du joueur (validée à l'envoi, GAME-01, et revérifiée à l'arrivée). À l'arrivée, vaisseaux et cargaison sont crédités une fois sur la planète de destination (prise en charge atomique d'ECO-04 conservée, deux workers testés), la flotte est marquée `completed` avec contenu vidé et n'apparaît plus dans les flottes actives. Rappel avant arrivée : retour intact à l'origine, rien déployé. Si la destination n'appartient plus au joueur, la flotte rentre à l'origine avec son contenu. Transport inchangé (livraison de la cargaison puis retour). Limites : aucune capacité maximale ni règle de champs/stockage à l'arrivée ; `returnTime` reste renseigné à l'envoi pour une flotte déployée (utilisé uniquement en cas de repli) ; règle « uniquement ses propres planètes » à confirmer avec SCOPE-01 ; un changement de propriétaire de planète n'existe pas encore dans le jeu (cas testé de façon synthétique). Clôture en attente : lien PR/commit.
 
 ### GAME-03 — Cargo et moteur de combat
 

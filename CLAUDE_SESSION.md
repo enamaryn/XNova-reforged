@@ -11,6 +11,18 @@
 
 Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DOUBLE_AUDIT_2026-10.md), [roadmap historique](docs/history/ROADMAP_MVP_AVANT_AUDIT.md).
 
+## Session de correction — GAME-02 (déploiement effectif)
+
+**Date :** 4 octobre 2026. **Objectif :** un déploiement installe la flotte sur la planète de destination, sans retour.
+
+- [x] `fleet-cron.service.ts` : branche DEPLOY dédiée (crédit unique des vaisseaux et de la cargaison, flotte `completed`, repli vers l'origine si la destination n'est plus au joueur) ; transport inchangé.
+- [x] Tests `game02-deploy.integration.spec.ts` (5, dont 3 en échec avant) : transfert unique sous deux workers, absence de retour, bilan conservé, rappel, repli, transport inchangé ; intégration 107/107, unitaires 35/35 (local).
+- [ ] Lien PR/commit ; SCOPE-01 (règle de destination) ; GAME-03 (cargo et combat).
+
+**Prochaines étapes :** GAME-03 et GAME-04, puis QUAL-01/QUAL-02.
+
+---
+
 ## Session de correction — GAME-01 (validation des flottes et missions)
 
 **Date :** 4 octobre 2026. **Objectif :** n'accepter que des missions réellement traitées, avec des entrées valides, sans débit en cas de refus.
