@@ -226,5 +226,15 @@ function calculateProducedResources(
 function clampResource(value: number, max: number) {
   if (value < 0) return 0;
   if (value > max) return Math.floor(max);
-  return Math.floor(value);
+  // Les fractions produites sont conservées (ECO-01) : l'arrondi se fait à l'affichage.
+  return value;
+}
+
+/** Valeur entière affichable/dépensable d'un stock fractionnaire. */
+export function floorResources(resources: ResourceState): ResourceState {
+  return {
+    metal: Math.floor(resources.metal),
+    crystal: Math.floor(resources.crystal),
+    deuterium: Math.floor(resources.deuterium),
+  };
 }

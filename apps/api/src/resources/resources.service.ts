@@ -5,6 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import {
+  floorResources,
   updateResources,
   type ResourceConfig,
   type ResourceLevels,
@@ -26,6 +27,7 @@ export class ResourcesService {
 
     return {
       ...planet,
+      ...floorResources(this.mapResources(planet)),
       storage: calculation.storage,
       productionLevel: calculation.energy.productionLevel,
     };
@@ -43,11 +45,7 @@ export class ResourcesService {
 
     return {
       planetId: planet.id,
-      resources: {
-        metal: planet.metal,
-        crystal: planet.crystal,
-        deuterium: planet.deuterium,
-      },
+      resources: floorResources(this.mapResources(planet)),
       production: {
         metal: planet.metalProduction,
         crystal: planet.crystalProduction,
