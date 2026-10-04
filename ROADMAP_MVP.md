@@ -14,7 +14,7 @@ Les travaux de sécurité et d'intégrité économique peuvent avancer en parall
 
 - [ ] **SEC-01 (P1)** — Dépendances vulnérables. Preuve de clôture : à renseigner.
 - [~] **SEC-02 (P1)** — Autorisation WebSocket. Correctif appliqué (4 oct. 2026) : `subscribe:planet` vérifie en base que la planète appartient au socket authentifié, sinon événement `subscribe:refused` (même réponse pour planète absente ou adverse) ; test avec deux comptes et vrais sockets (`ws-planet-subscription.integration.spec.ts`) : échec avant, réussite après ; intégration 51/51 en local. Reste : lien PR/commit ; SEC-03 (jeton révoqué/banni sur sockets) non traité.
-- [ ] **SEC-03 (P1)** — Bannissement et révocation des sessions. Preuve de clôture : à renseigner.
+- [~] **SEC-03 (P1)** — Bannissement et révocation des sessions. Correctif appliqué (4 oct. 2026) : table `Session` (claim `sid` dans les JWT), contrôle session + bannissement à chaque requête, refresh token à usage unique avec rotation et détection de rejeu, déconnexion qui révoque la session et coupe les sockets, ban qui révoque les sessions et coupe les sockets, contrôle à la connexion WebSocket. 6 tests PostgreSQL (`sec03-sessions.integration.spec.ts`) en échec avant, réussite après ; intégration 57/57 en local. Reste : lien PR/commit ; `db push` sur les environnements ; migration versionnée (OPS-01) ; durée de vie de l'access token (SEC-04).
 - [ ] **SEC-04 (P1)** — Protection de connexion et configuration. Preuve de clôture : à renseigner.
 
 ## Lot 2 — Intégrité économique

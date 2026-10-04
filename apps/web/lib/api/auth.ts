@@ -35,7 +35,13 @@ export async function getMe() {
   return apiRequest<AuthUserDto>("/auth/me", { auth: true });
 }
 
-export function logout() {
+export async function logout() {
+  // Revoque la session cote serveur (meilleur effort), puis nettoie l'etat local
+  try {
+    await apiRequest("/auth/logout", { method: "POST", auth: true, retry: false });
+  } catch {
+    // Session deja expiree ou serveur injoignable : on deconnecte quand meme localement
+  }
   useAuthStore.getState().reset();
 }
 

@@ -11,6 +11,22 @@
 
 Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DOUBLE_AUDIT_2026-10.md), [roadmap historique](docs/history/ROADMAP_MVP_AVANT_AUDIT.md).
 
+## Session de correction — SEC-03 (bannissement et révocation des sessions)
+
+**Date :** 4 octobre 2026. **Objectif :** un jeton émis avant un ban ou une déconnexion n'est plus accepté.
+
+- [x] Schéma : modèle `Session` (hash du refresh token courant, expiration, révocation).
+- [x] `auth.service.ts` : sessions à la connexion/inscription, refresh avec rotation atomique et détection de rejeu, révocation unitaire et par utilisateur.
+- [x] `jwt.strategy.ts` : refuse token sans `sid`, session révoquée/expirée/incohérente, compte suspendu.
+- [x] `POST /auth/logout` révoque la session et coupe ses sockets ; `AdminService.banUser` révoque les sessions et coupe les sockets ; passerelle WebSocket contrôle session et ban à la connexion.
+- [x] Web : refresh sérialisé, nouveau refresh token conservé, déconnexion appelle l'API.
+- [x] Tests `sec03-sessions.integration.spec.ts` (6) : échec avant, 25/25 unitaires et 57/57 intégration après (local).
+- [ ] Lien PR/commit ; `db push` sur les environnements existants ; SEC-04 (secrets, durée de l'access token, limitation de débit).
+
+**Prochaines étapes :** SEC-04, SEC-01.
+
+---
+
 ## Session de correction — SEC-02 (autorisation WebSocket)
 
 **Date :** 4 octobre 2026. **Objectif :** refuser l'abonnement aux rooms de planètes adverses.

@@ -39,7 +39,7 @@ Socle jouable, MVP non validé pour ouverture publique. Priorités : dépendance
 - **Constat :** Login vérifie le ban ; JWT existants, refresh et sockets ne le font pas. Logout ne révoque pas de session serveur.
 - **Périmètre :** `apps/api/src/auth/strategies/jwt.strategy.ts`, `apps/api/src/auth/auth.service.ts`, `apps/api/src/game-events/game-events.gateway.ts`.
 - **Acceptation :** Un token émis avant le ban est refusé ensuite sur HTTP/refresh ; socket déconnecté ; définir et tester rotation, expiration et révocation/logout.
-- **État :** ouvert ; responsable à attribuer lors de la PR corrective. Clôture : lien PR/commit + test et résultat requis.
+- **État :** correctif appliqué le 4 octobre 2026. Politique : une session serveur par connexion (`Session`, `sid` dans access et refresh tokens) ; access token valable tant que la session est active (durée configurée par `JWT_EXPIRES_IN`) ; refresh token à usage unique, rotation à chaque appel, rejeu = session révoquée ; expiration = `JWT_REFRESH_EXPIRES_IN` ; révocation par déconnexion (`POST /auth/logout`) ou bannissement ; sockets coupés dans les deux cas et contrôlés à la connexion. Limites : tous les jetons émis avant ce changement (sans `sid`) sont refusés, donc reconnexion obligatoire ; une session = un refresh token, deux onglets qui rafraîchissent en parallèle avec le même jeton déclenchent la révocation (le client web sérialise désormais les rafraîchissements) ; une requête de session par appel authentifié, sans cache ; pas de liste des sessions ni de déconnexion de tous les appareils ; changement de schéma par `db push`. Clôture en attente : lien PR/commit.
 
 ### SEC-04 — Protection de connexion et configuration
 

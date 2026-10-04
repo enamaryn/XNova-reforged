@@ -7,6 +7,8 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
+import { createHash, randomUUID } from 'crypto';
+import { isBanned } from './ban.util';
 import { DatabaseService } from '../database/database.service';
 import { ServerConfigService } from '../server-config/server-config.service';
 import { RegisterDto } from './dto/register.dto';
@@ -64,7 +66,7 @@ export class AuthService {
     await this.createStarterPlanet(user.id);
 
     // Générer les tokens JWT
-    const tokens = await this.generateTokens(user.id, user.username);
+    const tokens = await this.createSessionTokens(user.id, user.username);
 
     return {
       user: {
@@ -101,7 +103,7 @@ export class AuthService {
     }
 
     const now = new Date();
-    if (user.bannedAt && (!user.bannedUntil || user.bannedUntil > now)) {
+    if (isBanned(user, now)) {
       throw new UnauthorizedException('Compte suspendu temporairement');
     }
 
@@ -130,7 +132,7 @@ export class AuthService {
     });
 
     // Générer les tokens JWT
-    const tokens = await this.generateTokens(user.id, user.username);
+    const tokens = await this.createSessionTokens(user.id, user.username);
 
     return {
       user: {
@@ -147,40 +149,82 @@ export class AuthService {
   }
 
   /**
-   * Rafraîchir le token d'accès
+   * Rafraîchir les tokens (rotation du refresh token, SEC-03).
+   *
+   * Le refresh token est à usage unique : il est remplacé à chaque appel. Un refresh token
+   * déjà consommé (rejeu), une session révoquée ou expirée, ou un compte suspendu sont refusés ;
+   * le rejeu révoque en plus la session.
    */
-  async refreshAccessToken(refreshToken: string): Promise<{ accessToken: string }> {
+  async refreshAccessToken(
+    refreshToken: string,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    const invalid = new UnauthorizedException('Refresh token invalide ou expiré');
+
+    let payload: { sub?: string; sid?: string };
     try {
-      // Vérifier et décoder le refresh token
-      const payload = this.jwtService.verify(refreshToken, {
+      payload = this.jwtService.verify(refreshToken, {
         secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
       });
-
-      // Vérifier que l'utilisateur existe toujours
-      const user = await this.database.user.findUnique({
-        where: { id: payload.sub },
-      });
-
-      if (!user) {
-        throw new UnauthorizedException('Utilisateur non trouvé');
-      }
-
-      // Générer un nouveau access token
-      const accessToken = this.jwtService.sign(
-        {
-          sub: user.id,
-          username: user.username,
-        },
-        {
-          secret: this.configService.get<string>('JWT_SECRET'),
-          expiresIn: this.configService.get<string>('JWT_EXPIRES_IN') || '7d',
-        } as any,
-      );
-
-      return { accessToken };
-    } catch (error) {
-      throw new UnauthorizedException('Refresh token invalide ou expiré');
+    } catch {
+      throw invalid;
     }
+    if (!payload?.sub || !payload.sid) throw invalid;
+
+    const session = await this.database.session.findUnique({
+      where: { id: payload.sid },
+      include: {
+        user: {
+          select: { id: true, username: true, bannedAt: true, bannedUntil: true },
+        },
+      },
+    });
+
+    const now = new Date();
+    if (
+      !session ||
+      session.userId !== payload.sub ||
+      session.revokedAt ||
+      session.expiresAt <= now ||
+      isBanned(session.user, now)
+    ) {
+      throw invalid;
+    }
+
+    const next = await this.signTokens(session.user.id, session.user.username, session.id);
+
+    // Rotation atomique : seul le porteur du refresh token courant l'emporte
+    const rotated = await this.database.session.updateMany({
+      where: {
+        id: session.id,
+        revokedAt: null,
+        refreshHash: this.hashToken(refreshToken),
+      },
+      data: { refreshHash: this.hashToken(next.refreshToken), lastRotatedAt: now },
+    });
+
+    if (rotated.count !== 1) {
+      // Refresh token déjà consommé : possible vol, on coupe la session
+      await this.revokeSession(session.id);
+      throw invalid;
+    }
+
+    return next;
+  }
+
+  /** Révoque une session (déconnexion). */
+  async revokeSession(sessionId: string) {
+    await this.database.session.updateMany({
+      where: { id: sessionId, revokedAt: null },
+      data: { revokedAt: new Date() },
+    });
+  }
+
+  /** Révoque toutes les sessions actives d'un utilisateur (bannissement). */
+  async revokeAllUserSessions(userId: string) {
+    await this.database.session.updateMany({
+      where: { userId, revokedAt: null },
+      data: { revokedAt: new Date() },
+    });
   }
 
   /**
@@ -220,29 +264,47 @@ export class AuthService {
     return user;
   }
 
-  /**
-   * Générer les tokens JWT (access + refresh)
-   */
-  private async generateTokens(userId: string, username: string) {
-    const payload = { sub: userId, username };
+  /** Crée une session serveur et les tokens associés (claim `sid`). */
+  private async createSessionTokens(userId: string, username: string) {
+    const sessionId = randomUUID();
+    const tokens = await this.signTokens(userId, username, sessionId);
+    const decoded = this.jwtService.decode(tokens.refreshToken) as { exp: number };
+
+    await this.database.session.create({
+      data: {
+        id: sessionId,
+        userId,
+        refreshHash: this.hashToken(tokens.refreshToken),
+        expiresAt: new Date(decoded.exp * 1000),
+      },
+    });
+
+    return tokens;
+  }
+
+  /** Signe access + refresh token pour une session donnée (jti unique : un refresh token = un usage). */
+  private async signTokens(userId: string, username: string, sessionId: string) {
+    const payload = { sub: userId, username, sid: sessionId };
 
     const [accessToken, refreshToken] = await Promise.all([
-      // Access token (courte durée)
       this.jwtService.signAsync(payload, {
         secret: this.configService.get<string>('JWT_SECRET'),
         expiresIn: this.configService.get<string>('JWT_EXPIRES_IN') || '7d',
       } as any),
-      // Refresh token (longue durée)
-      this.jwtService.signAsync(payload, {
-        secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
-        expiresIn: this.configService.get<string>('JWT_REFRESH_EXPIRES_IN') || '30d',
-      } as any),
+      this.jwtService.signAsync(
+        { ...payload, jti: randomUUID() },
+        {
+          secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+          expiresIn: this.configService.get<string>('JWT_REFRESH_EXPIRES_IN') || '30d',
+        } as any,
+      ),
     ]);
 
-    return {
-      accessToken,
-      refreshToken,
-    };
+    return { accessToken, refreshToken };
+  }
+
+  private hashToken(token: string) {
+    return createHash('sha256').update(token).digest('hex');
   }
 
   /**
