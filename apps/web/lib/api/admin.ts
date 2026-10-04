@@ -122,3 +122,40 @@ export function getAuditLogs(limit = 30) {
 export function getBanLogs(limit = 30) {
   return apiClient.get<AdminBanLog[]>(`/admin/ban-logs?limit=${limit}`);
 }
+
+export interface SmtpSettings {
+  enabled: boolean;
+  host: string;
+  port: number;
+  secure: boolean;
+  username: string;
+  fromEmail: string;
+  fromName: string;
+  passwordSet: boolean;
+  passwordUnreadable: boolean;
+}
+
+export interface UpdateSmtpPayload {
+  enabled?: boolean;
+  host?: string;
+  port?: number;
+  secure?: boolean;
+  username?: string;
+  fromEmail?: string;
+  fromName?: string;
+  /** Absent : le mot de passe enregistré est conservé. */
+  password?: string;
+  clearPassword?: boolean;
+}
+
+export function getSmtpSettings() {
+  return apiClient.get<SmtpSettings>("/admin/smtp");
+}
+
+export function updateSmtpSettings(payload: UpdateSmtpPayload) {
+  return apiClient.put<SmtpSettings>("/admin/smtp", payload);
+}
+
+export function sendSmtpTest(to?: string) {
+  return apiClient.post<{ success: boolean; to: string }>("/admin/smtp/test", to ? { to } : {});
+}

@@ -4,7 +4,7 @@ import { DatabaseService } from '../../src/database/database.service';
 import { FleetCronService } from '../../src/fleet/fleet-cron.service';
 import { ResearchService } from '../../src/research/research.service';
 import { ShipyardService } from '../../src/shipyard/shipyard.service';
-import { DORMANT_SINCE, createIntegrationApp } from './helpers';
+import { DORMANT_SINCE, createIntegrationApp, deleteUsersByIds } from './helpers';
 
 /**
  * ECO-04 — chaque événement (arrivée, retour, combat, finalisation) n'a d'effet qu'une fois,
@@ -90,7 +90,7 @@ describe('API integration - Exécution unique des événements (ECO-04)', () => 
   });
 
   afterAll(async () => {
-    await database.user.deleteMany({ where: { id: { in: [userA, userB] } } });
+    await deleteUsersByIds(database, [userA, userB]);
     if (app) await app.close();
   });
 

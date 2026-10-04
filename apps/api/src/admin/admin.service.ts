@@ -1,9 +1,16 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { TECHNOLOGIES } from '@xnova/game-config';
 import { DatabaseService } from '../database/database.service';
 import { GameEventsGateway } from '../game-events/game-events.gateway';
 import { ServerConfigService } from '../server-config/server-config.service';
+import { MailService } from '../mail/mail.service';
+import { SmtpConfigService } from '../mail/smtp-config.service';
 import { UpdateConfigDto } from './dto/update-config.dto';
+import { UpdateSmtpDto } from './dto/update-smtp.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { BanUserDto } from './dto/ban-user.dto';
 import { UnbanUserDto } from './dto/unban-user.dto';
@@ -35,6 +42,8 @@ export class AdminService {
     private readonly database: DatabaseService,
     private readonly serverConfig: ServerConfigService,
     private readonly gameEvents: GameEventsGateway,
+    private readonly smtpConfig: SmtpConfigService,
+    private readonly mail: MailService,
   ) {}
 
   async getConfig() {
@@ -43,6 +52,62 @@ export class AdminService {
 
   async updateConfig(userId: string, dto: UpdateConfigDto) {
     return this.serverConfig.updateConfig(userId, dto);
+  }
+
+  getSmtpConfig() {
+    return this.smtpConfig.getPublic();
+  }
+
+  async updateSmtpConfig(actorId: string, dto: UpdateSmtpDto) {
+    const merged = { ...(await this.smtpConfig.getPublic()), ...dto };
+    if (dto.enabled === true || (dto.enabled === undefined && merged.enabled)) {
+      if (!merged.host || !merged.fromEmail) {
+        throw new BadRequestException(
+          "L'hôte et l'adresse d'expédition sont requis pour activer l'envoi d'emails",
+        );
+      }
+    }
+
+    const changed = await this.smtpConfig.update(dto);
+
+    // Journal : noms des champs modifiés seulement, jamais le mot de passe
+    if (changed.length > 0) {
+      await this.database.adminAuditLog.create({
+        data: { userId: actorId, action: 'update_smtp', changes: { fields: changed } },
+      });
+    }
+
+    return this.smtpConfig.getPublic();
+  }
+
+  async sendSmtpTest(actorId: string, to?: string) {
+    const actor = await this.database.user.findUnique({
+      where: { id: actorId },
+      select: { email: true },
+    });
+    const recipient = to ?? actor?.email;
+    if (!recipient) {
+      throw new BadRequestException('Aucune adresse de destination');
+    }
+
+    try {
+      await this.mail.send({
+        to: recipient,
+        subject: 'XNova Reforged - test de la configuration SMTP',
+        text: "Si vous lisez ce message, la configuration SMTP fonctionne.",
+      });
+    } catch (error) {
+      if (error instanceof Error && 'getStatus' in error) throw error;
+      // Message technique du serveur SMTP : utile à l'administrateur, sans secret
+      throw new BadRequestException(
+        `Échec de l'envoi : ${(error as Error)?.message ?? 'erreur inconnue'}`,
+      );
+    }
+
+    await this.database.adminAuditLog.create({
+      data: { userId: actorId, action: 'test_smtp', changes: { to: recipient } },
+    });
+    return { success: true, to: recipient };
   }
 
   async updateUserRole(actorId: string, dto: UpdateRoleDto) {

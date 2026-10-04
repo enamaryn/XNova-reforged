@@ -806,3 +806,19 @@ Le problème principal était que Framer Motion avec `initial: { opacity: 0 }` n
 
 ### ⏭️ Prochaines étapes
 - PR du lot (b) ; lot (c) comptes par email (fournisseur à choisir)
+
+
+---
+
+## Session du 4 octobre 2026 — SCOPE-01 lot (c), partie 1 : configuration SMTP
+
+**Objectif :** permettre au super admin de configurer SMTP depuis l'administration.
+
+### ✅ Tâches réalisées
+- [x] API `/admin/smtp` (lecture, mise à jour, test) réservée au `SUPER_ADMIN` ; mot de passe chiffré (AES-256-GCM), jamais renvoyé ni journalisé
+- [x] Service d'envoi `nodemailer` (module `mail`) ; onglet « Configurer SMTP » (page d'administration à onglets)
+- [x] 14 tests d'intégration (faux serveur SMTP) + 2 E2E
+- [x] Tests d'intégration : crons arrêtés (source des échecs intermittents de `game03`), suppressions rejouées en cas de deadlock ; 182/182 sur trois passes
+
+### ⏭️ Prochaines étapes
+- Emails de compte : mot de passe oublié, changement d'email et de mot de passe (révocation des autres sessions), vérification d'email

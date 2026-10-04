@@ -18,12 +18,14 @@ import {
 import { useI18n } from '@/lib/i18n';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { isSuperAdmin } from '@/lib/roles';
+import { SmtpSettingsPanel } from './SmtpSettingsPanel';
 
 export default function AdminPage() {
   const { t } = useI18n();
   const { user } = useAuthStore();
   const isSuperAdminUser = isSuperAdmin(user?.role);
   const queryClient = useQueryClient();
+  const [tab, setTab] = useState<'general' | 'smtp'>('general');
   const [form, setForm] = useState<AdminConfig | null>(null);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
   const [roleForm, setRoleForm] = useState({ username: '', role: 'MODERATOR' });
@@ -160,6 +162,35 @@ export default function AdminPage() {
 
   return (
     <div className="space-y-8">
+      <div className="flex gap-2 border-b border-slate-800/80" role="tablist">
+        <button
+          role="tab"
+          aria-selected={tab === 'general'}
+          onClick={() => setTab('general')}
+          className={`px-4 py-2 text-xs uppercase tracking-[0.2em] ${
+            tab === 'general' ? 'border-b-2 border-blue-400 text-white' : 'text-slate-500 hover:text-slate-300'
+          }`}
+        >
+          {t('admin.tabGeneral')}
+        </button>
+        {isSuperAdminUser && (
+          <button
+            role="tab"
+            aria-selected={tab === 'smtp'}
+            onClick={() => setTab('smtp')}
+            className={`px-4 py-2 text-xs uppercase tracking-[0.2em] ${
+              tab === 'smtp' ? 'border-b-2 border-blue-400 text-white' : 'text-slate-500 hover:text-slate-300'
+            }`}
+          >
+            {t('admin.tabSmtp')}
+          </button>
+        )}
+      </div>
+
+      {tab === 'smtp' && isSuperAdminUser && <SmtpSettingsPanel />}
+
+      {tab === 'general' && (
+        <>
       <div className="rounded-3xl border border-slate-800/80 bg-slate-950/60 p-6">
         <div className="flex items-center justify-between">
           <div>
@@ -597,6 +628,8 @@ export default function AdminPage() {
           </div>
         </div>
       </div>
+        </>
+      )}
     </div>
   );
 }

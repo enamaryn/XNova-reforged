@@ -30,6 +30,16 @@ export function validateEnv(env: Record<string, unknown>): Record<string, unknow
     errors.push('JWT_SECRET et JWT_REFRESH_SECRET doivent être distincts');
   }
 
+  // Clé optionnelle de chiffrement des secrets en base (mot de passe SMTP) ; à défaut JWT_SECRET est utilisé
+  if (str('SECRETS_ENCRYPTION_KEY')) {
+    const value = str('SECRETS_ENCRYPTION_KEY');
+    if (value.length < MIN_SECRET_LENGTH || PLACEHOLDER_PATTERN.test(value)) {
+      errors.push(
+        `SECRETS_ENCRYPTION_KEY doit contenir au moins ${MIN_SECRET_LENGTH} caractères et ne pas être une valeur d'exemple`,
+      );
+    }
+  }
+
   if (!str('DATABASE_URL')) {
     errors.push('DATABASE_URL est requis en production');
   }

@@ -10,6 +10,7 @@ import {
   cleanupTestUser,
   createIntegrationApp,
   registerAndLogin,
+  deleteUsersByIds,
 } from './helpers';
 
 const settle = <T>(promises: Promise<T>[]) => Promise.allSettled(promises);
@@ -57,7 +58,7 @@ describe('API integration - Atomicité des disponibilités et files (ECO-03)', (
 
   afterEach(async () => {
     await cleanupTestUser(database, username);
-    await database.user.deleteMany({ where: { id: { in: rivalIds.splice(0) } } });
+    await deleteUsersByIds(database, rivalIds.splice(0));
   });
 
   afterAll(async () => {

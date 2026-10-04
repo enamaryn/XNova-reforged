@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
@@ -9,6 +9,7 @@ import { UpdateRoleDto } from './dto/update-role.dto';
 import { BanUserDto } from './dto/ban-user.dto';
 import { UnbanUserDto } from './dto/unban-user.dto';
 import { BoostDevelopmentDto } from './dto/boost-development.dto';
+import { SendSmtpTestDto, UpdateSmtpDto } from './dto/update-smtp.dto';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('admin')
@@ -70,6 +71,24 @@ export class AdminController {
     @CurrentUser('id') userId: string,
   ) {
     return this.adminService.unbanUser(userId, dto);
+  }
+
+  @Get('smtp')
+  @Roles('SUPER_ADMIN')
+  getSmtp() {
+    return this.adminService.getSmtpConfig();
+  }
+
+  @Put('smtp')
+  @Roles('SUPER_ADMIN')
+  updateSmtp(@Body() dto: UpdateSmtpDto, @CurrentUser('id') userId: string) {
+    return this.adminService.updateSmtpConfig(userId, dto);
+  }
+
+  @Post('smtp/test')
+  @Roles('SUPER_ADMIN')
+  testSmtp(@Body() dto: SendSmtpTestDto, @CurrentUser('id') userId: string) {
+    return this.adminService.sendSmtpTest(userId, dto.to);
   }
 
   @Get('audit')
