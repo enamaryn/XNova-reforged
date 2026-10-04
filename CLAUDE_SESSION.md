@@ -11,6 +11,18 @@
 
 Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DOUBLE_AUDIT_2026-10.md), [roadmap historique](docs/history/ROADMAP_MVP_AVANT_AUDIT.md).
 
+## Session de correction — OPS-02 (inscription atomique)
+
+**Date :** 4 octobre 2026. **Objectif :** aucune inscription partielle, collisions reprises de façon bornée.
+
+- [x] `auth.service.ts` : compte, planète de départ et session dans une transaction ; reprise bornée (10 tentatives puis 503) sur collision de position ; 409 pour nom/email en conflit sous concurrence.
+- [x] Tests `ops02-registration.integration.spec.ts` (9) : échec injecté, reprise bornée, 20 inscriptions simultanées, doublons parallèles ; intégration 125/125 sur 3 bases neuves, unitaires 44/44, lint et build (local).
+- [ ] Première exécution CI ; univers saturé ; lien PR/commit.
+
+**Prochaines étapes :** OPS-03 (charge et parcours complet, seuils à fixer), SCOPE-01.
+
+---
+
 ## Session de correction — OPS-01 (sauvegarde, restauration et migrations)
 
 **Date :** 4 octobre 2026. **Objectif :** sauvegardes fiables, restauration tout ou rien, migrations versionnées avec retour arrière répété.
