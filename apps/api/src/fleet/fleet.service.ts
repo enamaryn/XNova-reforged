@@ -13,6 +13,7 @@ import {
   calculateFuelConsumption,
 } from '@xnova/game-engine';
 import { DatabaseService } from '../database/database.service';
+import { debitResources, debitShips, lockPlanet } from '../common/atomic';
 import { SendFleetDto } from './dto/send-fleet.dto';
 
 @Injectable()
@@ -218,23 +219,24 @@ export class FleetService {
     }, {} as Record<number, number>);
 
     const fleet = await this.database.$transaction(async (tx) => {
-      await tx.planet.update({
-        where: { id: dto.planetId },
-        data: {
-          metal: { decrement: cargo.metal },
-          crystal: { decrement: cargo.crystal },
-          deuterium: { decrement: cargo.deuterium + fuelConsumption },
-        },
+      // Verrou planete, puis debits conditionnels : pas de stock negatif ni de double usage de vaisseaux (ECO-03)
+      await lockPlanet(tx, dto.planetId);
+
+      await debitResources(tx, dto.planetId, {
+        metal: cargo.metal,
+        crystal: cargo.crystal,
+        deuterium: cargo.deuterium + fuelConsumption,
       });
 
-      await Promise.all(
-        shipsToSend.map((ship) =>
-          tx.ship.update({
-            where: { planetId_shipId: { planetId: dto.planetId, shipId: ship.shipId } },
-            data: { amount: { decrement: ship.amount } },
-          }),
-        ),
-      );
+      for (const ship of shipsToSend) {
+        await debitShips(
+          tx,
+          dto.planetId,
+          ship.shipId,
+          ship.amount,
+          `Vaisseaux insuffisants pour ${SHIPS[ship.shipId].name}`,
+        );
+      }
 
       return tx.fleet.create({
         data: {

@@ -71,7 +71,7 @@ Socle jouable, MVP non validé pour ouverture publique. Priorités : dépendance
 - **Constat :** Contrôles de ressources, vaisseaux, files et colonisateurs effectués avant les transactions.
 - **Périmètre :** `apps/api/src/fleet/fleet.service.ts`, `apps/api/src/buildings/buildings.service.ts`, `apps/api/src/research/research.service.ts`, `apps/api/src/shipyard/shipyard.service.ts`, `apps/api/src/resources/resources.service.ts`.
 - **Acceptation :** Requêtes simultanées avec budget limité : aucun stock négatif, aucun double usage d'un vaisseau/colonisateur, quotas et unicité des files respectés ; vérifier annulation contre finalisation.
-- **État :** ouvert ; responsable à attribuer lors de la PR corrective. Clôture : lien PR/commit + test et résultat requis.
+- **État :** correctif appliqué le 4 octobre 2026 pour bâtiments, recherche, chantier, flotte (départ) et colonisation ; 6 tests PostgreSQL concurrents en échec avant, réussis après. Limites : l'annulation vs finalisation est couverte pour bâtiments/recherche/chantier, pas pour les flottes (ECO-04) ; le contrôle de champs libres reste évalué hors verrou. Clôture en attente : lien PR/commit.
 
 ### ECO-04 — Exécution unique des événements
 

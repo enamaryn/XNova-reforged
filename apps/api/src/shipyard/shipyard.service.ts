@@ -7,6 +7,7 @@ import {
 import { ServerConfigService } from '../server-config/server-config.service';
 import { BUILDINGS, SHIPS, TECHNOLOGIES, type ShipCost } from '@xnova/game-config';
 import { DatabaseService } from '../database/database.service';
+import { debitResources, lockPlanet } from '../common/atomic';
 
 @Injectable()
 export class ShipyardService {
@@ -153,34 +154,36 @@ export class ShipyardService {
     const adjustedTime = Math.max(1, Math.floor(totalTimeSeconds / gameSpeed));
 
     const now = new Date();
-    const lastEntry = await this.database.shipQueue.findFirst({
-      where: { planetId, completed: false },
-      orderBy: { endTime: 'desc' },
-    });
 
-    const startTime =
-      lastEntry && lastEntry.endTime > now ? lastEntry.endTime : now;
-    const endTime = new Date(startTime.getTime() + adjustedTime * 1000);
+    // Debit conditionnel et calcul de la file dans une transaction verrouillee sur la planete (ECO-03)
+    const { updatedPlanet, queueEntry, startTime, endTime } = await this.database.$transaction(
+      async (tx) => {
+        await lockPlanet(tx, planetId);
 
-    const [updatedPlanet, queueEntry] = await this.database.$transaction([
-      this.database.planet.update({
-        where: { id: planetId },
-        data: {
-          metal: { decrement: totalCost.metal },
-          crystal: { decrement: totalCost.crystal },
-          deuterium: { decrement: totalCost.deuterium },
-        },
-      }),
-      this.database.shipQueue.create({
-        data: {
-          planetId,
-          shipId,
-          amount: safeAmount,
-          startTime,
-          endTime,
-        },
-      }),
-    ]);
+        const lastEntry = await tx.shipQueue.findFirst({
+          where: { planetId, completed: false },
+          orderBy: { endTime: 'desc' },
+        });
+
+        const startTime =
+          lastEntry && lastEntry.endTime > now ? lastEntry.endTime : now;
+        const endTime = new Date(startTime.getTime() + adjustedTime * 1000);
+
+        await debitResources(tx, planetId, totalCost);
+
+        const queueEntry = await tx.shipQueue.create({
+          data: {
+            planetId,
+            shipId,
+            amount: safeAmount,
+            startTime,
+            endTime,
+          },
+        });
+        const updatedPlanet = await tx.planet.findUniqueOrThrow({ where: { id: planetId } });
+        return { updatedPlanet, queueEntry, startTime, endTime };
+      },
+    );
 
     return {
       success: true,
@@ -252,19 +255,23 @@ export class ShipyardService {
       deuterium: unitCost.deuterium * queueEntry.amount,
     };
 
-    const [updatedPlanet] = await this.database.$transaction([
-      this.database.planet.update({
+    const updatedPlanet = await this.database.$transaction(async (tx) => {
+      const claimed = await tx.shipQueue.deleteMany({
+        where: { id: queueId, completed: false },
+      });
+      if (claimed.count !== 1) {
+        throw new BadRequestException('Construction deja terminee');
+      }
+
+      return tx.planet.update({
         where: { id: queueEntry.planetId },
         data: {
           metal: { increment: refund.metal },
           crystal: { increment: refund.crystal },
           deuterium: { increment: refund.deuterium },
         },
-      }),
-      this.database.shipQueue.delete({
-        where: { id: queueId },
-      }),
-    ]);
+      });
+    });
 
     await this.reflowQueueTimes(queueEntry.planetId, new Date());
 
@@ -292,6 +299,13 @@ export class ShipyardService {
     }
 
     await this.database.$transaction(async (tx) => {
+      // Prise en charge atomique : ignore une commande deja annulee ou terminee
+      const claimed = await tx.shipQueue.updateMany({
+        where: { id: queueEntry.id, completed: false },
+        data: { completed: true },
+      });
+      if (claimed.count !== 1) return;
+
       await tx.ship.upsert({
         where: {
           planetId_shipId: {
@@ -307,10 +321,6 @@ export class ShipyardService {
         },
       });
 
-      await tx.shipQueue.update({
-        where: { id: queueEntry.id },
-        data: { completed: true },
-      });
     });
   }
 

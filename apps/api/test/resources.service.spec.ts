@@ -232,48 +232,64 @@ describe('ResourcesService', () => {
     ).rejects.toBeInstanceOf(BadRequestException);
   });
 
-  it('refuse la colonisation si le joueur a trop de planetes', async () => {
-    const { service, database } = createService();
-    database.planet.count.mockResolvedValue(GAME_CONSTANTS.MAX_PLAYER_PLANETS);
+  const buildTx = (overrides: Record<string, any> = {}) => ({
+    $queryRaw: jest.fn().mockResolvedValue([]),
+    planet: {
+      count: jest.fn().mockResolvedValue(0),
+      findUnique: jest.fn().mockResolvedValue(null),
+      create: jest.fn().mockResolvedValue({ id: 'new-planet', name: 'Colonie' }),
+    },
+    ship: { updateMany: jest.fn().mockResolvedValue({ count: 1 }) },
+    ...overrides,
+  });
 
-    await expect(
-      service.colonizePlanet({
-        userId: 'user-1',
-        originPlanetId: 'origin',
-        galaxy: 1,
-        system: 1,
-        position: 1,
-        name: 'Colonie',
-      }),
-    ).rejects.toBeInstanceOf(BadRequestException);
+  const colonizeParams = {
+    userId: 'user-1',
+    originPlanetId: 'origin',
+    galaxy: 2,
+    system: 3,
+    position: 4,
+    name: '   ',
+  };
+
+  it('refuse la colonisation si le joueur a trop de planetes', async () => {
+    const { service, database, serverConfig } = createService();
+    const tx = buildTx();
+    tx.planet.count.mockResolvedValue(GAME_CONSTANTS.MAX_PLAYER_PLANETS);
+    database.planet.findUnique.mockResolvedValueOnce({ id: 'origin', userId: 'user-1' });
+    serverConfig.getConfig.mockResolvedValue({ planetSize: 150 });
+    database.$transaction.mockImplementation((cb: any) => cb(tx));
+
+    await expect(service.colonizePlanet(colonizeParams)).rejects.toBeInstanceOf(
+      BadRequestException,
+    );
+    expect(tx.ship.updateMany).not.toHaveBeenCalled();
+  });
+
+  it('refuse la colonisation sans vaisseau disponible (decrement conditionnel)', async () => {
+    const { service, database, serverConfig } = createService();
+    const tx = buildTx();
+    tx.ship.updateMany.mockResolvedValue({ count: 0 });
+    database.planet.findUnique.mockResolvedValueOnce({ id: 'origin', userId: 'user-1' });
+    serverConfig.getConfig.mockResolvedValue({ planetSize: 150 });
+    database.$transaction.mockImplementation((cb: any) => cb(tx));
+
+    await expect(service.colonizePlanet(colonizeParams)).rejects.toBeInstanceOf(
+      BadRequestException,
+    );
+    expect(tx.planet.create).not.toHaveBeenCalled();
   });
 
   it('cree une colonie quand les conditions sont valides', async () => {
     const { service, database, serverConfig } = createService();
-    const origin = { id: 'origin', userId: 'user-1' };
-
-    database.planet.count.mockResolvedValue(0);
-    database.planet.findUnique
-      .mockResolvedValueOnce(origin)
-      .mockResolvedValueOnce(null);
-    database.ship.findUnique.mockResolvedValue({ amount: 1 });
+    const tx = buildTx();
+    database.planet.findUnique.mockResolvedValueOnce({ id: 'origin', userId: 'user-1' });
     serverConfig.getConfig.mockResolvedValue({ planetSize: 150 });
-    database.planet.create.mockReturnValue({ id: 'new-planet', name: 'Colonie' });
-    database.ship.update.mockReturnValue({});
-    database.$transaction.mockResolvedValue([
-      { id: 'new-planet', name: 'Colonie' },
-    ]);
+    database.$transaction.mockImplementation((cb: any) => cb(tx));
 
-    const result = await service.colonizePlanet({
-      userId: 'user-1',
-      originPlanetId: 'origin',
-      galaxy: 2,
-      system: 3,
-      position: 4,
-      name: '   ',
-    });
+    const result = await service.colonizePlanet(colonizeParams);
 
-    expect(database.planet.create).toHaveBeenCalledWith(
+    expect(tx.planet.create).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({
           name: 'Colonie',
@@ -284,8 +300,8 @@ describe('ResourcesService', () => {
         }),
       }),
     );
-    expect(database.ship.update).toHaveBeenCalledWith({
-      where: { planetId_shipId: { planetId: 'origin', shipId: 208 } },
+    expect(tx.ship.updateMany).toHaveBeenCalledWith({
+      where: { planetId: 'origin', shipId: 208, amount: { gte: 1 } },
       data: { amount: { decrement: 1 } },
     });
     expect(result).toEqual({

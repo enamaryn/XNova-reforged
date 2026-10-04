@@ -13,6 +13,7 @@ import {
   type BuildingCost,
 } from '@xnova/game-config';
 import { DatabaseService } from '../database/database.service';
+import { debitResources, lockPlanet } from '../common/atomic';
 import { GameEventsGateway } from '../game-events/game-events.gateway';
 
 // Mapping des buildingId vers les champs de la table Planet
@@ -227,17 +228,22 @@ export class BuildingsService {
     const now = new Date();
     const endTime = new Date(now.getTime() + adjustedTime * 1000);
 
-    // Deduire les ressources et creer la file d'attente
-    const [updatedPlanet, queueEntry] = await this.database.$transaction([
-      this.database.planet.update({
-        where: { id: planetId },
-        data: {
-          metal: { decrement: cost.metal },
-          crystal: { decrement: cost.crystal },
-          deuterium: { decrement: cost.deuterium },
-        },
-      }),
-      this.database.buildQueue.create({
+    // Debit conditionnel + file d'attente dans une transaction verrouillee sur la planete (ECO-03)
+    const { updatedPlanet, queueEntry } = await this.database.$transaction(async (tx) => {
+      await lockPlanet(tx, planetId);
+
+      const duplicate = await tx.buildQueue.findFirst({
+        where: { planetId, buildingId, completed: false },
+      });
+      if (duplicate) {
+        throw new BadRequestException(
+          `${building.name} est deja en cours de construction`,
+        );
+      }
+
+      await debitResources(tx, planetId, cost);
+
+      const queueEntry = await tx.buildQueue.create({
         data: {
           planetId,
           buildingId,
@@ -245,8 +251,10 @@ export class BuildingsService {
           startTime: now,
           endTime,
         },
-      }),
-    ]);
+      });
+      const updatedPlanet = await tx.planet.findUniqueOrThrow({ where: { id: planetId } });
+      return { updatedPlanet, queueEntry };
+    });
 
     // Emettre un evenement WebSocket
     this.gameEvents.emitToPlanet(planetId, 'building:started', {
@@ -324,20 +332,24 @@ export class BuildingsService {
     const building = BUILDINGS[queueEntry.buildingId];
     const cost = getBuildingCost(queueEntry.buildingId, queueEntry.level - 1);
 
-    // Rembourser 100% et supprimer de la file
-    const [updatedPlanet] = await this.database.$transaction([
-      this.database.planet.update({
+    // Reclamer l'entree (annulation vs finalisation) puis rembourser, de facon atomique
+    const updatedPlanet = await this.database.$transaction(async (tx) => {
+      const claimed = await tx.buildQueue.deleteMany({
+        where: { id: queueId, completed: false },
+      });
+      if (claimed.count !== 1) {
+        throw new BadRequestException('Construction deja terminee');
+      }
+
+      return tx.planet.update({
         where: { id: queueEntry.planetId },
         data: {
           metal: { increment: cost.metal },
           crystal: { increment: cost.crystal },
           deuterium: { increment: cost.deuterium },
         },
-      }),
-      this.database.buildQueue.delete({
-        where: { id: queueId },
-      }),
-    ]);
+      });
+    });
 
     // Emettre un evenement WebSocket
     this.gameEvents.emitToPlanet(queueEntry.planetId, 'building:cancelled', {
@@ -388,16 +400,21 @@ export class BuildingsService {
       updateData.fieldsUsed = { increment: 1 };
     }
 
-    await this.database.$transaction([
-      this.database.planet.update({
+    const finalized = await this.database.$transaction(async (tx) => {
+      // Prise en charge atomique : ignore une entree deja annulee ou terminee
+      const claimed = await tx.buildQueue.updateMany({
+        where: { id: queueEntry.id, completed: false },
+        data: { completed: true },
+      });
+      if (claimed.count !== 1) return false;
+
+      await tx.planet.update({
         where: { id: queueEntry.planetId },
         data: updateData,
-      }),
-      this.database.buildQueue.update({
-        where: { id: queueEntry.id },
-        data: { completed: true },
-      }),
-    ]);
+      });
+      return true;
+    });
+    if (!finalized) return;
 
     // Emettre un evenement WebSocket
     this.gameEvents.emitToPlanet(queueEntry.planetId, 'building:completed', {

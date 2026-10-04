@@ -11,6 +11,20 @@
 
 Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DOUBLE_AUDIT_2026-10.md), [roadmap historique](docs/history/ROADMAP_MVP_AVANT_AUDIT.md).
 
+## Session de correction — ECO-03 (disponibilités et files atomiques)
+
+**Date :** 4 octobre 2026. **Objectif :** aucun stock négatif, aucun double usage de vaisseau/colonisateur, files et quotas respectés.
+
+- [x] `apps/api/src/common/atomic.ts` : `lockPlanet`/`lockUser` (`SELECT … FOR UPDATE`), `debitResources`, `debitShips` (débits conditionnels).
+- [x] Bâtiments, recherche, chantier, départ de flotte et colonisation : contrôles critiques et débits dans la transaction ; position prise gérée (P2002).
+- [x] Annulation et finalisation (bâtiments, recherche, chantier) : prise en charge atomique de l'entrée (`deleteMany`/`updateMany` sur `completed:false`).
+- [x] Tests PostgreSQL `eco03-atomicity.integration.spec.ts` (6) : échec avant, réussite après ; unitaires 25/25 et intégration 34/34 en local.
+- [ ] Lien PR/commit ; flottes (arrivée/retour) et combats en ECO-04 ; champs libres hors verrou.
+
+**Prochaines étapes :** ECO-04 (exécution unique des événements), ECO-05 (remboursement du montant payé).
+
+---
+
 ## Session de correction — ECO-02 (écritures concurrentes de ressources)
 
 **Date :** 4 octobre 2026. **Objectif :** empêcher le rafraîchissement d'écraser débits/crédits concurrents.

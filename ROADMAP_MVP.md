@@ -23,7 +23,7 @@ Les travaux de sécurité et d'intégrité économique peuvent avancer en parall
 
 - [~] **ECO-01 (P1)** — Conservation des fractions produites. Correctif appliqué (4 oct. 2026) : le moteur ne tronque plus le stock, arrondi à l'affichage (`floorResources`) ; 3 tests (`apps/api/test/resources-engine.spec.ts`) en échec avant, 24/24 unitaires après. Reste : lien PR/commit et test API sur PostgreSQL.
 - [~] **ECO-02 (P1)** — Écritures concurrentes de ressources. Correctif appliqué (4 oct. 2026) : le refresh API/cron applique la production en delta (`increment`) avec verrou optimiste sur `lastUpdate` (`resource-refresh.ts`). Test PostgreSQL `resources-concurrency.integration.spec.ts` : échec avant, réussite après ; intégration 28/28 sur base vierge locale. Reste : lien PR/commit ; achat/livraison/butin utilisaient déjà des incréments atomiques (contrôles de disponibilité = ECO-03).
-- [ ] **ECO-03 (P1)** — Disponibilités et files atomiques. Preuve de clôture : à renseigner.
+- [~] **ECO-03 (P1)** — Disponibilités et files atomiques. Correctif appliqué (4 oct. 2026) : verrou de ligne (`FOR UPDATE`) planète/utilisateur, débits conditionnels (ressources, vaisseaux, colonisateur), files et quotas revérifiés dans la transaction, annulation et finalisation par prise en charge atomique (`src/common/atomic.ts`). 6 tests PostgreSQL concurrents (`eco03-atomicity.integration.spec.ts`) en échec avant, réussis après ; unitaires 25/25, intégration 34/34 en local. Reste : lien PR/commit ; finalisation des flottes et combats = ECO-04.
 - [ ] **ECO-04 (P1)** — Exécution unique des événements. Preuve de clôture : à renseigner.
 - [ ] **ECO-05 (P1 conditionnel)** — Remboursement du montant réellement payé. Preuve de clôture : à renseigner.
 
