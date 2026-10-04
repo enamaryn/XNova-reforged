@@ -31,7 +31,7 @@ Les travaux de sécurité et d'intégrité économique peuvent avancer en parall
 
 **État : à réaliser / validation non reçue.**
 
-- [ ] **GAME-01 (P1)** — Validation des flottes et missions. Preuve de clôture : à renseigner.
+- [~] **GAME-01 (P1)** — Validation des flottes et missions. Correctif appliqué (4 oct. 2026) : liste commune `IMPLEMENTED_MISSIONS` (attaque, transport, déploiement) appliquée à l'API (`@IsIn` + service) et à l'UI (espionnage/colonisation retirés du formulaire) ; coordonnées bornées, vaisseaux et cargaison entiers validés, règles de cible (origine, attaque, transport, déploiement) ; refus sans débit. 40 tests (`game01-fleet-validation.integration.spec.ts`), dont 18 en échec avant correctif ; intégration 102/102 et unitaires 35/35 en local ; tests de flotte existants durcis (plus d'acceptation d'un 500). Reste : lien PR/commit ; règle de déploiement définitive (GAME-02) ; espionnage/colonisation (SCOPE-01).
 - [ ] **GAME-02 (P1)** — Déploiement effectif. Preuve de clôture : à renseigner.
 - [ ] **GAME-03 (P2)** — Cargo et moteur de combat. Preuve de clôture : à renseigner.
 - [ ] **GAME-04 (P2)** — Recherche et énergie. Preuve de clôture : à renseigner.

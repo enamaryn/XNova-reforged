@@ -29,6 +29,7 @@ describe('API integration - Atomicité des disponibilités et files (ECO-03)', (
   let resources: ResourcesService;
 
   let username: string;
+  const rivalIds: string[] = [];
   let userId: string;
   let planetId: string;
   let planet: { galaxy: number; system: number };
@@ -59,6 +60,7 @@ describe('API integration - Atomicité des disponibilités et files (ECO-03)', (
 
   afterEach(async () => {
     await cleanupTestUser(database, username);
+    await database.user.deleteMany({ where: { id: { in: rivalIds.splice(0) } } });
   });
 
   afterAll(async () => {
@@ -138,11 +140,30 @@ describe('API integration - Atomicité des disponibilités et files (ECO-03)', (
       create: { planetId, shipId: 202, amount: 3 },
     });
 
+    // GAME-01 : la destination doit être une planète existante
+    const rival = await database.user.create({
+      data: {
+        username: `eco03r_${Math.random().toString(36).slice(2, 10)}`,
+        email: `eco03r_${Math.random().toString(36).slice(2, 10)}@example.test`,
+        password: 'x',
+      },
+    });
+    const targetPlanet = await database.planet.create({
+      data: {
+        userId: rival.id,
+        name: 'Cible',
+        galaxy: 9,
+        system: 498,
+        position: 1 + Math.floor(Math.random() * 15),
+      },
+    });
+    rivalIds.push(rival.id);
+
     const dto = {
       planetId,
-      toGalaxy: planet.galaxy,
-      toSystem: planet.system + 1,
-      toPosition: 1,
+      toGalaxy: targetPlanet.galaxy,
+      toSystem: targetPlanet.system,
+      toPosition: targetPlanet.position,
       mission: 3,
       speedPercent: 100,
       ships: { '202': 3 },

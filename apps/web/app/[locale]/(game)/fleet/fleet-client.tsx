@@ -79,8 +79,6 @@ export default function FleetClient() {
     if (missionParam) {
       if (missionParam === 'attack') setMission('attaque');
       if (missionParam === 'transport') setMission('transport');
-      if (missionParam === 'spy') setMission('espionnage');
-      if (missionParam === 'colonize') setMission('colonisation');
     }
 
     const galaxyValue = galaxyParam ? Number(galaxyParam) : null;
@@ -233,7 +231,8 @@ export default function FleetClient() {
         toGalaxy: destination.galaxy,
         toSystem: destination.system,
         toPosition: destination.position,
-        mission: mission === 'transport' ? 3 : mission === 'attaque' ? 1 : mission === 'espionnage' ? 6 : 7,
+        // Seules les missions traitées par le serveur sont proposées (IMPLEMENTED_MISSIONS, GAME-01)
+        mission: mission === 'attaque' ? 1 : 3,
         speedPercent,
         ships: Object.fromEntries(selectedShips.map((ship) => [ship.shipId, ship.amount])),
         cargo,
@@ -315,8 +314,6 @@ export default function FleetClient() {
                 {[
                   { id: 'transport', label: t('fleet.missions.transport') },
                   { id: 'attaque', label: t('fleet.missions.attack') },
-                  { id: 'espionnage', label: t('fleet.missions.spy') },
-                  { id: 'colonisation', label: t('fleet.missions.colonize') },
                 ].map((item) => (
                   <button
                     key={item.id}

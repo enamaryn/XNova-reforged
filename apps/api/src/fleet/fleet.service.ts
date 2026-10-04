@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ServerConfigService } from '../server-config/server-config.service';
-import { SHIPS, getShipSpeed } from '@xnova/game-config';
+import { GAME_CONSTANTS, IMPLEMENTED_MISSIONS, MissionType, SHIPS, getShipSpeed } from '@xnova/game-config';
 import {
   calculateDistance,
   calculateFleetSpeed,
@@ -14,7 +14,7 @@ import {
 } from '@xnova/game-engine';
 import { DatabaseService } from '../database/database.service';
 import { debitResources, debitShips, lockPlanet } from '../common/atomic';
-import { SendFleetDto } from './dto/send-fleet.dto';
+import { MAX_QUANTITY, SendFleetDto } from './dto/send-fleet.dto';
 
 @Injectable()
 export class FleetService {
@@ -98,17 +98,55 @@ export class FleetService {
       throw new ForbiddenException('Acces refuse');
     }
 
-    const shipsToSend = Object.entries(dto.ships || {})
-      .map(([id, amount]) => ({ shipId: Number(id), amount: Number(amount) }))
-      .filter((ship) => ship.amount > 0);
-
-    if (shipsToSend.length === 0) {
-      throw new BadRequestException('Aucun vaisseau selectionne');
+    // Règles de validation (GAME-01) : tout est refusé avant le moindre débit
+    if (!IMPLEMENTED_MISSIONS.includes(dto.mission)) {
+      throw new BadRequestException('Mission non disponible');
     }
 
-    const invalid = shipsToSend.find((ship) => !SHIPS[ship.shipId]);
-    if (invalid) {
-      throw new BadRequestException(`Vaisseau invalide: ${invalid.shipId}`);
+    if (
+      dto.toGalaxy < 1 ||
+      dto.toGalaxy > GAME_CONSTANTS.MAX_GALAXIES ||
+      dto.toSystem < 1 ||
+      dto.toSystem > GAME_CONSTANTS.MAX_SYSTEMS ||
+      dto.toPosition < 1 ||
+      dto.toPosition > GAME_CONSTANTS.MAX_POSITIONS
+    ) {
+      throw new BadRequestException('Coordonnees invalides');
+    }
+
+    const shipsToSend = this.parseShips(dto.ships);
+
+    if (
+      planet.galaxy === dto.toGalaxy &&
+      planet.system === dto.toSystem &&
+      planet.position === dto.toPosition
+    ) {
+      throw new BadRequestException('La destination ne peut pas etre la planete d\'origine');
+    }
+
+    const target = await this.database.planet.findUnique({
+      where: {
+        galaxy_system_position: {
+          galaxy: dto.toGalaxy,
+          system: dto.toSystem,
+          position: dto.toPosition,
+        },
+      },
+      select: { userId: true },
+    });
+
+    if (dto.mission === MissionType.ATTACK) {
+      if (!target) throw new BadRequestException('Aucune planete a cette position');
+      if (target.userId === userId) {
+        throw new BadRequestException('Vous ne pouvez pas attaquer votre propre planete');
+      }
+    } else if (dto.mission === MissionType.DEPLOY) {
+      if (!target || target.userId !== userId) {
+        throw new BadRequestException('Le deploiement exige une de vos planetes');
+      }
+    } else if (!target) {
+      // TRANSPORT : la cible doit exister
+      throw new BadRequestException('Aucune planete a cette position');
     }
 
     const shipRows = await this.database.ship.findMany({
@@ -132,9 +170,9 @@ export class FleetService {
     });
 
     const cargo = {
-      metal: Math.max(0, dto.cargo?.metal ?? 0),
-      crystal: Math.max(0, dto.cargo?.crystal ?? 0),
-      deuterium: Math.max(0, dto.cargo?.deuterium ?? 0),
+      metal: this.parseQuantity(dto.cargo?.metal),
+      crystal: this.parseQuantity(dto.cargo?.crystal),
+      deuterium: this.parseQuantity(dto.cargo?.deuterium),
     };
 
     const cargoTotal = cargo.metal + cargo.crystal + cargo.deuterium;
@@ -266,6 +304,43 @@ export class FleetService {
       mission: dto.mission,
       arrivalTime,
     };
+  }
+
+  /** Liste de vaisseaux : identifiants connus, quantités entières strictement positives. */
+  private parseShips(raw: unknown): { shipId: number; amount: number }[] {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+      throw new BadRequestException('Liste de vaisseaux invalide');
+    }
+
+    const result: { shipId: number; amount: number }[] = [];
+    for (const [key, value] of Object.entries(raw as Record<string, unknown>)) {
+      if (!/^\d+$/.test(key) || !SHIPS[Number(key)]) {
+        throw new BadRequestException(`Vaisseau invalide: ${key}`);
+      }
+      if (
+        typeof value !== 'number' ||
+        !Number.isInteger(value) ||
+        value < 1 ||
+        value > MAX_QUANTITY
+      ) {
+        throw new BadRequestException(`Quantite invalide pour le vaisseau ${key}`);
+      }
+      result.push({ shipId: Number(key), amount: value });
+    }
+
+    if (result.length === 0) {
+      throw new BadRequestException('Aucun vaisseau selectionne');
+    }
+    return result;
+  }
+
+  /** Quantité de ressources : entier fini compris entre 0 et la borne maximale. */
+  private parseQuantity(value: unknown): number {
+    if (value === undefined || value === null) return 0;
+    if (typeof value !== 'number' || !Number.isInteger(value) || value < 0 || value > MAX_QUANTITY) {
+      throw new BadRequestException('Quantite de ressources invalide');
+    }
+    return value;
   }
 
   async recallFleet(fleetId: string, userId: string) {
