@@ -128,8 +128,9 @@ describe('API integration - Technologies & Recherche', () => {
       .set('Authorization', `Bearer ${accessToken}`)
       .send({ planetId, techId: 106 });
 
-    // Devrait échouer (400, 403 ou 500 si erreur non catchée)
-    expect([400, 403, 500]).toContain(researchResponse.status);
+    expect(researchResponse.status).toBe(400);
+    expect(String(researchResponse.body.message)).toMatch(/Prerequis manquants/);
+    expect(await database.researchQueue.count({ where: { planetId } })).toBe(0);
 
     await cleanupTestUser(database, testUser.username);
   });

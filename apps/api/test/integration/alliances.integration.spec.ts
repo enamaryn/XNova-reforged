@@ -115,15 +115,14 @@ describe('API integration - Alliances', () => {
       .set('Authorization', `Bearer ${founderToken}`)
       .send({ username: member.username });
 
-    // L'invitation peut retourner 201 ou 200 selon l'implémentation
-    expect([200, 201]).toContain(inviteResponse.status);
+    expect(inviteResponse.status).toBe(201);
 
     // POST /alliances/:id/join - Le membre rejoint l'alliance
     const joinResponse = await request(server)
       .post(`/alliances/${allianceId}/join`)
       .set('Authorization', `Bearer ${memberToken}`);
 
-    expect([200, 201]).toContain(joinResponse.status);
+    expect(joinResponse.status).toBe(201);
 
     // GET /alliances/:id - Vérifier que le membre est dans la liste
     const allianceDetails = await request(server)
@@ -215,8 +214,9 @@ describe('API integration - Alliances', () => {
       .set('Authorization', `Bearer ${token2}`)
       .send({ tag: uniqueTag, name: 'Alliance Dupliquee' });
 
-    // Devrait échouer (400, 409 Conflict, ou 500 si erreur Prisma non catchée)
-    expect([400, 409, 500]).toContain(duplicateResponse.status);
+    // Refus métier précis : jamais une erreur serveur
+    expect(duplicateResponse.status).toBe(400);
+    expect(String(duplicateResponse.body.message)).toMatch(/tag/i);
 
     await cleanupTestUser(database, user1.username);
     await cleanupTestUser(database, user2.username);

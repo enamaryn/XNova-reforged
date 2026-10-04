@@ -65,6 +65,73 @@ jobs:
       - name: Tests d'intégration
         run: npm run test:integration
 
+  e2e:
+    name: Tests E2E (Playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: build-test
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: xnova
+          POSTGRES_PASSWORD: xnova_ci
+          POSTGRES_DB: xnova_e2e
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U xnova -d xnova_e2e"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      CI: 'true'
+      DATABASE_URL: postgresql://xnova:xnova_ci@localhost:5432/xnova_e2e?schema=public
+      JWT_SECRET: e2e-secret-e2e-secret-e2e-secret
+      JWT_REFRESH_SECRET: e2e-refresh-e2e-refresh-e2e-refresh
+      JWT_EXPIRES_IN: 1h
+      JWT_REFRESH_EXPIRES_IN: 7d
+      # Les parcours E2E créent de nombreux comptes depuis la même IP
+      RATE_LIMIT_LOGIN_MAX: '1000'
+      RATE_LIMIT_REGISTER_MAX: '1000'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Installation (npm ci)
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Schéma de la base E2E
+        run: npx prisma db push --skip-generate
+        working-directory: packages/database
+
+      # Navigateur à la version exacte de @playwright/test verrouillée dans package-lock.json
+      - name: Installation de Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Tests E2E
+        run: npm run test:e2e
+
+      - name: Rapport Playwright (échec)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-test-results
+          path: test-results/
+          retention-days: 7
+
   audit:
     name: Audit des dépendances de production
     runs-on: ubuntu-latest

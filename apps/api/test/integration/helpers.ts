@@ -1,5 +1,6 @@
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { randomBytes } from 'crypto';
 import request from 'supertest';
 import { AppModule } from '../../src/app.module';
 import { configureApp } from '../../src/app.setup';
@@ -10,8 +11,15 @@ export interface IntegrationApp {
   database: DatabaseService;
 }
 
+let userCounter = 0;
+
+/**
+ * Utilisateur de test unique : aléa cryptographique + compteur, donc aucune collision possible
+ * même pour plusieurs comptes créés dans la même milliseconde (QUAL-02).
+ */
 export function buildTestUser() {
-  const unique = Date.now().toString(36).slice(-6) + Math.floor(Math.random() * 100);
+  userCounter += 1;
+  const unique = `${randomBytes(4).toString('hex')}${userCounter.toString(36)}`;
   return {
     username: `it_${unique}`,
     email: `itest_${unique}@example.test`,
