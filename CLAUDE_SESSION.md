@@ -855,3 +855,19 @@ Le problème principal était que Framer Motion avec `initial: { opacity: 0 }` n
 
 ### ⏭️ Prochaines étapes
 - Valider avec un SMTP réel ; configurer le SMTP avant d'ouvrir les inscriptions
+
+
+---
+
+## Session du 4 octobre 2026 — SEC-01 seconde passe
+
+**Objectif :** supprimer les 9 alertes hautes de production restantes.
+
+### ✅ Tâches réalisées
+- [x] Migration Sentry 8 → 11 (web et API), adaptation de `next.config.mjs` et de l'initialisation API
+- [x] Overrides `picomatch` (outillage Nest) et `postcss` (Next 15) ; `engines` Node ≥ 20.19
+- [x] Production : 34 → 3 alertes (0 haute) ; seuil CI de l'audit relevé à « hautes »
+- [x] Audits bruts et analyse conservés (`docs/audits/`, `docs/NPM_AUDIT_2026-10.md`)
+
+### ⏭️ Prochaines étapes
+- Planifier les migrations d'outillage (Jest 30, Tailwind 4, eslint-config-next 16) ; vérifier Sentry avec un vrai DSN

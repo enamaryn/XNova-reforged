@@ -13,7 +13,7 @@ Ce document est le registre des constats ; [ROADMAP_MVP.md](../ROADMAP_MVP.md) s
 
 ## Conclusion
 
-Socle jouable, MVP non validé pour ouverture publique. Les constats de sécurité, d'intégrité économique, de règles de jeu, de qualité et d'exploitation ont reçu des correctifs (voir le suivi ci-dessous) ; restent ouverts SEC-01 (9 alertes hautes de production sans mesure compensatoire acceptée), les décisions de périmètre SCOPE-01/02 et la validation de sortie OPS-03.
+Socle jouable, MVP non validé pour ouverture publique. Les constats de sécurité, d'intégrité économique, de règles de jeu, de qualité et d'exploitation ont reçu des correctifs (voir le suivi ci-dessous) ; reste ouvert SEC-01 pour la clôture formelle (production sans alerte haute depuis la seconde passe ; outillage de développement à migrer), les décisions de périmètre SCOPE-01/02 et la validation de sortie OPS-03.
 
 ## Suivi des clôtures (4 octobre 2026)
 
@@ -52,7 +52,7 @@ Un constat « clos » signifie : correctif fusionné, tests passant en CI, rése
 - **Constat :** 103 alertes (2 critiques, 61 hautes, 37 modérées, 3 faibles). Next.js et Handlebars critiques ; aucune preuve de correction reçue.
 - **Périmètre :** `package-lock.json`, `apps/web/package.json`, `apps/api/package.json`.
 - **Acceptation :** Conserver audits complets et production avant/après ; corriger les critiques/hautes de production ou documenter précisément non-applicabilité, mesure compensatoire et échéance ; traiter aussi les outils de build. Valider compilation et parcours. Ne pas appliquer aveuglément les migrations Sentry/Jest/Tailwind/Turbo ni la rétrogradation ESLint proposée.
-- **État :** partiellement corrigé le 4 octobre 2026 (voir [NPM_AUDIT_2026-10.md](NPM_AUDIT_2026-10.md)). `npm audit fix` sans `--force` : 103 → 72 alertes, critiques 2 → 0 ; production 60 → 34, critiques 1 → 0, hautes 26 → 9. Il reste 9 hautes de production (outillage de build `@sentry/nextjs`, `postcss` interne à Next 15, `picomatch`), analysées comme non exploitables par un joueur mais **sans mesure compensatoire formelle acceptée ni échéance fixée** : migration `@sentry/nextjs` 11.x à planifier. Validation locale : builds séquentiels, 35/35 unitaires, 62/62 intégration ; E2E et lint non exécutés. Ouvert : critère « critiques/hautes de production traitées ou documentées » non satisfait tant que cette analyse n'est pas acceptée. Clôture : lien PR/commit + décision sur les 9 hautes.
+- **État :** corrigé en production le 4 octobre 2026, en deux passes (voir [NPM_AUDIT_2026-10.md](NPM_AUDIT_2026-10.md)). Passe 1 (`npm audit fix`) : critiques 2 → 0. Passe 2 (migration Sentry 8 → 11, overrides `picomatch` et `postcss`) : **production 34 → 3 alertes, 0 critique, 0 haute** (reste 3 modérées non exposées à un joueur) ; le seuil CI de l'audit de production passe de « critiques » à « hautes et critiques ». Hors production : 34 hautes d'outillage de développement (Jest 29, Tailwind 3, `eslint-config-next`…) qui ne se corrigent que par des migrations majeures, documentées avec échéance (avant l'ouverture publique). Validation locale : builds, lint, unitaires 38/38, intégration 211/211, E2E 24/24. Limites : suivi d'erreurs Sentry non vérifié contre un vrai projet ; Node ≥ 20.19 désormais requis. Clôture en attente : lien PR/commit, CI verte, décision sur l'échéance des migrations d'outillage.
 
 ### SEC-02 — Autorisation WebSocket
 
