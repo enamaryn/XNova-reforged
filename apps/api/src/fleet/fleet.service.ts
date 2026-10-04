@@ -296,9 +296,16 @@ export class FleetService {
     );
     const returnTime = new Date(now.getTime() + elapsedSeconds * 1000);
 
-    const updatedFleet = await this.database.fleet.update({
-      where: { id: fleet.id },
+    // Rappel atomique : refuse si la flotte vient d'etre prise en charge par l'arrivee (ECO-04)
+    const recalled = await this.database.fleet.updateMany({
+      where: { id: fleet.id, status: 'traveling', arrivalTime: { gt: now } },
       data: { status: 'returning', returnTime },
+    });
+    if (recalled.count !== 1) {
+      throw new BadRequestException('La flotte ne peut pas etre rappelee');
+    }
+    const updatedFleet = await this.database.fleet.findUniqueOrThrow({
+      where: { id: fleet.id },
     });
 
     return {

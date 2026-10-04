@@ -11,8 +11,12 @@ import {
   type CombatResultSummary,
 } from '@xnova/game-engine';
 import { Prisma } from '@prisma/client';
+import { lockPlanet } from '../common/atomic';
 import { DatabaseService } from '../database/database.service';
 import { GameEventsGateway } from '../game-events/game-events.gateway';
+
+/** Retourne par resolveAttackMission quand un autre traitement a deja pris en charge la flotte. */
+export const ALREADY_PROCESSED = Symbol('fleet-event-already-processed');
 
 interface CombatTechLevels {
   weapon: number;
@@ -70,11 +74,11 @@ export class CombatService {
     });
 
     if (!target) {
-      await this.database.fleet.update({
-        where: { id: fleet.id },
+      const claimed = await this.database.fleet.updateMany({
+        where: { id: fleet.id, status: 'traveling' },
         data: { status: 'returning' },
       });
-      return null;
+      return claimed.count === 1 ? null : ALREADY_PROCESSED;
     }
 
     const attackerShips = this.normalizeShipMap(fleet.ships);
@@ -123,45 +127,11 @@ export class CombatService {
           })
         : { metal: 0, crystal: 0, deuterium: 0 };
 
-    const reportData = this.buildReportData({
-      attackerId: fleet.userId,
-      defenderId: target.userId,
-      attackerShips,
-      defenderShips,
-      combat,
-      loot,
-      location: {
-        galaxy: fleet.toGalaxy,
-        system: fleet.toSystem,
-        position: fleet.toPosition,
-      },
-    });
-
-    const existingDefenderShipIds = new Set<number>();
-    defenderShipRows.forEach((row) => existingDefenderShipIds.add(row.shipId));
-
-    const shipIds = new Set<number>(existingDefenderShipIds);
-    Object.keys(defenderSurvivors).forEach((shipId) => shipIds.add(Number(shipId)));
-
-    const shipUpdates = Array.from(shipIds).flatMap((shipId) => {
-      const amount = defenderSurvivors[shipId] ?? 0;
-      if (amount === 0 && !existingDefenderShipIds.has(shipId)) {
-        return [];
-      }
-
-      return this.database.ship.upsert({
-        where: { planetId_shipId: { planetId: target.id, shipId } },
-        update: { amount },
-        create: { planetId: target.id, shipId, amount },
-      });
-    });
-
     const fleetUpdate =
       attackerTotal > 0
         ? {
             status: 'returning',
             ships: attackerSurvivors,
-            cargo: loot,
           }
         : {
             status: 'completed',
@@ -170,24 +140,78 @@ export class CombatService {
             returnTime: null,
           };
 
-    const [report] = await this.database.$transaction([
-      this.database.combatReport.create({
-        data: reportData,
-      }),
-      this.database.planet.update({
+    // Resolution unique (ECO-04) : verrou de la cible, prise en charge atomique de la flotte,
+    // puis rapport, butin et pertes dans la meme transaction.
+    const report = await this.database.$transaction(async (tx) => {
+      await lockPlanet(tx, target.id);
+
+      const claimed = await tx.fleet.updateMany({
+        where: { id: fleet.id, status: 'traveling' },
+        data: { status: fleetUpdate.status },
+      });
+      if (claimed.count !== 1) return null;
+
+      // Le butin ne peut pas depasser le stock reellement present au moment de l'ecriture
+      const current = await tx.planet.findUniqueOrThrow({
+        where: { id: target.id },
+        select: { metal: true, crystal: true, deuterium: true },
+      });
+      const finalLoot = {
+        metal: Math.max(0, Math.min(loot.metal, Math.floor(current.metal))),
+        crystal: Math.max(0, Math.min(loot.crystal, Math.floor(current.crystal))),
+        deuterium: Math.max(0, Math.min(loot.deuterium, Math.floor(current.deuterium))),
+      };
+
+      const created = await tx.combatReport.create({
+        data: this.buildReportData({
+          attackerId: fleet.userId,
+          defenderId: target.userId,
+          attackerShips,
+          defenderShips,
+          combat,
+          loot: finalLoot,
+          location: {
+            galaxy: fleet.toGalaxy,
+            system: fleet.toSystem,
+            position: fleet.toPosition,
+          },
+        }),
+      });
+
+      await tx.planet.update({
         where: { id: target.id },
         data: {
-          metal: { decrement: loot.metal },
-          crystal: { decrement: loot.crystal },
-          deuterium: { decrement: loot.deuterium },
+          metal: { decrement: finalLoot.metal },
+          crystal: { decrement: finalLoot.crystal },
+          deuterium: { decrement: finalLoot.deuterium },
         },
-      }),
-      this.database.fleet.update({
+      });
+
+      await tx.fleet.update({
         where: { id: fleet.id },
-        data: fleetUpdate,
-      }),
-      ...shipUpdates,
-    ]);
+        data: attackerTotal > 0 ? { ...fleetUpdate, cargo: finalLoot } : fleetUpdate,
+      });
+
+      // Pertes du defenseur en decrement : ne jamais ecraser une construction ou un envoi concurrent
+      for (const [shipId, lost] of Object.entries(combat.defenderLosses ?? {})) {
+        const amount = Number(lost);
+        if (!(amount > 0)) continue;
+        const decremented = await tx.ship.updateMany({
+          where: { planetId: target.id, shipId: Number(shipId), amount: { gte: amount } },
+          data: { amount: { decrement: amount } },
+        });
+        if (decremented.count !== 1) {
+          await tx.ship.updateMany({
+            where: { planetId: target.id, shipId: Number(shipId) },
+            data: { amount: 0 },
+          });
+        }
+      }
+
+      return created;
+    });
+
+    if (!report) return ALREADY_PROCESSED;
 
     this.gameEvents.emitToUser(fleet.userId, 'combat:report', {
       reportId: report.id,

@@ -79,7 +79,7 @@ Socle jouable, MVP non validé pour ouverture publique. Priorités : dépendance
 - **Constat :** Finalisations et retours non protégés contre une sélection concurrente du même événement.
 - **Périmètre :** `apps/api/src/fleet/fleet-cron.service.ts`, `apps/api/src/shipyard/shipyard.service.ts`, `apps/api/src/buildings/buildings.service.ts`, `apps/api/src/research/research.service.ts`, `apps/api/src/combat/combat.service.ts`.
 - **Acceptation :** Deux workers et une reprise traitent le même événement sans double crédit, double rapport ni double incrément ; effets et prise en charge atomiques.
-- **État :** ouvert ; responsable à attribuer lors de la PR corrective. Clôture : lien PR/commit + test et résultat requis.
+- **État :** correctif appliqué le 4 octobre 2026 : prise en charge atomique des arrivées, retours, combats et rappels de flotte ; finalisations de files protégées (ECO-03) et testées à plusieurs workers. Limites : un « worker » est simulé par deux appels concurrents dans un même processus, pas deux processus ; la reprise après arrêt en plein traitement est couverte par la transaction (rien n'est validé à moitié) mais n'a pas de test dédié ; le moteur de combat reste couvert par GAME-03. Clôture en attente : lien PR/commit.
 
 ### ECO-05 — Remboursement du montant réellement payé
 

@@ -11,6 +11,20 @@
 
 Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DOUBLE_AUDIT_2026-10.md), [roadmap historique](docs/history/ROADMAP_MVP_AVANT_AUDIT.md).
 
+## Session de correction — ECO-04 (exécution unique des événements)
+
+**Date :** 4 octobre 2026. **Objectif :** un événement de flotte ou de file n'a d'effet qu'une fois, même traité en parallèle.
+
+- [x] `fleet-cron.service.ts` : arrivée et retour pris en charge par `updateMany` sur le statut avant tout effet ; événement WebSocket émis seulement si pris en charge.
+- [x] `combat.service.ts` : résolution dans une transaction (verrou cible, prise en charge de la flotte, butin borné au stock courant, pertes du défenseur en décrément) ; `ALREADY_PROCESSED` si un autre worker a traité.
+- [x] `fleet.service.ts` : rappel atomique (refus si l'arrivée vient d'être traitée).
+- [x] Tests `eco04-single-execution.integration.spec.ts` (6) ; tests unitaires de combat adaptés (25/25) ; intégration 40/40 en local. Les 3 tests de flotte échouent avant correctif.
+- [ ] Lien PR/commit ; test multi-processus et reprise après crash ; comportement DEPLOY (GAME-02) et cargo de combat (GAME-03) inchangés.
+
+**Prochaines étapes :** ECO-05 (remboursement du montant réellement payé), puis lot SEC.
+
+---
+
 ## Session de correction — ECO-03 (disponibilités et files atomiques)
 
 **Date :** 4 octobre 2026. **Objectif :** aucun stock négatif, aucun double usage de vaisseau/colonisateur, files et quotas respectés.
