@@ -250,6 +250,7 @@ export class BuildingsService {
           level: currentLevel + 1,
           startTime: now,
           endTime,
+          paidCost: { metal: cost.metal, crystal: cost.crystal, deuterium: cost.deuterium },
         },
       });
       const updatedPlanet = await tx.planet.findUniqueOrThrow({ where: { id: planetId } });
@@ -330,7 +331,11 @@ export class BuildingsService {
     }
 
     const building = BUILDINGS[queueEntry.buildingId];
-    const cost = getBuildingCost(queueEntry.buildingId, queueEntry.level - 1);
+    // Rembourse exactement le montant debite (ECO-05) ; entrees anterieures : cout de base
+    const cost = this.paidCostOrDefault(
+      queueEntry.paidCost,
+      getBuildingCost(queueEntry.buildingId, queueEntry.level - 1),
+    );
 
     // Reclamer l'entree (annulation vs finalisation) puis rembourser, de facon atomique
     const updatedPlanet = await this.database.$transaction(async (tx) => {
@@ -510,6 +515,21 @@ export class BuildingsService {
    * @param multiplier - Facteur de serveur (>= 1).
    * @returns Cout ajuste et arrondi.
    */
+  private paidCostOrDefault(
+    paid: unknown,
+    fallback: { metal: number; crystal: number; deuterium: number },
+  ) {
+    const value = paid as Partial<Record<'metal' | 'crystal' | 'deuterium', number>> | null;
+    if (value && typeof value === 'object') {
+      return {
+        metal: Number(value.metal) || 0,
+        crystal: Number(value.crystal) || 0,
+        deuterium: Number(value.deuterium) || 0,
+      };
+    }
+    return { metal: fallback.metal, crystal: fallback.crystal, deuterium: fallback.deuterium };
+  }
+
   private applyCostMultiplier(
     cost: BuildingCost,
     multiplier: number,

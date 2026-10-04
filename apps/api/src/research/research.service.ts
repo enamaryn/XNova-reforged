@@ -182,6 +182,7 @@ export class ResearchService {
           level: currentLevel + 1,
           startTime: now,
           endTime,
+          paidCost: { metal: cost.metal, crystal: cost.crystal, deuterium: cost.deuterium },
         },
       });
       const updatedPlanet = await tx.planet.findUniqueOrThrow({ where: { id: planetId } });
@@ -242,7 +243,19 @@ export class ResearchService {
       throw new BadRequestException('Recherche deja terminee');
     }
 
-    const cost = getTechnologyCost(queueEntry.techId, queueEntry.level - 1);
+    // Rembourse exactement le montant debite (ECO-05) ; entrees anterieures : cout de base
+    const base = getTechnologyCost(queueEntry.techId, queueEntry.level - 1);
+    const paid = queueEntry.paidCost as
+      | Partial<Record<'metal' | 'crystal' | 'deuterium', number>>
+      | null;
+    const cost =
+      paid && typeof paid === 'object'
+        ? {
+            metal: Number(paid.metal) || 0,
+            crystal: Number(paid.crystal) || 0,
+            deuterium: Number(paid.deuterium) || 0,
+          }
+        : { metal: base.metal, crystal: base.crystal, deuterium: base.deuterium };
 
     const updatedPlanet = await this.database.$transaction(async (tx) => {
       const claimed = await tx.researchQueue.deleteMany({

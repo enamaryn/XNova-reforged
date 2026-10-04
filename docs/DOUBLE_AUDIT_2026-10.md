@@ -87,7 +87,7 @@ Socle jouable, MVP non validé pour ouverture publique. Priorités : dépendance
 - **Constat :** Bâtiments/recherches remboursent le coût brut ; chantier utilise le multiplicateur courant.
 - **Périmètre :** `apps/api/src/buildings/buildings.service.ts`, `apps/api/src/research/research.service.ts`, `apps/api/src/shipyard/shipyard.service.ts`.
 - **Acceptation :** Enregistrer les coûts débités ; annulation rembourse exactement ces coûts pour multiplicateurs 0,1/1/>1 et après changement de configuration. Priorité P1 si coûts réduits, sinon P2.
-- **État :** ouvert ; responsable à attribuer lors de la PR corrective. Clôture : lien PR/commit + test et résultat requis.
+- **État :** correctif appliqué le 4 octobre 2026 : coût débité enregistré (`paidCost`) sur les trois files et remboursé exactement ; testé pour les multiplicateurs 0,1, 1 et 2,5 avec changement de configuration avant annulation. Limites : changement de schéma appliqué par `db push`, migration versionnée à produire (OPS-01) ; les entrées créées avant ce correctif n'ont pas de coût enregistré et gardent le calcul de repli (approximatif si la configuration a changé). Clôture en attente : lien PR/commit.
 
 ### GAME-01 — Validation des flottes et missions
 
