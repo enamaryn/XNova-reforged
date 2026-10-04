@@ -11,6 +11,19 @@
 
 Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DOUBLE_AUDIT_2026-10.md), [roadmap historique](docs/history/ROADMAP_MVP_AVANT_AUDIT.md).
 
+## Session de correction — ECO-02 (écritures concurrentes de ressources)
+
+**Date :** 4 octobre 2026. **Objectif :** empêcher le rafraîchissement d'écraser débits/crédits concurrents.
+
+- [x] `apps/api/src/resources/resource-refresh.ts` : production appliquée en delta avec `updateMany` conditionné par `lastUpdate` ; `lastUpdate` ne recule jamais.
+- [x] `resources.service.ts` et `resources-cron.service.ts` (tâches active et inactive) utilisent ce helper ; en cas de course, l'API relit sans réécrire.
+- [x] Test d'intégration PostgreSQL `resources-concurrency.integration.spec.ts` (bilan conservé, pas de double production) : échec avant correctif ; unitaires 24/24, intégration 28/28 après, sur PostgreSQL 16 jetable locale.
+- [ ] Lien PR/commit ; vérifier achat/livraison sous concurrence dans ECO-03.
+
+**Prochaines étapes :** ECO-03 (disponibilités et files atomiques), ECO-04.
+
+---
+
 ## Session de correction — ECO-01 (fractions de production)
 
 **Date :** 4 octobre 2026. **Objectif :** conserver les fractions produites entre deux rafraîchissements.

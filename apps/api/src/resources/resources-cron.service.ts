@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { DatabaseService } from '../database/database.service';
 import { GameEventsGateway } from '../game-events/game-events.gateway';
+import { persistResourceRefresh } from './resource-refresh';
 import { ServerConfigService } from '../server-config/server-config.service';
 import {
   floorResources,
@@ -77,20 +78,11 @@ export class ResourcesCronService {
           });
 
           // Mettre à jour la planète en base de données
-          await this.database.planet.update({
-            where: { id: planet.id },
-            data: {
-              metal: calculation.resources.metal,
-              crystal: calculation.resources.crystal,
-              deuterium: calculation.resources.deuterium,
-              metalProduction: calculation.productionPerHour.metal,
-              crystalProduction: calculation.productionPerHour.crystal,
-              deuteriumProduction: calculation.productionPerHour.deuterium,
-              energyUsed: calculation.energy.used,
-              energyAvailable: calculation.energy.available,
-              lastUpdate: calculation.lastUpdate,
-            },
-          });
+          const applied = await persistResourceRefresh(this.database, planet, calculation);
+          if (!applied) {
+            // Un autre rafraîchissement (API ou cron) a déjà couvert cette période.
+            return { success: true, planetId: planet.id };
+          }
 
           // Émettre un événement WebSocket pour cette planète
           this.gameEventsGateway.emitResourcesUpdate(planet.id, {
@@ -172,20 +164,7 @@ export class ResourcesCronService {
             config,
           });
 
-          await this.database.planet.update({
-            where: { id: planet.id },
-            data: {
-              metal: calculation.resources.metal,
-              crystal: calculation.resources.crystal,
-              deuterium: calculation.resources.deuterium,
-              metalProduction: calculation.productionPerHour.metal,
-              crystalProduction: calculation.productionPerHour.crystal,
-              deuteriumProduction: calculation.productionPerHour.deuterium,
-              energyUsed: calculation.energy.used,
-              energyAvailable: calculation.energy.available,
-              lastUpdate: calculation.lastUpdate,
-            },
-          });
+          await persistResourceRefresh(this.database, planet, calculation);
         } catch (error) {
           this.logger.error(
             `Error updating inactive planet ${planet.id}:`,

@@ -13,6 +13,7 @@ import {
 } from '@xnova/game-engine';
 import { GAME_CONSTANTS } from '@xnova/game-config';
 import { DatabaseService } from '../database/database.service';
+import { persistResourceRefresh } from './resource-refresh';
 import { ServerConfigService } from '../server-config/server-config.service';
 
 @Injectable()
@@ -249,23 +250,16 @@ export class ResourcesService {
       config: await this.buildConfig(),
     });
 
-    const updatedPlanet = await this.database.planet.update({
+    // Delta + verrou optimiste sur lastUpdate (ECO-02). Si un autre rafraichissement
+    // (API ou cron) a devance celui-ci, sa production est deja en base : on relit sans rien ecrire.
+    await persistResourceRefresh(this.database, planet, calculation);
+
+    const updatedPlanet = await this.database.planet.findUnique({
       where: { id: planet.id },
-      data: {
-        metal: calculation.resources.metal,
-        crystal: calculation.resources.crystal,
-        deuterium: calculation.resources.deuterium,
-        metalProduction: calculation.productionPerHour.metal,
-        crystalProduction: calculation.productionPerHour.crystal,
-        deuteriumProduction: calculation.productionPerHour.deuterium,
-        energyUsed: calculation.energy.used,
-        energyAvailable: calculation.energy.available,
-        lastUpdate: calculation.lastUpdate,
-      },
     });
 
     return {
-      planet: updatedPlanet,
+      planet: updatedPlanet ?? planet,
       calculation,
     };
   }

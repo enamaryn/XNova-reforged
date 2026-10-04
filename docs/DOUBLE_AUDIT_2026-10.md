@@ -63,7 +63,7 @@ Socle jouable, MVP non validé pour ouverture publique. Priorités : dépendance
 - **Constat :** Refresh/cron réécrivent un stock absolu et peuvent écraser un débit ou un crédit concurrent.
 - **Périmètre :** `apps/api/src/resources/resources.service.ts`, `apps/api/src/resources/resources-cron.service.ts`.
 - **Acceptation :** Test PostgreSQL entre refresh, achat et livraison : bilan initial + production + crédits − débits conservé ; stratégie transactionnelle/verrou/version commune à toutes les mutations.
-- **État :** ouvert ; responsable à attribuer lors de la PR corrective. Clôture : lien PR/commit + test et résultat requis.
+- **État :** correctif appliqué le 4 octobre 2026 (delta + verrou optimiste sur `lastUpdate`, partagé par l'API et les deux crons) ; test PostgreSQL refresh/débit/crédit concurrents en échec avant, réussi après. Limite : plafond de stockage évalué sur l'instantané lu ; achat/livraison/butin non retestés individuellement. Clôture en attente : lien PR/commit.
 
 ### ECO-03 — Disponibilités et files atomiques
 

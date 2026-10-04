@@ -22,7 +22,7 @@ Les travaux de sécurité et d'intégrité économique peuvent avancer en parall
 **État : à réaliser / validation non reçue.**
 
 - [~] **ECO-01 (P1)** — Conservation des fractions produites. Correctif appliqué (4 oct. 2026) : le moteur ne tronque plus le stock, arrondi à l'affichage (`floorResources`) ; 3 tests (`apps/api/test/resources-engine.spec.ts`) en échec avant, 24/24 unitaires après. Reste : lien PR/commit et test API sur PostgreSQL.
-- [ ] **ECO-02 (P1)** — Écritures concurrentes de ressources. Preuve de clôture : à renseigner.
+- [~] **ECO-02 (P1)** — Écritures concurrentes de ressources. Correctif appliqué (4 oct. 2026) : le refresh API/cron applique la production en delta (`increment`) avec verrou optimiste sur `lastUpdate` (`resource-refresh.ts`). Test PostgreSQL `resources-concurrency.integration.spec.ts` : échec avant, réussite après ; intégration 28/28 sur base vierge locale. Reste : lien PR/commit ; achat/livraison/butin utilisaient déjà des incréments atomiques (contrôles de disponibilité = ECO-03).
 - [ ] **ECO-03 (P1)** — Disponibilités et files atomiques. Preuve de clôture : à renseigner.
 - [ ] **ECO-04 (P1)** — Exécution unique des événements. Preuve de clôture : à renseigner.
 - [ ] **ECO-05 (P1 conditionnel)** — Remboursement du montant réellement payé. Preuve de clôture : à renseigner.
