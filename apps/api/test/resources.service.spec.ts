@@ -4,6 +4,7 @@ import { updateResources } from '@xnova/game-engine';
 import { ResourcesService } from '../src/resources/resources.service';
 
 jest.mock('@xnova/game-engine', () => ({
+  ...jest.requireActual('@xnova/game-engine'),
   updateResources: jest.fn(),
 }));
 

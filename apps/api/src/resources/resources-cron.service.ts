@@ -4,6 +4,7 @@ import { DatabaseService } from '../database/database.service';
 import { GameEventsGateway } from '../game-events/game-events.gateway';
 import { ServerConfigService } from '../server-config/server-config.service';
 import {
+  floorResources,
   updateResources,
   type ResourceConfig,
   type ResourceLevels,
@@ -93,11 +94,7 @@ export class ResourcesCronService {
 
           // Émettre un événement WebSocket pour cette planète
           this.gameEventsGateway.emitResourcesUpdate(planet.id, {
-            resources: {
-              metal: calculation.resources.metal,
-              crystal: calculation.resources.crystal,
-              deuterium: calculation.resources.deuterium,
-            },
+            resources: floorResources(calculation.resources),
             production: {
               metal: calculation.productionPerHour.metal,
               crystal: calculation.productionPerHour.crystal,

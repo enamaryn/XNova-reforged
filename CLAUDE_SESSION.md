@@ -11,6 +11,19 @@
 
 Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DOUBLE_AUDIT_2026-10.md), [roadmap historique](docs/history/ROADMAP_MVP_AVANT_AUDIT.md).
 
+## Session de correction — ECO-01 (fractions de production)
+
+**Date :** 4 octobre 2026. **Objectif :** conserver les fractions produites entre deux rafraîchissements.
+
+- [x] `packages/game-engine/src/resources.ts` : plus de troncature du stock ; ajout de `floorResources` pour l'affichage.
+- [x] `resources.service.ts` et `resources-cron.service.ts` : réponses API et événements WebSocket arrondis à l'affichage ; la base conserve la valeur fractionnaire (colonnes Float).
+- [x] Tests `apps/api/test/resources-engine.spec.ts` : 1 pas d'une heure = 360 pas de 10 s = 3600 pas d'1 s (520/510 à partir de 500/500). Échec avant correctif, 24/24 unitaires après.
+- [ ] Test API sur PostgreSQL et lien PR/commit pour clôturer ECO-01 ; conséquence à vérifier : les services de dépense lisent désormais un stock fractionnaire.
+
+**Prochaines étapes :** ECO-02 (écritures concurrentes), puis ECO-03/04.
+
+---
+
 ## Session documentaire — consolidation des audits Claude et Codex
 
 **Date :** 4 octobre 2026. **Objectif :** rendre les constats actionnables sans prétendre corriger le code.

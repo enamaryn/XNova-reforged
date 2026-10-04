@@ -55,7 +55,7 @@ Socle jouable, MVP non validé pour ouverture publique. Priorités : dépendance
 - **Constat :** À vitesse ×1, 360 pas de 10 s laissent 500/500 au lieu de 520/510 sur une heure.
 - **Périmètre :** `packages/game-engine/src/resources.ts`, `apps/api/src/resources/resources.service.ts`.
 - **Acceptation :** Conserver fractions/reliquat ; même résultat pour une heure calculée en un pas ou 360 pas, à niveaux/configuration constants ; test de l'API interrogée fréquemment.
-- **État :** ouvert ; responsable à attribuer lors de la PR corrective. Clôture : lien PR/commit + test et résultat requis.
+- **État :** correctif appliqué le 4 octobre 2026 (stock non tronqué, arrondi à l'affichage) ; tests moteur en échec avant, réussis après. Clôture en attente : lien PR/commit et test API sur PostgreSQL.
 
 ### ECO-02 — Écritures concurrentes de ressources
 
