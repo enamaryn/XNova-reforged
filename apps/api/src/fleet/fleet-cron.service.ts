@@ -53,7 +53,50 @@ export class FleetCronService {
           if (claimed.count !== 1) return false;
 
           let cargoDelivered = false;
-          if (fleet.mission === MissionType.TRANSPORT || fleet.mission === MissionType.DEPLOY) {
+
+          if (fleet.mission === MissionType.DEPLOY) {
+            // Déploiement (GAME-02) : vaisseaux et cargaison passent définitivement sur la planète
+            // de destination, une seule fois, sans retour. Si la destination n'est plus une planète
+            // du joueur, la flotte rentre à l'origine avec son contenu intact.
+            const destination = await tx.planet.findFirst({
+              where: {
+                galaxy: fleet.toGalaxy,
+                system: fleet.toSystem,
+                position: fleet.toPosition,
+                userId: fleet.userId,
+              },
+              select: { id: true },
+            });
+
+            if (destination) {
+              const cargo = fleet.cargo as Record<string, number>;
+              await tx.planet.update({
+                where: { id: destination.id },
+                data: {
+                  metal: { increment: Number(cargo.metal || 0) },
+                  crystal: { increment: Number(cargo.crystal || 0) },
+                  deuterium: { increment: Number(cargo.deuterium || 0) },
+                },
+              });
+
+              const ships = fleet.ships as Record<string, number>;
+              for (const [shipId, amount] of Object.entries(ships)) {
+                await tx.ship.upsert({
+                  where: { planetId_shipId: { planetId: destination.id, shipId: Number(shipId) } },
+                  update: { amount: { increment: Number(amount) } },
+                  create: { planetId: destination.id, shipId: Number(shipId), amount: Number(amount) },
+                });
+              }
+
+              await tx.fleet.update({
+                where: { id: fleet.id },
+                data: { status: 'completed', ships: {}, cargo: {}, returnTime: null },
+              });
+            }
+            return true;
+          }
+
+          if (fleet.mission === MissionType.TRANSPORT) {
             const target = await tx.planet.findFirst({
               where: {
                 galaxy: fleet.toGalaxy,
