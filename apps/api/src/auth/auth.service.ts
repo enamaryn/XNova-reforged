@@ -1,9 +1,12 @@
 import {
   Injectable,
   ConflictException,
+  ServiceUnavailableException,
   UnauthorizedException,
   NotFoundException,
 } from '@nestjs/common';
+import { GAME_CONSTANTS } from '@xnova/game-config';
+import { Prisma } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
@@ -14,6 +17,9 @@ import { ServerConfigService } from '../server-config/server-config.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { AuthResponseDto } from './dto/auth-response.dto';
+
+/** Nombre maximal de positions tentées pour la planète de départ lors d'une inscription. */
+const MAX_STARTER_ATTEMPTS = 10;
 
 @Injectable()
 export class AuthService {
@@ -30,56 +36,68 @@ export class AuthService {
   async register(registerDto: RegisterDto): Promise<AuthResponseDto> {
     const { username, email, password } = registerDto;
 
-    // Vérifier si l'username existe déjà
-    const existingUsername = await this.database.user.findUnique({
-      where: { username },
-    });
-
-    if (existingUsername) {
-      throw new ConflictException('Ce nom d\'utilisateur est déjà pris');
-    }
-
-    // Vérifier si l'email existe déjà
-    const existingEmail = await this.database.user.findUnique({
-      where: { email },
-    });
-
-    if (existingEmail) {
-      throw new ConflictException('Cet email est déjà utilisé');
-    }
-
-    // Hasher le mot de passe avec Argon2
+    // Hachage hors transaction : opération lente, sans accès base
     const hashedPassword = await argon2.hash(password);
+    const config = await this.serverConfig.getConfig();
 
-    // Créer l'utilisateur
-    const user = await this.database.user.create({
-      data: {
-        username,
-        email,
-        password: hashedPassword,
-        points: 0,
-        rank: 0,
-      },
-    });
+    // Compte, planète de départ et session dans UNE transaction (OPS-02) : un échec à n'importe
+    // quelle étape ne laisse aucune inscription partielle. Les unicités (nom, email, position) sont
+    // garanties par la base ; une position déjà prise (course entre deux inscriptions) est reprise
+    // avec de nouvelles coordonnées, dans la limite de MAX_STARTER_ATTEMPTS.
+    for (let attempt = 1; attempt <= MAX_STARTER_ATTEMPTS; attempt += 1) {
+      try {
+        const { user, tokens } = await this.database.$transaction(async (tx) => {
+          const created = await tx.user.create({
+            data: { username, email, password: hashedPassword, points: 0, rank: 0 },
+          });
+          await this.createStarterPlanet(tx, created.id, config.planetSize);
+          const sessionTokens = await this.createSessionTokens(created.id, created.username, tx);
+          return { user: created, tokens: sessionTokens };
+        });
 
-    // Créer la planète de départ
-    await this.createStarterPlanet(user.id);
+        return {
+          user: {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            points: user.points,
+            rank: user.rank,
+            role: user.role,
+            createdAt: user.createdAt,
+          },
+          tokens,
+        };
+      } catch (error) {
+        const conflict = this.classifyUniqueViolation(error);
+        if (conflict === 'username') {
+          throw new ConflictException('Ce nom d\'utilisateur est déjà pris');
+        }
+        if (conflict === 'email') {
+          throw new ConflictException('Cet email est déjà utilisé');
+        }
+        if (conflict === 'position') {
+          continue; // nouvelle tentative avec d'autres coordonnées
+        }
+        throw error;
+      }
+    }
 
-    // Générer les tokens JWT
-    const tokens = await this.createSessionTokens(user.id, user.username);
+    throw new ServiceUnavailableException(
+      'Aucune position libre trouvée pour la planète de départ, réessayez',
+    );
+  }
 
-    return {
-      user: {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        points: user.points,
-        rank: user.rank,
-        role: user.role,
-        createdAt: user.createdAt,
-      },
-      tokens,
-    };
+  /** Distingue la contrainte d'unicité violée (nom, email ou position de planète). */
+  private classifyUniqueViolation(error: unknown): 'username' | 'email' | 'position' | null {
+    if (!(error instanceof Prisma.PrismaClientKnownRequestError) || error.code !== 'P2002') {
+      return null;
+    }
+    const raw = (error.meta as { target?: unknown } | undefined)?.target;
+    const target = (Array.isArray(raw) ? raw.join(',') : String(raw ?? '')).toLowerCase();
+    if (target.includes('username')) return 'username';
+    if (target.includes('email')) return 'email';
+    if (target.includes('galaxy') || target.includes('position')) return 'position';
+    return null;
   }
 
   /**
@@ -265,12 +283,16 @@ export class AuthService {
   }
 
   /** Crée une session serveur et les tokens associés (claim `sid`). */
-  private async createSessionTokens(userId: string, username: string) {
+  private async createSessionTokens(
+    userId: string,
+    username: string,
+    db: Pick<Prisma.TransactionClient, 'session'> = this.database,
+  ) {
     const sessionId = randomUUID();
     const tokens = await this.signTokens(userId, username, sessionId);
     const decoded = this.jwtService.decode(tokens.refreshToken) as { exp: number };
 
-    await this.database.session.create({
+    await db.session.create({
       data: {
         id: sessionId,
         userId,
@@ -307,35 +329,27 @@ export class AuthService {
     return createHash('sha256').update(token).digest('hex');
   }
 
+  /** Coordonnées aléatoires dans l'univers (surchargeable en test pour forcer des collisions). */
+  private pickStarterCoordinates() {
+    return {
+      galaxy: Math.floor(Math.random() * GAME_CONSTANTS.MAX_GALAXIES) + 1,
+      system: Math.floor(Math.random() * GAME_CONSTANTS.MAX_SYSTEMS) + 1,
+      position: Math.floor(Math.random() * GAME_CONSTANTS.MAX_POSITIONS) + 1,
+    };
+  }
+
   /**
-   * Créer la planète de départ pour un nouvel utilisateur
+   * Créer la planète de départ dans la transaction d'inscription. L'unicité de la position est
+   * garantie par la base : une collision lève P2002, gérée par `register` (reprise bornée).
    */
-  private async createStarterPlanet(userId: string) {
-    // Position aléatoire dans l'univers
-    const galaxy = Math.floor(Math.random() * 9) + 1; // 1-9
-    const system = Math.floor(Math.random() * 499) + 1; // 1-499
-    const position = Math.floor(Math.random() * 15) + 1; // 1-15
+  private async createStarterPlanet(
+    tx: Prisma.TransactionClient,
+    userId: string,
+    fieldsMax: number,
+  ) {
+    const { galaxy, system, position } = this.pickStarterCoordinates();
 
-    // Vérifier si la position est déjà prise
-    const existingPlanet = await this.database.planet.findUnique({
-      where: {
-        galaxy_system_position: {
-          galaxy,
-          system,
-          position,
-        },
-      },
-    });
-
-    // Si la position est prise, réessayer de manière récursive
-    if (existingPlanet) {
-      return this.createStarterPlanet(userId);
-    }
-
-    // Créer la planète avec ressources de départ
-    const config = await this.serverConfig.getConfig();
-
-    await this.database.planet.create({
+    await tx.planet.create({
       data: {
         userId,
         name: 'Planète Mère',
@@ -346,7 +360,7 @@ export class AuthService {
         metal: 500,
         crystal: 500,
         deuterium: 0,
-        fieldsMax: config.planetSize,
+        fieldsMax,
         fieldsUsed: 0,
       },
     });
