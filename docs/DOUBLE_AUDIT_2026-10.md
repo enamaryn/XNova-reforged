@@ -95,7 +95,7 @@ Socle jouable, MVP non validé pour ouverture publique. Priorités : dépendance
 - **Constat :** Missions 6/7/999 acceptées sans effet ; IsInt/IsPositive ne constituent pas une liste autorisée ; objets cargo/ships peu validés.
 - **Périmètre :** `apps/api/src/fleet/dto/send-fleet.dto.ts`, `apps/api/src/fleet/fleet.service.ts`, `apps/api/src/fleet/fleet-cron.service.ts`.
 - **Acceptation :** Liste de missions réellement implémentées commune UI/API ; refuser missions inconnues sans débit ; nombres finis, quantités entières de vaisseaux, coordonnées bornées et règles de cible testés.
-- **État :** ouvert ; responsable à attribuer lors de la PR corrective. Clôture : lien PR/commit + test et résultat requis.
+- **État :** correctif appliqué le 4 octobre 2026. Missions autorisées (liste commune `IMPLEMENTED_MISSIONS` dans `@xnova/game-config`) : attaque (1), transport (3), déploiement (4) ; toute autre valeur (6, 7, 999, négative, fractionnaire, non numérique) est refusée en 400 sans débit, et le formulaire web ne propose plus espionnage ni colonisation. Validation : coordonnées entières bornées 1-9 / 1-499 / 1-15 ; vaisseaux = identifiants connus et entiers 1 à 10¹² ; cargaison = entiers 0 à 10¹², clés connues ; destination ≠ origine ; attaque : planète existante d'un autre joueur ; transport : planète existante ; déploiement : planète du joueur. Limites : le déploiement reste un transport avec retour (GAME-02) ; la règle « déploiement vers ses seules planètes » est une décision par défaut à confirmer ; espionnage, colonisation, recyclage, etc. dépendent de SCOPE-01 ; les flottes déjà en vol avec une mission non implémentée ne sont pas migrées. Clôture en attente : lien PR/commit.
 
 ### GAME-02 — Déploiement effectif
 

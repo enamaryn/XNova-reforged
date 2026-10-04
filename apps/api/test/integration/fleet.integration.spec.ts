@@ -94,10 +94,17 @@ describe('API integration - Flottes', () => {
       create: { planetId, shipId: 202, amount: 10 },
     });
 
-    // Déterminer une destination valide (même galaxie, système voisin)
-    const targetGalaxy = planet.galaxy || 1;
-    const targetSystem = (planet.system || 1) + 1;
-    const targetPosition = 1;
+    // Destination : planète d'un autre joueur (GAME-01 exige une cible existante)
+    const rival = await database.user.create({
+      data: {
+        username: `fleetr_${Math.random().toString(36).slice(2, 10)}`,
+        email: `fleetr_${Math.random().toString(36).slice(2, 10)}@example.test`,
+        password: 'x',
+      },
+    });
+    const targetPlanet = await database.planet.create({
+      data: { userId: rival.id, name: 'Cible', galaxy: 9, system: 497, position: 1 + Math.floor(Math.random() * 15) },
+    });
 
     // POST /fleet/send - Envoyer une flotte (mission transport = 3)
     const sendResponse = await request(server)
@@ -105,38 +112,34 @@ describe('API integration - Flottes', () => {
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
         planetId: planetId,
-        toGalaxy: targetGalaxy,
-        toSystem: targetSystem,
-        toPosition: targetPosition,
+        toGalaxy: targetPlanet.galaxy,
+        toSystem: targetPlanet.system,
+        toPosition: targetPlanet.position,
         mission: 3, // Transport
         speedPercent: 100,
         ships: { '202': 2 },
         cargo: { metal: 100, crystal: 50, deuterium: 0 },
-      });
+      })
+      .expect(201);
 
-    // Si l'envoi réussit (la destination doit exister)
-    if (sendResponse.status === 201) {
-      const fleetId = sendResponse.body?.fleetId || sendResponse.body?.id;
-      expect(fleetId).toBeTruthy();
+    const fleetId = sendResponse.body?.fleetId;
+    expect(fleetId).toBeTruthy();
 
-      // GET /fleet/active - Vérifier que la flotte est active
-      const activeResponse = await request(server)
-        .get('/fleet/active')
-        .set('Authorization', `Bearer ${accessToken}`)
-        .expect(200);
+    // GET /fleet/active - Vérifier que la flotte est active
+    const activeResponse = await request(server)
+      .get('/fleet/active')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .expect(200);
 
-      expect(activeResponse.body.length).toBeGreaterThan(0);
+    expect(activeResponse.body.length).toBeGreaterThan(0);
 
-      // DELETE /fleet/:fleetId - Rappeler la flotte
-      await request(server)
-        .delete(`/fleet/${fleetId}`)
-        .set('Authorization', `Bearer ${accessToken}`)
-        .expect(200);
-    } else {
-      // Destination invalide ou validation échouée - c'est attendu
-      expect([400, 404, 500]).toContain(sendResponse.status);
-    }
+    // DELETE /fleet/:fleetId - Rappeler la flotte
+    await request(server)
+      .delete(`/fleet/${fleetId}`)
+      .set('Authorization', `Bearer ${accessToken}`)
+      .expect(200);
 
+    await database.user.delete({ where: { id: rival.id } });
     await cleanupTestUser(database, testUser.username);
   });
 
@@ -154,24 +157,37 @@ describe('API integration - Flottes', () => {
     const planet = meResponse.body?.planets?.[0];
     const planetId = planet?.id;
 
-    // Tenter d'envoyer une flotte sans vaisseaux disponibles
+    // Cible valide, pour que seul le manque de vaisseaux justifie le refus
+    const rival = await database.user.create({
+      data: {
+        username: `fleetn_${Math.random().toString(36).slice(2, 10)}`,
+        email: `fleetn_${Math.random().toString(36).slice(2, 10)}@example.test`,
+        password: 'x',
+      },
+    });
+    const targetPlanet = await database.planet.create({
+      data: { userId: rival.id, name: 'Cible', galaxy: 9, system: 496, position: 1 + Math.floor(Math.random() * 15) },
+    });
+
+    // Tenter d'envoyer une flotte sans vaisseaux disponibles : 400 précis, jamais 500
     const sendResponse = await request(server)
       .post('/fleet/send')
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
         planetId: planetId,
-        toGalaxy: 1,
-        toSystem: 100,
-        toPosition: 5,
+        toGalaxy: targetPlanet.galaxy,
+        toSystem: targetPlanet.system,
+        toPosition: targetPlanet.position,
         mission: 3,
         speedPercent: 100,
         ships: { '202': 5 }, // Pas de vaisseaux disponibles
         cargo: { metal: 0, crystal: 0, deuterium: 0 },
       });
 
-    // Devrait échouer (400, 403, 404 ou 500)
-    expect([400, 403, 404, 500]).toContain(sendResponse.status);
+    expect(sendResponse.status).toBe(400);
+    expect(String(sendResponse.body.message)).toMatch(/insuffisants/i);
 
+    await database.user.delete({ where: { id: rival.id } });
     await cleanupTestUser(database, testUser.username);
   });
 });

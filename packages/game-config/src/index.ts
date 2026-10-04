@@ -52,6 +52,14 @@ export enum MissionType {
   EXPEDITION = 15,
 }
 
+// Missions réellement traitées à l'arrivée (liste commune API/UI, GAME-01).
+// SPY, COLONIZE, etc. restent exclues tant que SCOPE-01 n'a pas tranché : l'API les refuse sans débit.
+export const IMPLEMENTED_MISSIONS: readonly MissionType[] = [
+  MissionType.ATTACK,
+  MissionType.TRANSPORT,
+  MissionType.DEPLOY,
+]
+
 // Fleet status
 export enum FleetStatus {
   TRAVELING = 'traveling',

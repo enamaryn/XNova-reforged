@@ -11,6 +11,20 @@
 
 Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DOUBLE_AUDIT_2026-10.md), [roadmap historique](docs/history/ROADMAP_MVP_AVANT_AUDIT.md).
 
+## Session de correction — GAME-01 (validation des flottes et missions)
+
+**Date :** 4 octobre 2026. **Objectif :** n'accepter que des missions réellement traitées, avec des entrées valides, sans débit en cas de refus.
+
+- [x] `@xnova/game-config` : `IMPLEMENTED_MISSIONS` (attaque, transport, déploiement), source unique API/UI.
+- [x] `send-fleet.dto.ts` et `fleet.service.ts` : mission autorisée, coordonnées bornées, vaisseaux et cargaison entiers bornés, règles de cible.
+- [x] Web : espionnage et colonisation retirés du formulaire de flotte.
+- [x] Tests `game01-fleet-validation.integration.spec.ts` (40, 18 en échec avant) ; tests de flotte existants rendus stricts (cible existante, 201/400 exigés) ; intégration 102/102, unitaires 35/35 (local).
+- [ ] Lien PR/commit ; GAME-02 (déploiement) ; SCOPE-01 (espionnage, colonisation).
+
+**Prochaines étapes :** GAME-02, puis QUAL-01/QUAL-02.
+
+---
+
 ## Session de correction — SEC-01 (dépendances vulnérables)
 
 **Date :** 4 octobre 2026. **Objectif :** réduire les alertes npm sans migration majeure aveugle.
