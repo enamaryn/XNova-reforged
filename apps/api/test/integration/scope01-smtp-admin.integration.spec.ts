@@ -271,8 +271,15 @@ describe('API integration - Configuration SMTP (administration)', () => {
         .expect(201);
       expect(res.body).toEqual({ success: true, to: 'dest@example.org' });
 
-      await new Promise((resolve) => setTimeout(resolve, 200));
-      const session = received.at(-1)!;
+      // D'autres suites inscrivent des joueurs pendant ce temps : leurs emails de confirmation arrivent
+      // aussi sur ce faux serveur (la configuration est globale). On cherche donc notre message.
+      let session: (typeof received)[number] | undefined;
+      for (let attempt = 0; attempt < 50 && !session; attempt += 1) {
+        session = received.find((entry) => entry.commands.some((c) => /RCPT TO:<dest@example.org>/i.test(c)));
+        if (!session) await new Promise((resolve) => setTimeout(resolve, 100));
+      }
+      expect(session).toBeDefined();
+      session = session!;
       expect(session.commands.join('\n')).toMatch(/RCPT TO:<dest@example.org>/i);
       expect(session.commands.join('\n')).toMatch(/MAIL FROM:<jeu@example.org>/i);
       expect(session.data).toMatch(/Subject: XNova Reforged/);
