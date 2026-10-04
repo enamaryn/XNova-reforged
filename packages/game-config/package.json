@@ -6,7 +6,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "lint": "eslint ."
+    "lint": "eslint src --ext .ts"
   },
   "dependencies": {},
   "devDependencies": {

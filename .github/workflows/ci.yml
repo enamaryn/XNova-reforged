@@ -1,0 +1,88 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    name: Build, lint et tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: xnova
+          POSTGRES_PASSWORD: xnova_ci
+          POSTGRES_DB: xnova_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U xnova -d xnova_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://xnova:xnova_ci@localhost:5432/xnova_test?schema=public
+      NODE_ENV: test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # Installation verrouillée sur package-lock.json
+      - name: Installation (npm ci)
+        run: npm ci
+
+      # Turbo enchaîne database (prisma generate) -> game-config -> game-engine -> api et web
+      - name: Build
+        run: npm run build
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Tests unitaires
+        run: npm test
+
+      - name: Schéma de la base de test
+        run: npx prisma db push --skip-generate
+        working-directory: packages/database
+
+      - name: Tests d'intégration
+        run: npm run test:integration
+
+  audit:
+    name: Audit des dépendances de production
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Installation (npm ci)
+        run: npm ci --ignore-scripts
+
+      # Seuil actuel : aucune alerte critique de production. Le seuil « hautes » reste à fixer
+      # (9 hautes d'outillage de build connues, voir docs/NPM_AUDIT_2026-10.md).
+      - name: npm audit (production, critiques)
+        run: npm audit --omit=dev --audit-level=critical

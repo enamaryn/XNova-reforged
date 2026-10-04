@@ -1,4 +1,5 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { GAME_CONSTANTS } from '@xnova/game-config';
 import { DatabaseService } from '../database/database.service';
 import { ServerConfigService } from '../server-config/server-config.service';
@@ -92,8 +93,22 @@ export class GalaxyService implements OnModuleInit {
     };
   }
 
+  /**
+   * Semis des planètes abandonnées, une seule fois même si plusieurs instances démarrent en même
+   * temps (QUAL-01) : verrou consultatif PostgreSQL pendant la transaction, puis vérification.
+   */
   private async seedGalaxy() {
-    const abandonedUser = await this.database.user.upsert({
+    await this.database.$transaction(
+      async (tx) => {
+        await tx.$executeRaw`SELECT pg_advisory_xact_lock(727001)`;
+        await this.seedGalaxyLocked(tx);
+      },
+      { timeout: 60_000, maxWait: 60_000 },
+    );
+  }
+
+  private async seedGalaxyLocked(db: Prisma.TransactionClient) {
+    const abandonedUser = await db.user.upsert({
       where: { username: ABANDONED_USER.username },
       update: {},
       create: {
@@ -103,7 +118,7 @@ export class GalaxyService implements OnModuleInit {
       },
     });
 
-    const existingAbandoned = await this.database.planet.count({
+    const existingAbandoned = await db.planet.count({
       where: { userId: abandonedUser.id },
     });
 
@@ -113,7 +128,7 @@ export class GalaxyService implements OnModuleInit {
     }
 
     const occupied = new Set<string>();
-    const existingPlanets = await this.database.planet.findMany({
+    const existingPlanets = await db.planet.findMany({
       select: { galaxy: true, system: true, position: true },
     });
     existingPlanets.forEach((planet) => {
@@ -167,7 +182,7 @@ export class GalaxyService implements OnModuleInit {
     }
 
     if (planets.length > 0) {
-      await this.database.planet.createMany({ data: planets });
+      await db.planet.createMany({ data: planets, skipDuplicates: true });
       this.logger.log(`Galaxy seed created: ${planets.length} planètes abandonnées.`);
     } else {
       this.logger.warn('Galaxy seed skipped: aucune position libre.');

@@ -71,3 +71,7 @@ backups/
 
 # Sentry
 .sentryclirc
+
+# Artefacts de tests Playwright
+test-results/
+playwright-report/
