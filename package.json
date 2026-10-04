@@ -36,7 +36,9 @@
     "test:e2e:messages": "playwright test tests/e2e/messages.spec.ts --project=chromium",
     "test:e2e:alliance": "playwright test tests/e2e/alliance.spec.ts --project=chromium",
     "test:e2e:statistics": "playwright test tests/e2e/statistics.spec.ts --project=chromium",
-    "test:e2e:admin": "playwright test tests/e2e/admin.spec.ts --project=chromium"
+    "test:e2e:admin": "playwright test tests/e2e/admin.spec.ts --project=chromium",
+    "db:migrate:deploy": "cd packages/database && npx prisma migrate deploy",
+    "test:backup": "bash scripts/test-backup-restore.sh"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",

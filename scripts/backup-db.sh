@@ -1,39 +1,51 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Sauvegarde PostgreSQL compressée, atomique et vérifiée (OPS-01).
+#
+# Usage : scripts/backup-db.sh
+# Variables : DATABASE_URL (obligatoire, lue aussi depuis .env s'il existe),
+#             BACKUP_DIR (défaut ./backups), BACKUP_RETENTION_DAYS (défaut 7).
+#
+# Garanties : toute erreur (connexion, pg_dump, compression, archive vide ou tronquée) arrête le
+# script avec un code non nul ; le fichier final n'apparaît qu'une fois l'archive vérifiée ;
+# les anciennes sauvegardes ne sont purgées qu'après une sauvegarde réussie.
+set -euo pipefail
 
-# Configuration depuis .env
-source "$(dirname "$0")/../.env"
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+if [ -f "$ROOT/.env" ]; then
+  set -a
+  # shellcheck disable=SC1091
+  source "$ROOT/.env"
+  set +a
+fi
 
-# Variables
-BACKUP_DIR="$(dirname "$0")/../backups"
-TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-BACKUP_FILE="$BACKUP_DIR/xnova_backup_$TIMESTAMP.sql"
+: "${DATABASE_URL:?DATABASE_URL est requis}"
+BACKUP_DIR="${BACKUP_DIR:-$ROOT/backups}"
+RETENTION_DAYS="${BACKUP_RETENTION_DAYS:-7}"
 
-# Creer le repertoire de backup s'il n'existe pas
+# libpq refuse les paramètres propres à Prisma (?schema=public) : on les retire
+PG_URL="${DATABASE_URL%%\?*}"
+
 mkdir -p "$BACKUP_DIR"
+TIMESTAMP="$(date +%Y%m%d_%H%M%S)"
+FINAL="$BACKUP_DIR/xnova_backup_${TIMESTAMP}.sql.gz"
+TMP="$(mktemp "$BACKUP_DIR/.xnova_backup.XXXXXX")"
+trap 'rm -f "$TMP"' EXIT
 
-# Extraire les informations de connexion depuis DATABASE_URL
-DB_HOST=$(echo "$DATABASE_URL" | sed -n 's/.*@\([^:]*\):.*/\1/p')
-DB_PORT=$(echo "$DATABASE_URL" | sed -n 's/.*:\([0-9]*\)\/.*/\1/p')
-DB_NAME=$(echo "$DATABASE_URL" | sed -n 's/.*\/\([^?]*\).*/\1/p')
-DB_USER=$(echo "$DATABASE_URL" | sed -n 's/.*\/\/\([^:]*\):.*/\1/p')
-DB_PASS=$(echo "$DATABASE_URL" | sed -n 's/.*:\/\/[^:]*:\([^@]*\)@.*/\1/p')
+# pipefail : un échec de pg_dump fait échouer toute la chaîne (pas d'archive « vide mais valide »)
+pg_dump --no-owner --no-privileges --clean --if-exists "$PG_URL" | gzip -c > "$TMP"
 
-# Executer le backup
-export PGPASSWORD="$DB_PASS"
-pg_dump -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" > "$BACKUP_FILE"
-
-# Verifier le succes
-if [ $? -eq 0 ]; then
-  echo "OK: Backup cree avec succes: $BACKUP_FILE"
-
-  # Compresser le backup
-  gzip "$BACKUP_FILE"
-  echo "OK: Backup compresse: ${BACKUP_FILE}.gz"
-
-  # Supprimer les backups de plus de 7 jours
-  find "$BACKUP_DIR" -name "*.sql.gz" -mtime +7 -delete
-  echo "OK: Anciens backups supprimes (>7 jours)"
-else
-  echo "ERREUR: Echec lors du backup"
+# Vérifications : archive lisible, non vide, dump complet (pg_dump écrit cette ligne en dernier)
+gzip -t "$TMP"
+if ! gzip -dc "$TMP" | tail -n 5 | grep -q "PostgreSQL database dump complete"; then
+  echo "ERREUR: sauvegarde incomplète (fin de dump absente)" >&2
   exit 1
 fi
+
+chmod 600 "$TMP"
+mv "$TMP" "$FINAL"
+trap - EXIT
+echo "OK: sauvegarde créée et vérifiée : $FINAL ($(du -h "$FINAL" | cut -f1))"
+
+# Rotation, seulement après succès
+find "$BACKUP_DIR" -name 'xnova_backup_*.sql.gz' -mtime +"$RETENTION_DAYS" -delete
+echo "OK: sauvegardes de plus de ${RETENTION_DAYS} jours supprimées"

@@ -125,10 +125,13 @@ docker-compose logs  # Voir les logs
 ### Base de donnees
 
 ```bash
-npm run db:push      # Pousser le schema Prisma
-npm run db:studio    # Ouvrir Prisma Studio
-cd packages/database && npm run db:migrate
+npm run db:migrate:deploy   # Appliquer les migrations versionnees (production, CI, nouvelle base)
+npm run db:push             # Developpement local jetable uniquement (aucune trace versionnee)
+npm run db:studio           # Ouvrir Prisma Studio
+cd packages/database && npm run db:migrate   # Creer une migration apres modification de schema.prisma
 ```
+
+Sauvegarde, restauration, migrations et retour arriere : voir [docs/OPERATIONS.md](docs/OPERATIONS.md).
 
 ### Tests E2E
 

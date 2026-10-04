@@ -58,12 +58,81 @@ jobs:
       - name: Tests unitaires
         run: npm test
 
-      - name: Schéma de la base de test
-        run: npx prisma db push --skip-generate
+      # Les tests tournent sur le schéma issu des migrations versionnées, comme en production
+      - name: Migrations de la base de test
+        run: npx prisma migrate deploy
         working-directory: packages/database
 
       - name: Tests d'intégration
         run: npm run test:integration
+
+  database:
+    name: Migrations, sauvegarde et restauration
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: xnova
+          POSTGRES_PASSWORD: xnova_ci
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U xnova -d postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      PGPASSWORD: xnova_ci
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Installation (npm ci)
+        run: npm ci
+
+      # pg_dump doit être au moins de la version du serveur (16)
+      - name: Client PostgreSQL
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      - name: Bases isolées (migrations et ombre)
+        run: |
+          psql "postgresql://xnova@localhost:5432/postgres" -c 'CREATE DATABASE xnova_migrations'
+          psql "postgresql://xnova@localhost:5432/postgres" -c 'CREATE DATABASE xnova_shadow'
+
+      - name: Migrations sur base vierge
+        run: npx prisma migrate deploy
+        working-directory: packages/database
+        env:
+          DATABASE_URL: postgresql://xnova:xnova_ci@localhost:5432/xnova_migrations?schema=public
+
+      # Échoue si schema.prisma a changé sans migration correspondante
+      - name: Aucun écart entre migrations et schema.prisma
+        run: >-
+          npx prisma migrate diff
+          --from-migrations prisma/migrations
+          --to-schema-datamodel prisma/schema.prisma
+          --shadow-database-url "postgresql://xnova:xnova_ci@localhost:5432/xnova_shadow?schema=public"
+          --exit-code
+        working-directory: packages/database
+        env:
+          DATABASE_URL: postgresql://xnova:xnova_ci@localhost:5432/xnova_migrations?schema=public
+
+      - name: Sauvegarde, restauration, échecs et retour arrière
+        run: bash scripts/test-backup-restore.sh
+        env:
+          TEST_PG_ADMIN_URL: postgresql://xnova:xnova_ci@localhost:5432/postgres
 
   e2e:
     name: Tests E2E (Playwright)
@@ -113,8 +182,8 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Schéma de la base E2E
-        run: npx prisma db push --skip-generate
+      - name: Migrations de la base E2E
+        run: npx prisma migrate deploy
         working-directory: packages/database
 
       # Navigateur à la version exacte de @playwright/test verrouillée dans package-lock.json
