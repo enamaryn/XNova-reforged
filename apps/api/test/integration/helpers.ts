@@ -56,10 +56,20 @@ export async function registerAndLogin(app: INestApplication, testUser: ReturnTy
     .send({ identifier: testUser.username, password: testUser.password })
     .expect(200);
 
+  // Les ressources sont du Float alimenté par le cron de production (toutes les minutes) pour les
+  // joueurs actifs : un compte « inactif depuis 30 jours » est ignoré par le cron, ce qui garde les
+  // assertions exactes sur les stocks stables (sinon échec aléatoire quand le cron passe en cours de test).
+  await app
+    .get(DatabaseService)
+    .user.update({ where: { username: testUser.username }, data: { lastActive: DORMANT_SINCE() } });
+
   return {
     accessToken: loginResponse.body?.tokens?.accessToken,
   };
 }
+
+/** Date de dernière activité qui exclut le compte de la production périodique des ressources. */
+export const DORMANT_SINCE = () => new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
 
 export async function cleanupTestUser(database: DatabaseService, username: string) {
   const existing = await database.user.findUnique({
