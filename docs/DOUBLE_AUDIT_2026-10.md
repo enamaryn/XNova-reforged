@@ -31,7 +31,7 @@ Socle jouable, MVP non validé pour ouverture publique. Priorités : dépendance
 - **Constat :** Abonnement à une room planète sans contrôle de propriété.
 - **Périmètre :** `apps/api/src/game-events/game-events.gateway.ts`.
 - **Acceptation :** Avec deux comptes, refuser l'abonnement à la planète adverse ; aucun événement privé reçu ; abonnement propriétaire conservé.
-- **État :** ouvert ; responsable à attribuer lors de la PR corrective. Clôture : lien PR/commit + test et résultat requis.
+- **État :** correctif appliqué le 4 octobre 2026 : contrôle de propriété en base avant `client.join`, refus uniforme (planète absente, adverse ou identifiant invalide), aucun événement privé reçu par l'intrus ; abonnement du propriétaire conservé. Limites : les autres rooms et événements ciblés par utilisateur n'ont pas été audités ; la vérification a lieu à l'abonnement (un transfert de planète ne retire pas un abonnement existant) ; sockets d'un utilisateur banni = SEC-03. Clôture en attente : lien PR/commit.
 
 ### SEC-03 — Bannissement et révocation des sessions
 

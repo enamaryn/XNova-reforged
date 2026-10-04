@@ -13,7 +13,7 @@ Les travaux de sécurité et d'intégrité économique peuvent avancer en parall
 **État : à réaliser / validation non reçue.**
 
 - [ ] **SEC-01 (P1)** — Dépendances vulnérables. Preuve de clôture : à renseigner.
-- [ ] **SEC-02 (P1)** — Autorisation WebSocket. Preuve de clôture : à renseigner.
+- [~] **SEC-02 (P1)** — Autorisation WebSocket. Correctif appliqué (4 oct. 2026) : `subscribe:planet` vérifie en base que la planète appartient au socket authentifié, sinon événement `subscribe:refused` (même réponse pour planète absente ou adverse) ; test avec deux comptes et vrais sockets (`ws-planet-subscription.integration.spec.ts`) : échec avant, réussite après ; intégration 51/51 en local. Reste : lien PR/commit ; SEC-03 (jeton révoqué/banni sur sockets) non traité.
 - [ ] **SEC-03 (P1)** — Bannissement et révocation des sessions. Preuve de clôture : à renseigner.
 - [ ] **SEC-04 (P1)** — Protection de connexion et configuration. Preuve de clôture : à renseigner.
 

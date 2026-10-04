@@ -11,6 +11,18 @@
 
 Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DOUBLE_AUDIT_2026-10.md), [roadmap historique](docs/history/ROADMAP_MVP_AVANT_AUDIT.md).
 
+## Session de correction — SEC-02 (autorisation WebSocket)
+
+**Date :** 4 octobre 2026. **Objectif :** refuser l'abonnement aux rooms de planètes adverses.
+
+- [x] `game-events.gateway.ts` : `subscribe:planet` vérifie `planet.userId === client.data.userId`, valide l'identifiant, refuse avec `subscribe:refused` (réponse identique pour absente/adverse).
+- [x] Test `ws-planet-subscription.integration.spec.ts` : deux comptes, vrais sockets, aucun événement reçu par l'intrus, propriétaire servi ; échec avant, 25/25 unitaires et 51/51 intégration après (local).
+- [ ] Lien PR/commit ; audit des autres événements ciblés ; SEC-03/SEC-04 pour sockets bannis et origines.
+
+**Prochaines étapes :** SEC-03, SEC-04, SEC-01.
+
+---
+
 ## Session de correction — ECO-05 (remboursement du montant réellement payé)
 
 **Date :** 4 octobre 2026. **Objectif :** l'annulation rembourse exactement ce qui a été débité.

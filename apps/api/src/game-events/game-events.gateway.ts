@@ -12,6 +12,7 @@ import {
 import { Server, Socket } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { DatabaseService } from '../database/database.service';
 
 /**
  * Gateway WebSocket pour les événements de jeu en temps réel
@@ -49,6 +50,7 @@ export class GameEventsGateway
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly database: DatabaseService,
   ) {}
 
   afterInit(server: Server) {
@@ -107,14 +109,33 @@ export class GameEventsGateway
    * Permet au client de s'abonner aux événements d'une planète spécifique
    */
   @SubscribeMessage('subscribe:planet')
-  handleSubscribePlanet(
+  async handleSubscribePlanet(
     @ConnectedSocket() client: Socket,
     @MessageBody() data: { planetId: string },
   ) {
-    const room = `planet:${data.planetId}`;
+    const userId = client.data.userId as string | undefined;
+    const planetId = data?.planetId;
+
+    // SEC-02 : seul le propriétaire d'une planète peut rejoindre sa room
+    if (!userId || typeof planetId !== 'string' || planetId.length === 0 || planetId.length > 64) {
+      return { event: 'subscribe:refused', data: { message: 'Abonnement refuse' } };
+    }
+
+    const planet = await this.database.planet.findUnique({
+      where: { id: planetId },
+      select: { userId: true },
+    });
+
+    // Même réponse pour une planète absente ou appartenant à un autre joueur (pas d'énumération)
+    if (!planet || planet.userId !== userId) {
+      this.logger.warn(`Client ${client.id} (User: ${userId}) refused for planet ${planetId}`);
+      return { event: 'subscribe:refused', data: { message: 'Abonnement refuse' } };
+    }
+
+    const room = `planet:${planetId}`;
     client.join(room);
     this.logger.debug(`Client ${client.id} joined room ${room}`);
-    return { event: 'subscribed', data: { planetId: data.planetId } };
+    return { event: 'subscribed', data: { planetId } };
   }
 
   /**
@@ -125,6 +146,9 @@ export class GameEventsGateway
     @ConnectedSocket() client: Socket,
     @MessageBody() data: { planetId: string },
   ) {
+    if (typeof data?.planetId !== 'string') {
+      return { event: 'error', data: { message: 'Requete invalide' } };
+    }
     const room = `planet:${data.planetId}`;
     client.leave(room);
     this.logger.debug(`Client ${client.id} left room ${room}`);
