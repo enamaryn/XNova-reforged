@@ -7,7 +7,9 @@ Entièrement généré par IA, Claude et Codex.
 
 ## Statut
 
-MVP en cours (Sprint 10 - Polish & Tests). Détails dans `ROADMAP_MVP.md`.
+**Alpha privée en stabilisation ; MVP non validé pour ouverture publique.** Le double audit du 3 octobre 2026 relève des défauts de sécurité, de conservation des ressources et de fiabilité des tests.
+
+Voir le [registre des corrections](docs/DOUBLE_AUDIT_2026-10.md) et la [roadmap MVP](ROADMAP_MVP.md) pour les priorités et critères de sortie. Le démarrage LXC et le build séquentiel sont confirmés par les journaux utilisateur ; les correctifs npm et métier ne sont pas encore validés.
 
 ## Stack technique
 
@@ -91,6 +93,7 @@ Pour une installation détaillée : `GETTING_STARTED.md`
 ## Documentation
 
 - `GETTING_STARTED.md` - Guide d'installation complet
+- [Double audit et registre de corrections](docs/DOUBLE_AUDIT_2026-10.md) - Preuves, priorités, périmètres et critères d’acceptation
 - `ROADMAP_MVP.md` - Roadmap MVP
 - `ROADMAP_COMPLET.md` - Roadmap long terme
 - `GAME_FORMULAS.md` - Formules de jeu (référence)
@@ -120,10 +123,12 @@ npm run test:integration
 Notes rapides :
 - Tests unitaires : `apps/api/test/*.spec.ts` (mocks, logique métier)
 - Tests intégration : `apps/api/test/integration/` (vraie DB, requiert Docker)
-- Couverture intégration actuelle : `auth.integration.spec.ts` (auth + `GET /auth/me`) et `planets.integration.spec.ts` (liste bâtis + file build/cancel).
+- Neuf suites d’intégration : auth, planets, research, fleet, shipyard, galaxy, messages, alliances et statistics. Leur présence ne garantit pas une couverture complète : plusieurs assertions acceptent encore des erreurs 500 (QUAL-02).
 - Tests E2E : `tests/e2e/` (Playwright, interface utilisateur)
 - **IMPORTANT** : Les noms d'utilisateur sont limités à 20 caractères
 - Si erreur Reflector : ajouter `Reflector` aux providers du module
+
+Le résultat 21/21 unitaires et 26/26 intégration est rapporté par Claude ; les E2E n’ont pas été exécutés dans son environnement. Le test de service combat mocke le moteur. Exécuter les tests d’intégration sur une base dédiée, jamais celle des joueurs.
 
 ## Scripts utiles
 
@@ -149,3 +154,16 @@ GNU GPL v2 - voir `LICENSE`.
 ## Crédits
 
 Basé sur le projet original [XNova](http://www.xnova.fr/) (2008) par la XNova Team.
+
+## Limites connues de la chaîne de build
+
+Au commit audité, `@xnova/game-engine` ne déclare pas sa dépendance à `@xnova/game-config`. Le build Turbo initial peut échouer ; le correctif durable est suivi par QUAL-01. Après installation et génération Prisma, le contournement validé sur LXC est :
+
+```bash
+npm run build --workspace=@xnova/game-config
+npm run build --workspace=@xnova/game-engine
+npm run build --workspace=@xnova/api
+npm run build --workspace=@xnova/web
+```
+
+`npm run lint` reste une commande prévue, sans configuration ESLint versionnée au moment de l’audit. Le seul workflow GitHub Actions versionné est celui de sauvegarde.

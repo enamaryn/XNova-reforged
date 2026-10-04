@@ -5,37 +5,33 @@
 
 ---
 
-## 📊 État actuel du projet
+## État actuel — 4 octobre 2026
 
-**Sprint actuel :** Sprint 10 - Polish & Tests
-**Progression MVP :** ~95%
+**Phase : stabilisation après double audit. MVP public non validé.** L'estimation antérieure « ~95 % » est retirée faute de mesure de couverture. Les sprints historiques décrivent du code livré, pas une validation actuelle de la sécurité ou de tous les parcours.
 
-### ✅ Sprints terminés
-- Sprint 1A/1B : Infrastructure Backend + Frontend
-- Sprint 2A/2B : Authentification
-- Sprint 3 : Système de ressources temps réel
-- Sprint 3.5 : Refonte UI/UX 2026
-- Sprint 4 : Construction de bâtiments
-- Sprint 5 : Technologies / Recherche
-- Sprint 6 : Flottes + Hangar spatial
-- Sprint 7 : Combat simplifié
-- Sprint 8 : Galaxie & Exploration
-- Sprint 9 : Social (messagerie, alliances, stats)
-- Sprint 9.5 : Administration serveur
+Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DOUBLE_AUDIT_2026-10.md), [roadmap historique](docs/history/ROADMAP_MVP_AVANT_AUDIT.md).
 
-### 🔄 En cours (Sprint 10)
-- [x] Tests E2E Playwright
-- [x] Tests unitaires critiques
-- [x] Tests intégration API (9 fichiers)
-- [x] Responsive mobile
-- [x] Accessibilité ARIA
-- [x] Équilibrage du jeu
-- [x] Multi-langue (i18n)
-- [x] Monitoring & production (Sentry, health checks, backups)
-- [x] États de chargement & erreurs (UX)
-- [x] Optimisation frontend (performance)
+## Session documentaire — consolidation des audits Claude et Codex
+
+**Date :** 4 octobre 2026. **Objectif :** rendre les constats actionnables sans prétendre corriger le code.
+
+- [x] Consolider provenance, niveaux de preuve et limites des deux audits.
+- [x] Remplacer le statut courant par les lots SEC/ECO/GAME/SCOPE/QUAL/OPS et critères de sortie.
+- [x] Archiver la roadmap antérieure ; préciser les prérequis des extensions.
+- [x] Mettre à jour README et consignes de contexte CLAUDE.md.
+- [x] Conserver les références aux preuves dans docs/AUDIT_CODEX_2026-10-03.md.
+- [ ] Recevoir et analyser le résultat de la correction npm sur LXC ; 103 alertes au dernier état reçu.
+- [ ] Corriger et tester les tâches du registre ; aucune clôturée par cette session documentaire.
+
+**Fichiers :** docs/DOUBLE_AUDIT_2026-10.md (registre), docs/AUDIT_CODEX_2026-10-03.md (rapport détaillé), docs/history/ROADMAP_MVP_AVANT_AUDIT.md (archive), ROADMAP_MVP.md, ROADMAP_COMPLET.md, README.md, CLAUDE.md et ce journal.
+
+**Validation de cette PR :** cohérence des IDs, liens locaux et périmètre Markdown ; aucune suite applicative exécutée pour ces modifications documentaires. Les résultats d'exécution disponibles restent attribués à leurs sources dans le registre.
+
+**Prochaines étapes :** SEC-01 puis accès SEC-02/03/04, intégrité ECO-01 à ECO-05, règles GAME/SCOPE, preuves QUAL/OPS ; joindre PR et résultats à chaque clôture.
 
 ---
+
+## Historique des sessions (déclarations de l'époque)
 
 ## ✅ Session 66 - Tests intégration endpoints critiques
 

@@ -3,6 +3,16 @@
 > Version complète du projet XNova avec toutes les fonctionnalités avancées
 > **Durée totale :** 6-12 mois | **Base :** MVP (4 mois) + Extensions (2-8 mois)
 
+
+## Prérequis au lancement des extensions — 4 octobre 2026
+
+**Statut : post-MVP non engagé au titre de cet audit.** Les durées ci-dessus sont des estimations historiques, pas un calendrier validé. Les critères de sortie de [ROADMAP_MVP.md](ROADMAP_MVP.md) doivent être satisfaits avant les extensions.
+
+- Les défauts SEC, ECO, GAME, QUAL et OPS du [registre](docs/DOUBLE_AUDIT_2026-10.md) restent dans le MVP de stabilisation.
+- La défense de base et les règles de scan/colonisation doivent être arbitrées en SCOPE-01 ; leur mention ci-dessous ne signifie pas leur exclusion automatique du MVP.
+- Combat avancé, diplomatie/ACS, marché, mobile et 3D restent des extensions ; aucun de ces modules ne remplace la correction du moteur actuel.
+- [ ] Joindre les preuves de validation du MVP avant de démarrer cette roadmap.
+
 ---
 
 ## 📊 Vue d'ensemble
