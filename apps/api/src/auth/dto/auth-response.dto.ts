@@ -14,3 +14,10 @@ export class AuthResponseDto {
     refreshToken: string;
   };
 }
+
+/** Inscription lorsque la confirmation de l'adresse est obligatoire : aucune session n'est ouverte. */
+export class RegistrationPendingDto {
+  user: AuthResponseDto['user'];
+  verificationRequired: true;
+  message: string;
+}

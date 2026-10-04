@@ -79,3 +79,11 @@ Crée des bases jetables (supprimées en fin de test), puis vérifie : migration
 - Aucune restauration depuis les sauvegardes de production n'a été répétée (le test utilise des données synthétiques).
 - Pas de sauvegarde continue (PITR) : la perte maximale est l'intervalle entre deux sauvegardes (24 h).
 - Redis ne contient que des caches : il n'est pas sauvegardé.
+
+## Inscriptions et confirmation d'adresse email
+
+La confirmation de l'adresse est obligatoire pour créer un compte (`EMAIL_VERIFICATION_REQUIRED`, défaut : activée).
+Avant d'ouvrir les inscriptions : configurer le SMTP (administration, onglet « Configurer SMTP », compte super admin),
+envoyer un email de test, puis vérifier qu'une inscription reçoit bien son lien. Sans SMTP actif, `POST /auth/register`
+répond 503 et ne crée aucun compte. `EMAIL_VERIFICATION_REQUIRED=false` est réservé au développement et aux tests.
+Les comptes antérieurs à cette règle ont été marqués confirmés par la migration `20261004200000_existing_emails_considered_verified`.

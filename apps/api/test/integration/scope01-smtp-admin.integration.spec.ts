@@ -108,7 +108,7 @@ describe('API integration - Configuration SMTP (administration)', () => {
     admin = await signUp('ADMIN');
     player = await signUp('PLAYER');
     await startFakeSmtp();
-  });
+  }, 180_000); // attente possible du verrou des suites SMTP
 
   beforeEach(async () => {
     await database.gameConfig.deleteMany({ where: { key: { startsWith: 'smtp.' } } });

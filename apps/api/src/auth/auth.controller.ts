@@ -103,6 +103,14 @@ export class AuthController {
     return this.account.forgotPassword(dto.email);
   }
 
+  /** POST /auth/resend-confirmation : renvoi public du lien de confirmation d'un compte non activé. */
+  @Post('resend-confirmation')
+  @RateLimit('account')
+  @HttpCode(HttpStatus.OK)
+  resendConfirmation(@Body() dto: ForgotPasswordDto) {
+    return this.account.resendConfirmation(dto.email);
+  }
+
   /** POST /auth/reset-password : jeton reçu par email + nouveau mot de passe. */
   @Post('reset-password')
   @RateLimit('account')

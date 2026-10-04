@@ -1,5 +1,5 @@
 import { apiRequest } from "@/lib/api/client";
-import type { AuthResponseDto, AuthUserDto } from "@/lib/api/types";
+import type { AuthResponseDto, AuthUserDto, RegistrationPendingDto } from "@/lib/api/types";
 import { useAuthStore } from "@/lib/stores/auth-store";
 
 export interface LoginPayload {
@@ -23,12 +23,21 @@ export async function login(payload: LoginPayload) {
 }
 
 export async function register(payload: RegisterPayload) {
-  const data = await apiRequest<AuthResponseDto>("/auth/register", {
+  const data = await apiRequest<AuthResponseDto | RegistrationPendingDto>("/auth/register", {
     method: "POST",
     body: JSON.stringify(payload),
   });
+  // Confirmation d'adresse obligatoire : le compte existe mais aucune session n'est ouverte
+  if ("verificationRequired" in data) return data;
   applyAuthResponse(data);
   return data;
+}
+
+export function resendConfirmation(email: string) {
+  return apiRequest<{ message: string }>("/auth/resend-confirmation", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  });
 }
 
 export async function getMe() {

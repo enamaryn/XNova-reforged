@@ -1,6 +1,7 @@
 import {
   Injectable,
   ConflictException,
+  ForbiddenException,
   ServiceUnavailableException,
   UnauthorizedException,
   NotFoundException,
@@ -16,7 +17,9 @@ import { DatabaseService } from '../database/database.service';
 import { ServerConfigService } from '../server-config/server-config.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import { AuthResponseDto } from './dto/auth-response.dto';
+import { AuthResponseDto, RegistrationPendingDto } from './dto/auth-response.dto';
+import { EMAIL_NOT_VERIFIED, isEmailVerificationRequired } from './email-verification';
+import { MailService } from '../mail/mail.service';
 
 /** Nombre maximal de positions tentées pour la planète de départ lors d'une inscription. */
 const MAX_STARTER_ATTEMPTS = 10;
@@ -28,13 +31,22 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly serverConfig: ServerConfigService,
+    private readonly mail: MailService,
   ) {}
 
   /**
    * Inscription d'un nouvel utilisateur
    */
-  async register(registerDto: RegisterDto): Promise<AuthResponseDto> {
+  async register(registerDto: RegisterDto): Promise<AuthResponseDto | RegistrationPendingDto> {
     const { username, email, password } = registerDto;
+
+    // Confirmation obligatoire : sans envoi d'emails possible, un compte ne pourrait jamais être activé
+    const verificationRequired = isEmailVerificationRequired(this.configService);
+    if (verificationRequired && !(await this.mail.isConfigured())) {
+      throw new ServiceUnavailableException(
+        "Les inscriptions sont momentanément indisponibles : l'envoi d'emails de confirmation n'est pas configuré",
+      );
+    }
 
     // Hachage hors transaction : opération lente, sans accès base
     const hashedPassword = await argon2.hash(password);
@@ -51,9 +63,28 @@ export class AuthService {
             data: { username, email, password: hashedPassword, points: 0, rank: 0 },
           });
           await this.createStarterPlanet(tx, created.id, config.planetSize);
-          const sessionTokens = await this.createSessionTokens(created.id, created.username, tx);
+          // Pas de session tant que l'adresse n'est pas confirmée
+          const sessionTokens = verificationRequired
+            ? null
+            : await this.createSessionTokens(created.id, created.username, tx);
           return { user: created, tokens: sessionTokens };
         });
+
+        if (!tokens) {
+          return {
+            user: {
+              id: user.id,
+              username: user.username,
+              email: user.email,
+              points: user.points,
+              rank: user.rank,
+              role: user.role,
+              createdAt: user.createdAt,
+            },
+            verificationRequired: true,
+            message: 'Compte créé : un email de confirmation vous a été envoyé, cliquez sur le lien pour activer votre compte',
+          };
+        }
 
         return {
           user: {
@@ -141,6 +172,14 @@ export class AuthService {
 
     if (!isPasswordValid) {
       throw new UnauthorizedException('Identifiants incorrects');
+    }
+
+    // Adresse non confirmée : vérifié après le mot de passe, pour ne rien révéler à un tiers
+    if (!user.emailVerifiedAt && isEmailVerificationRequired(this.configService)) {
+      throw new ForbiddenException({
+        message: "Adresse email non confirmée : cliquez sur le lien reçu par email pour activer votre compte",
+        code: EMAIL_NOT_VERIFIED,
+      });
     }
 
     // Mettre à jour la date de dernière activité

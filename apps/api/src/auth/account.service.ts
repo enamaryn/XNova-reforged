@@ -118,6 +118,20 @@ export class AccountService {
     return { message: 'Email de confirmation envoyé' };
   }
 
+  /**
+   * Renvoi public du lien de confirmation (le compte n'a pas encore de session) : réponse identique que
+   * le compte existe, soit déjà confirmé ou non.
+   */
+  resendConfirmation(email: string) {
+    void (async () => {
+      const user = await this.database.user.findFirst({
+        where: { email: { equals: email, mode: 'insensitive' }, emailVerifiedAt: null },
+      });
+      if (user) await this.sendVerificationEmail(user);
+    })().catch((error) => this.logger.warn(`Renvoi de confirmation échoué : ${(error as Error).message}`));
+    return { message: "Si un compte non confirmé correspond à cette adresse, un nouvel email de confirmation a été envoyé" };
+  }
+
   /** Réponse identique que le compte existe ou non ; l'envoi se fait hors de la réponse. */
   forgotPassword(email: string) {
     void this.sendResetEmail(email).catch((error) => {

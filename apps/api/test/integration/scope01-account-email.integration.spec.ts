@@ -85,7 +85,7 @@ describe('API integration - Comptes par email (SCOPE-01)', () => {
     app = integration.app;
     database = integration.database;
     await smtp.start();
-  });
+  }, 180_000); // attente possible du verrou des suites SMTP
 
   beforeEach(async () => {
     smtp.clear();
