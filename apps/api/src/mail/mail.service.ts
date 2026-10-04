@@ -12,6 +12,11 @@ export interface OutgoingMail {
 export class MailService {
   constructor(private readonly smtpConfig: SmtpConfigService) {}
 
+  /** Vrai si l'envoi d'emails est activé et configuré (à vérifier avant d'émettre un jeton à envoyer). */
+  async isConfigured(): Promise<boolean> {
+    return (await this.smtpConfig.getForSending()) !== null;
+  }
+
   /** Envoie un message avec la configuration SMTP courante ; échoue clairement si elle est absente. */
   async send(mail: OutgoingMail): Promise<void> {
     const config = await this.smtpConfig.getForSending();

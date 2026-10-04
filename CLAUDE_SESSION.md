@@ -822,3 +822,20 @@ Le problème principal était que Framer Motion avec `initial: { opacity: 0 }` n
 
 ### ⏭️ Prochaines étapes
 - Emails de compte : mot de passe oublié, changement d'email et de mot de passe (révocation des autres sessions), vérification d'email
+
+
+---
+
+## Session du 4 octobre 2026 — SCOPE-01 lot (c), partie 2 : comptes par email
+
+**Objectif :** mot de passe oublié, changement d'email/mot de passe, vérification d'email.
+
+### ✅ Tâches réalisées
+- [x] Migration `20261004190000_email_tokens` ; `AccountService` (jetons hachés, usage unique, révocation des sessions)
+- [x] Routes `/auth/forgot-password`, `reset-password`, `verify-email`, `resend-verification`, `change-password`, `change-email` ; limitation de débit
+- [x] Pages web (oubli, réinitialisation, confirmation) et paramètres du compte
+- [x] 22 tests d'intégration + 4 E2E ; verrou entre suites pour la configuration SMTP globale
+
+### ⏭️ Prochaines étapes
+- Valider avec un SMTP réel ; décider si la confirmation d'adresse devient obligatoire
+- Restent ouverts : SEC-01 (9 alertes hautes de production), SCOPE-02, OPS-03

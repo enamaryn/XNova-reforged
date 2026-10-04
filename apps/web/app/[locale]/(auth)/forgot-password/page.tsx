@@ -1,19 +1,18 @@
 import Link from "next/link";
 import { AuthHeader } from "@/components/auth/AuthHeader";
+import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
 
 export default function ForgotPasswordPage() {
   return (
     <div className="space-y-5 sm:space-y-6">
       <AuthHeader
-        eyebrow="Recuperation"
-        title="Mot de passe oublie."
-        subtitle="Le module de recuperation sera disponible prochainement."
+        eyebrow="Récupération"
+        title="Mot de passe oublié."
+        subtitle="Indiquez l'adresse email de votre compte : nous vous enverrons un lien pour choisir un nouveau mot de passe."
       />
-      <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-6 text-sm text-slate-500">
-        En attendant, contactez l'equipe pour reinitialiser votre acces.
-      </div>
+      <ForgotPasswordForm />
       <Link href="/login" className="text-sm font-semibold text-slate-900">
-        Retour a la connexion
+        Retour à la connexion
       </Link>
     </div>
   );

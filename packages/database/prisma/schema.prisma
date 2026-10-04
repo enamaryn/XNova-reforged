@@ -34,6 +34,8 @@ model User {
   bannedUntil DateTime?
   banReason String?
   bannedAt  DateTime?
+  // Adresse email confirmée par lien ; null tant qu'elle ne l'est pas (SCOPE-01)
+  emailVerifiedAt DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -42,6 +44,7 @@ model User {
   // Relations
   planets       Planet[]
   sessions      Session[]
+  emailTokens   EmailToken[]
   spyReportsSent     SpyReport[] @relation("SpyReportsSent")
   spyReportsReceived SpyReport[] @relation("SpyReportsReceived")
   fleets        Fleet[]
@@ -473,6 +476,26 @@ model Session {
   lastRotatedAt DateTime  @default(now())
 
   @@index([userId, revokedAt])
+  @@index([expiresAt])
+}
+
+// Jetons à usage unique envoyés par email : vérification, réinitialisation du mot de passe, changement d'adresse.
+// Seule l'empreinte SHA-256 est stockée ; le jeton en clair n'existe que dans l'email.
+model EmailToken {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type      String    // verify_email, reset_password, change_email
+  tokenHash String    @unique
+  // Adresse concernée : celle à confirmer (verify_email, change_email) ; null pour reset_password
+  email     String?
+  expiresAt DateTime
+  usedAt    DateTime?
+
+  createdAt DateTime  @default(now())
+
+  @@index([userId, type, usedAt])
   @@index([expiresAt])
 }
 

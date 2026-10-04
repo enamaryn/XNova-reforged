@@ -4,6 +4,7 @@ import request from 'supertest';
 import { DatabaseService } from '../../src/database/database.service';
 import { decryptSecret, encryptSecret } from '../../src/common/security/secret-box';
 import {
+  acquireGlobalLock,
   buildTestUser,
   cleanupTestUser,
   createIntegrationApp,
@@ -95,7 +96,11 @@ describe('API integration - Configuration SMTP (administration)', () => {
       });
     });
 
+  let releaseLock: () => void = () => undefined;
+
   beforeAll(async () => {
+    // La configuration SMTP est un état global partagé avec l'autre suite SMTP
+    releaseLock = await acquireGlobalLock('smtp-config');
     const integration = await createIntegrationApp();
     app = integration.app;
     database = integration.database;
@@ -115,6 +120,7 @@ describe('API integration - Configuration SMTP (administration)', () => {
     await database.gameConfig.deleteMany({ where: { key: { startsWith: 'smtp.' } } });
     for (const username of usernames) await cleanupTestUser(database, username);
     if (app) await app.close();
+    releaseLock();
   });
 
   describe('contrôle d\'accès', () => {
