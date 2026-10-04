@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useAuthStore } from '@/lib/stores/auth-store';
+import { logout } from '@/lib/api/auth';
 import { ResourceBar } from './ResourceBar';
 import { PlanetSelector } from './PlanetSelector';
 import { useI18n } from '@/lib/i18n';
@@ -13,15 +14,16 @@ interface GameHeaderProps {
 }
 
 export function GameHeader({ onMenuToggle }: GameHeaderProps) {
-  const { user, reset } = useAuthStore();
+  const { user } = useAuthStore();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showLangMenu, setShowLangMenu] = useState(false);
   const { locale, setLocale, t } = useI18n();
   const langMenuId = 'game-lang-menu';
   const userMenuId = 'game-user-menu';
 
-  const handleLogout = () => {
-    reset();
+  const handleLogout = async () => {
+    // Revoque la session serveur puis nettoie l'etat local (SEC-03)
+    await logout();
     window.location.href = '/login';
   };
 

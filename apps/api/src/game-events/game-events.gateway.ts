@@ -13,6 +13,8 @@ import { Server, Socket } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '../database/database.service';
+import { isBanned } from '../auth/ban.util';
+import { resolveAllowedOrigins } from '../config/env.validation';
 
 /**
  * Gateway WebSocket pour les événements de jeu en temps réel
@@ -23,15 +25,10 @@ import { DatabaseService } from '../database/database.service';
  * - research:completed - Recherche terminée
  * - fleet:arrived - Flotte arrivée à destination
  */
-const webOrigins = (process.env.WEB_ORIGINS || process.env.WEB_ORIGIN || '')
-  .split(',')
-  .map((origin) => origin.trim())
-  .filter(Boolean);
-const isProd = process.env.NODE_ENV === 'production';
-
 @WebSocketGateway({
   cors: {
-    origin: isProd && webOrigins.length > 0 ? webOrigins : true,
+    // Même politique d'origines que l'API HTTP (SEC-04)
+    origin: resolveAllowedOrigins(),
     credentials: true,
   },
   namespace: '/game',
@@ -72,14 +69,40 @@ export class GameEventsGateway
       const secret = this.configService.get<string>('JWT_SECRET');
       const payload = await this.jwtService.verifyAsync(token, { secret });
 
-      if (!payload || !payload.sub) {
+      if (!payload || !payload.sub || !payload.sid) {
         this.logger.warn(`Client ${client.id} rejected: Invalid token`);
+        client.disconnect();
+        return;
+      }
+
+      // SEC-03 : session serveur active et compte non suspendu
+      const session = await this.database.session.findUnique({
+        where: { id: payload.sid },
+        select: {
+          userId: true,
+          revokedAt: true,
+          expiresAt: true,
+          user: { select: { bannedAt: true, bannedUntil: true } },
+        },
+      });
+      if (
+        !session ||
+        session.userId !== payload.sub ||
+        session.revokedAt ||
+        session.expiresAt <= new Date() ||
+        isBanned(session.user)
+      ) {
+        this.logger.warn(`Client ${client.id} rejected: Session revoked or user banned`);
         client.disconnect();
         return;
       }
 
       // Stocker l'userId dans les données du socket
       client.data.userId = payload.sub;
+      client.data.sessionId = payload.sid;
+      // Rooms dédiées pour pouvoir couper les sockets d'un utilisateur ou d'une session
+      client.join(`user:${payload.sub}`);
+      client.join(`session:${payload.sid}`);
       this.userSockets.set(payload.sub, client.id);
 
       this.logger.log(`Client ${client.id} connected (User: ${payload.sub})`);
@@ -103,6 +126,17 @@ export class GameEventsGateway
     } else {
       this.logger.log(`Client ${client.id} disconnected`);
     }
+  }
+
+  /** Coupe tous les sockets d'un utilisateur (bannissement). */
+  disconnectUser(userId: string) {
+    this.server?.in(`user:${userId}`).disconnectSockets(true);
+    this.userSockets.delete(userId);
+  }
+
+  /** Coupe les sockets d'une session (déconnexion). */
+  disconnectSession(sessionId: string) {
+    this.server?.in(`session:${sessionId}`).disconnectSockets(true);
   }
 
   /**

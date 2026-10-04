@@ -11,6 +11,50 @@
 
 Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DOUBLE_AUDIT_2026-10.md), [roadmap historique](docs/history/ROADMAP_MVP_AVANT_AUDIT.md).
 
+## Session de correction — SEC-01 (dépendances vulnérables)
+
+**Date :** 4 octobre 2026. **Objectif :** réduire les alertes npm sans migration majeure aveugle.
+
+- [x] Audits complets et production avant/après conservés dans `docs/audits/` ; analyse dans `docs/NPM_AUDIT_2026-10.md`.
+- [x] `npm audit fix --ignore-scripts` (lockfile seul) : 103 → 72 alertes, 0 critique ; production 60 → 34, 0 critique, 9 hautes.
+- [x] Validation locale : builds séquentiels config/engine/api/web, 35/35 unitaires, 62/62 intégration.
+- [ ] 9 hautes de production restantes : migration `@sentry/nextjs` 11.x, `picomatch` (override), `postcss` interne à Next ; décision sur la mesure compensatoire.
+- [ ] `npm run build` à froid (Turbo) toujours en échec (QUAL-01) ; lint web non configuré ; audit en CI.
+
+**Prochaines étapes :** GAME-01 (validation des flottes et missions), puis QUAL-01.
+
+---
+
+## Session de correction — SEC-04 (protection de connexion et configuration)
+
+**Date :** 4 octobre 2026. **Objectif :** limiter les tentatives, exiger secrets et origines en production, durcir les en-têtes.
+
+- [x] `common/security/rate-limit.guard.ts` : limitation login/register en mémoire (IP + compte visé), 429 + `Retry-After`, configurable (`RATE_LIMIT_*`).
+- [x] `config/env.validation.ts` : validation de production (secrets, `DATABASE_URL`, `WEB_ORIGINS`) et origines autorisées, utilisée par l'API HTTP et la passerelle WebSocket.
+- [x] `app.setup.ts` (`configureApp`) : en-têtes de sécurité, proxy de confiance, CORS, validation globale ; partagé par `main.ts` et les tests.
+- [x] Tests : `env.validation.spec.ts` (10), `sec04-hardening.integration.spec.ts` (5) ; unitaires 35/35 et intégration 62/62 en local.
+- [ ] Lien PR/commit ; limiteur partagé (Redis) ; cookie `xnova_access` ; durée de l'access token.
+
+**Prochaines étapes :** SEC-01 (dépendances), puis GAME-01.
+
+---
+
+## Session de correction — SEC-03 (bannissement et révocation des sessions)
+
+**Date :** 4 octobre 2026. **Objectif :** un jeton émis avant un ban ou une déconnexion n'est plus accepté.
+
+- [x] Schéma : modèle `Session` (hash du refresh token courant, expiration, révocation).
+- [x] `auth.service.ts` : sessions à la connexion/inscription, refresh avec rotation atomique et détection de rejeu, révocation unitaire et par utilisateur.
+- [x] `jwt.strategy.ts` : refuse token sans `sid`, session révoquée/expirée/incohérente, compte suspendu.
+- [x] `POST /auth/logout` révoque la session et coupe ses sockets ; `AdminService.banUser` révoque les sessions et coupe les sockets ; passerelle WebSocket contrôle session et ban à la connexion.
+- [x] Web : refresh sérialisé, nouveau refresh token conservé, déconnexion appelle l'API.
+- [x] Tests `sec03-sessions.integration.spec.ts` (6) : échec avant, 25/25 unitaires et 57/57 intégration après (local).
+- [ ] Lien PR/commit ; `db push` sur les environnements existants ; SEC-04 (secrets, durée de l'access token, limitation de débit).
+
+**Prochaines étapes :** SEC-04, SEC-01.
+
+---
+
 ## Session de correction — SEC-02 (autorisation WebSocket)
 
 **Date :** 4 octobre 2026. **Objectif :** refuser l'abonnement aux rooms de planètes adverses.

@@ -41,6 +41,7 @@ model User {
 
   // Relations
   planets       Planet[]
+  sessions      Session[]
   fleets        Fleet[]
   technologies  Technology[]
   messages      Message[]      @relation("ReceivedMessages")
@@ -448,4 +449,22 @@ model UserBanLog {
   @@index([userId])
   @@index([actorId])
   @@index([createdAt])
+}
+
+// Sessions serveur : une par connexion, referencee par le claim `sid` des JWT (SEC-03)
+model Session {
+  id            String    @id @default(uuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Empreinte SHA-256 du refresh token courant (rotation a chaque rafraichissement)
+  refreshHash   String
+  expiresAt     DateTime
+  revokedAt     DateTime?
+
+  createdAt     DateTime  @default(now())
+  lastRotatedAt DateTime  @default(now())
+
+  @@index([userId, revokedAt])
+  @@index([expiresAt])
 }

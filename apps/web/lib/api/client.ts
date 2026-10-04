@@ -57,7 +57,19 @@ async function parseError(response: Response) {
   return new ApiError(message, response.status, payload);
 }
 
-async function refreshAccessToken() {
+// Un seul rafraichissement a la fois : le refresh token est a usage unique (rotation, SEC-03)
+let refreshInFlight: Promise<{ accessToken: string; refreshToken: string } | null> | null = null;
+
+function refreshAccessToken() {
+  if (!refreshInFlight) {
+    refreshInFlight = doRefreshAccessToken().finally(() => {
+      refreshInFlight = null;
+    });
+  }
+  return refreshInFlight;
+}
+
+async function doRefreshAccessToken() {
   const { tokens, setTokens, reset } = useAuthStore.getState();
   if (!tokens?.refreshToken) {
     reset();
@@ -77,10 +89,11 @@ async function refreshAccessToken() {
     return null;
   }
 
-  const data = (await response.json()) as { accessToken: string };
+  const data = (await response.json()) as { accessToken: string; refreshToken: string };
   const nextTokens = {
     accessToken: data.accessToken,
-    refreshToken: tokens.refreshToken,
+    // Le serveur fait tourner le refresh token : conserver le nouveau
+    refreshToken: data.refreshToken ?? tokens.refreshToken,
   };
   setTokens(nextTokens);
   return nextTokens;

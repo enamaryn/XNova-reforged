@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { TECHNOLOGIES } from '@xnova/game-config';
 import { DatabaseService } from '../database/database.service';
+import { GameEventsGateway } from '../game-events/game-events.gateway';
 import { ServerConfigService } from '../server-config/server-config.service';
 import { UpdateConfigDto } from './dto/update-config.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
@@ -33,6 +34,7 @@ export class AdminService {
   constructor(
     private readonly database: DatabaseService,
     private readonly serverConfig: ServerConfigService,
+    private readonly gameEvents: GameEventsGateway,
   ) {}
 
   async getConfig() {
@@ -202,6 +204,11 @@ export class AdminService {
           expiresAt,
         },
       }),
+      // SEC-03 : les sessions existantes (HTTP, refresh) sont révoquées immédiatement
+      this.database.session.updateMany({
+        where: { userId: target.id, revokedAt: null },
+        data: { revokedAt: now },
+      }),
       this.database.adminAuditLog.create({
         data: {
           userId: actorId,
@@ -215,6 +222,9 @@ export class AdminService {
         },
       }),
     ]);
+
+    // ... et les sockets déjà ouverts sont coupés
+    this.gameEvents.disconnectUser(target.id);
 
     return { success: true, expiresAt };
   }

@@ -12,17 +12,24 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { GameEventsGateway } from '../game-events/game-events.gateway';
+import { RateLimit, RateLimitGuard } from '../common/security/rate-limit.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 
 @Controller('auth')
+@UseGuards(RateLimitGuard)
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly gameEvents: GameEventsGateway,
+  ) {}
 
   /**
    * POST /auth/register
    * Inscription d'un nouvel utilisateur
    */
   @Post('register')
+  @RateLimit('register')
   @HttpCode(HttpStatus.CREATED)
   async register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);
@@ -33,6 +40,7 @@ export class AuthController {
    * Connexion d'un utilisateur existant
    */
   @Post('login')
+  @RateLimit('login')
   @HttpCode(HttpStatus.OK)
   async login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
@@ -62,14 +70,14 @@ export class AuthController {
 
   /**
    * POST /auth/logout
-   * Déconnexion (côté client, suppression du token)
-   * Cette route existe pour la symétrie de l'API mais ne fait rien côté serveur
-   * car nous utilisons des JWT stateless
+   * Révoque la session serveur courante et coupe ses sockets
    */
   @Post('logout')
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
-  async logout() {
+  async logout(@CurrentUser('sessionId') sessionId: string) {
+    await this.authService.revokeSession(sessionId);
+    this.gameEvents.disconnectSession(sessionId);
     return {
       message: 'Déconnexion réussie',
     };

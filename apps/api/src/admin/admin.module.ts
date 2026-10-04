@@ -3,10 +3,11 @@ import { Reflector } from '@nestjs/core';
 import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
 import { DatabaseModule } from '../database/database.module';
+import { GameEventsModule } from '../game-events/game-events.module';
 import { ServerConfigModule } from '../server-config/server-config.module';
 
 @Module({
-  imports: [DatabaseModule, ServerConfigModule],
+  imports: [DatabaseModule, ServerConfigModule, GameEventsModule],
   controllers: [AdminController],
   providers: [AdminService, Reflector],
 })

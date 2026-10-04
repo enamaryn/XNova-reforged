@@ -12,10 +12,10 @@ Les travaux de sécurité et d'intégrité économique peuvent avancer en parall
 
 **État : à réaliser / validation non reçue.**
 
-- [ ] **SEC-01 (P1)** — Dépendances vulnérables. Preuve de clôture : à renseigner.
+- [~] **SEC-01 (P1)** — Dépendances vulnérables. Correctif partiel appliqué (4 oct. 2026) : `npm audit fix` sans `--force` (lockfile seul) ; 103 → 72 alertes, 0 critique (production : 60 → 34, 0 critique, 9 hautes). Rapports avant/après dans `docs/audits/`, analyse dans `docs/NPM_AUDIT_2026-10.md`. Build séquentiel, 35/35 unitaires et 62/62 intégration en local. **Reste** : 9 hautes de production (chaîne `@sentry/nextjs` ≤ 10.39, `postcss` imbriqué dans Next, `picomatch`) sans mesure de clôture, migration Sentry 11 à planifier ; lien PR/commit ; audit en CI (QUAL-01).
 - [~] **SEC-02 (P1)** — Autorisation WebSocket. Correctif appliqué (4 oct. 2026) : `subscribe:planet` vérifie en base que la planète appartient au socket authentifié, sinon événement `subscribe:refused` (même réponse pour planète absente ou adverse) ; test avec deux comptes et vrais sockets (`ws-planet-subscription.integration.spec.ts`) : échec avant, réussite après ; intégration 51/51 en local. Reste : lien PR/commit ; SEC-03 (jeton révoqué/banni sur sockets) non traité.
-- [ ] **SEC-03 (P1)** — Bannissement et révocation des sessions. Preuve de clôture : à renseigner.
-- [ ] **SEC-04 (P1)** — Protection de connexion et configuration. Preuve de clôture : à renseigner.
+- [~] **SEC-03 (P1)** — Bannissement et révocation des sessions. Correctif appliqué (4 oct. 2026) : table `Session` (claim `sid` dans les JWT), contrôle session + bannissement à chaque requête, refresh token à usage unique avec rotation et détection de rejeu, déconnexion qui révoque la session et coupe les sockets, ban qui révoque les sessions et coupe les sockets, contrôle à la connexion WebSocket. 6 tests PostgreSQL (`sec03-sessions.integration.spec.ts`) en échec avant, réussite après ; intégration 57/57 en local. Reste : lien PR/commit ; `db push` sur les environnements ; migration versionnée (OPS-01) ; durée de vie de l'access token (SEC-04).
+- [~] **SEC-04 (P1)** — Protection de connexion et configuration. Correctif appliqué (4 oct. 2026) : limitation login/register (429 + `Retry-After`, récupération après fenêtre ; par IP et, pour le login, par compte visé), démarrage refusé en production sans secrets valides ni `WEB_ORIGINS`, CORS HTTP et WebSocket jamais ouverts en production, en-têtes de sécurité. 15 tests unitaires et 5 d'intégration en échec avant ou ajoutés ; intégration 62/62 en local. Reste : lien PR/commit ; limiteur en mémoire (une instance) ; durée de l'access token ; cookie `xnova_access` du web sans `Secure`/`HttpOnly`.
 
 ## Lot 2 — Intégrité économique
 
