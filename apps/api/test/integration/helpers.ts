@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { randomBytes } from 'crypto';
-import { mkdirSync, rmdirSync, statSync } from 'fs';
+import { mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
 import { SchedulerRegistry } from '@nestjs/schedule';
@@ -40,6 +40,9 @@ export async function createIntegrationApp(): Promise<IntegrationApp> {
   process.env.RATE_LIMIT_LOGIN_MAX = process.env.RATE_LIMIT_LOGIN_MAX || '100000';
   process.env.RATE_LIMIT_REGISTER_MAX = process.env.RATE_LIMIT_REGISTER_MAX || '100000';
   process.env.RATE_LIMIT_ACCOUNT_MAX = process.env.RATE_LIMIT_ACCOUNT_MAX || '100000';
+  // La confirmation d'adresse est obligatoire en production ; les suites créent des comptes sans SMTP.
+  // La suite dédiée la réactive (scope01-email-required).
+  process.env.EMAIL_VERIFICATION_REQUIRED = process.env.EMAIL_VERIFICATION_REQUIRED || 'false';
 
   const moduleRef = await Test.createTestingModule({
     imports: [AppModule],
@@ -120,26 +123,42 @@ export async function cleanupTestUser(database: DatabaseService, username: strin
 /**
  * Verrou entre suites : les suites tournent en parallèle sur la même base ; celles qui modifient un état
  * global (configuration SMTP dans `GameConfig`) doivent s'exécuter l'une après l'autre.
- * Verrou par répertoire (création atomique), repris s'il date de plus de deux minutes (suite interrompue).
+ * Verrou par répertoire (création atomique) portant le PID du détenteur : repris si ce processus n'existe
+ * plus (suite interrompue) ou si le verrou date de plus de deux minutes.
  */
 export async function acquireGlobalLock(name: string): Promise<() => void> {
   const dir = join(tmpdir(), `xnova-itest-lock-${name}`);
-  const deadline = Date.now() + 180_000;
+  const pidFile = join(dir, 'pid');
+  const deadline = Date.now() + 170_000;
+  const isAlive = (pid: number) => {
+    try {
+      process.kill(pid, 0);
+      return true;
+    } catch {
+      return false;
+    }
+  };
   for (;;) {
     try {
       mkdirSync(dir);
+      writeFileSync(pidFile, String(process.pid));
       return () => {
         try {
-          rmdirSync(dir);
+          rmSync(dir, { recursive: true, force: true });
         } catch {
           // déjà libéré
         }
       };
     } catch {
       try {
-        if (Date.now() - statSync(dir).mtimeMs > 120_000) rmdirSync(dir);
+        const holder = Number(readFileSync(pidFile, 'utf8'));
+        const age = Date.now() - statSync(dir).mtimeMs;
+        if ((Number.isInteger(holder) && holder > 0 && !isAlive(holder)) || age > 120_000) {
+          rmSync(dir, { recursive: true, force: true });
+          continue;
+        }
       } catch {
-        // libéré entre-temps
+        // verrou en cours de création ou libéré entre-temps
       }
       if (Date.now() > deadline) throw new Error(`Verrou ${name} non obtenu`);
       await new Promise((resolve) => setTimeout(resolve, 100));

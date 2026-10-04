@@ -839,3 +839,19 @@ Le problème principal était que Framer Motion avec `initial: { opacity: 0 }` n
 ### ⏭️ Prochaines étapes
 - Valider avec un SMTP réel ; décider si la confirmation d'adresse devient obligatoire
 - Restent ouverts : SEC-01 (9 alertes hautes de production), SCOPE-02, OPS-03
+
+
+---
+
+## Session du 4 octobre 2026 — confirmation d'email obligatoire
+
+**Objectif :** la confirmation de l'adresse devient obligatoire pour la création de compte (décision du propriétaire).
+
+### ✅ Tâches réalisées
+- [x] Inscription sans session, connexion refusée tant que l'adresse n'est pas confirmée (403 `EMAIL_NOT_VERIFIED`), renvoi public du lien
+- [x] Inscription refusée (503) sans SMTP configuré ; `EMAIL_VERIFICATION_REQUIRED=false` pour développement/tests/CI E2E
+- [x] Migration de reprise : comptes existants considérés confirmés
+- [x] UI : écran « vérifiez vos emails », renvoi depuis la connexion ; 7 tests d'intégration ; verrou entre suites durci (PID, délai)
+
+### ⏭️ Prochaines étapes
+- Valider avec un SMTP réel ; configurer le SMTP avant d'ouvrir les inscriptions

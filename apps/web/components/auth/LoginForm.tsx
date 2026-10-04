@@ -15,12 +15,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { ResendConfirmation } from "@/components/auth/ResendConfirmation";
 
 export function LoginForm() {
   const t = useTranslations('auth.login');
   const setStatus = useAuthStore((state) => state.setStatus);
   const setRemember = useAuthStore((state) => state.setRemember);
   const [remember, setLocalRemember] = useState(false);
+  const [needsConfirmation, setNeedsConfirmation] = useState(false);
 
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
@@ -40,6 +42,7 @@ export function LoginForm() {
     },
     onError: (error) => {
       setStatus("unauthenticated");
+      setNeedsConfirmation(error instanceof ApiError && error.payload?.code === "EMAIL_NOT_VERIFIED");
       if (error instanceof ApiError) {
         showError(error.message);
       } else {
@@ -113,6 +116,19 @@ export function LoginForm() {
       <Button type="submit" className="w-full" disabled={mutation.isPending}>
         {t('submit')}
       </Button>
+
+      {needsConfirmation ? (
+        <div
+          className="space-y-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900"
+          data-testid="login-needs-confirmation"
+        >
+          <p>
+            Votre adresse email n&apos;est pas encore confirmée. Cliquez sur le lien reçu par email, ou
+            demandez-en un nouveau :
+          </p>
+          <ResendConfirmation initialEmail={form.getValues("identifier").includes("@") ? form.getValues("identifier") : ""} />
+        </div>
+      ) : null}
     </form>
   );
 }

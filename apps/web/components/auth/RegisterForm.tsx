@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import Link from "next/link";
 import { useMutation } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -12,10 +14,12 @@ import { useAuthStore } from "@/lib/stores/auth-store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ResendConfirmation } from "@/components/auth/ResendConfirmation";
 
 export function RegisterForm() {
   const setStatus = useAuthStore((state) => state.setStatus);
   const setRemember = useAuthStore((state) => state.setRemember);
+  const [pendingEmail, setPendingEmail] = useState<string | null>(null);
 
   const form = useForm<RegisterSchema>({
     resolver: zodResolver(registerSchema),
@@ -28,7 +32,12 @@ export function RegisterForm() {
 
   const mutation = useMutation({
     mutationFn: register,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      // Confirmation d'adresse obligatoire : on attend le clic sur le lien reçu par email
+      if ("verificationRequired" in data) {
+        setPendingEmail(data.user.email);
+        return;
+      }
       showSuccess("Compte cree avec succes");
       // Navigation complète : le cache du routeur peut contenir les préchargements de /overview faits
       // avant connexion (redirigés vers /login par le middleware) et renverrait le joueur à /login.
@@ -48,6 +57,26 @@ export function RegisterForm() {
     setRemember(true);
     mutation.mutate(values);
   };
+
+  if (pendingEmail) {
+    return (
+      <div className="space-y-5" data-testid="register-pending">
+        <p className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
+          Compte créé. Un email de confirmation a été envoyé à <strong>{pendingEmail}</strong> : cliquez sur le
+          lien qu&apos;il contient pour activer votre compte, puis connectez-vous.
+        </p>
+        <details className="text-sm text-slate-600">
+          <summary className="cursor-pointer font-semibold">Email non reçu ?</summary>
+          <div className="mt-3">
+            <ResendConfirmation initialEmail={pendingEmail} />
+          </div>
+        </details>
+        <Link href="/login" className="text-sm font-semibold text-slate-900">
+          Aller à la connexion
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <form
