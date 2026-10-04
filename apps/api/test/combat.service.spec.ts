@@ -28,6 +28,7 @@ type MockDb = {
   };
   fleet: {
     update: jest.Mock;
+    updateMany: jest.Mock;
   };
   $transaction: jest.Mock;
 };
@@ -52,6 +53,7 @@ const createService = () => {
     },
     fleet: {
       update: jest.fn(),
+      updateMany: jest.fn(),
     },
     $transaction: jest.fn(),
   };
@@ -71,6 +73,22 @@ const computeCargoCapacityMock = computeCargoCapacity as jest.MockedFunction<
   typeof computeCargoCapacity
 >;
 const distributeLootMock = distributeLoot as jest.MockedFunction<typeof distributeLoot>;
+
+const buildTx = (stock: { metal: number; crystal: number; deuterium: number }) => ({
+  $queryRaw: jest.fn().mockResolvedValue([]),
+  fleet: {
+    updateMany: jest.fn().mockResolvedValue({ count: 1 }),
+    update: jest.fn().mockResolvedValue({}),
+  },
+  planet: {
+    findUniqueOrThrow: jest.fn().mockResolvedValue(stock),
+    update: jest.fn().mockResolvedValue({}),
+  },
+  combatReport: {
+    create: jest.fn().mockResolvedValue({ id: 'report-1', result: 'attacker_win' }),
+  },
+  ship: { updateMany: jest.fn().mockResolvedValue({ count: 1 }) },
+});
 
 const baseFleet = {
   id: 'fleet-1',
@@ -109,12 +127,13 @@ describe('CombatService', () => {
   it('fait revenir la flotte si la cible est absente', async () => {
     const { service, database } = createService();
     database.planet.findFirst.mockResolvedValue(null);
+    database.fleet.updateMany.mockResolvedValue({ count: 1 });
 
     const result = await service.resolveAttackMission(baseFleet);
 
     expect(result).toBeNull();
-    expect(database.fleet.update).toHaveBeenCalledWith({
-      where: { id: 'fleet-1' },
+    expect(database.fleet.updateMany).toHaveBeenCalledWith({
+      where: { id: 'fleet-1', status: 'traveling' },
       data: { status: 'returning' },
     });
   });
@@ -149,18 +168,17 @@ describe('CombatService', () => {
     computeCargoCapacityMock.mockReturnValue(500);
     distributeLootMock.mockReturnValue({ metal: 100, crystal: 50, deuterium: 0 });
 
-    database.combatReport.create.mockReturnValue({ id: 'report-1', result: combatSummary.result });
-    database.planet.update.mockReturnValue({});
-    database.fleet.update.mockReturnValue({});
-    database.ship.upsert.mockReturnValue({});
-    database.$transaction.mockResolvedValue([
-      { id: 'report-1', result: combatSummary.result },
-    ]);
+    const tx = buildTx({ metal: 1000, crystal: 800, deuterium: 200 });
+    database.$transaction.mockImplementation((cb: any) => cb(tx));
 
     const report = await service.resolveAttackMission(baseFleet);
 
-    expect(report).toEqual({ id: 'report-1', result: CombatResult.ATTACKER_WIN });
-    expect(database.combatReport.create).toHaveBeenCalledWith({
+    expect(report).toEqual({ id: 'report-1', result: 'attacker_win' });
+    expect(tx.fleet.updateMany).toHaveBeenCalledWith({
+      where: { id: 'fleet-1', status: 'traveling' },
+      data: { status: 'returning' },
+    });
+    expect(tx.combatReport.create).toHaveBeenCalledWith({
       data: expect.objectContaining({
         attackerId: 'user-1',
         defenderId: 'user-2',
@@ -170,7 +188,7 @@ describe('CombatService', () => {
         position: 4,
       }),
     });
-    expect(database.planet.update).toHaveBeenCalledWith({
+    expect(tx.planet.update).toHaveBeenCalledWith({
       where: { id: 'planet-2' },
       data: {
         metal: { decrement: 100 },
@@ -178,13 +196,17 @@ describe('CombatService', () => {
         deuterium: { decrement: 0 },
       },
     });
-    expect(database.fleet.update).toHaveBeenCalledWith({
+    expect(tx.fleet.update).toHaveBeenCalledWith({
       where: { id: 'fleet-1' },
       data: {
         status: 'returning',
         ships: { 202: 2 },
         cargo: { metal: 100, crystal: 50, deuterium: 0 },
       },
+    });
+    expect(tx.ship.updateMany).toHaveBeenCalledWith({
+      where: { planetId: 'planet-2', shipId: 401, amount: { gte: 2 } },
+      data: { amount: { decrement: 2 } },
     });
     expect(gameEvents.emitToUser).toHaveBeenCalledWith('user-1', 'combat:report', {
       reportId: 'report-1',

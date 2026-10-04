@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { MissionType } from '@xnova/game-config';
-import { CombatService } from '../combat/combat.service';
+import { ALREADY_PROCESSED, CombatService } from '../combat/combat.service';
 import { DatabaseService } from '../database/database.service';
 import { GameEventsGateway } from '../game-events/game-events.gateway';
 
@@ -39,10 +39,19 @@ export class FleetCronService {
     if (fleets.length === 0) return;
 
     for (const fleet of fleets) {
+      let processed = true;
       if (fleet.mission === MissionType.ATTACK) {
-        await this.combatService.resolveAttackMission(fleet);
+        const outcome = await this.combatService.resolveAttackMission(fleet);
+        processed = outcome !== ALREADY_PROCESSED;
       } else {
-        await this.database.$transaction(async (tx) => {
+        processed = await this.database.$transaction(async (tx) => {
+          // Prise en charge atomique (ECO-04) : un seul worker traite cette arrivee
+          const claimed = await tx.fleet.updateMany({
+            where: { id: fleet.id, status: 'traveling' },
+            data: { status: 'returning' },
+          });
+          if (claimed.count !== 1) return false;
+
           let cargoDelivered = false;
           if (fleet.mission === MissionType.TRANSPORT || fleet.mission === MissionType.DEPLOY) {
             const target = await tx.planet.findFirst({
@@ -67,12 +76,14 @@ export class FleetCronService {
             }
           }
 
-          await tx.fleet.update({
-            where: { id: fleet.id },
-            data: cargoDelivered ? { status: 'returning', cargo: {} } : { status: 'returning' },
-          });
+          if (cargoDelivered) {
+            await tx.fleet.update({ where: { id: fleet.id }, data: { cargo: {} } });
+          }
+          return true;
         });
       }
+
+      if (!processed) continue;
 
       this.gameEvents.emitFleetArrived(fleet.userId, {
         fleetId: fleet.id,
@@ -94,6 +105,13 @@ export class FleetCronService {
 
     for (const fleet of fleets) {
       await this.database.$transaction(async (tx) => {
+        // Prise en charge atomique (ECO-04) : un seul worker credite ce retour
+        const claimed = await tx.fleet.updateMany({
+          where: { id: fleet.id, status: 'returning' },
+          data: { status: 'completed', cargo: {} },
+        });
+        if (claimed.count !== 1) return;
+
         const origin = await tx.planet.findFirst({
           where: {
             userId: fleet.userId,
@@ -136,11 +154,6 @@ export class FleetCronService {
             ),
           );
         }
-
-        await tx.fleet.update({
-          where: { id: fleet.id },
-          data: { status: 'completed', cargo: {} },
-        });
       });
     }
   }

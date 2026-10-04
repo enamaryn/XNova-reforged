@@ -13,6 +13,8 @@ import {
 } from '@xnova/game-engine';
 import { GAME_CONSTANTS } from '@xnova/game-config';
 import { DatabaseService } from '../database/database.service';
+import { debitShips, lockUser } from '../common/atomic';
+import { persistResourceRefresh } from './resource-refresh';
 import { ServerConfigService } from '../server-config/server-config.service';
 
 @Injectable()
@@ -137,13 +139,6 @@ export class ResourcesService {
       throw new BadRequestException('Coordonnees invalides');
     }
 
-    const planetCount = await this.database.planet.count({
-      where: { userId },
-    });
-    if (planetCount >= GAME_CONSTANTS.MAX_PLAYER_PLANETS) {
-      throw new BadRequestException('Nombre maximal de planetes atteint');
-    }
-
     const origin = await this.database.planet.findUnique({
       where: { id: originPlanetId },
     });
@@ -154,57 +149,51 @@ export class ResourcesService {
       throw new ForbiddenException('Acces refuse');
     }
 
-    const existing = await this.database.planet.findUnique({
-      where: {
-        galaxy_system_position: {
-          galaxy,
-          system,
-          position,
-        },
-      },
-    });
-
-    if (existing) {
-      throw new BadRequestException('Position deja occupee');
-    }
-
-    const colonizer = await this.database.ship.findUnique({
-      where: {
-        planetId_shipId: {
-          planetId: originPlanetId,
-          shipId: 208,
-        },
-      },
-    });
-
-    if (!colonizer || colonizer.amount < 1) {
-      throw new BadRequestException('Vaisseau de colonisation requis');
-    }
-
     const planetName = name?.trim() || 'Colonie';
     const config = await this.serverConfig.getConfig();
 
-    const [createdPlanet] = await this.database.$transaction([
-      this.database.planet.create({
-        data: {
-          userId,
-          name: planetName,
-          galaxy,
-          system,
-          position,
-          planetType: 'normal',
-          metal: GAME_CONSTANTS.STARTING_METAL,
-          crystal: GAME_CONSTANTS.STARTING_CRYSTAL,
-          deuterium: GAME_CONSTANTS.STARTING_DEUTERIUM,
-          fieldsMax: config.planetSize,
-          fieldsUsed: 0,
-        },
-      }),
-      this.database.ship.update({
-        where: { planetId_shipId: { planetId: originPlanetId, shipId: 208 } },
-        data: { amount: { decrement: 1 } },
-      }),
-    ]);
+    // Quota, position libre et vaisseau verifies et consommes dans la meme transaction (ECO-03)
+    const createdPlanet = await this.database.$transaction(async (tx) => {
+      await lockUser(tx, userId);
+
+      const planetCount = await tx.planet.count({ where: { userId } });
+      if (planetCount >= GAME_CONSTANTS.MAX_PLAYER_PLANETS) {
+        throw new BadRequestException('Nombre maximal de planetes atteint');
+      }
+
+      const existing = await tx.planet.findUnique({
+        where: { galaxy_system_position: { galaxy, system, position } },
+      });
+      if (existing) {
+        throw new BadRequestException('Position deja occupee');
+      }
+
+      await debitShips(tx, originPlanetId, 208, 1, 'Vaisseau de colonisation requis');
+
+      try {
+        return await tx.planet.create({
+          data: {
+            userId,
+            name: planetName,
+            galaxy,
+            system,
+            position,
+            planetType: 'normal',
+            metal: GAME_CONSTANTS.STARTING_METAL,
+            crystal: GAME_CONSTANTS.STARTING_CRYSTAL,
+            deuterium: GAME_CONSTANTS.STARTING_DEUTERIUM,
+            fieldsMax: config.planetSize,
+            fieldsUsed: 0,
+          },
+        });
+      } catch (error) {
+        // Course sur la position (contrainte d'unicite) : meme reponse que la verification
+        if ((error as { code?: string }).code === 'P2002') {
+          throw new BadRequestException('Position deja occupee');
+        }
+        throw error;
+      }
+    });
 
     return {
       success: true,
@@ -249,23 +238,16 @@ export class ResourcesService {
       config: await this.buildConfig(),
     });
 
-    const updatedPlanet = await this.database.planet.update({
+    // Delta + verrou optimiste sur lastUpdate (ECO-02). Si un autre rafraichissement
+    // (API ou cron) a devance celui-ci, sa production est deja en base : on relit sans rien ecrire.
+    await persistResourceRefresh(this.database, planet, calculation);
+
+    const updatedPlanet = await this.database.planet.findUnique({
       where: { id: planet.id },
-      data: {
-        metal: calculation.resources.metal,
-        crystal: calculation.resources.crystal,
-        deuterium: calculation.resources.deuterium,
-        metalProduction: calculation.productionPerHour.metal,
-        crystalProduction: calculation.productionPerHour.crystal,
-        deuteriumProduction: calculation.productionPerHour.deuterium,
-        energyUsed: calculation.energy.used,
-        energyAvailable: calculation.energy.available,
-        lastUpdate: calculation.lastUpdate,
-      },
     });
 
     return {
-      planet: updatedPlanet,
+      planet: updatedPlanet ?? planet,
       calculation,
     };
   }

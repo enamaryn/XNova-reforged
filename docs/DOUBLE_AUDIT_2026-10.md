@@ -63,7 +63,7 @@ Socle jouable, MVP non validé pour ouverture publique. Priorités : dépendance
 - **Constat :** Refresh/cron réécrivent un stock absolu et peuvent écraser un débit ou un crédit concurrent.
 - **Périmètre :** `apps/api/src/resources/resources.service.ts`, `apps/api/src/resources/resources-cron.service.ts`.
 - **Acceptation :** Test PostgreSQL entre refresh, achat et livraison : bilan initial + production + crédits − débits conservé ; stratégie transactionnelle/verrou/version commune à toutes les mutations.
-- **État :** ouvert ; responsable à attribuer lors de la PR corrective. Clôture : lien PR/commit + test et résultat requis.
+- **État :** correctif appliqué le 4 octobre 2026 (delta + verrou optimiste sur `lastUpdate`, partagé par l'API et les deux crons) ; test PostgreSQL refresh/débit/crédit concurrents en échec avant, réussi après. Limite : plafond de stockage évalué sur l'instantané lu ; achat/livraison/butin non retestés individuellement. Clôture en attente : lien PR/commit.
 
 ### ECO-03 — Disponibilités et files atomiques
 
@@ -71,7 +71,7 @@ Socle jouable, MVP non validé pour ouverture publique. Priorités : dépendance
 - **Constat :** Contrôles de ressources, vaisseaux, files et colonisateurs effectués avant les transactions.
 - **Périmètre :** `apps/api/src/fleet/fleet.service.ts`, `apps/api/src/buildings/buildings.service.ts`, `apps/api/src/research/research.service.ts`, `apps/api/src/shipyard/shipyard.service.ts`, `apps/api/src/resources/resources.service.ts`.
 - **Acceptation :** Requêtes simultanées avec budget limité : aucun stock négatif, aucun double usage d'un vaisseau/colonisateur, quotas et unicité des files respectés ; vérifier annulation contre finalisation.
-- **État :** ouvert ; responsable à attribuer lors de la PR corrective. Clôture : lien PR/commit + test et résultat requis.
+- **État :** correctif appliqué le 4 octobre 2026 pour bâtiments, recherche, chantier, flotte (départ) et colonisation ; 6 tests PostgreSQL concurrents en échec avant, réussis après. Limites : l'annulation vs finalisation est couverte pour bâtiments/recherche/chantier, pas pour les flottes (ECO-04) ; le contrôle de champs libres reste évalué hors verrou. Clôture en attente : lien PR/commit.
 
 ### ECO-04 — Exécution unique des événements
 
@@ -79,7 +79,7 @@ Socle jouable, MVP non validé pour ouverture publique. Priorités : dépendance
 - **Constat :** Finalisations et retours non protégés contre une sélection concurrente du même événement.
 - **Périmètre :** `apps/api/src/fleet/fleet-cron.service.ts`, `apps/api/src/shipyard/shipyard.service.ts`, `apps/api/src/buildings/buildings.service.ts`, `apps/api/src/research/research.service.ts`, `apps/api/src/combat/combat.service.ts`.
 - **Acceptation :** Deux workers et une reprise traitent le même événement sans double crédit, double rapport ni double incrément ; effets et prise en charge atomiques.
-- **État :** ouvert ; responsable à attribuer lors de la PR corrective. Clôture : lien PR/commit + test et résultat requis.
+- **État :** correctif appliqué le 4 octobre 2026 : prise en charge atomique des arrivées, retours, combats et rappels de flotte ; finalisations de files protégées (ECO-03) et testées à plusieurs workers. Limites : un « worker » est simulé par deux appels concurrents dans un même processus, pas deux processus ; la reprise après arrêt en plein traitement est couverte par la transaction (rien n'est validé à moitié) mais n'a pas de test dédié ; le moteur de combat reste couvert par GAME-03. Clôture en attente : lien PR/commit.
 
 ### ECO-05 — Remboursement du montant réellement payé
 

@@ -11,6 +11,47 @@
 
 Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DOUBLE_AUDIT_2026-10.md), [roadmap historique](docs/history/ROADMAP_MVP_AVANT_AUDIT.md).
 
+## Session de correction — ECO-04 (exécution unique des événements)
+
+**Date :** 4 octobre 2026. **Objectif :** un événement de flotte ou de file n'a d'effet qu'une fois, même traité en parallèle.
+
+- [x] `fleet-cron.service.ts` : arrivée et retour pris en charge par `updateMany` sur le statut avant tout effet ; événement WebSocket émis seulement si pris en charge.
+- [x] `combat.service.ts` : résolution dans une transaction (verrou cible, prise en charge de la flotte, butin borné au stock courant, pertes du défenseur en décrément) ; `ALREADY_PROCESSED` si un autre worker a traité.
+- [x] `fleet.service.ts` : rappel atomique (refus si l'arrivée vient d'être traitée).
+- [x] Tests `eco04-single-execution.integration.spec.ts` (6) ; tests unitaires de combat adaptés (25/25) ; intégration 40/40 en local. Les 3 tests de flotte échouent avant correctif.
+- [ ] Lien PR/commit ; test multi-processus et reprise après crash ; comportement DEPLOY (GAME-02) et cargo de combat (GAME-03) inchangés.
+
+**Prochaines étapes :** ECO-05 (remboursement du montant réellement payé), puis lot SEC.
+
+---
+
+## Session de correction — ECO-03 (disponibilités et files atomiques)
+
+**Date :** 4 octobre 2026. **Objectif :** aucun stock négatif, aucun double usage de vaisseau/colonisateur, files et quotas respectés.
+
+- [x] `apps/api/src/common/atomic.ts` : `lockPlanet`/`lockUser` (`SELECT … FOR UPDATE`), `debitResources`, `debitShips` (débits conditionnels).
+- [x] Bâtiments, recherche, chantier, départ de flotte et colonisation : contrôles critiques et débits dans la transaction ; position prise gérée (P2002).
+- [x] Annulation et finalisation (bâtiments, recherche, chantier) : prise en charge atomique de l'entrée (`deleteMany`/`updateMany` sur `completed:false`).
+- [x] Tests PostgreSQL `eco03-atomicity.integration.spec.ts` (6) : échec avant, réussite après ; unitaires 25/25 et intégration 34/34 en local.
+- [ ] Lien PR/commit ; flottes (arrivée/retour) et combats en ECO-04 ; champs libres hors verrou.
+
+**Prochaines étapes :** ECO-04 (exécution unique des événements), ECO-05 (remboursement du montant payé).
+
+---
+
+## Session de correction — ECO-02 (écritures concurrentes de ressources)
+
+**Date :** 4 octobre 2026. **Objectif :** empêcher le rafraîchissement d'écraser débits/crédits concurrents.
+
+- [x] `apps/api/src/resources/resource-refresh.ts` : production appliquée en delta avec `updateMany` conditionné par `lastUpdate` ; `lastUpdate` ne recule jamais.
+- [x] `resources.service.ts` et `resources-cron.service.ts` (tâches active et inactive) utilisent ce helper ; en cas de course, l'API relit sans réécrire.
+- [x] Test d'intégration PostgreSQL `resources-concurrency.integration.spec.ts` (bilan conservé, pas de double production) : échec avant correctif ; unitaires 24/24, intégration 28/28 après, sur PostgreSQL 16 jetable locale.
+- [ ] Lien PR/commit ; vérifier achat/livraison sous concurrence dans ECO-03.
+
+**Prochaines étapes :** ECO-03 (disponibilités et files atomiques), ECO-04.
+
+---
+
 ## Session de correction — ECO-01 (fractions de production)
 
 **Date :** 4 octobre 2026. **Objectif :** conserver les fractions produites entre deux rafraîchissements.

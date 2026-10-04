@@ -11,6 +11,7 @@ import {
   getTechnologyCost,
 } from '@xnova/game-config';
 import { DatabaseService } from '../database/database.service';
+import { debitResources, lockUser } from '../common/atomic';
 import { GameEventsGateway } from '../game-events/game-events.gateway';
 
 @Injectable()
@@ -160,16 +161,20 @@ export class ResearchService {
     const now = new Date();
     const endTime = new Date(now.getTime() + adjustedTime * 1000);
 
-    const [updatedPlanet, queueEntry] = await this.database.$transaction([
-      this.database.planet.update({
-        where: { id: planetId },
-        data: {
-          metal: { decrement: cost.metal },
-          crystal: { decrement: cost.crystal },
-          deuterium: { decrement: cost.deuterium },
-        },
-      }),
-      this.database.researchQueue.create({
+    // Une seule recherche par joueur : verrou utilisateur, debit conditionnel et file dans la meme transaction (ECO-03)
+    const { updatedPlanet, queueEntry } = await this.database.$transaction(async (tx) => {
+      await lockUser(tx, userId);
+
+      const running = await tx.researchQueue.findFirst({
+        where: { userId, completed: false },
+      });
+      if (running) {
+        throw new BadRequestException('Une recherche est deja en cours');
+      }
+
+      await debitResources(tx, planetId, cost);
+
+      const queueEntry = await tx.researchQueue.create({
         data: {
           userId,
           planetId,
@@ -178,8 +183,10 @@ export class ResearchService {
           startTime: now,
           endTime,
         },
-      }),
-    ]);
+      });
+      const updatedPlanet = await tx.planet.findUniqueOrThrow({ where: { id: planetId } });
+      return { updatedPlanet, queueEntry };
+    });
 
     return {
       success: true,
@@ -237,19 +244,23 @@ export class ResearchService {
 
     const cost = getTechnologyCost(queueEntry.techId, queueEntry.level - 1);
 
-    const [updatedPlanet] = await this.database.$transaction([
-      this.database.planet.update({
+    const updatedPlanet = await this.database.$transaction(async (tx) => {
+      const claimed = await tx.researchQueue.deleteMany({
+        where: { id: queueId, completed: false },
+      });
+      if (claimed.count !== 1) {
+        throw new BadRequestException('Recherche deja terminee');
+      }
+
+      return tx.planet.update({
         where: { id: queueEntry.planetId },
         data: {
           metal: { increment: cost.metal },
           crystal: { increment: cost.crystal },
           deuterium: { increment: cost.deuterium },
         },
-      }),
-      this.database.researchQueue.delete({
-        where: { id: queueId },
-      }),
-    ]);
+      });
+    });
 
     return {
       success: true,
@@ -278,7 +289,14 @@ export class ResearchService {
       where: { userId_techId: { userId: queueEntry.userId, techId: queueEntry.techId } },
     });
 
-    await this.database.$transaction(async (tx) => {
+    const finalized = await this.database.$transaction(async (tx) => {
+      // Prise en charge atomique : ignore une recherche deja annulee ou terminee
+      const claimed = await tx.researchQueue.updateMany({
+        where: { id: queueEntry.id, completed: false },
+        data: { completed: true },
+      });
+      if (claimed.count !== 1) return false;
+
       if (existing) {
         await tx.technology.update({
           where: { id: existing.id },
@@ -294,11 +312,9 @@ export class ResearchService {
         });
       }
 
-      await tx.researchQueue.update({
-        where: { id: queueEntry.id },
-        data: { completed: true },
-      });
+      return true;
     });
+    if (!finalized) return;
 
     this.gameEvents.emitResearchCompleted(queueEntry.userId, {
       techId: queueEntry.techId,
