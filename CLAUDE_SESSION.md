@@ -11,6 +11,19 @@
 
 Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DOUBLE_AUDIT_2026-10.md), [roadmap historique](docs/history/ROADMAP_MVP_AVANT_AUDIT.md).
 
+## Session de correction — OPS-01 (sauvegarde, restauration et migrations)
+
+**Date :** 4 octobre 2026. **Objectif :** sauvegardes fiables, restauration tout ou rien, migrations versionnées avec retour arrière répété.
+
+- [x] Défauts d'origine reproduits sur les anciens scripts (restauration partielle déclarée « réussie », parsing d'URL fragile, fichier vide après échec).
+- [x] `backup-db.sh` et `restore-db.sh` réécrits ; migration initiale `20261004000000_init` + baseline des bases `db push` ; `docs/OPERATIONS.md`.
+- [x] `scripts/test-backup-restore.sh` : 28 contrôles sur bases isolées (restauration à données identiques, échecs sans effet partiel, retour arrière de migration) ; job CI `database` (migrations, écart schéma/migrations, test) ; tests d'intégration et E2E sur le schéma issu des migrations.
+- [ ] Première exécution du job `database` sur GitHub ; chiffrement des sauvegardes planifiées ; restauration d'une vraie sauvegarde de production ; baseline à exécuter sur les environnements existants.
+
+**Prochaines étapes :** OPS-02 (inscription atomique), OPS-03 (charge), SCOPE-01.
+
+---
+
 ## Session de correction — QUAL-02 (tests qui détectent les échecs)
 
 **Date :** 4 octobre 2026. **Objectif :** des tests qui échouent quand le produit est faux, E2E compris.
