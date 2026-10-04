@@ -23,6 +23,9 @@ export interface TechnologyInfo {
   queueEndTime?: string;
   missingRequirements: string[];
   queueBlocked?: boolean;
+  energyRequired?: number;
+  energyAvailable?: number;
+  hasEnoughEnergy?: boolean;
 }
 
 export interface TechnologiesResponse {
