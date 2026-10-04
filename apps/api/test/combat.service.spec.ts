@@ -4,6 +4,7 @@ import { computeCargoCapacity, distributeLoot, simulateCombat } from '@xnova/gam
 import { CombatService } from '../src/combat/combat.service';
 
 jest.mock('@xnova/game-engine', () => ({
+  ...jest.requireActual('@xnova/game-engine'),
   simulateCombat: jest.fn(),
   computeCargoCapacity: jest.fn(),
   distributeLoot: jest.fn(),

@@ -290,6 +290,48 @@ export function distributeLoot(params: {
   return { metal, crystal, deuterium };
 }
 
+/**
+ * Répartit une cargaison embarquée sur une capacité réduite (GAME-03).
+ *
+ * Si la cargaison tient dans la capacité, tout est conservé ; sinon chaque ressource est réduite
+ * proportionnellement (arrondi inférieur) et le surplus est perdu avec les vaisseaux détruits.
+ * Invariant : kept + lost = cargo, et somme(kept) <= capacité.
+ */
+export function fitCargo(
+  cargo: { metal: number; crystal: number; deuterium: number },
+  capacity: number,
+): {
+  kept: { metal: number; crystal: number; deuterium: number };
+  lost: { metal: number; crystal: number; deuterium: number };
+} {
+  const clean = {
+    metal: Math.max(0, Math.floor(cargo.metal)),
+    crystal: Math.max(0, Math.floor(cargo.crystal)),
+    deuterium: Math.max(0, Math.floor(cargo.deuterium)),
+  };
+  const total = clean.metal + clean.crystal + clean.deuterium;
+  const cap = Math.max(0, Math.floor(capacity));
+
+  if (total <= cap) {
+    return { kept: clean, lost: { metal: 0, crystal: 0, deuterium: 0 } };
+  }
+
+  const ratio = cap / total;
+  const kept = {
+    metal: Math.floor(clean.metal * ratio),
+    crystal: Math.floor(clean.crystal * ratio),
+    deuterium: Math.floor(clean.deuterium * ratio),
+  };
+  return {
+    kept,
+    lost: {
+      metal: clean.metal - kept.metal,
+      crystal: clean.crystal - kept.crystal,
+      deuterium: clean.deuterium - kept.deuterium,
+    },
+  };
+}
+
 export function computeCargoCapacity(
   ships: Record<number, number>,
   hyperspaceLevel: number,

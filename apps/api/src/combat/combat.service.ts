@@ -7,6 +7,7 @@ import { CombatResult, MissionType } from '@xnova/game-config';
 import {
   computeCargoCapacity,
   distributeLoot,
+  fitCargo,
   simulateCombat,
   type CombatResultSummary,
 } from '@xnova/game-engine';
@@ -119,12 +120,20 @@ export class CombatService {
       deuterium: Math.floor(target.deuterium * 0.5),
     };
 
+    // Cargaison embarquée (GAME-03) : conservée dans la limite de la capacité des survivants,
+    // le surplus est perdu avec les vaisseaux détruits ; le butin n'occupe que la place libre.
+    const boarded = this.normalizeCargo(fleet.cargo);
+    const capacity =
+      attackerTotal > 0 ? computeCargoCapacity(attackerSurvivors, attackerTech.hyperspace) : 0;
+    const { kept: keptCargo } = fitCargo(boarded, capacity);
+    const freeCapacity = Math.max(
+      0,
+      capacity - (keptCargo.metal + keptCargo.crystal + keptCargo.deuterium),
+    );
+
     const loot =
       combat.result === CombatResult.ATTACKER_WIN && attackerTotal > 0
-        ? distributeLoot({
-            maxLoot,
-            capacity: computeCargoCapacity(attackerSurvivors, attackerTech.hyperspace),
-          })
+        ? distributeLoot({ maxLoot, capacity: freeCapacity })
         : { metal: 0, crystal: 0, deuterium: 0 };
 
     const fleetUpdate =
@@ -189,7 +198,17 @@ export class CombatService {
 
       await tx.fleet.update({
         where: { id: fleet.id },
-        data: attackerTotal > 0 ? { ...fleetUpdate, cargo: finalLoot } : fleetUpdate,
+        data:
+          attackerTotal > 0
+            ? {
+                ...fleetUpdate,
+                cargo: {
+                  metal: keptCargo.metal + finalLoot.metal,
+                  crystal: keptCargo.crystal + finalLoot.crystal,
+                  deuterium: keptCargo.deuterium + finalLoot.deuterium,
+                },
+              }
+            : fleetUpdate,
       });
 
       // Pertes du defenseur en decrement : ne jamais ecraser une construction ou un envoi concurrent
@@ -258,6 +277,15 @@ export class CombatService {
     }
 
     return report;
+  }
+
+  private normalizeCargo(raw: unknown) {
+    const cargo = (raw ?? {}) as Record<string, unknown>;
+    const read = (value: unknown) => {
+      const n = Number(value);
+      return Number.isFinite(n) && n > 0 ? Math.floor(n) : 0;
+    };
+    return { metal: read(cargo.metal), crystal: read(cargo.crystal), deuterium: read(cargo.deuterium) };
   }
 
   private buildReportData(params: {

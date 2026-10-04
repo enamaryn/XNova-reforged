@@ -11,6 +11,19 @@
 
 Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DOUBLE_AUDIT_2026-10.md), [roadmap historique](docs/history/ROADMAP_MVP_AVANT_AUDIT.md).
 
+## Session de correction — GAME-03 (cargo et moteur de combat)
+
+**Date :** 4 octobre 2026. **Objectif :** définir le sort du cargo en combat et tester le vrai moteur.
+
+- [x] Règle du propriétaire : butin embarqué suivant la place restante des survivants du vainqueur, le reste est perdu.
+- [x] `fitCargo` dans `packages/game-engine/src/combat.ts` ; `combat.service.ts` : cargaison embarquée conservée selon la capacité, butin limité à la place libre.
+- [x] Tests : `combat-cargo.spec.ts` (9, moteur réel), `game03-combat-cargo.integration.spec.ts` (4, combat complet via le cron) ; unitaires 44/44, intégration 111/111 (local).
+- [ ] Lien PR/commit ; confirmer le sort du reliquat de butin ; détail des pertes dans le rapport.
+
+**Prochaines étapes :** GAME-04 (recherche et énergie), puis QUAL-01/QUAL-02.
+
+---
+
 ## Session de correction — GAME-02 (déploiement effectif)
 
 **Date :** 4 octobre 2026. **Objectif :** un déploiement installe la flotte sur la planète de destination, sans retour.
