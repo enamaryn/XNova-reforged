@@ -43,13 +43,10 @@ test('construction vaisseau', async ({ page }) => {
   // Chercher un bouton Construire activé (Satellite Solaire devrait être dispo avec hangar lvl 2)
   const buildButton = page.locator('button:not([disabled])').filter({ hasText: 'Construire' }).first();
 
-  // Si le bouton est visible et activé, cliquer
-  const isVisible = await buildButton.isVisible().catch(() => false);
+  // Le scénario nominal exige un bouton activé : plus de contournement si absent
+  await expect(buildButton).toBeVisible();
+  await buildButton.click();
 
-  if (isVisible) {
-    await buildButton.click();
-  }
-
-  // Vérifier que la file d'attente affiche au moins 1 construction
-  await expect(page.getByText(/\d+ en cours/)).toBeVisible();
+  // La file d'attente doit afficher au moins 1 construction (et non « 0 en cours »)
+  await expect(page.getByText(/[1-9]\d* en cours/).first()).toBeVisible();
 });

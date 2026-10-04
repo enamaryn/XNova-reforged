@@ -140,8 +140,8 @@ describe('API integration - Messagerie', () => {
       .get(`/messages/${messageId}`)
       .set('Authorization', `Bearer ${intruderToken}`);
 
-    // Devrait être refusé (403, 404 ou 500 si erreur non catchée)
-    expect([403, 404, 500]).toContain(intruderRead.status);
+    // Un message d'autrui est introuvable pour l'intrus (pas de fuite d'existence)
+    expect(intruderRead.status).toBe(404);
 
     await cleanupTestUser(database, sender.username);
     await cleanupTestUser(database, receiver.username);
@@ -159,13 +159,12 @@ describe('API integration - Messagerie', () => {
       .post('/messages/send')
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
-        toUsername: 'joueur_inexistant_xyz',
+        toUsername: 'inconnu_xyz_123',
         subject: 'Test envoi',
         body: 'Test message vers joueur inexistant',
       });
 
-    // Devrait échouer (400, 404 ou 500 si erreur non catchée)
-    expect([400, 404, 500]).toContain(sendResponse.status);
+    expect(sendResponse.status).toBe(404);
 
     await cleanupTestUser(database, testUser.username);
   });

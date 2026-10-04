@@ -39,6 +39,8 @@ export function middleware(request: NextRequest) {
 
     // Redirect to locale path
     const redirectUrl = new URL(`/${locale}${pathname}`, request.url);
+    // Conserver la query string (ex. /fleet?mission=attack&galaxy=1 depuis la galaxie)
+    redirectUrl.search = request.nextUrl.search;
     const response = NextResponse.redirect(redirectUrl);
 
     // Set locale cookie

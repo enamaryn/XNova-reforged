@@ -102,15 +102,20 @@ describe('API integration - Galaxie', () => {
       .get('/galaxy/99/1')
       .set('Authorization', `Bearer ${accessToken}`);
 
-    // Devrait retourner une erreur (400 ou 404)
-    expect([400, 404, 200]).toContain(invalidGalaxy.status);
+    expect(invalidGalaxy.status).toBe(400);
 
     // Système hors limites (> 499)
     const invalidSystem = await request(server)
       .get('/galaxy/1/999')
       .set('Authorization', `Bearer ${accessToken}`);
 
-    expect([400, 404, 200]).toContain(invalidSystem.status);
+    expect(invalidSystem.status).toBe(400);
+
+    // Valeurs non entières ou non numériques : refus identique
+    for (const path of ['/galaxy/0/1', '/galaxy/1/0', '/galaxy/abc/1', '/galaxy/1.5/1']) {
+      const res = await request(server).get(path).set('Authorization', `Bearer ${accessToken}`);
+      expect({ path, status: res.status }).toEqual({ path, status: 400 });
+    }
 
     await cleanupTestUser(database, testUser.username);
   });

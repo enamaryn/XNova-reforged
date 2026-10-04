@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -19,7 +18,6 @@ import Link from "next/link";
 
 export function LoginForm() {
   const t = useTranslations('auth.login');
-  const router = useRouter();
   const setStatus = useAuthStore((state) => state.setStatus);
   const setRemember = useAuthStore((state) => state.setRemember);
   const [remember, setLocalRemember] = useState(false);
@@ -36,7 +34,9 @@ export function LoginForm() {
     mutationFn: login,
     onSuccess: () => {
       showSuccess(t('success'));
-      router.push("/overview");
+      // Navigation complète : le cache du routeur peut contenir les préchargements de /overview faits
+      // avant connexion (redirigés vers /login par le middleware) et renverrait le joueur à /login.
+      window.location.assign("/overview");
     },
     onError: (error) => {
       setStatus("unauthenticated");

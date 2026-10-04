@@ -4,7 +4,7 @@ import { DatabaseService } from '../../src/database/database.service';
 import { FleetCronService } from '../../src/fleet/fleet-cron.service';
 import { ResearchService } from '../../src/research/research.service';
 import { ShipyardService } from '../../src/shipyard/shipyard.service';
-import { createIntegrationApp } from './helpers';
+import { DORMANT_SINCE, createIntegrationApp } from './helpers';
 
 /**
  * ECO-04 — chaque événement (arrivée, retour, combat, finalisation) n'a d'effet qu'une fois,
@@ -58,7 +58,12 @@ describe('API integration - Exécution unique des événements (ECO-04)', () => 
 
     const mkUser = (tag: string) =>
       database.user.create({
-        data: { username: `e4${tag}_${suffix}`, email: `e4${tag}_${suffix}@example.test`, password: 'x' },
+        data: {
+          username: `e4${tag}_${suffix}`,
+          email: `e4${tag}_${suffix}@example.test`,
+          password: 'x',
+          lastActive: DORMANT_SINCE(), // hors production périodique : stocks stables
+        },
       });
     userA = (await mkUser('a')).id;
     userB = (await mkUser('b')).id;

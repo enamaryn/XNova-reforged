@@ -1,4 +1,4 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { GAME_CONSTANTS } from '@xnova/game-config';
 import { DatabaseService } from '../database/database.service';
@@ -25,6 +25,18 @@ export class GalaxyService implements OnModuleInit {
   }
 
   async getSystem(galaxy: number, system: number, userId: string) {
+    // Coordonnées entières dans les bornes de l'univers (sinon 400, pas une réponse vide)
+    if (
+      !Number.isInteger(galaxy) ||
+      !Number.isInteger(system) ||
+      galaxy < 1 ||
+      galaxy > GAME_CONSTANTS.MAX_GALAXIES ||
+      system < 1 ||
+      system > GAME_CONSTANTS.MAX_SYSTEMS
+    ) {
+      throw new BadRequestException('Coordonnees invalides');
+    }
+
     const planets = await this.database.planet.findMany({
       where: { galaxy, system },
       select: {

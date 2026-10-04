@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -15,7 +14,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export function RegisterForm() {
-  const router = useRouter();
   const setStatus = useAuthStore((state) => state.setStatus);
   const setRemember = useAuthStore((state) => state.setRemember);
 
@@ -32,7 +30,9 @@ export function RegisterForm() {
     mutationFn: register,
     onSuccess: () => {
       showSuccess("Compte cree avec succes");
-      router.push("/overview");
+      // Navigation complète : le cache du routeur peut contenir les préchargements de /overview faits
+      // avant connexion (redirigés vers /login par le middleware) et renverrait le joueur à /login.
+      window.location.assign("/overview");
     },
     onError: (error) => {
       setStatus("unauthenticated");

@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { DatabaseService } from '../../src/database/database.service';
 import { FleetCronService } from '../../src/fleet/fleet-cron.service';
-import { createIntegrationApp } from './helpers';
+import { DORMANT_SINCE, createIntegrationApp } from './helpers';
 
 /**
  * GAME-03 — combat complet avec le VRAI moteur via le cron de flotte : retour, pertes, cargaison
@@ -48,7 +48,12 @@ describe('API integration - Cargo et combat (GAME-03)', () => {
 
     const mk = (tag: string) =>
       database.user.create({
-        data: { username: `g3${tag}_${suffix}`, email: `g3${tag}_${suffix}@example.test`, password: 'x' },
+        data: {
+          username: `g3${tag}_${suffix}`,
+          email: `g3${tag}_${suffix}@example.test`,
+          password: 'x',
+          lastActive: DORMANT_SINCE(), // hors production périodique : stocks stables
+        },
       });
     attackerId = (await mk('a')).id;
     defenderId = (await mk('d')).id;

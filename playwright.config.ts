@@ -10,6 +10,11 @@ export default defineConfig({
     baseURL: process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:3000',
     trace: 'retain-on-failure',
     navigationTimeout: 120_000,
+    // Navigateur imposé uniquement si fourni (environnements sans `playwright install`) ;
+    // en CI, `npx playwright install chromium` installe la version alignée sur le lockfile.
+    launchOptions: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
+      ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH }
+      : {},
   },
   projects: [
     {
@@ -17,19 +22,21 @@ export default defineConfig({
       use: { browserName: 'chromium' },
     },
   ],
+  // CI : serveurs de production (build déjà fait) ; en local : serveurs de développement,
+  // réutilisés s'ils tournent déjà.
   webServer: [
     {
-      command: 'npm run dev',
+      command: process.env.CI ? 'npm run start' : 'npm run dev',
       cwd: 'apps/api',
       port: 3001,
-      reuseExistingServer: true,
+      reuseExistingServer: !process.env.CI,
       timeout: 180_000,
     },
     {
-      command: 'npm run dev',
+      command: process.env.CI ? 'npm run start' : 'npm run dev',
       cwd: 'apps/web',
       port: 3000,
-      reuseExistingServer: true,
+      reuseExistingServer: !process.env.CI,
       timeout: 180_000,
     },
   ],

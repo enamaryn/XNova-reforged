@@ -50,6 +50,12 @@ describe('API integration - Chantier Spatial (Shipyard)', () => {
         shipyard: 2, // Niveau 2 pour construire des vaisseaux basiques
       },
     });
+    // Prérequis du petit transporteur : technologie Réacteur à combustion niveau 2
+    await database.technology.upsert({
+      where: { userId_techId: { userId: meResponse.body.id, techId: 115 } },
+      update: { level: 2 },
+      create: { userId: meResponse.body.id, techId: 115, level: 2 },
+    });
 
     // GET /shipyard - Liste des vaisseaux constructibles
     const shipyardResponse = await request(server)
@@ -66,7 +72,9 @@ describe('API integration - Chantier Spatial (Shipyard)', () => {
       .set('Authorization', `Bearer ${accessToken}`)
       .send({ planetId, shipId: 202, amount: 1 });
 
-    if (buildResponse.status === 201) {
+    // Scénario nominal : succès exact exigé, puis toutes les étapes (file, annulation, file vide)
+    expect(buildResponse.status).toBe(201);
+    {
       const queueId = buildResponse.body?.queueId;
       expect(queueId).toBeTruthy();
 
@@ -94,9 +102,6 @@ describe('API integration - Chantier Spatial (Shipyard)', () => {
         .expect(200);
 
       expect(postCancelQueue.body.length).toBe(0);
-    } else {
-      // Erreur possible si le chantier n'est pas assez haut ou autre prérequis
-      expect([400, 403, 500]).toContain(buildResponse.status);
     }
 
     await cleanupTestUser(database, testUser.username);
@@ -127,7 +132,9 @@ describe('API integration - Chantier Spatial (Shipyard)', () => {
       .set('Authorization', `Bearer ${accessToken}`)
       .send({ planetId, shipId: 202, amount: 1 });
 
-    expect([400, 403, 500]).toContain(buildResponse.status);
+    expect(buildResponse.status).toBe(400);
+    expect(String(buildResponse.body.message)).toMatch(/Prerequis manquants/);
+    expect(await database.shipQueue.count({ where: { planetId } })).toBe(0);
 
     await cleanupTestUser(database, testUser.username);
   });
@@ -155,6 +162,12 @@ describe('API integration - Chantier Spatial (Shipyard)', () => {
         deuterium: 0,
       },
     });
+    // Prérequis satisfaits : seul le manque de ressources doit justifier le refus
+    await database.technology.upsert({
+      where: { userId_techId: { userId: meResponse.body.id, techId: 115 } },
+      update: { level: 2 },
+      create: { userId: meResponse.body.id, techId: 115, level: 2 },
+    });
 
     // Tenter de construire (devrait échouer)
     const buildResponse = await request(server)
@@ -162,7 +175,9 @@ describe('API integration - Chantier Spatial (Shipyard)', () => {
       .set('Authorization', `Bearer ${accessToken}`)
       .send({ planetId, shipId: 202, amount: 1 });
 
-    expect([400, 403, 500]).toContain(buildResponse.status);
+    expect(buildResponse.status).toBe(400);
+    expect(String(buildResponse.body.message)).toMatch(/Ressources insuffisantes/);
+    expect(await database.shipQueue.count({ where: { planetId } })).toBe(0);
 
     await cleanupTestUser(database, testUser.username);
   });

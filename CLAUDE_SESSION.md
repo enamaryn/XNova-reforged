@@ -11,6 +11,20 @@
 
 Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DOUBLE_AUDIT_2026-10.md), [roadmap historique](docs/history/ROADMAP_MVP_AVANT_AUDIT.md).
 
+## Session de correction — QUAL-02 (tests qui détectent les échecs)
+
+**Date :** 4 octobre 2026. **Objectif :** des tests qui échouent quand le produit est faux, E2E compris.
+
+- [x] Assertions exactes à la place des listes de statuts (alliances, galaxie, messagerie, recherche, chantier) ; chantier nominal strict ; `buildTestUser` sans collision.
+- [x] Défaut applicatif corrigé : `/galaxy/:g/:s` valide les bornes (400).
+- [x] E2E exécutés : tous échouaient ; corrigés : persistance de session sans « se souvenir », navigation après connexion (cache du routeur), query string perdue par le middleware ; E2E flotte et chantier mis à jour.
+- [x] 15/15 E2E sur production + base vierge, 12 passes consécutives, puis conditions CI (`CI=true`) ; intégration 116/116 sur 3 bases neuves ; job `e2e` ajouté à la CI.
+- [ ] Première exécution du job E2E sur GitHub ; décision « se souvenir de moi » ; moteur mocké dans `combat.service.spec.ts` ; couverture non mesurée.
+
+**Prochaines étapes :** OPS-01 (sauvegarde, restauration, migrations), OPS-02 (inscription atomique), SCOPE-01.
+
+---
+
 ## Session de correction — QUAL-01 (build propre, lint et CI)
 
 **Date :** 4 octobre 2026. **Objectif :** un clone vierge installe, compile, lint et teste ; la CI le vérifie.

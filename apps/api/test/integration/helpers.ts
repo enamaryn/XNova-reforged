@@ -1,5 +1,6 @@
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { randomBytes } from 'crypto';
 import request from 'supertest';
 import { AppModule } from '../../src/app.module';
 import { configureApp } from '../../src/app.setup';
@@ -10,8 +11,15 @@ export interface IntegrationApp {
   database: DatabaseService;
 }
 
+let userCounter = 0;
+
+/**
+ * Utilisateur de test unique : aléa cryptographique + compteur, donc aucune collision possible
+ * même pour plusieurs comptes créés dans la même milliseconde (QUAL-02).
+ */
 export function buildTestUser() {
-  const unique = Date.now().toString(36).slice(-6) + Math.floor(Math.random() * 100);
+  userCounter += 1;
+  const unique = `${randomBytes(4).toString('hex')}${userCounter.toString(36)}`;
   return {
     username: `it_${unique}`,
     email: `itest_${unique}@example.test`,
@@ -48,10 +56,20 @@ export async function registerAndLogin(app: INestApplication, testUser: ReturnTy
     .send({ identifier: testUser.username, password: testUser.password })
     .expect(200);
 
+  // Les ressources sont du Float alimenté par le cron de production (toutes les minutes) pour les
+  // joueurs actifs : un compte « inactif depuis 30 jours » est ignoré par le cron, ce qui garde les
+  // assertions exactes sur les stocks stables (sinon échec aléatoire quand le cron passe en cours de test).
+  await app
+    .get(DatabaseService)
+    .user.update({ where: { username: testUser.username }, data: { lastActive: DORMANT_SINCE() } });
+
   return {
     accessToken: loginResponse.body?.tokens?.accessToken,
   };
 }
+
+/** Date de dernière activité qui exclut le compte de la production périodique des ressources. */
+export const DORMANT_SINCE = () => new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
 
 export async function cleanupTestUser(database: DatabaseService, username: string) {
   const existing = await database.user.findUnique({
