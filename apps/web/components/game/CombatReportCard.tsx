@@ -1,5 +1,6 @@
 'use client';
 
+import { DEFENSES } from '@xnova/game-config';
 import { memo } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 
@@ -101,6 +102,29 @@ export const CombatReportCard = memo(function CombatReportCard({
             </div>
           </div>
         </div>
+
+        {report.defenderDefs && sumCounts(report.defenderDefs) > 0 && (
+          <div
+            className="rounded-2xl border border-slate-800/60 bg-slate-900/50 p-4"
+            data-testid="report-defenses"
+          >
+            <h3 className="text-xs uppercase tracking-[0.2em] text-slate-500">Défenses</h3>
+            <div className="mt-3 grid gap-2 text-xs text-slate-300">
+              {Object.entries(report.defenderDefs).map(([id, count]) => {
+                const destroyed = report.defenderLosses?.[id] ?? 0;
+                const repaired = report.defenderRepaired?.[id] ?? 0;
+                return (
+                  <div key={id} className="flex items-center justify-between">
+                    <span>{DEFENSES[Number(id)]?.name ?? `Défense ${id}`}</span>
+                    <span>
+                      {formatNumber(count)} (détruites {formatNumber(destroyed)}, réparées {formatNumber(repaired)})
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {report.timeline && report.timeline.length > 0 && (
           <div className="rounded-2xl border border-slate-800/60 bg-slate-900/50 p-4">

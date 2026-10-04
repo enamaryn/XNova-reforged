@@ -5,7 +5,15 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ServerConfigService } from '../server-config/server-config.service';
-import { BUILDINGS, SHIPS, TECHNOLOGIES, type ShipCost } from '@xnova/game-config';
+import {
+  BUILDINGS,
+  DEFENSES,
+  IMPLEMENTED_DEFENSES,
+  SHIPS,
+  SINGLE_UNIT_DEFENSES,
+  TECHNOLOGIES,
+  type ShipCost,
+} from '@xnova/game-config';
 import { DatabaseService } from '../database/database.service';
 import { debitResources, lockPlanet } from '../common/atomic';
 
@@ -92,17 +100,96 @@ export class ShipyardService {
     };
   }
 
+  async getDefenses(planetId: string, userId: string) {
+    if (!planetId) {
+      throw new BadRequestException('planetId requis');
+    }
+
+    const planet = await this.getPlanetOrFail(planetId, userId);
+
+    const rows = await this.database.defense.findMany({
+      where: { planetId },
+      select: { defenseId: true, amount: true },
+    });
+    const amounts = new Map(rows.map((row) => [row.defenseId, row.amount]));
+
+    const techRows = await this.database.technology.findMany({ where: { userId } });
+    const techLevels: Record<number, number> = {};
+    techRows.forEach((row) => {
+      techLevels[row.techId] = row.level;
+    });
+
+    const queue = await this.database.shipQueue.findMany({
+      where: { planetId, completed: false, shipId: { in: [...IMPLEMENTED_DEFENSES] } },
+    });
+    const queued = new Map<number, number>();
+    queue.forEach((entry) => queued.set(entry.shipId, (queued.get(entry.shipId) ?? 0) + entry.amount));
+
+    const { shipCostMultiplier } = await this.serverConfig.getConfig();
+
+    const defenses = IMPLEMENTED_DEFENSES.map((id) => {
+      const defense = DEFENSES[id];
+      const cost = this.applyCostMultiplier(defense.cost, shipCostMultiplier);
+      const buildTime = this.getShipBuildTimeSeconds({
+        cost,
+        shipyardLevel: planet.shipyard,
+        naniteLevel: planet.naniteFactory,
+      });
+      const requirements = this.checkRequirements(id, this.extractBuildingLevels(planet), techLevels);
+      const canAfford =
+        planet.metal >= cost.metal &&
+        planet.crystal >= cost.crystal &&
+        planet.deuterium >= cost.deuterium;
+      const currentAmount = amounts.get(id) ?? 0;
+      const inQueue = queued.get(id) ?? 0;
+      const single = SINGLE_UNIT_DEFENSES.includes(id);
+      const missingRequirements = [...requirements.missingRequirements];
+      if (single && currentAmount + inQueue >= 1) {
+        missingRequirements.push('Une seule unité par planète');
+      }
+
+      return {
+        id,
+        name: defense.name,
+        description: defense.description,
+        cost,
+        buildTime,
+        stats: defense.stats,
+        currentAmount,
+        inQueue,
+        singleUnit: single,
+        canAfford,
+        canBuild: missingRequirements.length === 0 && canAfford,
+        missingRequirements,
+      };
+    });
+
+    return {
+      planetId,
+      defenses,
+      resources: { metal: planet.metal, crystal: planet.crystal, deuterium: planet.deuterium },
+    };
+  }
+
   async startBuild(
     planetId: string,
     shipId: number,
     amount: number,
     userId: string,
+    kind: 'ship' | 'defense' = 'ship',
   ) {
     const planet = await this.getPlanetOrFail(planetId, userId);
-    const ship = SHIPS[shipId];
+    const isDefense = kind === 'defense';
+    const ship = isDefense
+      ? IMPLEMENTED_DEFENSES.includes(shipId)
+        ? DEFENSES[shipId]
+        : undefined
+      : SHIPS[shipId];
 
     if (!ship) {
-      throw new BadRequestException(`Vaisseau ${shipId} inexistant`);
+      throw new BadRequestException(
+        isDefense ? `Defense ${shipId} inexistante ou indisponible` : `Vaisseau ${shipId} inexistant`,
+      );
     }
 
     const safeAmount = Math.max(1, Math.floor(amount));
@@ -115,11 +202,15 @@ export class ShipyardService {
       techLevels[row.techId] = row.level;
     });
 
-    const requirements = this.checkShipRequirements(
+    const requirements = this.checkRequirements(
       shipId,
       this.extractBuildingLevels(planet),
       techLevels,
     );
+
+    if (isDefense && SINGLE_UNIT_DEFENSES.includes(shipId) && safeAmount !== 1) {
+      throw new BadRequestException('Un bouclier planetaire ne se construit qu\'en un seul exemplaire');
+    }
 
     if (!requirements.canBuild) {
       throw new BadRequestException(
@@ -159,6 +250,16 @@ export class ShipyardService {
     const { updatedPlanet, queueEntry, startTime, endTime } = await this.database.$transaction(
       async (tx) => {
         await lockPlanet(tx, planetId);
+
+        if (isDefense && SINGLE_UNIT_DEFENSES.includes(shipId)) {
+          const built = await tx.defense.findUnique({
+            where: { planetId_defenseId: { planetId, defenseId: shipId } },
+          });
+          const pending = await tx.shipQueue.count({ where: { planetId, shipId, completed: false } });
+          if ((built?.amount ?? 0) + pending >= 1) {
+            throw new BadRequestException('Ce bouclier existe deja sur cette planete');
+          }
+        }
 
         const lastEntry = await tx.shipQueue.findFirst({
           where: { planetId, completed: false },
@@ -218,7 +319,8 @@ export class ShipyardService {
     return queue.map((item) => ({
       id: item.id,
       shipId: item.shipId,
-      shipName: SHIPS[item.shipId]?.name || `Ship ${item.shipId}`,
+      shipName: SHIPS[item.shipId]?.name || DEFENSES[item.shipId]?.name || `Ship ${item.shipId}`,
+      kind: item.shipId >= 400 ? 'defense' : 'ship',
       amount: item.amount,
       startTime: item.startTime,
       endTime: item.endTime,
@@ -247,7 +349,7 @@ export class ShipyardService {
       throw new BadRequestException('Construction deja terminee');
     }
 
-    const ship = SHIPS[queueEntry.shipId];
+    const ship = SHIPS[queueEntry.shipId] ?? DEFENSES[queueEntry.shipId];
     if (!ship) {
       throw new BadRequestException('Vaisseau invalide');
     }
@@ -311,8 +413,9 @@ export class ShipyardService {
     shipId: number;
     amount: number;
   }) {
+    const defense = DEFENSES[queueEntry.shipId];
     const ship = SHIPS[queueEntry.shipId];
-    if (!ship) {
+    if (!ship && !defense) {
       console.error(`[Shipyard] Unknown ship ID: ${queueEntry.shipId}`);
       return;
     }
@@ -324,6 +427,21 @@ export class ShipyardService {
         data: { completed: true },
       });
       if (claimed.count !== 1) return;
+
+      if (defense && !ship) {
+        await tx.defense.upsert({
+          where: {
+            planetId_defenseId: { planetId: queueEntry.planetId, defenseId: queueEntry.shipId },
+          },
+          update: { amount: { increment: queueEntry.amount } },
+          create: {
+            planetId: queueEntry.planetId,
+            defenseId: queueEntry.shipId,
+            amount: queueEntry.amount,
+          },
+        });
+        return;
+      }
 
       await tx.ship.upsert({
         where: {
@@ -410,10 +528,19 @@ export class ShipyardService {
     shipId: number,
     planetBuildings: Record<number, number>,
     userTechnologies: Record<number, number>,
+  ) {
+    return this.checkRequirements(shipId, planetBuildings, userTechnologies);
+  }
+
+  /** Prérequis d'un vaisseau (ids 2xx) ou d'une défense (ids 4xx). */
+  private checkRequirements(
+    shipId: number,
+    planetBuildings: Record<number, number>,
+    userTechnologies: Record<number, number>,
   ): { canBuild: boolean; missingRequirements: string[] } {
-    const ship = SHIPS[shipId];
+    const ship = SHIPS[shipId] ?? DEFENSES[shipId];
     if (!ship) {
-      return { canBuild: false, missingRequirements: ['Vaisseau introuvable'] };
+      return { canBuild: false, missingRequirements: ['Element introuvable'] };
     }
 
     const missingRequirements: string[] = [];

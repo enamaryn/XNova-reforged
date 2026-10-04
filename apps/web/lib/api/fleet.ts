@@ -92,6 +92,7 @@ export interface SpyReportDetail extends SpyReportSummary {
   data: {
     resources: { metal: number; crystal: number; deuterium: number };
     ships?: Record<string, number>;
+    defenses?: Record<string, number>;
     buildings?: Record<string, number>;
     technologies?: Record<string, number>;
   };

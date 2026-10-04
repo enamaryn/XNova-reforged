@@ -319,6 +319,8 @@ model CombatReport {
   attackerShips Json   // Before combat
   defenderShips Json
   defenderDefs  Json
+  // Défenses détruites puis réparées après le combat { defenseId: nombre } ; null pour les rapports antérieurs
+  defenderRepaired Json?
 
   // Losses
   attackerLosses Json

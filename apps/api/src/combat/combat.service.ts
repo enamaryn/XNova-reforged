@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CombatResult, MissionType } from '@xnova/game-config';
+import { CombatResult, GAME_CONSTANTS, MissionType } from '@xnova/game-config';
 import {
   computeCargoCapacity,
   distributeLoot,
@@ -91,13 +91,22 @@ export class CombatService {
       acc[row.shipId] = row.amount;
       return acc;
     }, {} as Record<number, number>);
+    // Les défenses de la planète combattent avec la flotte stationnée (SCOPE-01)
+    const defenderDefenseRows = await this.database.defense.findMany({
+      where: { planetId: target.id, amount: { gt: 0 } },
+      select: { defenseId: true, amount: true },
+    });
+    const defenderDefenses = defenderDefenseRows.reduce((acc, row) => {
+      acc[row.defenseId] = row.amount;
+      return acc;
+    }, {} as Record<number, number>);
 
     const attackerTech = await this.getCombatTechLevels(fleet.userId);
     const defenderTech = await this.getCombatTechLevels(target.userId);
 
     const combat = simulateCombat({
       attackerShips,
-      defenderShips,
+      defenderShips: { ...defenderShips, ...defenderDefenses },
       attackerTech: {
         weapon: attackerTech.weapon,
         shield: attackerTech.shield,
@@ -111,7 +120,11 @@ export class CombatService {
     });
 
     const attackerSurvivors = combat.attackerRemaining;
-    const defenderSurvivors = combat.defenderRemaining;
+    const { shipLosses: defenderShipLosses, defenseLosses } = this.splitDefenderLosses(
+      combat.defenderLosses ?? {},
+    );
+    // Réparation : chaque défense détruite revient avec la probabilité DEFENSE_REPAIR_FACTOR
+    const defenderRepaired = this.repairDefenses(defenseLosses);
     const attackerTotal = this.countShips(attackerSurvivors);
 
     const maxLoot = {
@@ -177,6 +190,8 @@ export class CombatService {
           defenderId: target.userId,
           attackerShips,
           defenderShips,
+          defenderDefenses,
+          defenderRepaired,
           combat,
           loot: finalLoot,
           location: {
@@ -212,7 +227,7 @@ export class CombatService {
       });
 
       // Pertes du defenseur en decrement : ne jamais ecraser une construction ou un envoi concurrent
-      for (const [shipId, lost] of Object.entries(combat.defenderLosses ?? {})) {
+      for (const [shipId, lost] of Object.entries(defenderShipLosses)) {
         const amount = Number(lost);
         if (!(amount > 0)) continue;
         const decremented = await tx.ship.updateMany({
@@ -222,6 +237,22 @@ export class CombatService {
         if (decremented.count !== 1) {
           await tx.ship.updateMany({
             where: { planetId: target.id, shipId: Number(shipId) },
+            data: { amount: 0 },
+          });
+        }
+      }
+
+      // Défenses perdues pour de bon = détruites moins réparées
+      for (const [defenseId, destroyed] of Object.entries(defenseLosses)) {
+        const amount = destroyed - (defenderRepaired[Number(defenseId)] ?? 0);
+        if (!(amount > 0)) continue;
+        const decremented = await tx.defense.updateMany({
+          where: { planetId: target.id, defenseId: Number(defenseId), amount: { gte: amount } },
+          data: { amount: { decrement: amount } },
+        });
+        if (decremented.count !== 1) {
+          await tx.defense.updateMany({
+            where: { planetId: target.id, defenseId: Number(defenseId) },
             data: { amount: 0 },
           });
         }
@@ -293,6 +324,8 @@ export class CombatService {
     defenderId: string;
     attackerShips: Record<number, number>;
     defenderShips: Record<number, number>;
+    defenderDefenses: Record<number, number>;
+    defenderRepaired: Record<number, number>;
     combat: CombatResultSummary;
     loot: { metal: number; crystal: number; deuterium: number };
     location: { galaxy: number; system: number; position: number };
@@ -302,7 +335,8 @@ export class CombatService {
       defenderId: params.defenderId,
       attackerShips: params.attackerShips as Prisma.InputJsonValue,
       defenderShips: params.defenderShips as Prisma.InputJsonValue,
-      defenderDefs: {} as Prisma.InputJsonValue,
+      defenderDefs: params.defenderDefenses as Prisma.InputJsonValue,
+      defenderRepaired: params.defenderRepaired as Prisma.InputJsonValue,
       attackerLosses: params.combat.attackerLosses as Prisma.InputJsonValue,
       defenderLosses: params.combat.defenderLosses as Prisma.InputJsonValue,
       result: params.combat.result,
@@ -314,6 +348,28 @@ export class CombatService {
       system: params.location.system,
       position: params.location.position,
     };
+  }
+
+  /** Sépare les pertes du défenseur : vaisseaux (ids 2xx) et défenses (ids >= 400). */
+  private splitDefenderLosses(losses: Record<number, number>) {
+    const shipLosses: Record<number, number> = {};
+    const defenseLosses: Record<number, number> = {};
+    for (const [id, amount] of Object.entries(losses)) {
+      (Number(id) >= 400 ? defenseLosses : shipLosses)[Number(id)] = Number(amount);
+    }
+    return { shipLosses, defenseLosses };
+  }
+
+  private repairDefenses(defenseLosses: Record<number, number>): Record<number, number> {
+    const repaired: Record<number, number> = {};
+    for (const [id, destroyed] of Object.entries(defenseLosses)) {
+      let back = 0;
+      for (let i = 0; i < destroyed; i += 1) {
+        if (Math.random() < GAME_CONSTANTS.DEFENSE_REPAIR_FACTOR) back += 1;
+      }
+      if (back > 0) repaired[Number(id)] = back;
+    }
+    return repaired;
   }
 
   private normalizeShipMap(raw: any): Record<number, number> {

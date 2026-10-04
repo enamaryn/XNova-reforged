@@ -82,3 +82,12 @@ export enum CombatResult {
   DEFENDER_WIN = 'defender_win',
   DRAW = 'draw',
 }
+
+/**
+ * Défenses constructibles (SCOPE-01). Les missiles (502, 503) dépendent du silo et des attaques
+ * interplanétaires, hors périmètre : ils ne sont ni proposés ni acceptés.
+ */
+export const IMPLEMENTED_DEFENSES: readonly number[] = [401, 402, 403, 404, 405, 406, 407, 408]
+
+/** Boucliers planétaires : une seule unité par planète. */
+export const SINGLE_UNIT_DEFENSES: readonly number[] = [407, 408]
