@@ -5,7 +5,15 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ServerConfigService } from '../server-config/server-config.service';
-import { GAME_CONSTANTS, IMPLEMENTED_MISSIONS, MissionType, SHIPS, getShipSpeed } from '@xnova/game-config';
+import {
+  COLONY_SHIP_ID,
+  ESPIONAGE_PROBE_ID,
+  GAME_CONSTANTS,
+  IMPLEMENTED_MISSIONS,
+  MissionType,
+  SHIPS,
+  getShipSpeed,
+} from '@xnova/game-config';
 import {
   calculateDistance,
   calculateFleetSpeed,
@@ -144,6 +152,25 @@ export class FleetService {
       if (!target || target.userId !== userId) {
         throw new BadRequestException('Le deploiement exige une de vos planetes');
       }
+    } else if (dto.mission === MissionType.SPY) {
+      // Espionnage : uniquement des sondes, vers la planete d'un autre joueur
+      if (shipsToSend.some((ship) => ship.shipId !== ESPIONAGE_PROBE_ID)) {
+        throw new BadRequestException('Une mission d\'espionnage n\'accepte que des sondes d\'espionnage');
+      }
+      if (!target) throw new BadRequestException('Aucune planete a cette position');
+      if (target.userId === userId) {
+        throw new BadRequestException('Vous ne pouvez pas espionner votre propre planete');
+      }
+    } else if (dto.mission === MissionType.COLONIZE) {
+      // Colonisation : au moins un vaisseau de colonisation, vers une position libre
+      if (!shipsToSend.some((ship) => ship.shipId === COLONY_SHIP_ID)) {
+        throw new BadRequestException('Une mission de colonisation exige un vaisseau de colonisation');
+      }
+      if (target) throw new BadRequestException('Cette position est deja occupee');
+      const owned = await this.database.planet.count({ where: { userId } });
+      if (owned >= GAME_CONSTANTS.MAX_PLAYER_PLANETS) {
+        throw new BadRequestException('Nombre maximal de planetes atteint');
+      }
     } else if (!target) {
       // TRANSPORT : la cible doit exister
       throw new BadRequestException('Aucune planete a cette position');
@@ -174,6 +201,14 @@ export class FleetService {
       crystal: this.parseQuantity(dto.cargo?.crystal),
       deuterium: this.parseQuantity(dto.cargo?.deuterium),
     };
+
+    // Espionnage et colonisation n'embarquent aucune ressource
+    if (
+      (dto.mission === MissionType.SPY || dto.mission === MissionType.COLONIZE) &&
+      cargo.metal + cargo.crystal + cargo.deuterium > 0
+    ) {
+      throw new BadRequestException('Cette mission n\'accepte aucune cargaison');
+    }
 
     const cargoTotal = cargo.metal + cargo.crystal + cargo.deuterium;
     const cargoCapacity = shipsToSend.reduce(
@@ -288,6 +323,7 @@ export class FleetService {
           mission: dto.mission,
           ships: shipsPayload,
           cargo,
+          colonyName: dto.mission === MissionType.COLONIZE ? dto.planetName?.trim() || 'Colonie' : null,
           startTime: now,
           arrivalTime,
           returnTime,

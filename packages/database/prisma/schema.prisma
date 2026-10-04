@@ -42,6 +42,8 @@ model User {
   // Relations
   planets       Planet[]
   sessions      Session[]
+  spyReportsSent     SpyReport[] @relation("SpyReportsSent")
+  spyReportsReceived SpyReport[] @relation("SpyReportsReceived")
   fleets        Fleet[]
   technologies  Technology[]
   messages      Message[]      @relation("ReceivedMessages")
@@ -286,6 +288,9 @@ model Fleet {
   arrivalTime     DateTime
   returnTime      DateTime?
 
+  // Nom de la colonie a creer (mission de colonisation)
+  colonyName      String?
+
   // Status
   status          String   // traveling, arrived, returning, completed
 
@@ -467,4 +472,31 @@ model Session {
 
   @@index([userId, revokedAt])
   @@index([expiresAt])
+}
+
+// Rapports d'espionnage : informations collectees par une mission d'espionnage (SCOPE-01)
+model SpyReport {
+  id         String   @id @default(uuid())
+
+  attackerId String
+  attacker   User     @relation("SpyReportsSent", fields: [attackerId], references: [id], onDelete: Cascade)
+
+  defenderId String
+  defender   User     @relation("SpyReportsReceived", fields: [defenderId], references: [id], onDelete: Cascade)
+
+  // Cible
+  galaxy     Int
+  system     Int
+  position   Int
+  planetName String
+
+  // Sondes envoyees et niveau d'information obtenu (0 = ressources, 1 = + flotte, 2 = + batiments, 3 = + technologies)
+  probes     Int
+  infoLevel  Int
+  data       Json
+
+  createdAt  DateTime @default(now())
+
+  @@index([attackerId, createdAt])
+  @@index([defenderId])
 }

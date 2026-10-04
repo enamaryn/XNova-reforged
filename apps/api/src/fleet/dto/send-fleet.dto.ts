@@ -7,7 +7,9 @@ import {
   IsOptional,
   IsString,
   Max,
+  MaxLength,
   Min,
+  MinLength,
   ValidateNested,
 } from 'class-validator';
 
@@ -69,4 +71,11 @@ export class SendFleetDto {
   @ValidateNested()
   @Type(() => FleetCargoDto)
   cargo?: FleetCargoDto;
+
+  // Nom de la colonie (mission de colonisation uniquement)
+  @IsOptional()
+  @IsString()
+  @MinLength(2)
+  @MaxLength(30)
+  planetName?: string;
 }

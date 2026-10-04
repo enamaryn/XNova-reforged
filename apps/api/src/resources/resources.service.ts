@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -11,9 +10,7 @@ import {
   type ResourceLevels,
   type ResourceState,
 } from '@xnova/game-engine';
-import { GAME_CONSTANTS } from '@xnova/game-config';
 import { DatabaseService } from '../database/database.service';
-import { debitShips, lockUser } from '../common/atomic';
 import { persistResourceRefresh } from './resource-refresh';
 import { ServerConfigService } from '../server-config/server-config.service';
 
@@ -89,120 +86,6 @@ export class ResourcesService {
     });
 
     return updated;
-  }
-
-  async scanPlanet(planetId: string) {
-    const planet = await this.database.planet.findUnique({
-      where: { id: planetId },
-      include: {
-        user: { select: { id: true, username: true } },
-      },
-    });
-
-    if (!planet) {
-      throw new NotFoundException('Planete introuvable');
-    }
-
-    return {
-      id: planet.id,
-      name: planet.name,
-      galaxy: planet.galaxy,
-      system: planet.system,
-      position: planet.position,
-      owner: planet.user?.username ?? 'Inconnu',
-      resources: {
-        metal: planet.metal,
-        crystal: planet.crystal,
-        deuterium: planet.deuterium,
-      },
-    };
-  }
-
-  async colonizePlanet(params: {
-    userId: string;
-    originPlanetId: string;
-    galaxy: number;
-    system: number;
-    position: number;
-    name: string;
-  }) {
-    const { userId, originPlanetId, galaxy, system, position, name } = params;
-
-    if (
-      galaxy < 1 ||
-      galaxy > GAME_CONSTANTS.MAX_GALAXIES ||
-      system < 1 ||
-      system > GAME_CONSTANTS.MAX_SYSTEMS ||
-      position < 1 ||
-      position > GAME_CONSTANTS.MAX_POSITIONS
-    ) {
-      throw new BadRequestException('Coordonnees invalides');
-    }
-
-    const origin = await this.database.planet.findUnique({
-      where: { id: originPlanetId },
-    });
-    if (!origin) {
-      throw new NotFoundException('Planete d\'origine introuvable');
-    }
-    if (origin.userId !== userId) {
-      throw new ForbiddenException('Acces refuse');
-    }
-
-    const planetName = name?.trim() || 'Colonie';
-    const config = await this.serverConfig.getConfig();
-
-    // Quota, position libre et vaisseau verifies et consommes dans la meme transaction (ECO-03)
-    const createdPlanet = await this.database.$transaction(async (tx) => {
-      await lockUser(tx, userId);
-
-      const planetCount = await tx.planet.count({ where: { userId } });
-      if (planetCount >= GAME_CONSTANTS.MAX_PLAYER_PLANETS) {
-        throw new BadRequestException('Nombre maximal de planetes atteint');
-      }
-
-      const existing = await tx.planet.findUnique({
-        where: { galaxy_system_position: { galaxy, system, position } },
-      });
-      if (existing) {
-        throw new BadRequestException('Position deja occupee');
-      }
-
-      await debitShips(tx, originPlanetId, 208, 1, 'Vaisseau de colonisation requis');
-
-      try {
-        return await tx.planet.create({
-          data: {
-            userId,
-            name: planetName,
-            galaxy,
-            system,
-            position,
-            planetType: 'normal',
-            metal: GAME_CONSTANTS.STARTING_METAL,
-            crystal: GAME_CONSTANTS.STARTING_CRYSTAL,
-            deuterium: GAME_CONSTANTS.STARTING_DEUTERIUM,
-            fieldsMax: config.planetSize,
-            fieldsUsed: 0,
-          },
-        });
-      } catch (error) {
-        // Course sur la position (contrainte d'unicite) : meme reponse que la verification
-        if ((error as { code?: string }).code === 'P2002') {
-          throw new BadRequestException('Position deja occupee');
-        }
-        throw error;
-      }
-    });
-
-    return {
-      success: true,
-      planetId: createdPlanet.id,
-      galaxy,
-      system,
-      position,
-      name: createdPlanet.name,
-    };
   }
 
   /**

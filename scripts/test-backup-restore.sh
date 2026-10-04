@@ -42,6 +42,8 @@ fingerprint() {
         coalesce((SELECT string_agg(id || name || metal::text, ',' ORDER BY id) FROM \"Planet\"), ''))"
 }
 
+MIG_COUNT="$(find "$ROOT/packages/database/prisma/migrations" -mindepth 1 -maxdepth 1 -type d | wc -l)"
+
 echo "== Préparation (bases isolées $SRC_DB / $DST_DB)"
 psql "$ADMIN_URL" -qc "CREATE DATABASE \"$SRC_DB\"" || { echo "Impossible de créer la base source"; exit 2; }
 psql "$ADMIN_URL" -qc "CREATE DATABASE \"$DST_DB\"" || { echo "Impossible de créer la base cible"; exit 2; }
@@ -54,8 +56,12 @@ expect_ok "aucun écart entre migrations et schema.prisma" \
 echo "== Base existante créée par db push : alignement sur les migrations (baseline)"
 psql "$ADMIN_URL" -qc "CREATE DATABASE \"$LEG_DB\"" || { echo "Impossible de créer la base historique"; exit 2; }
 expect_ok "base historique créée par prisma db push" env DATABASE_URL="$BASE_URL/$LEG_DB?schema=public" npx prisma db push --skip-generate --schema "$SCHEMA"
-expect_ok "baseline : migrate resolve --applied de la migration initiale" \
-  env DATABASE_URL="$BASE_URL/$LEG_DB?schema=public" npx prisma migrate resolve --applied 20261004000000_init --schema "$SCHEMA"
+# La base `db push` reflète le schéma courant : toutes les migrations versionnées sont déjà appliquées
+for MIG_DIR in "$ROOT"/packages/database/prisma/migrations/*/; do
+  MIG="$(basename "$MIG_DIR")"
+  expect_ok "baseline : migrate resolve --applied $MIG" \
+    env DATABASE_URL="$BASE_URL/$LEG_DB?schema=public" npx prisma migrate resolve --applied "$MIG" --schema "$SCHEMA"
+done
 expect_ok "base historique à jour pour migrate deploy (aucune migration en attente)" \
   env DATABASE_URL="$BASE_URL/$LEG_DB?schema=public" npx prisma migrate deploy --schema "$SCHEMA"
 
@@ -80,7 +86,7 @@ echo "== Restauration sur base isolée"
 expect_ok "restore-db.sh --yes sur la base cible" "$ROOT/scripts/restore-db.sh" --yes "$BACKUP" "$DST_URL?schema=public"
 DST_FP="$(fingerprint "$DST_URL")"
 [ "$SRC_FP" = "$DST_FP" ] && pass "données identiques après restauration ($DST_FP)" || fail "données différentes (source $SRC_FP / cible $DST_FP)"
-[ "$(sql "$DST_URL" 'SELECT count(*) FROM _prisma_migrations')" = "1" ] && pass "historique des migrations restauré" || fail "historique des migrations"
+[ "$(sql "$DST_URL" 'SELECT count(*) FROM _prisma_migrations')" = "$MIG_COUNT" ] && pass "historique des migrations restauré" || fail "historique des migrations"
 
 echo "== Échecs : la restauration est tout ou rien"
 sql "$DST_URL" "INSERT INTO \"User\"(id, username, email, password, \"updatedAt\") VALUES ('u9','zoe','zoe@test.local','h9', now())" >/dev/null
@@ -114,11 +120,11 @@ mkdir "$PROBE/migrations/20261005000000_sonde_retour_arriere"
 echo 'ALTER TABLE "User" ADD COLUMN "sonde" TEXT;' > "$PROBE/migrations/20261005000000_sonde_retour_arriere/migration.sql"
 expect_ok "migration de test appliquée (prisma migrate deploy)" env DATABASE_URL="$SRC_URL?schema=public" npx prisma migrate deploy --schema "$PROBE/schema.prisma"
 [ "$(sql "$SRC_URL" "SELECT count(*) FROM information_schema.columns WHERE table_name='User' AND column_name='sonde'")" = "1" ] && pass "colonne ajoutée par la migration" || fail "migration non appliquée"
-[ "$(sql "$SRC_URL" 'SELECT count(*) FROM _prisma_migrations')" = "2" ] && pass "deux migrations enregistrées" || fail "historique des migrations après migration"
+[ "$(sql "$SRC_URL" 'SELECT count(*) FROM _prisma_migrations')" = "$((MIG_COUNT + 1))" ] && pass "migration de test enregistrée" || fail "historique des migrations après migration"
 
 expect_ok "retour arrière : restauration de la sauvegarde d'avant migration" "$ROOT/scripts/restore-db.sh" --yes "$BACKUP" "$SRC_URL"
 [ "$(sql "$SRC_URL" "SELECT count(*) FROM information_schema.columns WHERE table_name='User' AND column_name='sonde'")" = "0" ] && pass "colonne retirée par le retour arrière" || fail "colonne toujours présente"
-[ "$(sql "$SRC_URL" 'SELECT count(*) FROM _prisma_migrations')" = "1" ] && pass "historique revenu à une migration" || fail "historique après retour arrière"
+[ "$(sql "$SRC_URL" 'SELECT count(*) FROM _prisma_migrations')" = "$MIG_COUNT" ] && pass "historique revenu à l'état d'avant migration" || fail "historique après retour arrière"
 [ "$(fingerprint "$SRC_URL")" = "$SRC_FP" ] && pass "données identiques à celles d'avant migration" || fail "données différentes après retour arrière"
 
 echo

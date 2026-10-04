@@ -59,3 +59,52 @@ test('lancer une recherche', async ({ page }) => {
   // Vérifier qu'une recherche est en cours
   await expect(page.getByText(/Recherche en cours/)).toBeVisible();
 });
+
+test('page détail : lancer, finaliser et voir le niveau', async ({ page }) => {
+  const credentials = buildCredentials('e2e_resdet');
+
+  await registerUser(page, credentials);
+  await seedResearchLab(credentials.username);
+
+  // Technologie sans seuil d'énergie et dont le prérequis (laboratoire 1) est satisfait : Énergie (113)
+  await page.goto('/research/113');
+  await expect(page.getByRole('heading', { name: /Énergie/ })).toBeVisible();
+  await expect(page.getByText('Niveau actuel')).toBeVisible();
+
+  const launch = page.getByRole('button', { name: 'Lancer la recherche' });
+  await expect(launch).toBeEnabled();
+  await launch.click();
+
+  // Démarrée : message de succès, bouton désactivé « Recherche en cours »
+  await expect(page.getByText('Recherche lancée.')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Recherche en cours' })).toBeDisabled();
+
+  // Finalisation : on avance l'échéance, le cron de recherche (toutes les 10 s) la termine
+  const user = await prisma.user.findUniqueOrThrow({ where: { username: credentials.username } });
+  await prisma.researchQueue.updateMany({
+    where: { userId: user.id, completed: false },
+    data: { endTime: new Date(Date.now() - 1000) },
+  });
+
+  await expect(async () => {
+    await page.reload();
+    await expect(page.getByText('Niveau actuel').locator('..')).toContainText('1', { timeout: 2000 });
+  }).toPass({ timeout: 60_000, intervals: [3000] });
+
+  const tech = await prisma.technology.findFirst({ where: { userId: user.id, techId: 113 } });
+  expect(tech?.level).toBe(1);
+});
+
+test('page détail : une technologie sans énergie suffisante ne peut pas être lancée', async ({ page }) => {
+  const credentials = buildCredentials('e2e_graviton');
+
+  await registerUser(page, credentials);
+  await seedResearchLab(credentials.username);
+  const user = await prisma.user.findUniqueOrThrow({ where: { username: credentials.username } });
+  await prisma.planet.updateMany({ where: { userId: user.id }, data: { researchLab: 12 } });
+
+  // Graviton (199) : seuil d'énergie 300 000, la planète de départ ne produit pas autant
+  await page.goto('/research/199');
+  await expect(page.getByText(/Énergie produite/)).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Lancer la recherche' })).toBeDisabled();
+});

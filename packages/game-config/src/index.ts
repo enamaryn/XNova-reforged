@@ -53,12 +53,20 @@ export enum MissionType {
 }
 
 // Missions réellement traitées à l'arrivée (liste commune API/UI, GAME-01).
-// SPY, COLONIZE, etc. restent exclues tant que SCOPE-01 n'a pas tranché : l'API les refuse sans débit.
+// Les autres missions (recyclage, expédition...) restent refusées par l'API sans débit.
 export const IMPLEMENTED_MISSIONS: readonly MissionType[] = [
   MissionType.ATTACK,
   MissionType.TRANSPORT,
   MissionType.DEPLOY,
+  MissionType.SPY,
+  MissionType.COLONIZE,
 ]
+
+/** Identifiants des vaisseaux imposés par certaines missions. */
+export const ESPIONAGE_PROBE_ID = 210
+export const COLONY_SHIP_ID = 208
+/** Technologie Espionnage : détermine le niveau d'information d'un rapport d'espionnage. */
+export const ESPIONAGE_TECH_ID = 106
 
 // Fleet status
 export enum FleetStatus {

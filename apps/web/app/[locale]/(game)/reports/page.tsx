@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { motion, useReducedMotion, type MotionProps } from 'framer-motion';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { reportsApi } from '@/lib/api/reports';
+import { getSpyReports } from '@/lib/api/fleet';
 import { designTokens } from '@/lib/design-tokens';
 
 function formatResult(result: string) {
@@ -17,6 +18,52 @@ function formatResult(result: string) {
     default:
       return 'Match nul';
   }
+}
+
+/** Rapports d'espionnage : un par mission d'espionnage arrivée à destination. */
+function SpyReportsSection() {
+  const { data, isLoading } = useQuery({
+    queryKey: ['spy-reports'],
+    queryFn: () => getSpyReports(),
+    refetchInterval: 30000,
+  });
+  const reports = data ?? [];
+
+  return (
+    <section className="space-y-3" data-testid="spy-reports">
+      <div>
+        <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">Espionnage</p>
+        <h2 className="mt-1 text-lg font-semibold text-white">Rapports d&apos;espionnage</h2>
+      </div>
+      {isLoading ? (
+        <p className="text-sm text-slate-400">Chargement...</p>
+      ) : reports.length === 0 ? (
+        <div className="rounded-2xl border border-slate-800/80 bg-slate-900/40 p-4 text-sm text-slate-400">
+          Aucun rapport d&apos;espionnage. Envoyez des sondes depuis la page Flotte.
+        </div>
+      ) : (
+        <div className="grid gap-3 lg:grid-cols-2">
+          {reports.map((report) => (
+            <Link
+              key={report.id}
+              href={`/reports/spy/${report.id}`}
+              className="block rounded-2xl border border-slate-800/80 bg-slate-950/60 p-4 text-sm text-slate-300 transition hover:border-slate-600"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-slate-100">
+                  {report.planetName} [{report.galaxy}:{report.system}:{report.position}]
+                </span>
+                <span className="text-xs text-slate-500">{new Date(report.createdAt).toLocaleString()}</span>
+              </div>
+              <div className="mt-2 text-xs text-slate-400">
+                {report.probes} sonde(s) · niveau d&apos;information {report.infoLevel + 1}/4
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
+    </section>
+  );
 }
 
 export default function ReportsPage() {
@@ -167,6 +214,8 @@ export default function ReportsPage() {
           ))}
         </motion.div>
       )}
+
+      <SpyReportsSection />
     </motion.div>
   );
 }

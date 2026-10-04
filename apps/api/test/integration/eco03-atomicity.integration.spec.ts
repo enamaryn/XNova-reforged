@@ -4,7 +4,6 @@ import { BuildingsService } from '../../src/buildings/buildings.service';
 import { DatabaseService } from '../../src/database/database.service';
 import { FleetService } from '../../src/fleet/fleet.service';
 import { ResearchService } from '../../src/research/research.service';
-import { ResourcesService } from '../../src/resources/resources.service';
 import { ShipyardService } from '../../src/shipyard/shipyard.service';
 import {
   buildTestUser,
@@ -26,7 +25,6 @@ describe('API integration - Atomicité des disponibilités et files (ECO-03)', (
   let research: ResearchService;
   let shipyard: ShipyardService;
   let fleet: FleetService;
-  let resources: ResourcesService;
 
   let username: string;
   const rivalIds: string[] = [];
@@ -42,7 +40,6 @@ describe('API integration - Atomicité des disponibilités et files (ECO-03)', (
     research = app.get(ResearchService);
     shipyard = app.get(ShipyardService);
     fleet = app.get(FleetService);
-    resources = app.get(ResourcesService);
   });
 
   beforeEach(async () => {
@@ -178,34 +175,6 @@ describe('API integration - Atomicité des disponibilités et files (ECO-03)', (
     expect(ok(results)).toBe(1);
     expect(row.amount).toBe(0);
     expect(await database.fleet.count({ where: { userId } })).toBe(1);
-  });
-
-  it('colonisation : un seul colonisateur donne une seule planète', async () => {
-    await database.ship.upsert({
-      where: { planetId_shipId: { planetId, shipId: 208 } },
-      update: { amount: 1 },
-      create: { planetId, shipId: 208, amount: 1 },
-    });
-
-    const results = await settle(
-      [1, 2, 3, 4].map((position) =>
-        resources.colonizePlanet({
-          userId,
-          originPlanetId: planetId,
-          galaxy: 9,
-          system: 499,
-          position,
-          name: 'Colonie',
-        }),
-      ),
-    );
-
-    const row = await database.ship.findUniqueOrThrow({
-      where: { planetId_shipId: { planetId, shipId: 208 } },
-    });
-    expect(ok(results)).toBe(1);
-    expect(row.amount).toBe(0);
-    expect(await database.planet.count({ where: { userId } })).toBe(2);
   });
 
   it('annulation contre finalisation : jamais les deux effets', async () => {

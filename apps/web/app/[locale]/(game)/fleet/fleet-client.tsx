@@ -40,6 +40,14 @@ function formatNumber(value: number) {
   return new Intl.NumberFormat().format(Math.floor(value));
 }
 
+/** Identifiants de mission du serveur (MissionType) par option du formulaire. */
+const MISSION_IDS: Record<string, number> = {
+  attaque: 1,
+  transport: 3,
+  espionnage: 6,
+  colonisation: 7,
+};
+
 export default function FleetClient() {
   const shouldReduceMotion = useReducedMotion();
   const fadeInProps: MotionProps = shouldReduceMotion ? {} : designTokens.animations.fadeIn;
@@ -53,6 +61,7 @@ export default function FleetClient() {
   };
 
   const [mission, setMission] = useState('transport');
+  const [colonyName, setColonyName] = useState('Nouvelle colonie');
   const [speedPercent, setSpeedPercent] = useState(100);
   const [shipSelection, setShipSelection] = useState<Record<number, number>>({});
   const [cargo, setCargo] = useState({ metal: 0, crystal: 0, deuterium: 0 });
@@ -79,6 +88,8 @@ export default function FleetClient() {
     if (missionParam) {
       if (missionParam === 'attack') setMission('attaque');
       if (missionParam === 'transport') setMission('transport');
+      if (missionParam === 'spy') setMission('espionnage');
+      if (missionParam === 'colonize') setMission('colonisation');
     }
 
     const galaxyValue = galaxyParam ? Number(galaxyParam) : null;
@@ -231,11 +242,13 @@ export default function FleetClient() {
         toGalaxy: destination.galaxy,
         toSystem: destination.system,
         toPosition: destination.position,
-        // Seules les missions traitées par le serveur sont proposées (IMPLEMENTED_MISSIONS, GAME-01)
-        mission: mission === 'attaque' ? 1 : 3,
+        // Seules les missions traitées par le serveur sont proposées (IMPLEMENTED_MISSIONS)
+        mission: MISSION_IDS[mission] ?? 3,
         speedPercent,
         ships: Object.fromEntries(selectedShips.map((ship) => [ship.shipId, ship.amount])),
-        cargo,
+        // Espionnage et colonisation n'embarquent aucune ressource
+        cargo: mission === 'espionnage' || mission === 'colonisation' ? { metal: 0, crystal: 0, deuterium: 0 } : cargo,
+        ...(mission === 'colonisation' ? { planetName: colonyName.trim() || 'Colonie' } : {}),
       }),
     onSuccess: () => {
       setShipSelection({});
@@ -314,6 +327,8 @@ export default function FleetClient() {
                 {[
                   { id: 'transport', label: t('fleet.missions.transport') },
                   { id: 'attaque', label: t('fleet.missions.attack') },
+                  { id: 'espionnage', label: t('fleet.missions.spy') },
+                  { id: 'colonisation', label: t('fleet.missions.colonize') },
                 ].map((item) => (
                   <button
                     key={item.id}
@@ -328,6 +343,25 @@ export default function FleetClient() {
                   </button>
                 ))}
               </div>
+              {mission === 'espionnage' && (
+                <p className="mt-3 text-xs text-slate-400">
+                  Envoyez uniquement des sondes d&apos;espionnage vers la planète d&apos;un autre joueur ; le rapport arrive à l&apos;atterrissage dans la page Rapports.
+                </p>
+              )}
+              {mission === 'colonisation' && (
+                <label className="mt-3 block text-xs uppercase tracking-[0.2em] text-slate-500">
+                  Nom de la colonie
+                  <input
+                    value={colonyName}
+                    maxLength={30}
+                    onChange={(event) => setColonyName(event.target.value)}
+                    className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                  />
+                  <span className="mt-2 block normal-case tracking-normal text-slate-400">
+                    Joignez au moins un vaisseau de colonisation ; la destination doit être une position libre.
+                  </span>
+                </label>
+              )}
             </div>
 
             <div className="rounded-2xl bg-slate-900/60 p-4">

@@ -1,5 +1,4 @@
-import { BadRequestException, ForbiddenException, NotFoundException } from '@nestjs/common';
-import { GAME_CONSTANTS } from '@xnova/game-config';
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { updateResources } from '@xnova/game-engine';
 import { ResourcesService } from '../src/resources/resources.service';
 
@@ -214,103 +213,6 @@ describe('ResourcesService', () => {
       galaxy: 1,
       system: 2,
       position: 3,
-    });
-  });
-
-  it('refuse la colonisation si les coordonnees sont hors limites', async () => {
-    const { service } = createService();
-
-    await expect(
-      service.colonizePlanet({
-        userId: 'user-1',
-        originPlanetId: 'origin',
-        galaxy: 0,
-        system: 1,
-        position: 1,
-        name: 'Colonie',
-      }),
-    ).rejects.toBeInstanceOf(BadRequestException);
-  });
-
-  const buildTx = (overrides: Record<string, any> = {}) => ({
-    $queryRaw: jest.fn().mockResolvedValue([]),
-    planet: {
-      count: jest.fn().mockResolvedValue(0),
-      findUnique: jest.fn().mockResolvedValue(null),
-      create: jest.fn().mockResolvedValue({ id: 'new-planet', name: 'Colonie' }),
-    },
-    ship: { updateMany: jest.fn().mockResolvedValue({ count: 1 }) },
-    ...overrides,
-  });
-
-  const colonizeParams = {
-    userId: 'user-1',
-    originPlanetId: 'origin',
-    galaxy: 2,
-    system: 3,
-    position: 4,
-    name: '   ',
-  };
-
-  it('refuse la colonisation si le joueur a trop de planetes', async () => {
-    const { service, database, serverConfig } = createService();
-    const tx = buildTx();
-    tx.planet.count.mockResolvedValue(GAME_CONSTANTS.MAX_PLAYER_PLANETS);
-    database.planet.findUnique.mockResolvedValueOnce({ id: 'origin', userId: 'user-1' });
-    serverConfig.getConfig.mockResolvedValue({ planetSize: 150 });
-    database.$transaction.mockImplementation((cb: any) => cb(tx));
-
-    await expect(service.colonizePlanet(colonizeParams)).rejects.toBeInstanceOf(
-      BadRequestException,
-    );
-    expect(tx.ship.updateMany).not.toHaveBeenCalled();
-  });
-
-  it('refuse la colonisation sans vaisseau disponible (decrement conditionnel)', async () => {
-    const { service, database, serverConfig } = createService();
-    const tx = buildTx();
-    tx.ship.updateMany.mockResolvedValue({ count: 0 });
-    database.planet.findUnique.mockResolvedValueOnce({ id: 'origin', userId: 'user-1' });
-    serverConfig.getConfig.mockResolvedValue({ planetSize: 150 });
-    database.$transaction.mockImplementation((cb: any) => cb(tx));
-
-    await expect(service.colonizePlanet(colonizeParams)).rejects.toBeInstanceOf(
-      BadRequestException,
-    );
-    expect(tx.planet.create).not.toHaveBeenCalled();
-  });
-
-  it('cree une colonie quand les conditions sont valides', async () => {
-    const { service, database, serverConfig } = createService();
-    const tx = buildTx();
-    database.planet.findUnique.mockResolvedValueOnce({ id: 'origin', userId: 'user-1' });
-    serverConfig.getConfig.mockResolvedValue({ planetSize: 150 });
-    database.$transaction.mockImplementation((cb: any) => cb(tx));
-
-    const result = await service.colonizePlanet(colonizeParams);
-
-    expect(tx.planet.create).toHaveBeenCalledWith(
-      expect.objectContaining({
-        data: expect.objectContaining({
-          name: 'Colonie',
-          galaxy: 2,
-          system: 3,
-          position: 4,
-          fieldsMax: 150,
-        }),
-      }),
-    );
-    expect(tx.ship.updateMany).toHaveBeenCalledWith({
-      where: { planetId: 'origin', shipId: 208, amount: { gte: 1 } },
-      data: { amount: { decrement: 1 } },
-    });
-    expect(result).toEqual({
-      success: true,
-      planetId: 'new-planet',
-      galaxy: 2,
-      system: 3,
-      position: 4,
-      name: 'Colonie',
     });
   });
 });
