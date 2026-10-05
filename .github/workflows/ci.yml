@@ -221,7 +221,7 @@ jobs:
       - name: Installation (npm ci)
         run: npm ci --ignore-scripts
 
-      # Seuil actuel : aucune alerte critique de production. Le seuil « hautes » reste à fixer
-      # (9 hautes d'outillage de build connues, voir docs/NPM_AUDIT_2026-10.md).
-      - name: npm audit (production, critiques)
-        run: npm audit --omit=dev --audit-level=critical
+      # Seuil : aucune alerte haute ou critique en production (SEC-01 : 0 depuis le 4 octobre 2026).
+      # Les modérées et l'outillage de développement sont suivis dans docs/NPM_AUDIT_2026-10.md.
+      - name: npm audit (production, hautes et critiques)
+        run: npm audit --omit=dev --audit-level=high

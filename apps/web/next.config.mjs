@@ -1,5 +1,6 @@
 import os from "node:os";
-import { withSentryConfig } from '@sentry/nextjs';
+// @sentry/nextjs 11 : `withSentryConfig` vit dans le sous-chemin /config (module CommonJS)
+import sentryConfig from '@sentry/nextjs/config';
 import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
@@ -64,5 +65,7 @@ const sentryWebpackPluginOptions = {
   hideSourceMaps: true,
   disableLogger: true,
 };
+
+const { withSentryConfig } = sentryConfig;
 
 export default withSentryConfig(withNextIntl(nextConfig), sentryWebpackPluginOptions);

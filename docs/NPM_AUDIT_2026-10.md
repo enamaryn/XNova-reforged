@@ -40,3 +40,28 @@ Les 25 alertes modérées de production et les 42 hautes du périmètre complet 
 - Migration `@sentry/nextjs` 11.x puis nouvel audit de production.
 - Corriger `picomatch` (override) et trier les modérées.
 - Brancher `npm audit --omit=dev` en CI avec seuil sur critiques/hautes de production (QUAL-01).
+
+
+## Seconde passe — SEC-01 (4 octobre 2026, après SCOPE-01)
+
+Rapports bruts : `docs/audits/npm-audit-2026-10-04b-before-prod.json`, `…-after-prod.json`, `…-after-full.json` (Node 22.22.0).
+
+| Périmètre | Avant (reprise) | Après |
+|---|---|---|
+| Production (`--omit=dev`) | 34 — 0 critique, **9 hautes**, 25 modérées | 3 — 0 critique, **0 haute**, 3 modérées |
+| Complet (dev + prod) | 72 — 42 hautes | 42 — 34 hautes (outillage de développement), 8 modérées |
+
+Actions :
+
+- **Migration `@sentry/nextjs` 8 → 11.4 (web) et `@sentry/node` / `@sentry/profiling-node` 8 → 11.4 (API).** Supprime sept des neuf hautes (`@sentry/webpack-plugin`, `@sentry/bundler-plugin-core`, `unplugin`, `rollup`, `braces`, `chokidar`, `@sentry/nextjs`). Adaptations : `withSentryConfig` s'importe désormais depuis `@sentry/nextjs/config` ; `profilesSampleRate` n'existe plus (remplacé par `profileSessionSampleRate` avec `profileLifecycle: 'trace'`, même taux). Prérequis : Node ≥ 20.19 (≥ 22.12 pour Node 22) — `engines` relevé à `>=20.19.0`.
+- **`picomatch` (haute)** : `overrides` ciblé `@angular-devkit/core → picomatch ^4.0.4` (le paquet de l'outillage Nest épinglait 4.0.2) ; les autres consommateurs sont passés en 4.0.7.
+- **`postcss` imbriqué dans Next 15 (haute)** : `overrides` `next → postcss ^8.5.23` au lieu d'attendre Next 16 ; le build, les tests et les parcours E2E passent avec cette version.
+- Seuil CI de l'audit de production relevé de « critiques » à **« hautes et critiques »**.
+
+Reste, en production (3 modérées) : `ajv` (ReDoS avec l'option `$data`), `js-yaml` (fusion de clés YAML) et `@nestjs/swagger` (qui les embarque) : non exposés à un joueur (aucune donnée utilisateur n'est analysée par ces fonctions) ; `npm audit fix` ne propose pas de correctif sans montée majeure ; à revoir à la prochaine mise à jour de NestJS.
+
+Reste, hors production (34 hautes) : chaîne de test et de compilation — Jest 29 (`jest-*`, `@jest/*`, `babel-jest`), `tailwindcss` 3, `eslint-config-next`, `fast-glob`, `micromatch`, `braces`, `chokidar` — corrigeable seulement par des migrations majeures (Jest 30, Tailwind 4, eslint-config-next 16) que le registre interdit d'appliquer à l'aveugle. Ces paquets ne tournent ni dans l'API ni dans le serveur web en production ; les failles (déni de service par motifs de glob pathologiques) exigent un motif fourni par le développeur. Échéance proposée : planifier ces migrations avec SCOPE-02/OPS-03, avant l'ouverture publique.
+
+Limites : le suivi d'erreurs Sentry n'a pas été vérifié contre un vrai projet Sentry (DSN absent en test) : seuls le build, le chargement des modules et les parcours E2E sont validés ; le serveur Next n'initialise toujours pas Sentry côté serveur (pas de `instrumentation.ts`, comme avant la migration) ; le profilage Node (`profiling-node`) nécessite sa compilation native (`npm ci` sans `--ignore-scripts` en production).
+
+Validation locale : `npm ci --dry-run`, builds complets (Turbo, 5/5), lint, unitaires 38/38, intégration 211/211, E2E 24/24.
