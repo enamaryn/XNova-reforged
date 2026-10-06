@@ -105,3 +105,22 @@ Côté web : `instrumentation.ts` (serveur Node et edge, `onRequestError`), `ins
 (profilage chargé seulement avec un DSN ; son échec n'empêche pas le démarrage). Node ≥ 20.19 requis ; le profilage Node demande la
 compilation native de `@sentry/profiling-node` (`npm ci` sans `--ignore-scripts` en production).
 **À valider avant l'ouverture publique** : fournir un DSN réel dans l'environnement de production et vérifier qu'une erreur de test apparaît.
+
+## Déploiement : procédure et vérification de l'installation
+
+À chaque mise à jour du code sur un serveur :
+
+```bash
+git pull
+npm ci                          # sans --ignore-scripts : le profilage Sentry de l'API compile un module natif
+bash scripts/verify-install.sh  # Node, arbre de dépendances, versions de @sentry/nextjs, @sentry/node et next
+npm run build
+npx prisma migrate deploy --schema packages/database/prisma/schema.prisma   # avec DATABASE_URL de production
+sudo systemctl restart xnova-api xnova-web
+```
+
+`npm install` à la place de `npm ci`, ou l'absence de réinstallation après un `git pull`, laisse des `node_modules` différents du `package-lock.json`.
+Incident du 6 octobre 2026 : le service web redémarrait en boucle (`Package subpath './config' is not defined by "exports"` dans
+`@sentry/nextjs`) parce que la version installée n'était pas celle du lockfile (Sentry 11.4). `next.config.mjs` ne dépend plus du sous-chemin
+`@sentry/nextjs/config` : il essaie le sous-chemin puis l'export du paquet et, à défaut, sert la configuration Next sans Sentry avec un
+avertissement. Le suivi d'erreurs ne peut donc plus empêcher le site de démarrer ; `scripts/verify-install.sh` signale le décalage.
