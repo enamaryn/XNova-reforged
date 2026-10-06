@@ -871,3 +871,19 @@ Le problème principal était que Framer Motion avec `initial: { opacity: 0 }` n
 
 ### ⏭️ Prochaines étapes
 - Planifier les migrations d'outillage (Jest 30, Tailwind 4, eslint-config-next 16) ; vérifier Sentry avec un vrai DSN
+
+
+---
+
+## Session du 6 octobre 2026 — clôtures du registre et intégration Sentry
+
+**Objectif :** clôturer SCOPE-01 et SEC-01, créer la dette technique et les prérequis bloquants, préparer Sentry.
+
+### ✅ Tâches réalisées
+- [x] Registre : SCOPE-01 et SEC-01 clos (PR et CI de `main` en preuve) ; SEC-01 : production à 0 haute/critique, CI bloquante
+- [x] Sections « Prérequis bloquants avant l'ouverture publique » (SMTP réel, variables, Sentry, comptes de l'alpha, secrets) et « Dette technique identifiée » (Jest 30, Tailwind 4, eslint-config-next 16, modérées) avec échéance avant la bêta publique
+- [x] Sentry : `instrumentation.ts`, `instrumentation-client.ts`, `global-error.tsx`, DSN par variable d'environnement seulement, inactif sans DSN ; test unitaire (aucun DSN versionné) ; tunnel `/monitoring` hors redirection de langue
+- [x] Essai SMTP réel : impossible depuis le conteneur (pas d'accès réseau sortant hors proxy HTTPS) ; à faire depuis l'environnement déployé
+
+### ⏭️ Prochaines étapes
+- SCOPE-02 : analyse de l'équilibrage, des langues et des valeurs codées en dur ; propositions de game design à valider avant tout développement

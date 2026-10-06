@@ -78,7 +78,7 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Skip all internal paths (_next, api, static files)
-    '/((?!api|_next|_vercel|.*\\..*).*)',
+    // Skip all internal paths (_next, api, static files) et le tunnel Sentry (/monitoring, sans redirection de langue)
+    '/((?!api|_next|_vercel|monitoring|.*\\..*).*)',
   ],
 };
