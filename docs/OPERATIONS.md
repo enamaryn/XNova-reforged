@@ -124,3 +124,55 @@ Incident du 6 octobre 2026 : le service web redémarrait en boucle (`Package sub
 `@sentry/nextjs`) parce que la version installée n'était pas celle du lockfile (Sentry 11.4). `next.config.mjs` ne dépend plus du sous-chemin
 `@sentry/nextjs/config` : il essaie le sous-chemin puis l'export du paquet et, à défaut, sert la configuration Next sans Sentry avec un
 avertissement. Le suivi d'erreurs ne peut donc plus empêcher le site de démarrer ; `scripts/verify-install.sh` signale le décalage.
+
+## Adresse publique, proxy inverse et variables d'environnement
+
+Le navigateur appelle l'API directement (HTTP et WebSocket). `NEXT_PUBLIC_API_URL` est **figée à la compilation** du web : la modifier
+impose un `npm run build`. Une adresse privée (`http://192.168.x.x:3001`) ou `localhost` ne marche pas pour un site public en https
+(contenu mixte bloqué, port non exposé). Deux montages possibles ; le premier est recommandé (une seule origine, pas de CORS, pas de
+certificat supplémentaire).
+
+### Option A (recommandée) : même origine, API sous `/api`
+
+Variables (`.env`, chargé avant `npm run build` et par les services) :
+
+```
+NEXT_PUBLIC_API_URL=/api
+WEB_ORIGINS=https://xnova.exemple.fr
+TRUST_PROXY=1
+NODE_ENV=production
+```
+
+nginx (dans le `server` de `xnova.exemple.fr`, en plus du `location /` qui envoie vers le web sur le port 3000) :
+
+```nginx
+location /api/ {
+    proxy_pass http://127.0.0.1:3001/;          # la barre finale retire le préfixe /api
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;     # WebSocket (Socket.io, chemin /api/socket.io)
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_read_timeout 3600s;
+}
+```
+
+### Option B : sous-domaine dédié pour l'API
+
+```
+NEXT_PUBLIC_API_URL=https://api.xnova.exemple.fr
+WEB_ORIGINS=https://xnova.exemple.fr
+TRUST_PROXY=1
+```
+
+Un `server` nginx `api.xnova.exemple.fr` (certificat TLS propre) avec le même bloc de proxy, `proxy_pass http://127.0.0.1:3001;` sans préfixe.
+
+### Points de contrôle
+
+- `TRUST_PROXY=1` : sans lui, la limitation de débit voit l'adresse du proxy et non celle des joueurs.
+- `WEB_ORIGINS` : l'origine exacte du site (schéma, nom d'hôte, port), séparée par des virgules s'il y en a plusieurs ; l'API refuse toute autre origine en production.
+- Après tout changement de `NEXT_PUBLIC_API_URL` : `npm run build` puis redémarrage du web.
+- Vérification : depuis le navigateur (F12, onglet Réseau), la requête de connexion doit partir vers `https://<site>/api/auth/login` (option A) et le WebSocket vers `wss://<site>/api/socket.io/`.
+- En cas d'échec de connexion sans message : le navigateur n'a pas pu joindre l'API (l'interface affiche désormais « Impossible de joindre le serveur »).

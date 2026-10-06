@@ -896,3 +896,11 @@ Le problème principal était que Framer Motion avec `initial: { opacity: 0 }` n
 **Constat (journaux du propriétaire sur xnova.didrod.fr) :** `xnova-web` redémarre en boucle : `ERR_PACKAGE_PATH_NOT_EXPORTED` pour `@sentry/nextjs/config` dans `next.config.mjs`. L'API démarre normalement.
 **Cause :** `node_modules` du serveur différents du `package-lock.json` (Sentry plus ancien que 11.4 installé) ; ma configuration dépendait d'un sous-chemin absent de ces versions.
 **Correctif :** `next.config.mjs` tolérant (sous-chemin, puis export du paquet, puis configuration sans Sentry) ; `scripts/verify-install.sh` ; procédure de déploiement dans `docs/OPERATIONS.md`.
+
+
+---
+
+## Session du 6 octobre 2026 (suite) — connexion impossible sur xnova.didrod.fr
+
+**Constat (journaux et capture du propriétaire) :** le formulaire de connexion ne fait rien. `NEXT_PUBLIC_API_URL=http://192.168.1.119:3001` et `WEB_ORIGINS=http://192.168.1.119:3000` : le navigateur, sur `https://xnova.didrod.fr`, tente d'appeler une adresse privée en http (contenu mixte bloqué, CORS refusé). L'API tournait avec un ancien code (routes `/defense`, `/spy-reports`, `/admin/smtp` absentes) et 4 migrations n'étaient pas appliquées.
+**Correctifs :** adresse d'API relative acceptée (`/api`) et Socket.io compatible avec un préfixe (`resolveApiBaseUrl`, `resolveSocketTarget`, 8 tests) ; message « Impossible de joindre le serveur » quand l'API est injoignable ; documentation nginx (options A et B) et variables. Vérifié de bout en bout derrière un proxy inverse local (inscription, connexion, WebSocket via `/api/socket.io`).
