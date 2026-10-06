@@ -887,3 +887,12 @@ Le problème principal était que Framer Motion avec `initial: { opacity: 0 }` n
 
 ### ⏭️ Prochaines étapes
 - SCOPE-02 : analyse de l'équilibrage, des langues et des valeurs codées en dur ; propositions de game design à valider avant tout développement
+
+
+---
+
+## Session du 6 octobre 2026 (suite) — incident de déploiement web
+
+**Constat (journaux du propriétaire sur xnova.didrod.fr) :** `xnova-web` redémarre en boucle : `ERR_PACKAGE_PATH_NOT_EXPORTED` pour `@sentry/nextjs/config` dans `next.config.mjs`. L'API démarre normalement.
+**Cause :** `node_modules` du serveur différents du `package-lock.json` (Sentry plus ancien que 11.4 installé) ; ma configuration dépendait d'un sous-chemin absent de ces versions.
+**Correctif :** `next.config.mjs` tolérant (sous-chemin, puis export du paquet, puis configuration sans Sentry) ; `scripts/verify-install.sh` ; procédure de déploiement dans `docs/OPERATIONS.md`.

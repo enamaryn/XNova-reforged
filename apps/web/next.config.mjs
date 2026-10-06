@@ -1,6 +1,4 @@
 import os from "node:os";
-// @sentry/nextjs 11 : `withSentryConfig` vit dans le sous-chemin /config (module CommonJS)
-import sentryConfig from '@sentry/nextjs/config';
 import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
@@ -66,6 +64,28 @@ const sentryWebpackPluginOptions = {
   disableLogger: true,
 };
 
-const { withSentryConfig } = sentryConfig;
+/**
+ * `withSentryConfig` : sous-chemin `@sentry/nextjs/config` à partir de Sentry 11, export du paquet avant.
+ * Le suivi d'erreurs ne doit jamais empêcher le site de démarrer : si aucun des deux n'est utilisable
+ * (dépendances installées différentes du lockfile, par exemple), la configuration Next est servie telle quelle.
+ */
+export async function resolveWithSentryConfig(importers = [
+  () => import('@sentry/nextjs/config'),
+  () => import('@sentry/nextjs'),
+]) {
+  for (const load of importers) {
+    try {
+      const mod = await load();
+      const fn = mod.withSentryConfig ?? mod.default?.withSentryConfig;
+      if (typeof fn === 'function') return fn;
+    } catch {
+      // essai suivant
+    }
+  }
+  console.warn('[next.config] withSentryConfig introuvable : Sentry non configuré à la compilation (dépendances à réinstaller avec `npm ci` ?)');
+  return (config) => config;
+}
+
+const withSentryConfig = await resolveWithSentryConfig();
 
 export default withSentryConfig(withNextIntl(nextConfig), sentryWebpackPluginOptions);
