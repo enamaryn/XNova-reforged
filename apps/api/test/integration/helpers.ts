@@ -1,5 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { PrismaClient } from '@prisma/client';
+import { execSync } from 'child_process';
 import { randomBytes } from 'crypto';
 import { mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
@@ -31,7 +33,24 @@ export function buildTestUser() {
   };
 }
 
-export async function createIntegrationApp(): Promise<IntegrationApp> {
+/**
+ * Les inscriptions sont fermées tant que l'installation du serveur n'est pas terminée (SETUP-01) : les suites
+ * marquent l'installation terminée avant de démarrer l'application (hors suite dédiée au parcours).
+ */
+async function markSetupCompletedForTests() {
+  const client = new PrismaClient();
+  try {
+    await client.gameConfig.upsert({
+      where: { key: 'setup.completedAt' },
+      create: { key: 'setup.completedAt', value: new Date().toISOString() },
+      update: {},
+    });
+  } finally {
+    await client.$disconnect();
+  }
+}
+
+export async function createIntegrationApp(options: { setupCompleted?: boolean } = {}): Promise<IntegrationApp> {
   process.env.JWT_SECRET = process.env.JWT_SECRET || 'test-secret';
   process.env.JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'test-refresh-secret';
   process.env.JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1h';
@@ -43,6 +62,8 @@ export async function createIntegrationApp(): Promise<IntegrationApp> {
   // La confirmation d'adresse est obligatoire en production ; les suites créent des comptes sans SMTP.
   // La suite dédiée la réactive (scope01-email-required).
   process.env.EMAIL_VERIFICATION_REQUIRED = process.env.EMAIL_VERIFICATION_REQUIRED || 'false';
+
+  if (options.setupCompleted !== false) await markSetupCompletedForTests();
 
   const moduleRef = await Test.createTestingModule({
     imports: [AppModule],
@@ -164,4 +185,37 @@ export async function acquireGlobalLock(name: string): Promise<() => void> {
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
   }
+}
+
+/**
+ * Schéma PostgreSQL dédié à une suite : migrations appliquées dans un schéma neuf, supprimé en fin de suite.
+ * Pour les états globaux à la base (installation du serveur) qui perturberaient les suites parallèles.
+ * Modifie `process.env.DATABASE_URL` pour la suite (restauré par `restore`).
+ */
+export async function useIsolatedSchema(prefix: string) {
+  const schema = `${prefix}_${Date.now().toString(36)}${Math.floor(Math.random() * 1e4)}`;
+  const original = process.env.DATABASE_URL ?? '';
+  const baseUrl = original.replace(/[?&]schema=[^&]*/, '');
+  if (!baseUrl) throw new Error('DATABASE_URL requis');
+  const url = `${baseUrl}?schema=${schema}`;
+  process.env.DATABASE_URL = url;
+  execSync('npx prisma migrate deploy --schema ../../packages/database/prisma/schema.prisma', {
+    cwd: process.cwd(),
+    env: process.env,
+    stdio: 'pipe',
+  });
+  return {
+    schema,
+    url,
+    /** Supprime le schéma (via un client dédié) et restaure DATABASE_URL. */
+    async drop() {
+      const client = new PrismaClient({ datasources: { db: { url } } });
+      try {
+        await client.$executeRawUnsafe(`DROP SCHEMA IF EXISTS "${schema}" CASCADE`);
+      } finally {
+        await client.$disconnect();
+        process.env.DATABASE_URL = original;
+      }
+    },
+  };
 }

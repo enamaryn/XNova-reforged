@@ -38,7 +38,11 @@
     "test:e2e:statistics": "playwright test tests/e2e/statistics.spec.ts --project=chromium",
     "test:e2e:admin": "playwright test tests/e2e/admin.spec.ts --project=chromium",
     "db:migrate:deploy": "cd packages/database && npx prisma migrate deploy",
-    "test:backup": "bash scripts/test-backup-restore.sh"
+    "test:backup": "bash scripts/test-backup-restore.sh",
+    "setup:token": "npm run setup:token -w @xnova/api --",
+    "setup:reset": "npm run setup:reset -w @xnova/api --",
+    "setup:create-admin": "npm run setup:create-admin -w @xnova/api --",
+    "admin:reset-password": "npm run admin:reset-password -w @xnova/api --"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",

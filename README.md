@@ -83,6 +83,33 @@ cd ../..
 npm run dev
 ```
 
+### Première connexion : assistant d'installation
+
+Un serveur neuf n'a ni super admin, ni SMTP, ni réglages : l'assistant (`/setup`) les configure à la première visite.
+
+1. Démarrer l'API. Au démarrage, elle affiche dans son journal un **code d'installation** (`XXXX-XXXX-XXXX-XXXX`) :
+   - en développement : dans le terminal de `npm run dev` ;
+   - en production : `journalctl -u xnova-api | grep -A3 "Code d'installation"`.
+2. Ouvrir le site : les pages de connexion et d'inscription redirigent vers `/setup`. Saisir le code (valable 2 h d'inactivité, régénéré à
+   chaque redémarrage de l'API ; seule son empreinte est stockée en base).
+3. Étapes : **SMTP** (enregistré puis testé par un email réel, obligatoire) → **réglages du serveur** (vitesses,
+   multiplicateurs, tailles, production de base...) → **compte super admin** → **validation** : cliquer le lien reçu
+   par email. Cette confirmation termine l'installation.
+4. L'installation est alors **verrouillée** : les routes `/setup/*` répondent 404 et l'assistant ne peut plus être
+   rouvert depuis le navigateur. Jusqu'à ce moment, les inscriptions des joueurs répondent 503.
+
+Commandes de secours, à exécuter **sur le serveur** (après `npm run build`, variables d'environnement chargées) :
+
+| Commande | Usage |
+|---|---|
+| `npm run setup:token` | Émet un nouveau code d'installation (assistant non terminé) |
+| `npm run setup:reset` | Réarme l'assistant (confirmation `RESET`, ou `--yes`) ; seule façon de le relancer |
+| `npm run setup:create-admin -- --username X --email Y` | Crée ou promeut un super admin, déjà confirmé (mot de passe demandé, masqué ; ou `--password-env VAR`) |
+| `npm run admin:reset-password -- --username X` | Redéfinit un mot de passe et révoque les sessions |
+
+Serveur déjà en service avant l'assistant : la migration `20261006100000_setup_completed_for_existing_installs`
+le marque installé, aucun changement.
+
 ### URLs locales
 - Frontend : http://localhost:3000
 - API : http://localhost:3001

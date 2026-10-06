@@ -904,3 +904,21 @@ Le problème principal était que Framer Motion avec `initial: { opacity: 0 }` n
 
 **Constat (journaux et capture du propriétaire) :** le formulaire de connexion ne fait rien. `NEXT_PUBLIC_API_URL=http://192.168.1.119:3001` et `WEB_ORIGINS=http://192.168.1.119:3000` : le navigateur, sur `https://xnova.didrod.fr`, tente d'appeler une adresse privée en http (contenu mixte bloqué, CORS refusé). L'API tournait avec un ancien code (routes `/defense`, `/spy-reports`, `/admin/smtp` absentes) et 4 migrations n'étaient pas appliquées.
 **Correctifs :** adresse d'API relative acceptée (`/api`) et Socket.io compatible avec un préfixe (`resolveApiBaseUrl`, `resolveSocketTarget`, 8 tests) ; message « Impossible de joindre le serveur » quand l'API est injoignable ; documentation nginx (options A et B) et variables. Vérifié de bout en bout derrière un proxy inverse local (inscription, connexion, WebSocket via `/api/socket.io`).
+
+
+---
+
+## Session du 6 octobre 2026 (suite) — SETUP-01 : assistant d'installation
+
+**Demande du propriétaire :** parcours de paramétrage à la toute première connexion (super admin, SMTP, réglages serveur), validation du compte en fin de parcours, puis suppression du parcours ; relance possible uniquement depuis un terminal du serveur. Décisions : code d'installation lu dans le terminal, verrouillage, commandes de secours, README à documenter, PR dédiée avant SCOPE-02.
+
+### ✅ Tâches réalisées
+- [x] API : module `setup` (code haché 80 bits, expiration glissante 2 h, `SETUP_TOKEN` pour l'automatisation), verrou `setup.completedAt`, routes `/setup/*` (404 après verrouillage), inscriptions 503 tant que non terminé
+- [x] Validation : lien de confirmation du super admin (`AccountService.verifyEmail` → `completeIfReady`) ; migration marquant installés les serveurs existants
+- [x] CLI : `setup:token`, `setup:reset`, `setup:create-admin`, `admin:reset-password`
+- [x] Web : assistant `/setup` (5 étapes), redirection depuis connexion/inscription
+- [x] Tests : 9 unitaires, 31 intégration (schéma PostgreSQL isolé par suite, faux SMTP), E2E projet Playwright « setup » dont dépendent les autres parcours
+- [x] Documentation : README, `docs/OPERATIONS.md`, `.env.example`, registre, roadmap
+
+### ⏭️ Prochaines étapes
+- Ouvrir la PR dédiée dès que la PR #21 est fusionnée par le propriétaire, CI verte, puis SCOPE-02 (13 décisions en attente) et OPS-03

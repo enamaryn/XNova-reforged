@@ -11,7 +11,11 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:integration": "jest --config jest.integration.config.cjs"
+    "test:integration": "jest --config jest.integration.config.cjs",
+    "setup:token": "node dist/cli/setup-token.js",
+    "setup:reset": "node dist/cli/setup-reset.js",
+    "setup:create-admin": "node dist/cli/create-admin.js",
+    "admin:reset-password": "node dist/cli/reset-password.js"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.0",

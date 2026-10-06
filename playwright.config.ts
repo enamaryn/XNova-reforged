@@ -18,7 +18,16 @@ export default defineConfig({
   },
   projects: [
     {
+      // SETUP-01 : assistant d'installation, prérequis des autres parcours (inscriptions refusées sinon)
+      name: 'setup',
+      testDir: 'tests/setup',
+      testMatch: /.*\.setup\.ts/,
+      use: { browserName: 'chromium' },
+    },
+    {
       name: 'chromium',
+      testDir: 'tests/e2e',
+      dependencies: ['setup'],
       use: { browserName: 'chromium' },
     },
   ],

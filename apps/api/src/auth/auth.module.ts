@@ -6,6 +6,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { AccountService } from './account.service';
 import { MailModule } from '../mail/mail.module';
+import { SetupStateModule } from '../setup/setup-state.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { DatabaseModule } from '../database/database.module';
 import { GameEventsModule } from '../game-events/game-events.module';
@@ -17,6 +18,7 @@ import { ServerConfigModule } from '../server-config/server-config.module';
     ServerConfigModule,
     GameEventsModule,
     MailModule,
+    SetupStateModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       inject: [ConfigService],
@@ -30,6 +32,6 @@ import { ServerConfigModule } from '../server-config/server-config.module';
   ],
   controllers: [AuthController],
   providers: [AuthService, AccountService, JwtStrategy],
-  exports: [AuthService, JwtStrategy],
+  exports: [AuthService, AccountService, JwtStrategy],
 })
 export class AuthModule {}

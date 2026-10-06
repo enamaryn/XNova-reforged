@@ -18,6 +18,7 @@ import { ServerConfigModule } from './server-config/server-config.module';
 import { RedisModule } from './redis/redis.module';
 import { HealthModule } from './health/health.module';
 import { MonitoringModule } from './monitoring/monitoring.module';
+import { SetupModule } from './setup/setup.module';
 import { validateEnv } from './config/env.validation';
 
 @Module({
@@ -46,6 +47,9 @@ import { validateEnv } from './config/env.validation';
 
     // Module d'authentification
     AuthModule,
+
+    // Parcours d'installation du serveur (SETUP-01)
+    SetupModule,
 
     // Module ressources
     ResourcesModule,

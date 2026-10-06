@@ -12,6 +12,7 @@ import * as argon2 from 'argon2';
 import { DatabaseService } from '../database/database.service';
 import { GameEventsGateway } from '../game-events/game-events.gateway';
 import { MailService } from '../mail/mail.service';
+import { SetupStateService } from '../setup/setup-state.service';
 
 type TokenType = 'verify_email' | 'reset_password' | 'change_email';
 
@@ -40,6 +41,7 @@ export class AccountService {
     private readonly mail: MailService,
     private readonly gameEvents: GameEventsGateway,
     private readonly config: ConfigService,
+    private readonly setupState: SetupStateService,
   ) {}
 
   /** Adresse publique du site web, pour les liens des emails. */
@@ -258,6 +260,8 @@ export class AccountService {
         throw new BadRequestException('Lien invalide ou expiré');
       }
       await this.database.user.update({ where: { id: user.id }, data: { emailVerifiedAt: new Date() } });
+      // Confirmation du super admin du parcours d'installation : l'installation est terminée et verrouillée
+      await this.setupState.completeIfReady(user.id);
       return { message: 'Adresse email confirmée', type: 'verify_email' as const };
     }
 

@@ -7,7 +7,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { GAME_CONSTANTS } from '@xnova/game-config';
-import { Prisma } from '@prisma/client';
+import { Prisma, UserRole } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
@@ -20,6 +20,7 @@ import { LoginDto } from './dto/login.dto';
 import { AuthResponseDto, RegistrationPendingDto } from './dto/auth-response.dto';
 import { EMAIL_NOT_VERIFIED, isEmailVerificationRequired } from './email-verification';
 import { MailService } from '../mail/mail.service';
+import { SetupStateService } from '../setup/setup-state.service';
 
 /** Nombre maximal de positions tentées pour la planète de départ lors d'une inscription. */
 const MAX_STARTER_ATTEMPTS = 10;
@@ -32,17 +33,30 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly serverConfig: ServerConfigService,
     private readonly mail: MailService,
+    private readonly setupState: SetupStateService,
   ) {}
 
   /**
    * Inscription d'un nouvel utilisateur
    */
-  async register(registerDto: RegisterDto): Promise<AuthResponseDto | RegistrationPendingDto> {
+  async register(
+    registerDto: RegisterDto,
+    options: { role?: UserRole; internal?: boolean } = {},
+  ): Promise<AuthResponseDto | RegistrationPendingDto> {
     const { username, email, password } = registerDto;
+    const internal = options.internal === true;
 
-    // Confirmation obligatoire : sans envoi d'emails possible, un compte ne pourrait jamais être activé
-    const verificationRequired = isEmailVerificationRequired(this.configService);
-    if (verificationRequired && !(await this.mail.isConfigured())) {
+    // Inscriptions fermées tant que l'installation du serveur n'est pas terminée (SETUP-01)
+    if (!internal && !(await this.setupState.isCompleted())) {
+      throw new ServiceUnavailableException(
+        "Le serveur n'est pas encore configuré : les inscriptions ouvriront à la fin de l'installation",
+      );
+    }
+
+    // Confirmation obligatoire : sans envoi d'emails possible, un compte ne pourrait jamais être activé.
+    // Le compte créé par le parcours d'installation est toujours soumis à confirmation (c'est sa validation finale).
+    const verificationRequired = internal || isEmailVerificationRequired(this.configService);
+    if (!internal && verificationRequired && !(await this.mail.isConfigured())) {
       throw new ServiceUnavailableException(
         "Les inscriptions sont momentanément indisponibles : l'envoi d'emails de confirmation n'est pas configuré",
       );
@@ -60,7 +74,14 @@ export class AuthService {
       try {
         const { user, tokens } = await this.database.$transaction(async (tx) => {
           const created = await tx.user.create({
-            data: { username, email, password: hashedPassword, points: 0, rank: 0 },
+            data: {
+              username,
+              email,
+              password: hashedPassword,
+              points: 0,
+              rank: 0,
+              ...(options.role ? { role: options.role } : {}),
+            },
           });
           await this.createStarterPlanet(tx, created.id, config.planetSize);
           // Pas de session tant que l'adresse n'est pas confirmée
@@ -116,6 +137,15 @@ export class AuthService {
     throw new ServiceUnavailableException(
       'Aucune position libre trouvée pour la planète de départ, réessayez',
     );
+  }
+
+  /**
+   * Compte super admin du parcours d'installation : créé sans session, adresse à confirmer (la confirmation
+   * clôt l'installation). Réservé au parcours (appelé après contrôle du code d'installation).
+   */
+  async createSetupAdmin(dto: RegisterDto): Promise<RegistrationPendingDto['user']> {
+    const result = await this.register(dto, { role: 'SUPER_ADMIN', internal: true });
+    return (result as RegistrationPendingDto).user;
   }
 
   /** Distingue la contrainte d'unicité violée (nom, email ou position de planète). */

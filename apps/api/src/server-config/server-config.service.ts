@@ -102,6 +102,18 @@ export class ServerConfigService {
     userId: string,
     updates: Partial<ServerConfigValues>,
   ): Promise<ServerConfigValues> {
+    return this.writeConfig(updates, userId);
+  }
+
+  /** Écrit les réglages sans journal d'audit : parcours d'installation, avant l'existence de tout compte. */
+  async applyConfig(updates: Partial<ServerConfigValues>): Promise<ServerConfigValues> {
+    return this.writeConfig(updates, null);
+  }
+
+  private async writeConfig(
+    updates: Partial<ServerConfigValues>,
+    auditUserId: string | null,
+  ): Promise<ServerConfigValues> {
     const current = await this.getConfig();
     const entries = Object.entries(updates).filter(([, value]) => value !== undefined);
 
@@ -126,16 +138,20 @@ export class ServerConfigService {
           update: { value: String(value) },
         }),
       ),
-      this.database.adminAuditLog.create({
-        data: {
-          userId,
-          action: 'update_config',
-          changes: {
-            before,
-            after,
-          },
-        },
-      }),
+      ...(auditUserId
+        ? [
+            this.database.adminAuditLog.create({
+              data: {
+                userId: auditUserId,
+                action: 'update_config',
+                changes: {
+                  before,
+                  after,
+                },
+              },
+            }),
+          ]
+        : []),
     ]);
 
     this.cache = null;

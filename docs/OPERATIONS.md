@@ -88,6 +88,22 @@ envoyer un email de test, puis vérifier qu'une inscription reçoit bien son lie
 répond 503 et ne crée aucun compte. `EMAIL_VERIFICATION_REQUIRED=false` est réservé au développement et aux tests.
 Les comptes antérieurs à cette règle ont été marqués confirmés par la migration `20261004200000_existing_emails_considered_verified`.
 
+## Assistant d'installation (première connexion)
+
+Voir aussi la section « Première connexion » du `README.md`. Rappels d'exploitation :
+
+- Le code d'installation est lu dans le journal de l'API (`journalctl -u xnova-api | grep -A3 "Code d'installation"`)
+  ou émis par `npm run setup:token`. Il n'existe qu'en terminal : la personne qui installe doit avoir accès au serveur.
+- Étapes : SMTP testé → réglages → super admin → clic sur le lien de confirmation reçu par email (verrouillage).
+- État stocké dans `GameConfig` (`setup.completedAt`, `setup.tokenHash`, `setup.tokenExpiresAt`). Une fois
+  `setup.completedAt` posé, `/setup/*` répond 404 et plus aucun code n'est accepté.
+- Relancer : uniquement `npm run setup:reset` sur le serveur (ne supprime ni comptes ni réglages).
+- Perte du mot de passe super admin : `npm run admin:reset-password -- --username <nom>` ; perte du compte :
+  `npm run setup:create-admin -- --username <nom> --email <adresse>`.
+- Automatisation/tests : `SETUP_TOKEN` impose le code (à ne jamais utiliser en production, il est alors connu).
+- Migration d'un serveur existant : `20261006100000_setup_completed_for_existing_installs` marque l'installation
+  terminée dès qu'un compte joueur existe.
+
 ## Suivi d'erreurs (Sentry)
 
 L'intégration est **optionnelle et inactive par défaut** : sans DSN, rien n'est initialisé et aucune erreur n'est produite.
