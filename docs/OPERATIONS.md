@@ -87,3 +87,21 @@ Avant d'ouvrir les inscriptions : configurer le SMTP (administration, onglet « 
 envoyer un email de test, puis vérifier qu'une inscription reçoit bien son lien. Sans SMTP actif, `POST /auth/register`
 répond 503 et ne crée aucun compte. `EMAIL_VERIFICATION_REQUIRED=false` est réservé au développement et aux tests.
 Les comptes antérieurs à cette règle ont été marqués confirmés par la migration `20261004200000_existing_emails_considered_verified`.
+
+## Suivi d'erreurs (Sentry)
+
+L'intégration est **optionnelle et inactive par défaut** : sans DSN, rien n'est initialisé et aucune erreur n'est produite.
+Le DSN est fourni **exclusivement par variable d'environnement** (jamais dans Git ; un test unitaire échoue si un DSN est versionné).
+
+| Variable | Rôle |
+|---|---|
+| `SENTRY_DSN` | API NestJS (et serveur Next, avant `NEXT_PUBLIC_SENTRY_DSN`) |
+| `NEXT_PUBLIC_SENTRY_DSN` | navigateur (DSN public) et repli du serveur Next |
+| `SENTRY_ENV` / `NEXT_PUBLIC_SENTRY_ENV` | environnement (défaut : `NODE_ENV`) |
+| `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN` | envoi des source maps à la compilation uniquement (secret : jamais versionné) |
+
+Côté web : `instrumentation.ts` (serveur Node et edge, `onRequestError`), `instrumentation-client.ts` (navigateur, transitions du routeur),
+`app/global-error.tsx` (erreurs de rendu), tunnel `/monitoring` exclu de la redirection de langue. Côté API : `src/monitoring/sentry.ts`
+(profilage chargé seulement avec un DSN ; son échec n'empêche pas le démarrage). Node ≥ 20.19 requis ; le profilage Node demande la
+compilation native de `@sentry/profiling-node` (`npm ci` sans `--ignore-scripts` en production).
+**À valider avant l'ouverture publique** : fournir un DSN réel dans l'environnement de production et vérifier qu'une erreur de test apparaît.
