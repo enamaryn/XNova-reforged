@@ -65,3 +65,13 @@ Reste, hors production (34 hautes) : chaîne de test et de compilation — Jest 
 Limites : le suivi d'erreurs Sentry n'a pas été vérifié contre un vrai projet Sentry (DSN absent en test) : seuls le build, le chargement des modules et les parcours E2E sont validés ; le serveur Next n'initialise toujours pas Sentry côté serveur (pas de `instrumentation.ts`, comme avant la migration) ; le profilage Node (`profiling-node`) nécessite sa compilation native (`npm ci` sans `--ignore-scripts` en production).
 
 Validation locale : `npm ci --dry-run`, builds complets (Turbo, 5/5), lint, unitaires 38/38, intégration 211/211, E2E 24/24.
+
+
+## Troisième passe — alertes publiées après coup (6 octobre 2026)
+
+Le seuil CI « hautes et critiques » a fait son travail : deux nouvelles alertes de production sont apparues entre deux exécutions, sans changement de code.
+
+- `proxy-addr` 2.0.7 (**critique**, usurpation d'adresse IP via un sous-réseau IPv4 mappé en IPv6) : l'API utilise `trust proxy` (variable `TRUST_PROXY`, `app.setup.ts`) et la limitation de débit repose sur `request.ip` : l'alerte était **applicable** derrière un proxy. Corrigée par la mise à jour de patch 2.0.8.
+- `source-map-js` 1.2.1 (haute, déni de service sur des source maps) : outillage de compilation ; corrigée par 1.2.2.
+
+Action : `npm update proxy-addr source-map-js` (lockfile seul, correctifs de patch). Production : 3 modérées, 0 haute, 0 critique. Validation locale : `npm ci --dry-run`, lint, builds, unitaires 42/42, intégration 211/211, E2E 24/24.
