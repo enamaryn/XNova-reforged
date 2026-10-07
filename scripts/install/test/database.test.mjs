@@ -14,6 +14,32 @@ test('la vérification attend une vraie connexion DB, pas seulement une réponse
   await assert.rejects(waitForJson(`http://127.0.0.1:${server.address().port}/health`, json => json.status === 'ok' && json.database.status === 'connected', { attempts: 2, delay: 1 }), /non prêt/);
 });
 
+test('la vérification nginx utilise le Host du site et suit une redirection avec le nouveau Host', async t => {
+  const expectedHost = 'jeu.example.test';
+  let directHost, redirectHost;
+  const server = createServer((req, res) => {
+    if (req.url === '/final') {
+      redirectHost = req.headers.host;
+      res.end(JSON.stringify({ setupRequired: true }));
+      return;
+    }
+    directHost = req.headers.host;
+    if (directHost !== expectedHost) { res.end('<html>Site nginx par défaut</html>'); return; }
+    if (req.url === '/redirect') {
+      res.writeHead(301, { Location: `http://127.0.0.1:${server.address().port}/final` });
+      res.end();
+    } else res.end(JSON.stringify({ setupRequired: true }));
+  });
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  t.after(() => new Promise(resolve => server.close(resolve)));
+  const origin = `http://127.0.0.1:${server.address().port}`;
+  const options = { attempts: 1, headers: { Host: expectedHost } };
+  assert.deepEqual(await waitForJson(`${origin}/api/setup/status`, json => json.setupRequired, options), { setupRequired: true });
+  assert.equal(directHost, expectedHost);
+  await waitForJson(`${origin}/redirect`, json => json.setupRequired, options);
+  assert.equal(redirectHost, new URL(origin).host);
+});
+
 test('création PostgreSQL locale réelle, authentification et reprise sans changement de mot de passe', {
   skip: !process.env.XNOVA_INSTALL_POSTGRES_CONTAINER && 'Définir XNOVA_INSTALL_POSTGRES_CONTAINER pour le test PostgreSQL isolé',
 }, async t => {

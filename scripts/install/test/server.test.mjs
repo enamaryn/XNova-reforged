@@ -123,6 +123,29 @@ test('deux installations concurrentes ne créent pas deux configurations', async
   await f.app.settled();
 });
 
+test('services détectés : choix obligatoire et transmission de garder/supprimer à l’installation', async t => {
+  for (const action of ['keep', 'recreate']) {
+    let selected;
+    const f = await fixture(t, {
+      existingServices: () => ['xnova-api.service', 'xnova-web.service'],
+      install: async config => { selected = config.state.replaceServices; return { setupRequired: true }; },
+    });
+    const unauthenticated = await f.send('status');
+    assert.equal(unauthenticated.status, 401);
+    assert.ok(!(await unauthenticated.text()).includes('xnova-api.service'));
+    const auth = await f.login();
+    const status = await (await f.send('status', undefined, auth)).json();
+    assert.deepEqual(status.existingServices, ['xnova-api.service', 'xnova-web.service']);
+    assert.equal((await f.send('install', settings, auth)).status, 400);
+    assert.equal((await f.send('install', { ...settings, serviceAction: 'invalid' }, auth)).status, 400);
+    assert.equal(existsSync(join(f.root, '.env')), false);
+    assert.equal((await f.send('install', { ...settings, serviceAction: action }, auth)).status, 202);
+    await f.app.settled();
+    assert.equal(selected, action === 'keep');
+    assert.equal(readConfiguration(f.root).state.replaceServices, action === 'keep');
+  }
+});
+
 test('un proxy avec keep-alive reçoit le nouveau site après le transfert du port', async t => {
   let web;
   const f = await fixture(t, { handoff: async () => {

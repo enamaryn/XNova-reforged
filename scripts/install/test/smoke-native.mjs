@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict';
 import { spawn, spawnSync } from 'node:child_process';
 import { createServer } from 'node:net';
-import { statSync } from 'node:fs';
+import { statSync, writeFileSync, mkdirSync, existsSync, readFileSync } from 'node:fs';
 import { networkInterfaces } from 'node:os';
 import { readConfiguration } from '../config.mjs';
 
@@ -11,6 +11,16 @@ if (process.env.XNOVA_INSTALL_SMOKE !== 'disposable-ci' || process.getuid?.() !=
   throw new Error('Ce test modifie le système : XNOVA_INSTALL_SMOKE=disposable-ci et root sont requis.');
 }
 const root = process.cwd();
+// Reproduire les services laissés par la suppression du clone : actifs, non gérés,
+// avec un ancien override. Leur lancement ne réserve pas le port du bootstrap.
+for (const component of ['api', 'web']) {
+  writeFileSync(`/etc/systemd/system/xnova-${component}.service`, '[Unit]\nDescription=Ancien XNova\n[Service]\nExecStart=/usr/bin/sleep infinity\n[Install]\nWantedBy=multi-user.target\n');
+}
+mkdirSync('/etc/systemd/system/xnova-api.service.d', { recursive: true });
+writeFileSync('/etc/systemd/system/xnova-api.service.d/old.conf', '[Service]\nEnvironment=XNOVA_OLD_SERVICE=1\n');
+for (const args of [['daemon-reload'], ['enable', '--now', 'xnova-api', 'xnova-web']]) {
+  assert.equal(spawnSync('systemctl', args).status, 0, 'Préparer les anciens services du test.');
+}
 const bootstrap = spawn('bash', ['scripts/install.sh'], { cwd: root, stdio: ['ignore', 'pipe', 'pipe'] });
 let output = '';
 let accessCode;
@@ -75,16 +85,23 @@ try {
   const login = await call(origin, '/bootstrap/auth', { code: accessCode });
   assert.equal(login.status, 200);
   auth = { Cookie: login.headers.get('set-cookie').split(';')[0], 'x-xnova-bootstrap-csrf': (await login.json()).csrf };
-  const response = await call(origin, '/bootstrap/install', { mode: 'development', url: web, database: 'local', tls: 'none' }, 'POST', auth);
+  const detected = await (await call(origin, '/bootstrap/status', undefined, 'GET', auth)).json();
+  assert.deepEqual(detected.existingServices, ['xnova-api.service', 'xnova-web.service']);
+  const response = await call(origin, '/bootstrap/install', { mode: 'development', url: web, database: 'local', tls: 'none', serviceAction: 'recreate' }, 'POST', auth);
   assert.equal(response.status, 202);
   let status;
+  let lastStage;
   for (let i = 0; i < 1200; i++) {
     status = await (await call(origin, '/bootstrap/status', undefined, 'GET', auth)).json();
+    if (status.stage !== lastStage) { console.log(`Étape : ${status.stage}`); lastStage = status.stage; }
     if (status.phase === 'failed') throw new Error(status.error);
     if (status.phase === 'ready') break;
     await sleep(1000);
   }
   assert.equal(status.phase, 'ready');
+  assert.equal(existsSync('/etc/systemd/system/xnova-api.service.d'), false);
+  assert.match(readFileSync('/etc/systemd/system/xnova-api.service', 'utf8'), /dist\/main\.js/);
+  console.log('PASS : anciens services et override supprimés, services recréés.');
   const config = readConfiguration(root);
   assert.equal(statSync(`${root}/.env`).mode & 0o777, 0o600);
   assert.equal(new URL(config.env.DATABASE_URL).username, config.state.role);
@@ -121,7 +138,7 @@ try {
   assert.equal((await call(web, '/api/setup/state', undefined, 'GET', tokenHeaders)).status, 404);
   console.log('PASS : SMTP réel, compte super admin confirmé et assistant verrouillé.');
 } catch (error) {
-  console.error(error.message);
+  console.error(`::error::${error.message.replace(/[a-f0-9]{32,}/gi, '[secret masqué]').replace(/\r?\n/g, '%0A')}`);
   // Les sorties du lanceur peuvent contenir des secrets générés : les masquer dans les diagnostics CI.
   console.error(output.replace(/[a-f0-9]{32,}/gi, '[secret masqué]'));
   process.exitCode = 1;

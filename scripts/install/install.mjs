@@ -2,7 +2,7 @@ import { randomBytes } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { realpathSync, readFileSync } from 'node:fs';
 import { createBootstrapServer } from './server.mjs';
-import { prepareInstallation, startWeb } from './runner.mjs';
+import { prepareInstallation, startWeb, findExistingServices } from './runner.mjs';
 import { bootstrapListenHost, bootstrapUrls } from './network.mjs';
 
 const root = realpathSync(fileURLToPath(new URL('../..', import.meta.url)));
@@ -13,6 +13,7 @@ const accessCode = randomBytes(32).toString('hex');
 const host = bootstrapListenHost();
 const { server } = createBootstrapServer({
   root, accessCode,
+  existingServices: findExistingServices,
   install: (config, code, report) => prepareInstallation(root, config, code, report),
   handoff: async () => {
     try {

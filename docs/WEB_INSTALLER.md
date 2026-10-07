@@ -48,7 +48,10 @@ Un service web existant occupant le port 3000 doit être arrêté avant le lance
    - HTTPS fourni par un proxy existant : conserver sa configuration et transmettre le site vers le port 3000. Next écoute sur les interfaces réseau pour recevoir également un proxy situé sur le NAS, l'hôte Proxmox ou une autre machine. Il relaie `/api/*` et Socket.io vers l'API locale ; `NEXT_PUBLIC_API_URL=/api` est enregistré automatiquement.
    - HTTPS géré ici : nginx et Certbot sont installés. Le DNS doit pointer vers ce serveur et les ports 80/443 doivent être accessibles à Let's Encrypt. L'adresse email du certificat est demandée dans la page.
    - HTTP de développement : nginx est préparé sur le port 80. Une adresse HTTPS n'est pas acceptée avec ce choix.
-4. Si d'anciens services `xnova-api` / `xnova-web` existent, cocher explicitement leur reprise. Leur ancienne configuration système est conservée à côté des fichiers avant remplacement. Les configurations nginx non gérées ne sont jamais écrasées.
+4. Si d'anciens services `xnova-api` / `xnova-web` sont détectés, l'assistant demande **« Garder et reprendre »** ou **« Supprimer et recréer »**. Le choix est obligatoire avant l'installation :
+   - Garder : reprendre et adapter les services à cette installation, en conservant à côté leur ancienne configuration manuelle et leurs réglages systemd supplémentaires.
+   - Supprimer : arrêter et désactiver les anciens services, retirer leurs définitions locales et leurs dossiers de réglages supplémentaires (`.service.d`) dans `/etc/systemd/system` et `/run/systemd/system`, recharger systemd, puis créer les nouveaux services. Cela permet de repartir après avoir supprimé uniquement le clone.
+   - Si aucun service n'existe, aucune question supplémentaire n'est posée ; les services sont créés directement. Les configurations nginx non gérées restent protégées.
 
 L'assistant génère les secrets JWT, la clé de chiffrement SMTP et l'URL de la base locale. Il écrit `.env` et `.xnova-install.json` en permissions `600`, prépare le compte de service `xnova`, puis installe les dépendances en tant que ce compte. Ce compte devient propriétaire du clone ; choisissez un clone dédié au serveur. Les opérations Git ultérieures doivent utiliser ce propriétaire, par exemple `sudo -u xnova git -C /opt/xnova pull --ff-only`. Exécuter également les commandes npm/Prisma de maintenance avec ce compte, en chargeant la configuration de ce clone.
 
@@ -64,7 +67,7 @@ La production et le développement/test utilisent tous deux le parcours SMTP ré
 
 ## Reprise et mises à jour
 
-En cas d'échec, le navigateur indique l'étape concernée. Les détails restent dans le terminal du lanceur ou dans `journalctl -u xnova-api -u xnova-web`. La base, ses identifiants et les clés déjà générées sont conservés. Corriger les prérequis, puis cliquer sur **Reprendre l'installation**. Une URL externe erronée, l'email Certbot et le choix de reprise des services peuvent être corrigés dans la page ; le mode, le domaine et le type de base sont figés après l'enregistrement initial.
+En cas d'échec, le navigateur indique l'étape concernée. Les détails restent dans le terminal du lanceur ou dans `journalctl -u xnova-api -u xnova-web`. La base, ses identifiants et les clés déjà générées sont conservés. Corriger les prérequis, puis cliquer sur **Reprendre l'installation**. Une URL externe erronée, l'email Certbot et le traitement des services existants peuvent être corrigés dans la page ; le mode, le domaine et le type de base sont figés après l'enregistrement initial. Si des services sont détectés au rechargement de la page, leur traitement doit être choisi de nouveau.
 
 Après un arrêt du lanceur, relancer la même commande. `.xnova-install.json` permet de reprendre sans renouveler les clés, perdre le mot de passe SMTP chiffré ou créer une autre base. Les services déjà gérés sont mis à jour, notamment pour corriger leur adresse d'écoute ; le bloc nginx enrichi par Certbot est conservé. Un `.env` manuel existant, une configuration incomplète ou un lien symbolique provoque un refus explicite : aucun écrasement silencieux.
 

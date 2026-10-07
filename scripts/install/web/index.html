@@ -50,8 +50,14 @@
         <input id="email" type="email" autocomplete="email">
         <p class="hint">Le DNS du domaine doit déjà pointer vers ce serveur, accessible sur les ports 80 et 443.</p>
       </div>
-      <label class="checkbox"><input id="replace-services" type="checkbox"> Reprendre les services xnova-api et xnova-web s’ils existent déjà</label>
-      <p class="hint">Ce choix remplace leur configuration système. Leur configuration précédente sera conservée sur le serveur.</p>
+      <fieldset id="existing-services" hidden>
+        <legend>Des services XNova ont été trouvés</legend>
+        <p id="services-found" class="hint"></p>
+        <label class="checkbox"><input id="keep-services" type="radio" name="service-action" value="keep"> Garder et reprendre</label>
+        <p class="hint">Les services seront adaptés à cette installation. Leur configuration précédente sera conservée sur le serveur.</p>
+        <label class="checkbox"><input id="recreate-services" type="radio" name="service-action" value="recreate"> Supprimer et recréer</label>
+        <p class="hint">Les anciens services et leurs réglages supplémentaires seront supprimés, puis de nouveaux services seront créés.</p>
+      </fieldset>
       <p id="resume-info" class="hint" hidden>Une configuration a déjà été créée. La reprise conserve la base et les secrets ; vous pouvez corriger l’URL externe ou l’email du certificat.</p>
       <button id="install-button">Préparer le serveur</button>
     </form>
