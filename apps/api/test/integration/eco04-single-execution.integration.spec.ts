@@ -67,12 +67,26 @@ describe('API integration - Exécution unique des événements (ECO-04)', () => 
       });
     userA = (await mkUser('a')).id;
     userB = (await mkUser('b')).id;
-    const mkPlanet = (userId: string, position: number) =>
-      database.planet.create({
-        data: { userId, name: 'E4', galaxy: 9, system: 490 + Math.floor(Math.random() * 9), position },
-      });
-    origin = await mkPlanet(userA, 1 + Math.floor(Math.random() * 7));
-    target = await mkPlanet(userB, 8 + Math.floor(Math.random() * 7));
+    // Coordonnées tirées au hasard : on retente si l'emplacement est déjà pris (semis de galaxie, autres suites)
+    const mkPlanet = async (userId: string, firstPosition: number, span: number) => {
+      for (let attempt = 0; ; attempt++) {
+        try {
+          return await database.planet.create({
+            data: {
+              userId,
+              name: 'E4',
+              galaxy: 9,
+              system: 490 + Math.floor(Math.random() * 9),
+              position: firstPosition + Math.floor(Math.random() * span),
+            },
+          });
+        } catch (error: any) {
+          if (error?.code !== 'P2002' || attempt >= 50) throw error;
+        }
+      }
+    };
+    origin = await mkPlanet(userA, 1, 7);
+    target = await mkPlanet(userB, 8, 7);
   });
 
   beforeEach(async () => {

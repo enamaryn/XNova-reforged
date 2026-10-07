@@ -168,6 +168,8 @@ jobs:
       RATE_LIMIT_ACCOUNT_MAX: '1000'
       # Les parcours E2E créent des comptes sans SMTP ; la confirmation obligatoire est couverte par l'intégration
       EMAIL_VERIFICATION_REQUIRED: 'false'
+      # Code d'installation connu des tests (assistant SETUP-01)
+      SETUP_TOKEN: E2E0-SETU-PCOD-E123
 
     steps:
       - name: Checkout
