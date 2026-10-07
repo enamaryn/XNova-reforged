@@ -1,6 +1,6 @@
 import { INestApplication } from "@nestjs/common";
 import request from "supertest";
-import { randomBytes } from "crypto";
+import { createHash, randomBytes } from "crypto";
 import { DatabaseService } from "../../src/database/database.service";
 import { MailService } from "../../src/mail/mail.service";
 import {
@@ -205,11 +205,31 @@ describe("Administration des joueurs", () => {
       .post("/auth/verify-email")
       .send({ token: previousToken })
       .expect(400);
+    // Une demande personnelle déjà en vol peut émettre son lien après la correction.
+    // Ce lien ne doit pas contourner la vérification imposée à la nouvelle adresse.
+    const concurrentChange = randomBytes(32).toString("base64url");
+    await database.emailToken.create({
+      data: {
+        userId: player.id,
+        type: "change_email",
+        email: player.email,
+        tokenHash: createHash("sha256").update(concurrentChange).digest("hex"),
+        expiresAt: new Date(Date.now() + 3600000),
+      },
+    });
+    await request(server())
+      .post("/auth/verify-email")
+      .send({ token: concurrentChange })
+      .expect(400);
     const token = extractToken(await smtp.waitFor(newEmail));
     await request(server())
       .post("/auth/verify-email")
       .send({ token })
       .expect(200);
+    await request(server())
+      .post("/auth/verify-email")
+      .send({ token: concurrentChange })
+      .expect(400);
     await request(server())
       .post("/auth/verify-email")
       .send({ token })

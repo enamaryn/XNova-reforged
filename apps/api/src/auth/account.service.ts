@@ -294,8 +294,13 @@ export class AccountService {
         const row = await this.consumeToken(token, ['verify_email', 'change_email'], tx);
         if (!row || !row.email) throw new BadRequestException('Lien invalide ou expiré');
         const user = await tx.user.findUnique({ where: { id: row.userId } });
-        if (!user || (row.type === 'verify_email' && user.email.toLowerCase() !== row.email.toLowerCase())) {
+        if (!user || (row.type === 'verify_email' && user.email.toLowerCase() !== row.email.toLowerCase()) ||
+          (row.type === 'change_email' && user.mustVerifyEmail)) {
           throw new BadRequestException('Lien invalide ou expiré');
+        }
+        if (user.mustVerifyEmail) {
+          // Invalide aussi les liens émis par une demande déjà en vol lors de la correction.
+          await tx.emailToken.updateMany({ where: { userId: user.id, usedAt: null }, data: { usedAt: new Date() } });
         }
         await tx.user.update({ where: { id: user.id }, data: {
           ...(row.type === 'change_email' ? { email: row.email } : {}),
