@@ -922,3 +922,4 @@ Le problème principal était que Framer Motion avec `initial: { opacity: 0 }` n
 
 ### ⏭️ Prochaines étapes
 - Ouvrir la PR dédiée dès que la PR #21 est fusionnée par le propriétaire, CI verte, puis SCOPE-02 (13 décisions en attente) et OPS-03
+- [x] README : section « Installer sur un serveur LXC (Ubuntu 24.04, sans Docker) » (paquets, PostgreSQL, `.env` de production, migrations, services systemd, nginx, assistant, sauvegardes)
