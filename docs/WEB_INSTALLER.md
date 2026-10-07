@@ -4,7 +4,7 @@ L'assistant démarre **avant la base et avant la compilation de l'application**.
 
 ## Serveur pris en charge
 
-Ubuntu 24.04, avec systemd actif (serveur ou conteneur LXC). Le compte qui lance la commande doit avoir les droits root pour installer les paquets, créer la base locale et enregistrer les services. Le dépôt doit être placé dans un chemin absolu simple, sans espaces, par exemple `/opt/xnova`.
+Ubuntu 24.04, avec systemd actif (conteneur LXC, VPS ou serveur dédié). Le compte qui lance la commande doit avoir les droits root pour installer les paquets, créer la base locale et enregistrer les services. Le dépôt doit être placé dans un chemin absolu simple, sans espaces, par exemple `/opt/xnova`.
 
 Sur un serveur neuf :
 
@@ -19,16 +19,20 @@ Le lanceur installe Node.js 22 si aucun Node compatible n'est disponible, via le
 
 ## Ouvrir la première page
 
-Le serveur d'installation écoute uniquement sur `127.0.0.1:3000`.
+Le serveur d'installation écoute par défaut sur `0.0.0.0:3000`, donc sur les interfaces réseau du serveur. Le terminal affiche les adresses IP à ouvrir et le code temporaire.
 
-- Si un proxy HTTPS existant transmet votre site vers ce port, ouvrez la racine de votre site.
-- Sinon, depuis votre ordinateur, ouvrez un tunnel SSH :
+- Depuis le même réseau qu'un LXC, ouvrir par exemple `http://192.168.1.119:3000`.
+- Sur un VPS ou un serveur dédié, ouvrir `http://IP_PUBLIQUE:3000` ou `http://DOMAINE:3000`. Le port TCP 3000 doit être autorisé par le pare-feu du serveur et de l'hébergeur. Le lanceur ne modifie pas leurs règles.
+- Si un proxy HTTPS existant transmet votre site vers ce port, ouvrir la racine de votre site. Le proxy peut se trouver sur une autre machine.
+- Pour choisir un accès uniquement local, lancer `sudo env XNOVA_BOOTSTRAP_HOST=127.0.0.1 bash scripts/install.sh`, puis utiliser un proxy local ou un tunnel SSH depuis votre ordinateur :
 
   ```bash
   ssh -N -L 3000:127.0.0.1:3000 root@ADRESSE_DU_SERVEUR
   ```
 
-  Puis ouvrez `http://localhost:3000`. L'adresse saisie ensuite dans l'assistant est **l'adresse finale du serveur**, pas celle du tunnel.
+  Puis ouvrir `http://localhost:3000`.
+
+L'adresse saisie dans l'assistant est **l'adresse finale du site**, sans le port temporaire 3000 ni le chemin `/setup`.
 
 Saisissez le code affiché par le lanceur. Il donne temporairement accès à l'installation système ; ne le partagez pas. Il expire après deux heures, la session après une heure. Les requêtes de préparation sont protégées par une session, un contrôle d'origine et un jeton CSRF. Un seul travail d'installation peut tourner à la fois. Les sorties brutes des commandes et les identifiants de base ne sont pas exposés par le suivi web.
 
@@ -41,7 +45,7 @@ Un service web existant occupant le port 3000 doit être arrêté avant le lance
    - Locale : PostgreSQL est installé ; une nouvelle base et son rôle propriétaire sont créés, avec un mot de passe aléatoire. Le nom distingue développement et production et comprend un identifiant d'installation. Aucune autre base n'est effacée.
    - Externe : saisir l'URL PostgreSQL complète. La base doit déjà exister et les credentials doivent autoriser les migrations. Aucun PostgreSQL local ni rôle local n'est créé dans ce mode. L'URL est saisie par HTTPS ou à travers le tunnel local.
 3. **Accès web** :
-   - HTTPS fourni par un proxy existant : conserver sa configuration et transmettre le site vers le port 3000. Next relaie `/api/*` et Socket.io vers l'API locale ; `NEXT_PUBLIC_API_URL=/api` est enregistré automatiquement.
+   - HTTPS fourni par un proxy existant : conserver sa configuration et transmettre le site vers le port 3000. Next écoute sur les interfaces réseau pour recevoir également un proxy situé sur le NAS, l'hôte Proxmox ou une autre machine. Il relaie `/api/*` et Socket.io vers l'API locale ; `NEXT_PUBLIC_API_URL=/api` est enregistré automatiquement.
    - HTTPS géré ici : nginx et Certbot sont installés. Le DNS doit pointer vers ce serveur et les ports 80/443 doivent être accessibles à Let's Encrypt. L'adresse email du certificat est demandée dans la page.
    - HTTP de développement : nginx est préparé sur le port 80. Une adresse HTTPS n'est pas acceptée avec ce choix.
 4. Si d'anciens services `xnova-api` / `xnova-web` existent, cocher explicitement leur reprise. Leur ancienne configuration système est conservée à côté des fichiers avant remplacement. Les configurations nginx non gérées ne sont jamais écrasées.
@@ -56,13 +60,13 @@ La page affiche les étapes et vérifie une vraie connexion à la base via `/hea
 
 Le code est transmis dans un fragment d'URL, consommé puis retiré immédiatement par l'assistant applicatif. Il n'apparaît pas dans les requêtes HTTP ni dans le Referer. Il n'est pas enregistré en clair dans `.env`. Le parcours continue directement au SMTP, puis aux réglages de l'univers, à la création du super admin et à sa confirmation par email. La confirmation clôture l'installation ; les routes applicatives de configuration sont alors verrouillées comme dans le parcours existant.
 
-La production et le développement/test utilisent tous deux le parcours SMTP réel : `EMAIL_VERIFICATION_REQUIRED=true`. Les services applicatifs restent limités à localhost. La confiance proxy générée est de 2 pour un proxy externe plus Next, et 1 pour nginx local relayant directement l'API ; adapter `TRUST_PROXY` si votre architecture comporte d'autres proxys.
+La production et le développement/test utilisent tous deux le parcours SMTP réel : `EMAIL_VERIFICATION_REQUIRED=true`. L'API reste limitée à localhost. Le web écoute sur `0.0.0.0:3000` avec un proxy existant, et sur localhost lorsque nginx est installé sur ce serveur. La confiance proxy générée est de 2 pour un proxy externe plus Next, et 1 pour nginx local relayant directement l'API ; adapter `TRUST_PROXY` si votre architecture comporte d'autres proxys.
 
 ## Reprise et mises à jour
 
 En cas d'échec, le navigateur indique l'étape concernée. Les détails restent dans le terminal du lanceur ou dans `journalctl -u xnova-api -u xnova-web`. La base, ses identifiants et les clés déjà générées sont conservés. Corriger les prérequis, puis cliquer sur **Reprendre l'installation**. Une URL externe erronée, l'email Certbot et le choix de reprise des services peuvent être corrigés dans la page ; le mode, le domaine et le type de base sont figés après l'enregistrement initial.
 
-Après un arrêt du lanceur, relancer la même commande. `.xnova-install.json` permet de reprendre sans renouveler les clés, perdre le mot de passe SMTP chiffré ou créer une autre base. Un `.env` manuel existant, une configuration incomplète ou un lien symbolique provoque un refus explicite : aucun écrasement silencieux.
+Après un arrêt du lanceur, relancer la même commande. `.xnova-install.json` permet de reprendre sans renouveler les clés, perdre le mot de passe SMTP chiffré ou créer une autre base. Les services déjà gérés sont mis à jour, notamment pour corriger leur adresse d'écoute ; le bloc nginx enrichi par Certbot est conservé. Un `.env` manuel existant, une configuration incomplète ou un lien symbolique provoque un refus explicite : aucun écrasement silencieux.
 
 Pour les mises à jour d'un serveur installé, utiliser la procédure de [déploiement](OPERATIONS.md#déploiement--procédure-et-vérification-de-linstallation). Cet assistant est un programme de première installation, pas une commande de reset. Le développement habituel Docker / `npm run dev` reste disponible et ne requiert pas cet installateur système.
 

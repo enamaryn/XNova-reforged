@@ -1,8 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, rmSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { tmpdir, networkInterfaces } from 'node:os';
 import { join } from 'node:path';
+import { bootstrapListenHost } from '../network.mjs';
 import { createBootstrapServer } from '../server.mjs';
 import { readConfiguration } from '../config.mjs';
 
@@ -17,8 +18,8 @@ test('navigateur : première page, formulaire local, progression et continuation
     report('Création de la base locale');
     return { setupRequired: true };
   }, handoff: async () => { handoff = true; } });
-  await new Promise(resolve => app.server.listen(0, '127.0.0.1', resolve));
-  const browser = await chromium.launch({ executablePath: process.env.XNOVA_INSTALL_CHROMIUM, args: ['--no-sandbox'] });
+  await new Promise(resolve => app.server.listen(0, bootstrapListenHost(), resolve));
+  const browser = await chromium.launch({ executablePath: process.env.XNOVA_INSTALL_CHROMIUM, args: ['--no-sandbox', '--no-proxy-server'] });
   t.after(async () => {
     await browser.close();
     await app.settled();
@@ -28,11 +29,12 @@ test('navigateur : première page, formulaire local, progression et continuation
   const page = await browser.newPage();
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto(`http://127.0.0.1:${app.server.address().port}`);
+  const address = Object.values(networkInterfaces()).flat().find(entry => !entry.internal && entry.family === 'IPv4')?.address || '127.0.0.2';
+  await page.goto(`http://${address}:${app.server.address().port}`);
   await page.getByLabel('Code d’accès temporaire').fill(code);
   await page.getByRole('button', { name: 'Ouvrir l’assistant' }).click();
   await page.getByLabel('Utilisation').selectOption('development');
-  assert.equal(await page.getByLabel('Adresse publique du site').inputValue(), 'http://127.0.0.1');
+  assert.equal(await page.getByLabel('Adresse publique du site').inputValue(), `http://${address}`);
   assert.equal(await page.getByLabel('Comment le site sera-t-il accessible ?').inputValue(), 'none');
   await page.getByRole('button', { name: 'Préparer le serveur' }).click();
   const next = page.getByRole('button', { name: 'Continuer : SMTP et compte administrateur' });
@@ -41,7 +43,7 @@ test('navigateur : première page, formulaire local, progression et continuation
   assert.equal(config.state.database, 'local');
   assert.equal(config.env.NEXT_PUBLIC_API_URL, '/api');
   assert.ok(!(await page.locator('body').innerText()).includes(config.env.JWT_SECRET));
-  await page.route('http://127.0.0.1/setup', route => route.fulfill({ contentType: 'text/html', body: '<h1>Configuration SMTP</h1>' }));
+  await page.route(`http://${address}/setup`, route => route.fulfill({ contentType: 'text/html', body: '<h1>Configuration SMTP</h1>' }));
   await next.click();
   await page.getByRole('heading', { name: 'Configuration SMTP' }).waitFor();
   assert.equal(handoff, true);

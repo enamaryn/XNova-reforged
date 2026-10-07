@@ -54,11 +54,17 @@ function preflightFile(path, adopt) {
   }
 }
 
-function installService(path, content, adopt) {
+export function installService(path, content, adopt) {
   preflightFile(path, adopt);
-  if (existsSync(path) && !readFileSync(path, 'utf8').startsWith(`${MARKER}\n`)) {
-    // Conserver la configuration système précédente avant un remplacement explicitement demandé.
-    writeFileSync(`${path}.before-xnova-${Date.now()}`, readFileSync(path), { flag: 'wx', mode: 0o600 });
+  if (existsSync(path)) {
+    const previous = readFileSync(path);
+    if (previous.toString() === content) return;
+    if (!previous.toString().startsWith(`${MARKER}\n`)) {
+      // Conserver la configuration système précédente avant un remplacement explicitement demandé.
+      writeFileSync(`${path}.before-xnova-${Date.now()}`, previous, { flag: 'wx', mode: 0o600 });
+    }
+    // Les services gérés doivent recevoir les corrections lors d'une reprise.
+    // Le bloc nginx reste conservé séparément par managedFile, notamment après Certbot.
     writeFileSync(path, content, { mode: 0o644 });
     return;
   }
@@ -67,7 +73,7 @@ function installService(path, content, adopt) {
 
 export async function prepareInstallation(root, config, accessCode, report, { run = command } = {}) {
   const { state, env } = config;
-  renderService(root, 'api', realpathSync(process.execPath)); // Valider avant les mutations système.
+  renderService(root, 'api', realpathSync(process.execPath), state); // Valider avant les mutations système.
   for (const component of ['api', 'web']) preflightFile(`/etc/systemd/system/xnova-${component}.service`, state.replaceServices);
   const step = async (label, action) => { report(label); await action(); };
   const packages = ['build-essential', 'python3', 'ca-certificates', 'curl', 'openssl', 'redis-server'];
@@ -122,7 +128,7 @@ export async function prepareInstallation(root, config, accessCode, report, { ru
     }
   });
   await step('Configuration des services', async () => {
-    for (const component of ['api', 'web']) installService(`/etc/systemd/system/xnova-${component}.service`, renderService(root, component, realpathSync(process.execPath)), state.replaceServices);
+    for (const component of ['api', 'web']) installService(`/etc/systemd/system/xnova-${component}.service`, renderService(root, component, realpathSync(process.execPath), state), state.replaceServices);
     await run('systemctl', ['daemon-reload']);
     await run('systemctl', ['enable', 'xnova-api', 'xnova-web']);
   });

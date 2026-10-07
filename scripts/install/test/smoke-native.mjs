@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import { spawn, spawnSync } from 'node:child_process';
 import { createServer } from 'node:net';
 import { statSync } from 'node:fs';
+import { networkInterfaces } from 'node:os';
 import { readConfiguration } from '../config.mjs';
 
 if (process.env.XNOVA_INSTALL_SMOKE !== 'disposable-ci' || process.getuid?.() !== 0) {
@@ -21,7 +22,10 @@ bootstrap.stdout.on('data', chunk => {
 bootstrap.stderr.on('data', chunk => { output = (output + chunk).slice(-32000); });
 bootstrap.on('exit', code => { exit = code; });
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-const origin = 'http://127.0.0.1:3000';
+const address = Object.values(networkInterfaces()).flat().find(entry => !entry.internal && entry.family === 'IPv4')?.address;
+assert.ok(address, 'Une interface réseau non locale est nécessaire pour ce test CI.');
+const web = `http://${address}`;
+const origin = `${web}:3000`;
 let auth = {};
 async function call(base, path, body, method = body === undefined ? 'GET' : 'POST', headers = {}) {
   return fetch(`${base}${path}`, {
@@ -65,12 +69,13 @@ try {
   assert.equal(page.status, 200);
   assert.match(await page.text(), /Créer une base locale automatiquement/);
   assert.equal((await call(origin, '/bootstrap/status')).status, 401);
-  console.log('PASS : première page sans dépendances ni base, protégée par un code.');
+  assert.ok(output.includes(origin), 'Le terminal affiche l’adresse réseau utilisée.');
+  console.log('PASS : première page joignable par l’IP réseau, sans dépendances ni base, protégée par un code.');
 
   const login = await call(origin, '/bootstrap/auth', { code: accessCode });
   assert.equal(login.status, 200);
   auth = { Cookie: login.headers.get('set-cookie').split(';')[0], 'x-xnova-bootstrap-csrf': (await login.json()).csrf };
-  const response = await call(origin, '/bootstrap/install', { mode: 'development', url: 'http://127.0.0.1', database: 'local', tls: 'none' }, 'POST', auth);
+  const response = await call(origin, '/bootstrap/install', { mode: 'development', url: web, database: 'local', tls: 'none' }, 'POST', auth);
   assert.equal(response.status, 202);
   let status;
   for (let i = 0; i < 1200; i++) {
@@ -88,15 +93,14 @@ try {
   const transfer = await call(origin, '/bootstrap/handoff', {}, 'POST', auth);
   assert.equal(transfer.status, 200);
   const next = new URL((await transfer.json()).next);
-  assert.equal(next.origin, 'http://127.0.0.1');
+  assert.equal(next.origin, web);
   assert.equal(new URLSearchParams(next.hash.slice(1)).get('bootstrap-token'), accessCode);
-  const rendered = await fetch('http://127.0.0.1/fr/setup');
+  const rendered = await fetch(`${web}/fr/setup`);
   assert.equal(rendered.status, 200);
   assert.match(await rendered.text(), /Installation du serveur/);
   assert.equal((await call(origin, '/bootstrap/status', undefined, 'GET', auth)).status, 404);
   console.log('PASS : relais vers Next et arrêt du service d’installation privilégié.');
 
-  const web = 'http://127.0.0.1';
   const tokenHeaders = { 'x-setup-token': accessCode };
   assert.equal((await call(web, '/api/setup/smtp', { host: '127.0.0.1', port: smtp.address().port, secure: false, fromEmail: 'xnova@example.test', fromName: 'XNova installation' }, 'PUT', tokenHeaders)).status, 200);
   assert.equal((await call(web, '/api/setup/smtp/test', { to: 'admin@example.test' }, 'POST', tokenHeaders)).status, 200);
@@ -105,8 +109,11 @@ try {
   assert.equal((await call(web, '/api/setup/admin', { username: 'fresh_admin', email: 'admin@example.test', password: 'FreshAdmin1234!' }, 'POST', tokenHeaders)).status, 200);
   assert.equal(messages.length, 2);
   const mail = messages[1].replace(/=\r\n/g, '').replace(/=([a-f0-9]{2})/gi, (_all, hex) => String.fromCharCode(parseInt(hex, 16)));
-  const confirmation = mail.match(/http:\/\/127\.0\.0\.1\/verify-email\?token=([A-Za-z0-9_-]{43})(?![A-Za-z0-9_-])/)?.[1];
-  assert.ok(confirmation, 'Lien de confirmation réellement reçu par SMTP.');
+  const link = mail.match(/http:\/\/[^\s<>]+\/verify-email\?token=[A-Za-z0-9_-]{43}(?![A-Za-z0-9_-])/)?.[0];
+  assert.ok(link, 'Lien de confirmation réellement reçu par SMTP.');
+  const confirmationUrl = new URL(link);
+  assert.equal(confirmationUrl.origin, web);
+  const confirmation = confirmationUrl.searchParams.get('token');
   assert.equal((await call(web, '/api/auth/verify-email', { token: confirmation })).status, 200);
   assert.equal((await (await call(web, '/api/setup/status')).json()).setupRequired, false);
   assert.equal((await call(web, '/api/setup/state', undefined, 'GET', tokenHeaders)).status, 404);

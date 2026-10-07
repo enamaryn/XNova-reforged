@@ -77,7 +77,7 @@ test('refuse les adresses injectables, HTTP en production et les choix incohére
   assert.equal(publicUrl('http://localhost', 'development'), 'http://localhost');
 });
 
-test('rend un proxy HTTP/WebSocket et des services limités à localhost', t => {
+test('rend un proxy HTTP/WebSocket et adapte l’écoute du web à la position du proxy', t => {
   const root = directory(t);
   const config = createConfiguration(options);
   const proxy = renderProxy(config.state);
@@ -85,6 +85,8 @@ test('rend un proxy HTTP/WebSocket et des services limités à localhost', t => 
   assert.match(proxy, /proxy_pass http:\/\/127\.0\.0\.1:3001\//);
   assert.match(proxy, /proxy_set_header Upgrade \$http_upgrade/);
   assert.match(renderService('/opt/xnova', 'web', '/usr/bin/node'), /start --hostname 127\.0\.0\.1/);
+  assert.match(renderService('/opt/xnova', 'web', '/usr/bin/node', config.state), /start --hostname 0\.0\.0\.0/);
+  assert.equal(config.env.API_HOST, '127.0.0.1');
   assert.match(renderService('/opt/xnova', 'api', '/usr/bin/node'), /User=xnova/);
   assert.throws(() => renderService('/opt/xnova\nExecStart=bad', 'api', '/usr/bin/node'));
   const path = join(root, 'nginx.conf');
