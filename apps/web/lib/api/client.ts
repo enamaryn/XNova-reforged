@@ -1,31 +1,14 @@
 import { useAuthStore } from "@/lib/stores/auth-store";
 import type { ApiErrorPayload } from "@/lib/api/types";
+import { resolveApiBaseUrl } from "@/lib/api/base-url";
 
-const DEFAULT_API_BASE_URL = "http://localhost:3001";
 const ENV_API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 export function getApiBaseUrl() {
-  if (ENV_API_BASE_URL) {
-    try {
-      const url = new URL(ENV_API_BASE_URL);
-      if (typeof window !== "undefined") {
-        const isLocalhost = url.hostname === "localhost" || url.hostname === "127.0.0.1";
-        if (isLocalhost) {
-          const port = url.port || "3001";
-          return `${url.protocol}//${window.location.hostname}:${port}`;
-        }
-      }
-      return ENV_API_BASE_URL;
-    } catch {
-      return ENV_API_BASE_URL;
-    }
-  }
-
-  if (typeof window !== "undefined") {
-    return `${window.location.protocol}//${window.location.hostname}:3001`;
-  }
-
-  return DEFAULT_API_BASE_URL;
+  return resolveApiBaseUrl(
+    ENV_API_BASE_URL,
+    typeof window !== "undefined" ? window.location : undefined,
+  );
 }
 
 export class ApiError extends Error {
@@ -119,10 +102,19 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}) 
     }
   }
 
-  const response = await fetch(`${getApiBaseUrl()}${path}`, {
-    ...fetchOptions,
-    headers,
-  });
+  let response: Response;
+  try {
+    response = await fetch(`${getApiBaseUrl()}${path}`, {
+      ...fetchOptions,
+      headers,
+    });
+  } catch {
+    // Réseau coupé, API injoignable, contenu mixte ou CORS refusé : le navigateur ne donne aucun détail
+    throw new ApiError(
+      "Impossible de joindre le serveur. Vérifiez votre connexion ou réessayez dans un instant.",
+      0,
+    );
+  }
 
   if (response.status === 401 && auth && retry) {
     const tokens = await refreshAccessToken();
