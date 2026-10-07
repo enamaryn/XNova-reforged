@@ -98,7 +98,9 @@ try {
   const rendered = await fetch(`${web}/fr/setup`);
   assert.equal(rendered.status, 200);
   assert.match(await rendered.text(), /Installation du serveur/);
-  assert.equal((await call(origin, '/bootstrap/status', undefined, 'GET', auth)).status, 404);
+  assert.equal((await call(web, '/bootstrap/status', undefined, 'GET', auth)).status, 404);
+  // En mode nginx local, le port temporaire n'est plus exposé sur l'IP réseau après le relais.
+  await assert.rejects(fetch(`${origin}/bootstrap/status`, { signal: AbortSignal.timeout(2000) }));
   console.log('PASS : relais vers Next et arrêt du service d’installation privilégié.');
 
   const tokenHeaders = { 'x-setup-token': accessCode };
