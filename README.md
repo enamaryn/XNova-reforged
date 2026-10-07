@@ -51,6 +51,18 @@ XNova-reforged/
 
 ## Démarrage rapide
 
+### Première installation serveur, dans le navigateur
+
+Sur un clone neuf **Ubuntu 24.04 / LXC**, lancer :
+
+```bash
+sudo bash scripts/install.sh
+```
+
+Une première page autonome démarre avant la base et avant le build. Le navigateur demande le mode développement/production, l'adresse web HTTPS et le choix d'une base locale créée automatiquement ou d'une URL PostgreSQL externe. L'installateur génère les identifiants et les secrets, prépare les migrations et les services, puis passe directement au SMTP et au super admin. Ouvrir la page via un proxy HTTPS existant ou un tunnel SSH, avec le code temporaire affiché au lancement.
+
+Procédure complète et prérequis réseau : [assistant web d'installation](docs/WEB_INSTALLER.md). Les procédures manuelles ci-dessous restent disponibles.
+
 ### Prérequis
 - Node.js >= 20
 - npm >= 10

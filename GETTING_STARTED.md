@@ -1,5 +1,7 @@
 # Guide d'installation - XNova Reforged
 
+Pour une **première installation serveur Ubuntu 24.04 / LXC**, utiliser l'[assistant web](docs/WEB_INSTALLER.md) : `sudo bash scripts/install.sh`. Il démarre avant la base et le build, et demande tous les réglages dans le navigateur. Les étapes suivantes décrivent le développement local manuel avec Docker.
+
 ## 1. Prerequis
 
 Assurez-vous d'avoir installe :

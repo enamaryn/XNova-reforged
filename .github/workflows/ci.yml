@@ -10,6 +10,28 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  installer:
+    name: Première installation web (Ubuntu 24.04)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Tests autonomes sans npm install
+        run: |
+          bash -n scripts/install.sh
+          node --test scripts/install/test/*.test.mjs
+      - name: Clone dédié sur la machine jetable
+        run: |
+          sudo mkdir -p /opt/xnova-bootstrap-test
+          sudo cp -a . /opt/xnova-bootstrap-test/
+      - name: Base locale, relais web et SMTP réel
+        run: |
+          cd /opt/xnova-bootstrap-test
+          sudo env PATH="$PATH" XNOVA_INSTALL_SMOKE=disposable-ci node scripts/install/test/smoke-native.mjs
+
   build-test:
     name: Build, lint et tests
     runs-on: ubuntu-latest
@@ -64,7 +86,8 @@ jobs:
         working-directory: packages/database
 
       - name: Tests d'intégration
-        run: npm run test:integration
+        # Les suites partagent la même base et l'état global setup.completedAt.
+        run: npm run test:integration -- --runInBand
 
   database:
     name: Migrations, sauvegarde et restauration

@@ -37,7 +37,7 @@ async function bootstrap() {
     SwaggerModule.setup(swaggerPath, app, document);
   }
 
-  await app.listen(port);
+  await app.listen(port, configService.get<string>('API_HOST') || '0.0.0.0');
   console.log(`🚀 API NestJS démarrée sur http://localhost:${port}`);
   if (swaggerEnabled) {
     console.log(`📘 Swagger disponible sur http://localhost:${port}/${swaggerPath}`);

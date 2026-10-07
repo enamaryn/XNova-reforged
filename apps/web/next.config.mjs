@@ -35,6 +35,11 @@ const allowedDevOrigins = Array.from(
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Même origine pour le navigateur, y compris derrière un proxy qui ne relaie que le web.
+  async rewrites() {
+    const apiUrl = process.env.API_URL || 'http://127.0.0.1:3001';
+    return [{ source: '/api/:path*', destination: `${apiUrl.replace(/\/+$/, '')}/:path*` }];
+  },
   allowedDevOrigins,
   transpilePackages: ['@xnova/game-config'],
   experimental: {
