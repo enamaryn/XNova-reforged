@@ -128,7 +128,8 @@ compilation native de `@sentry/profiling-node` (`npm ci` sans `--ignore-scripts`
 
 ```bash
 git pull
-npm ci                          # sans --ignore-scripts : le profilage Sentry de l'API compile un module natif
+npm ci --include=dev            # sans --ignore-scripts (module natif Sentry) ; --include=dev : turbo et la CLI Nest servent à compiler.
+                                # Lancer AVANT de charger .env (NODE_ENV=production ferait sauter les devDependencies : « turbo: not found »)
 npx prisma generate --schema packages/database/prisma/schema.prisma   # client de base de données (sinon l'API plante : IsEnum / undefined)
 bash scripts/verify-install.sh  # Node, arbre de dépendances, versions de @sentry/nextjs, @sentry/node et next
 npm run build

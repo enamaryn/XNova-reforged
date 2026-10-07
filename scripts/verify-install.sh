@@ -39,6 +39,15 @@ for PKG in @sentry/nextjs @sentry/node next; do
   fi
 done
 
+# Outils de compilation (devDependencies) : absents si `npm ci` a tourné avec NODE_ENV=production
+for BIN in turbo nest tsc; do
+  if [ -x "node_modules/.bin/$BIN" ]; then
+    pass "outil de compilation $BIN présent"
+  else
+    fail "outil de compilation $BIN absent : lancer « npm ci --include=dev » (avant de charger .env : NODE_ENV=production saute les devDependencies)"
+  fi
+done
+
 # Client Prisma généré : sans lui l'API plante au démarrage (« Cannot convert undefined or null to object » dans IsEnum)
 if node -e '
 const c = require("@prisma/client");
