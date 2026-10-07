@@ -923,3 +923,7 @@ Le problème principal était que Framer Motion avec `initial: { opacity: 0 }` n
 ### ⏭️ Prochaines étapes
 - Ouvrir la PR dédiée dès que la PR #21 est fusionnée par le propriétaire, CI verte, puis SCOPE-02 (13 décisions en attente) et OPS-03
 - [x] README : section « Installer sur un serveur LXC (Ubuntu 24.04, sans Docker) » (paquets, PostgreSQL, `.env` de production, migrations, services systemd, nginx, assistant, sauvegardes)
+
+- [x] SETUP-01 clos (PR #22 fusionnée, CI de `main` verte n° 36) ; registre et roadmap mis à jour
+- [x] Incident de déploiement : client Prisma non généré (API en boucle) puis `turbo: not found` (`npm ci` lancé avec NODE_ENV=production) ; procédures corrigées (`npm ci --include=dev` avant `.env`, `prisma generate`), `verify-install.sh` contrôle client Prisma et outils de compilation
+- À confirmer côté propriétaire : serveur relancé après recompilation, erreur 500 de la page de connexion disparue
