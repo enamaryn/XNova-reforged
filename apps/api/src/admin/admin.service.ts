@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { TECHNOLOGIES } from '@xnova/game-config';
+import { BUILDINGS, TECHNOLOGIES } from '@xnova/game-config';
 import { DatabaseService } from '../database/database.service';
 import { GameEventsGateway } from '../game-events/game-events.gateway';
 import { ServerConfigService } from '../server-config/server-config.service';
@@ -15,6 +15,10 @@ import { UpdateRoleDto } from './dto/update-role.dto';
 import { BanUserDto } from './dto/ban-user.dto';
 import { UnbanUserDto } from './dto/unban-user.dto';
 import { BoostDevelopmentDto } from './dto/boost-development.dto';
+import { ListPlayersDto } from './dto/list-players.dto';
+import { AccountService } from '../auth/account.service';
+import { isBanned } from '../auth/ban.util';
+import { ResourcesService } from '../resources/resources.service';
 const BUILDING_FIELDS = [
   'metalMine',
   'crystalMine',
@@ -44,7 +48,54 @@ export class AdminService {
     private readonly gameEvents: GameEventsGateway,
     private readonly smtpConfig: SmtpConfigService,
     private readonly mail: MailService,
+    private readonly account: AccountService,
+    private readonly resources: ResourcesService,
   ) {}
+
+  async getPlayers(dto: ListPlayersDto) {
+    const pageSize = 25;
+    const where = dto.search ? { username: { contains: dto.search, mode: 'insensitive' as const } } : {};
+    const [total, users] = await Promise.all([
+      this.database.user.count({ where }),
+      this.database.user.findMany({
+        where, skip: (dto.page - 1) * pageSize, take: pageSize,
+        orderBy: [{ username: 'asc' }, { id: 'asc' }],
+        select: {
+          id: true, username: true, email: true, emailVerifiedAt: true, role: true,
+          points: true, rank: true, lastActive: true, bannedAt: true, bannedUntil: true,
+          _count: { select: { planets: true } },
+        },
+      }),
+    ]);
+    return { total, page: dto.page, pageSize, players: users.map(({ _count, ...user }) => ({ ...user, planets: _count.planets, banned: isBanned(user) })) };
+  }
+
+  async getPlayer(id: string) {
+    const user = await this.database.user.findUnique({
+      where: { id }, include: { planets: { orderBy: [{ galaxy: 'asc' }, { system: 'asc' }, { position: 'asc' }] }, technologies: true },
+    });
+    if (!user) throw new NotFoundException('Joueur introuvable');
+    const snapshots = await Promise.all(user.planets.map(planet => this.resources.getPlanetResources(planet.id, user.id)));
+    const buildingIds = [1, 2, 3, 4, 12, 14, 15, 21, 22, 23, 24, 31, 33, 34, 44, 41, 42, 43];
+    return {
+      id: user.id, username: user.username, email: user.email, role: user.role,
+      emailVerifiedAt: user.emailVerifiedAt, mustVerifyEmail: user.mustVerifyEmail,
+      points: user.points, rank: user.rank, createdAt: user.createdAt, lastActive: user.lastActive,
+      banned: isBanned(user), bannedUntil: user.bannedUntil, banReason: user.banReason,
+      technologies: Object.values(TECHNOLOGIES).map(tech => ({ id: tech.id, name: tech.name, level: user.technologies.find(row => row.techId === tech.id)?.level || 0 })),
+      planets: user.planets.map((planet, index) => ({
+        id: planet.id, name: planet.name, coordinates: `${planet.galaxy}:${planet.system}:${planet.position}`,
+        resources: snapshots[index].resources,
+        energy: { produced: snapshots[index].energy.available, used: snapshots[index].energy.used },
+        fields: { used: planet.fieldsUsed, max: planet.fieldsMax }, lastUpdate: snapshots[index].lastUpdate,
+        buildings: BUILDING_FIELDS.map((field, index) => ({ id: buildingIds[index], name: BUILDINGS[buildingIds[index]].name, level: planet[field] })),
+      })),
+    };
+  }
+
+  updatePlayerEmail(actorId: string, targetId: string, email: string) {
+    return this.account.adminChangeEmail(actorId, targetId, email);
+  }
 
   async getConfig() {
     return this.serverConfig.getConfig();

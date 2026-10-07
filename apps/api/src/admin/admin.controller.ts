@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
@@ -10,11 +10,31 @@ import { BanUserDto } from './dto/ban-user.dto';
 import { UnbanUserDto } from './dto/unban-user.dto';
 import { BoostDevelopmentDto } from './dto/boost-development.dto';
 import { SendSmtpTestDto, UpdateSmtpDto } from './dto/update-smtp.dto';
+import { ListPlayersDto } from './dto/list-players.dto';
+import { UpdatePlayerEmailDto } from './dto/update-player-email.dto';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('admin')
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
+
+  @Get('players')
+  @Roles('MODERATOR', 'ADMIN', 'SUPER_ADMIN')
+  getPlayers(@Query() dto: ListPlayersDto) {
+    return this.adminService.getPlayers(dto);
+  }
+
+  @Get('players/:id')
+  @Roles('MODERATOR', 'ADMIN', 'SUPER_ADMIN')
+  getPlayer(@Param('id', ParseUUIDPipe) id: string) {
+    return this.adminService.getPlayer(id);
+  }
+
+  @Put('players/:id/email')
+  @Roles('ADMIN', 'SUPER_ADMIN')
+  updatePlayerEmail(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdatePlayerEmailDto, @CurrentUser('id') actorId: string) {
+    return this.adminService.updatePlayerEmail(actorId, id, dto.email);
+  }
 
   @Get('overview')
   @Roles('MODERATOR', 'ADMIN', 'SUPER_ADMIN')

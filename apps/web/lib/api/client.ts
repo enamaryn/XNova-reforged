@@ -68,8 +68,11 @@ async function doRefreshAccessToken() {
   });
 
   if (!response.ok) {
-    reset();
-    return null;
+    if (response.status === 401 || response.status === 403) {
+      reset();
+      return null;
+    }
+    throw await parseError(response);
   }
 
   const data = (await response.json()) as { accessToken: string; refreshToken: string };

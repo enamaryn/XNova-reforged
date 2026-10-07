@@ -6,9 +6,11 @@ import { DatabaseModule } from '../database/database.module';
 import { GameEventsModule } from '../game-events/game-events.module';
 import { MailModule } from '../mail/mail.module';
 import { ServerConfigModule } from '../server-config/server-config.module';
+import { AuthModule } from '../auth/auth.module';
+import { ResourcesModule } from '../resources/resources.module';
 
 @Module({
-  imports: [DatabaseModule, ServerConfigModule, GameEventsModule, MailModule],
+  imports: [DatabaseModule, ServerConfigModule, GameEventsModule, MailModule, AuthModule, ResourcesModule],
   controllers: [AdminController],
   providers: [AdminService, Reflector],
 })

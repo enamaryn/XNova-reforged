@@ -6,7 +6,7 @@ Ce guide rassemble les multiplicateurs et formules que l’équipe utilise penda
 
 | Clé | Description | Valeur par défaut |
 |-----|-------------|-------------------|
-| `gameSpeed` | Multiplie les durées de construction, recherche et voyages (ex : 1 = temps réel, 2500 = accéléré). | env `GAME_SPEED` (2500 en dev) |
+| `gameSpeed` | Divise les durées de construction, recherche et voyages (ex : 1 = temps réel, 2500 = accéléré). | env `GAME_SPEED` (2500 en dev) |
 | `fleetSpeed` | Impacte le calcul des vitesses de flotte. | env `FLEET_SPEED` (2500) |
 | `resourceMultiplier` | Multiplie la production par heure. | env `RESOURCE_MULTIPLIER` (1) |
 | `buildingCostMultiplier` | Appliqué à tous les coûts batiments. | env `BUILDING_COST_MULTIPLIER` (1) |
@@ -21,7 +21,8 @@ Ce guide rassemble les multiplicateurs et formules que l’équipe utilise penda
 ## Formules clés
 
 - **Coûts bâtiments** : `baseCost × factor^level × buildingCostMultiplier`. Chaque `building` de `packages/game-config/src/buildings.ts` référence `baseCost` et `factor`.
-- **Durées builts** : `(metal + crystal) / (2500 × (1 + robotics) × 2^nanite)`, puis divisées par `gameSpeed`.
+- **Durées des bâtiments (secondes)** : `30 × (metal + crystal) / (75 × (1 + robotics) × 2^nanite)`, puis divisées par `gameSpeed`. Mine de métal niveau 1 : 30 s à vitesse ×1 sans robots ni nanites. Les coûts exponentiels prolongent les niveaux suivants.
+- **Durées des recherches (secondes)** : `30 × (metal + crystal) / (200 × (1 + researchLab))`, puis divisées par `gameSpeed`. Technologie Ordinateur niveau 1 : 30 s avec laboratoire niveau 1 à vitesse ×1. Arrondi inférieur, minimum d’une seconde ; les files déjà lancées conservent leur durée.
 - **Production ressources** : calculée dans `packages/game-engine/src/resources.ts` avec `resourceMultiplier` + énergie (ventilation positive/negative).
 - **Vitesse flottes** : prend le vaisseau le plus lent (facteur de base + boost par tech `combustion/impulsion/hyperespace`). Appliqué ensuite `fleetSpeed`.
 

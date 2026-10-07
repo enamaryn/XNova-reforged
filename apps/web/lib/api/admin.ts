@@ -23,6 +23,49 @@ export interface AdminOverview {
   serverTime: string;
 }
 
+export interface AdminPlayerSummary {
+  id: string;
+  username: string;
+  email: string;
+  role: string;
+  emailVerifiedAt: string | null;
+  points: number;
+  rank: number;
+  planets: number;
+  lastActive: string;
+  banned: boolean;
+  bannedUntil: string | null;
+}
+
+export interface AdminPlayerDetail extends Omit<AdminPlayerSummary, 'planets'> {
+  mustVerifyEmail: boolean;
+  createdAt: string;
+  banReason: string | null;
+  technologies: { id: number; name: string; level: number }[];
+  planets: {
+    id: string;
+    name: string;
+    coordinates: string;
+    resources: { metal: number; crystal: number; deuterium: number };
+    energy: { produced: number; used: number };
+    fields: { used: number; max: number };
+    lastUpdate: string;
+    buildings: { id: number; name: string; level: number }[];
+  }[];
+}
+
+export function getAdminPlayers(search = '', page = 1) {
+  return apiClient.get<{ players: AdminPlayerSummary[]; total: number; page: number; pageSize: number }>(`/admin/players?${new URLSearchParams({ search, page: String(page) })}`);
+}
+
+export function getAdminPlayer(id: string) {
+  return apiClient.get<AdminPlayerDetail>(`/admin/players/${id}`);
+}
+
+export function updatePlayerEmail({ id, email }: { id: string; email: string }) {
+  return apiClient.put<{ success: boolean; message: string }>(`/admin/players/${id}/email`, { email });
+}
+
 export interface AdminAuditLog {
   id: string;
   action: string;

@@ -39,14 +39,23 @@ interface AuthState {
   reset: () => void;
 }
 
-function syncAccessTokenCookie(token: string | null) {
+function syncAccessTokenCookie(tokens: AuthTokens | null, remember = false) {
   if (typeof document === "undefined") return;
-  if (!token) {
+  if (!tokens) {
     document.cookie =
       "xnova_access=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     return;
   }
-  document.cookie = `xnova_access=${token}; path=/; SameSite=Lax`;
+  let maxAge = '';
+  if (remember) {
+    try {
+      const payload = tokens.refreshToken.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      const expires = Number(JSON.parse(atob(payload)).exp);
+      if (Number.isFinite(expires)) maxAge = `; Max-Age=${Math.max(0, Math.floor(expires - Date.now() / 1000))}`;
+    } catch { /* Un jeton invalide sera refusé par l’API à la restauration. */ }
+  }
+  const secure = window.location.protocol === 'https:' ? '; Secure' : '';
+  document.cookie = `xnova_access=${tokens.accessToken}; path=/; SameSite=Lax${secure}${maxAge}`;
 }
 
 /**
@@ -86,18 +95,21 @@ const sessionAwareStorage = {
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
       tokens: null,
       status: "idle",
       remember: false,
       setUser: (user) => set({ user }),
       setTokens: (tokens) => {
-        syncAccessTokenCookie(tokens?.accessToken ?? null);
+        syncAccessTokenCookie(tokens, get().remember);
         set({ tokens });
       },
       setStatus: (status) => set({ status }),
-      setRemember: (remember) => set({ remember }),
+      setRemember: (remember) => {
+        set({ remember });
+        syncAccessTokenCookie(get().tokens, remember);
+      },
       reset: () => {
         syncAccessTokenCookie(null);
         set({
@@ -112,7 +124,7 @@ export const useAuthStore = create<AuthState>()(
       name: "xnova-auth",
       storage: createJSONStorage(() => sessionAwareStorage),
       onRehydrateStorage: () => (state) => {
-        syncAccessTokenCookie(state?.tokens?.accessToken ?? null);
+        syncAccessTokenCookie(state?.tokens ?? null, state?.remember);
       },
       partialize: (state) => ({
         user: state.user,

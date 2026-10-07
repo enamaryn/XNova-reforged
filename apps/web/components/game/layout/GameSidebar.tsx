@@ -85,65 +85,34 @@ export function GameSidebar({ isOpen, onClose }: GameSidebarProps) {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-14 left-0 bottom-0 w-64 bg-slate-950/95 border-r border-slate-800/60 z-40 transform transition-transform duration-200 ease-in-out ${
+        className={`fixed top-14 left-0 bottom-[calc(4rem_+_env(safe-area-inset-bottom))] md:bottom-0 flex w-64 flex-col bg-slate-950/95 border-r border-slate-800/60 z-40 transform transition-transform duration-200 ease-in-out ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0`}
       >
-        {/* Contenu scrollable */}
-        <nav className="h-full overflow-y-auto py-4 px-3">
-          <div className="mb-5 rounded-2xl border border-slate-800/80 bg-slate-900/60 p-3">
-            <p className="text-[10px] uppercase tracking-[0.24em] text-slate-500">
-              {t('sidebar.quickAccess')}
-            </p>
-            <div className="mt-3 grid gap-2">
-              <Link
-                href="/overview"
-                onClick={onClose}
-                className="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-950/70 px-3 py-2 text-xs text-slate-300 transition hover:border-slate-600 hover:text-white"
-              >
-                <span>{t('sidebar.planetView')}</span>
-                <span className="text-lg">🪐</span>
-              </Link>
-              <div className="grid grid-cols-2 gap-2">
-                <Link
-                  href="/buildings"
-                  onClick={onClose}
-                  className="rounded-xl border border-slate-800 bg-slate-950/70 px-3 py-2 text-xs text-slate-300 transition hover:border-slate-600 hover:text-white"
-                >
-                  🏗️ {t('nav.buildings')}
-                </Link>
-                <Link
-                  href="/research"
-                  onClick={onClose}
-                  className="rounded-xl border border-slate-800 bg-slate-950/70 px-3 py-2 text-xs text-slate-300 transition hover:border-slate-600 hover:text-white"
-                >
-                  🔬 {t('nav.research')}
-                </Link>
-              </div>
-            </div>
-          </div>
+        <nav aria-label="Menu du jeu" className="grid min-h-0 flex-1 px-3 py-2"
+          style={{ gridTemplateRows: `repeat(${Object.values(groupedItems).reduce((count, items) => count + items.length + 1, 0)}, minmax(0, 1fr))` }}>
           {Object.entries(groupedItems).map(([category, items]) => (
-            <div key={category} className="mb-4">
-              <h3 className="px-3 mb-2 text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500">
+            <div key={category} className="contents">
+              <h3 className="flex min-h-0 items-center px-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
                 {categoryLabels[category]}
               </h3>
-              <ul className="space-y-1">
+              <ul className="contents">
                 {items.map((item) => {
                   const isActive = pathname === item.href;
                   const showAdminBadge = item.href === '/admin';
                   return (
-                    <li key={item.href}>
+                    <li key={item.href} className="min-h-0">
                       <Link
                         href={item.href}
                         prefetch={item.href !== '/admin'}
                         onClick={onClose}
-                        className={`flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all duration-150 ${
+                        className={`flex h-full min-h-0 items-center gap-3 px-3 rounded-lg text-[clamp(10px,1.9vh,14px)] leading-tight transition-all duration-150 ${
                           isActive
                             ? 'bg-blue-500/15 text-blue-300 font-medium border border-blue-500/40'
                             : 'text-slate-400 hover:bg-slate-900 hover:text-white border border-transparent'
                         }`}
                       >
-                        <span className="text-lg w-6 text-center">{item.icon}</span>
+                        <span className="w-6 shrink-0 text-center text-[1.2em]">{item.icon}</span>
                         <span>{t(item.label)}</span>
                         {(showAdminBadge || isActive) && (
                           <div className="ml-auto flex items-center gap-2">
@@ -167,10 +136,9 @@ export function GameSidebar({ isOpen, onClose }: GameSidebarProps) {
         </nav>
 
         {/* Info bas de sidebar */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-800/60 bg-slate-950/90">
+        <div className="shrink-0 px-3 py-2 border-t border-slate-800/60 bg-slate-950/90">
           <div className="text-center">
-            <p className="text-[10px] text-slate-500 uppercase tracking-wider">XNova Reforged</p>
-            <p className="text-xs text-slate-400">v0.1.0 Alpha</p>
+            <p className="text-[10px] text-slate-500">XNova Reforged · v0.1.0 Alpha</p>
           </div>
         </div>
       </aside>

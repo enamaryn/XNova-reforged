@@ -44,6 +44,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
             role: true,
             bannedAt: true,
             bannedUntil: true,
+            mustVerifyEmail: true,
           },
         },
       },
@@ -59,7 +60,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException('Session invalide ou révoquée');
     }
 
-    const { bannedAt, bannedUntil, ...user } = session.user;
+    const { bannedAt, bannedUntil, mustVerifyEmail, ...user } = session.user;
+    if (mustVerifyEmail) throw new UnauthorizedException('Adresse email à confirmer');
     if (isBanned({ bannedAt, bannedUntil }, now)) {
       throw new UnauthorizedException('Compte suspendu');
     }

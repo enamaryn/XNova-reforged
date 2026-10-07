@@ -34,7 +34,7 @@ export function GameLayout({ children }: GameLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-slate-950 overflow-x-hidden">
+    <div className="min-h-screen bg-slate-950 overflow-x-clip">
       {/* Fond spatial */}
       <div
         className="fixed inset-0 z-0"
@@ -72,7 +72,7 @@ export function GameLayout({ children }: GameLayoutProps) {
         <div className="md:hidden h-10" />
 
         {/* Contenu */}
-        <div className="min-w-0 p-4 pb-20 md:p-6 lg:p-8">
+        <div className="min-w-0 p-4 pb-[calc(5rem_+_env(safe-area-inset-bottom))] md:p-6 lg:p-8">
           <PageTransition>{children}</PageTransition>
         </div>
       </main>
@@ -81,7 +81,7 @@ export function GameLayout({ children }: GameLayoutProps) {
 
       {/* Navigation mobile rapide */}
       <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-800/80 bg-slate-950/90 backdrop-blur md:hidden">
-        <div className="mx-auto flex max-w-md items-center justify-between px-4 py-2 text-[10px] uppercase tracking-[0.18em] text-slate-400">
+        <div className="mx-auto flex max-w-md items-center justify-between px-4 pt-2 pb-[calc(0.5rem_+_env(safe-area-inset-bottom))] text-[10px] uppercase tracking-[0.18em] text-slate-400">
           <Link href="/overview" className="flex flex-col items-center gap-1 text-slate-300">
             <span className="text-lg">🏠</span>
             Vue

@@ -19,11 +19,9 @@ test('inscription puis connexion', async ({ page }) => {
   await registerUser(page, { ...credentials, password });
   await expect(page.getByRole('heading', { name: "Vue d'ensemble" })).toBeVisible();
 
-  await page.context().clearCookies();
-  await page.evaluate(() => {
-    localStorage.clear();
-    sessionStorage.clear();
-  });
+  await page.getByRole('button', { name: 'Menu utilisateur' }).click();
+  await page.getByRole('menuitem', { name: 'Déconnexion' }).click();
+  await page.waitForURL(/\/login$/);
 
   await loginUser(page, { identifier: credentials.username, password });
   await expect(page.getByRole('heading', { name: "Vue d'ensemble" })).toBeVisible();

@@ -1,8 +1,10 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   Logger,
+  NotFoundException,
   ServiceUnavailableException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -13,6 +15,8 @@ import { DatabaseService } from '../database/database.service';
 import { GameEventsGateway } from '../game-events/game-events.gateway';
 import { MailService } from '../mail/mail.service';
 import { SetupStateService } from '../setup/setup-state.service';
+import { lockUser } from '../common/atomic';
+import type { Prisma } from '@prisma/client';
 
 type TokenType = 'verify_email' | 'reset_password' | 'change_email';
 
@@ -161,11 +165,11 @@ export class AccountService {
   }
 
   /** Consomme un jeton valide et non utilisé ; retourne null sinon (un seul usage, même en concurrence). */
-  private async consumeToken(token: string, types: TokenType[]) {
+  private async consumeToken(token: string, types: TokenType[], client: Pick<Prisma.TransactionClient, 'emailToken'> = this.database) {
     const hash = hashToken(token);
-    const row = await this.database.emailToken.findUnique({ where: { tokenHash: hash } });
+    const row = await client.emailToken.findUnique({ where: { tokenHash: hash } });
     if (!row || !types.includes(row.type as TokenType)) return null;
-    const claimed = await this.database.emailToken.updateMany({
+    const claimed = await client.emailToken.updateMany({
       where: { id: row.id, usedAt: null, expiresAt: { gt: new Date() } },
       data: { usedAt: new Date() },
     });
@@ -243,47 +247,75 @@ export class AccountService {
     return { message: 'Un email de confirmation a été envoyé à la nouvelle adresse' };
   }
 
-  async verifyEmail(token: string) {
-    const row = await this.consumeToken(token, ['verify_email', 'change_email']);
-    if (!row || !row.email) {
-      throw new BadRequestException('Lien invalide ou expiré');
-    }
-
-    const user = await this.database.user.findUnique({ where: { id: row.userId } });
-    if (!user) {
-      throw new BadRequestException('Lien invalide ou expiré');
-    }
-
-    if (row.type === 'verify_email') {
-      // Le jeton ne vaut que pour l'adresse à laquelle il a été envoyé
-      if (user.email.toLowerCase() !== row.email.toLowerCase()) {
-        throw new BadRequestException('Lien invalide ou expiré');
-      }
-      await this.database.user.update({ where: { id: user.id }, data: { emailVerifiedAt: new Date() } });
-      // Confirmation du super admin du parcours d'installation : l'installation est terminée et verrouillée
-      await this.setupState.completeIfReady(user.id);
-      return { message: 'Adresse email confirmée', type: 'verify_email' as const };
-    }
-
-    const previousEmail = user.email;
+  /** Correction administrative : révocation et nouveau lien atomiques, même en mode développement. */
+  async adminChangeEmail(actorId: string, userId: string, email: string) {
+    await this.requireMail();
     try {
-      await this.database.user.update({
-        where: { id: user.id },
-        data: { email: row.email, emailVerifiedAt: new Date() },
-      });
+      await this.database.$transaction(async tx => {
+        await lockUser(tx, userId);
+        const user = await tx.user.findUnique({ where: { id: userId } });
+        if (!user) throw new NotFoundException('Joueur introuvable');
+        const actor = await tx.user.findUnique({ where: { id: actorId }, select: { role: true } });
+        if (!actor || !['ADMIN', 'SUPER_ADMIN'].includes(actor.role) || (user.role === 'SUPER_ADMIN' && actor.role !== 'SUPER_ADMIN')) {
+          throw new ForbiddenException('Droits insuffisants pour modifier l’adresse de ce joueur');
+        }
+        if (user.email.toLowerCase() === email.toLowerCase()) throw new BadRequestException('Cette adresse est déjà utilisée par ce joueur');
+        const taken = await tx.user.findFirst({ where: { email: { equals: email, mode: 'insensitive' } }, select: { id: true } });
+        if (taken) throw new ConflictException('Cet email est déjà utilisé');
+        const now = new Date();
+        const token = randomBytes(32).toString('base64url');
+        await tx.user.update({ where: { id: userId }, data: { email, emailVerifiedAt: null, mustVerifyEmail: true } });
+        await tx.session.updateMany({ where: { userId, revokedAt: null }, data: { revokedAt: now } });
+        await tx.emailToken.updateMany({ where: { userId, usedAt: null }, data: { usedAt: now } });
+        await tx.emailToken.create({ data: { userId, type: 'verify_email', email, tokenHash: hashToken(token), expiresAt: new Date(now.getTime() + TTL_MS.verify_email) } });
+        await tx.adminAuditLog.create({ data: { userId: actorId, action: 'update_player_email', changes: { targetId: userId, targetUsername: user.username, before: user.email, after: email } } });
+        await this.mail.send({
+          to: email, subject: 'XNova Reforged - confirmez votre nouvelle adresse email',
+          text: `Bonjour ${user.username},\n\nVotre adresse email a été modifiée par un administrateur. Confirmez cette adresse pour pouvoir vous connecter (lien valable 24 heures) :\n${this.webBaseUrl()}/verify-email?token=${token}`,
+        });
+      }, { timeout: 45000 });
     } catch (error) {
-      if ((error as { code?: string })?.code === 'P2002') {
-        throw new ConflictException('Cet email est déjà utilisé');
-      }
+      if ((error as { code?: string }).code === 'P2002') throw new ConflictException('Cet email est déjà utilisé');
       throw error;
     }
-    await this.mail
-      .send({
-        to: previousEmail,
-        subject: "XNova Reforged - votre adresse email a été modifiée",
-        text: `Bonjour ${user.username},\n\nL'adresse email de votre compte est désormais ${row.email}.`,
-      })
-      .catch(() => undefined);
+    this.gameEvents.disconnectUser(userId);
+    return { success: true, message: 'Adresse modifiée. Le joueur doit confirmer le nouvel email avant de se reconnecter.' };
+  }
+
+  async verifyEmail(token: string) {
+    const candidate = await this.database.emailToken.findUnique({ where: { tokenHash: hashToken(token) } });
+    if (!candidate) throw new BadRequestException('Lien invalide ou expiré');
+    let result;
+    try {
+      result = await this.database.$transaction(async tx => {
+        // Sérialise confirmation et changement administratif : un ancien lien ne peut pas
+        // réactiver le compte après correction de son adresse.
+        await lockUser(tx, candidate.userId);
+        const row = await this.consumeToken(token, ['verify_email', 'change_email'], tx);
+        if (!row || !row.email) throw new BadRequestException('Lien invalide ou expiré');
+        const user = await tx.user.findUnique({ where: { id: row.userId } });
+        if (!user || (row.type === 'verify_email' && user.email.toLowerCase() !== row.email.toLowerCase())) {
+          throw new BadRequestException('Lien invalide ou expiré');
+        }
+        await tx.user.update({ where: { id: user.id }, data: {
+          ...(row.type === 'change_email' ? { email: row.email } : {}),
+          emailVerifiedAt: new Date(), mustVerifyEmail: false,
+        } });
+        return { id: user.id, type: row.type, previousEmail: user.email, email: row.email, username: user.username };
+      });
+    } catch (error) {
+      if ((error as { code?: string })?.code === 'P2002') throw new ConflictException('Cet email est déjà utilisé');
+      throw error;
+    }
+    if (result.type === 'verify_email') {
+      await this.setupState.completeIfReady(result.id);
+      return { message: 'Adresse email confirmée', type: 'verify_email' as const };
+    }
+    await this.mail.send({
+      to: result.previousEmail,
+      subject: "XNova Reforged - votre adresse email a été modifiée",
+      text: `Bonjour ${result.username},\n\nL'adresse email de votre compte est désormais ${result.email}.`,
+    }).catch(() => undefined);
     return { message: 'Adresse email modifiée', type: 'change_email' as const };
   }
 

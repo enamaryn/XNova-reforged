@@ -15,6 +15,7 @@ import {
 import { DatabaseService } from '../database/database.service';
 import { debitResources, lockPlanet } from '../common/atomic';
 import { GameEventsGateway } from '../game-events/game-events.gateway';
+import { getBuildingUpgradeEffects } from './building-upgrade-effects';
 
 // Mapping des buildingId vers les champs de la table Planet
 const BUILDING_FIELD_MAP: Record<number, string> = {
@@ -73,9 +74,10 @@ export class BuildingsService {
       orderBy: { endTime: 'asc' },
     });
 
-    const { maxBuildingLevel, buildingCostMultiplier } =
+    const { maxBuildingLevel, buildingCostMultiplier, gameSpeed } =
       await this.serverConfig.getConfig();
     const costFactor = buildingCostMultiplier > 0 ? buildingCostMultiplier : 1;
+    const resourceConfig = await this.serverConfig.getResourceConfig();
 
     const buildingsInfo = Object.values(BUILDINGS).map((building) => {
       const currentLevel = planetBuildings[building.id] || 0;
@@ -87,7 +89,8 @@ export class BuildingsService {
         roboticsLevel: planet.roboticsFactory,
         naniteLevel: planet.naniteFactory,
       });
-      const time = Math.max(1, Math.floor(baseTime * costFactor));
+      const scaledTime = Math.max(1, Math.floor(baseTime * costFactor));
+      const time = Math.max(1, Math.floor(scaledTime / gameSpeed));
 
       // Verifier les prerequis
       const requirements = checkBuildingRequirements(
@@ -121,6 +124,7 @@ export class BuildingsService {
         inQueue: !!inQueue,
         queueEndTime: inQueue?.endTime,
         missingRequirements: requirements.missingRequirements,
+        upgrade: isMaxLevel ? null : getBuildingUpgradeEffects(building.id, currentLevel, planet, resourceConfig, planetBuildings, techLevels),
       };
     });
 

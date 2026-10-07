@@ -36,6 +36,7 @@ model User {
   bannedAt  DateTime?
   // Adresse email confirmée par lien ; null tant qu'elle ne l'est pas (SCOPE-01)
   emailVerifiedAt DateTime?
+  mustVerifyEmail Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

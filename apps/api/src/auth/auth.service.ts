@@ -205,7 +205,7 @@ export class AuthService {
     }
 
     // Adresse non confirmée : vérifié après le mot de passe, pour ne rien révéler à un tiers
-    if (!user.emailVerifiedAt && isEmailVerificationRequired(this.configService)) {
+    if (!user.emailVerifiedAt && (user.mustVerifyEmail || isEmailVerificationRequired(this.configService))) {
       throw new ForbiddenException({
         message: "Adresse email non confirmée : cliquez sur le lien reçu par email pour activer votre compte",
         code: EMAIL_NOT_VERIFIED,
@@ -261,7 +261,7 @@ export class AuthService {
       where: { id: payload.sid },
       include: {
         user: {
-          select: { id: true, username: true, bannedAt: true, bannedUntil: true },
+          select: { id: true, username: true, bannedAt: true, bannedUntil: true, mustVerifyEmail: true },
         },
       },
     });
@@ -272,7 +272,7 @@ export class AuthService {
       session.userId !== payload.sub ||
       session.revokedAt ||
       session.expiresAt <= now ||
-      isBanned(session.user, now)
+      isBanned(session.user, now) || session.user.mustVerifyEmail
     ) {
       throw invalid;
     }

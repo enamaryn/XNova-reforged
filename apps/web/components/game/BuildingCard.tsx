@@ -4,6 +4,7 @@ import { memo, useState } from 'react';
 import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
 import type { BuildingInfo } from '@/lib/api/buildings';
+import { BuildingUpgradeEffects } from './BuildingUpgradeEffects';
 
 interface BuildingCardProps {
   building: BuildingInfo;
@@ -68,7 +69,8 @@ export const BuildingCard = memo(function BuildingCard({
   const categoryLabel = getCategoryLabel(building.category);
 
   return (
-    <motion.div
+    <motion.article
+      aria-label={building.name}
       whileHover={shouldReduceMotion ? undefined : { scale: 1.02 }}
       transition={{ duration: 0.2 }}
       className={`rounded-2xl border ${borderColor} bg-slate-900/60 p-4 backdrop-blur-sm transition-all duration-200 shadow-[0_0_24px_rgba(15,23,42,0.6)]`}
@@ -89,6 +91,10 @@ export const BuildingCard = memo(function BuildingCard({
 
       {/* Description */}
       <p className="mb-3 text-sm text-slate-400 line-clamp-2">{building.description}</p>
+
+      <div className="mb-3 rounded-xl bg-slate-950/40 p-3">
+        <BuildingUpgradeEffects building={building} />
+      </div>
 
       {/* Coûts */}
       <div className="mb-3 grid grid-cols-2 gap-2 text-xs sm:grid-cols-3">
@@ -175,7 +181,7 @@ export const BuildingCard = memo(function BuildingCard({
           Détails
         </Link>
       </div>
-    </motion.div>
+    </motion.article>
   );
 });
 

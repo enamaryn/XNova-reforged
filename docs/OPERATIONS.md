@@ -137,6 +137,8 @@ npx prisma migrate deploy --schema packages/database/prisma/schema.prisma   # av
 sudo systemctl restart xnova-api xnova-web
 ```
 
+La migration `20261007190000_require_admin_email_verification` doit être appliquée avant de redémarrer la nouvelle API. Elle ajoute le suivi des vérifications obligatoires après une correction d’email par un administrateur ; les comptes existants restent accessibles. Dans Administration → Joueurs, le changement révoque les sessions et bloque la connexion jusqu’à confirmation du nouvel email. Un SMTP fonctionnel est nécessaire : si l’envoi échoue, l’ancienne adresse et les sessions sont conservées.
+
 `npm install` à la place de `npm ci`, ou l'absence de réinstallation après un `git pull`, laisse des `node_modules` différents du `package-lock.json`.
 Incident du 6 octobre 2026 : le service web redémarrait en boucle (`Package subpath './config' is not defined by "exports"` dans
 `@sentry/nextjs`) parce que la version installée n'était pas celle du lockfile (Sentry 11.4). `next.config.mjs` ne dépend plus du sous-chemin

@@ -231,8 +231,8 @@ export function getDemolitionRefund(buildingId: number, currentLevel: number): B
 }
 
 // Helper to calculate construction time
-// Formula from GAME_FORMULAS.md:
-// buildTime = (metal + crystal) / (2500 * (1 + roboticsLevel) * 2^naniteLevel)
+// Durée en secondes : 30 s pour les 75 ressources de la mine de métal niveau 1.
+// Les coûts exponentiels font progresser la durée avec le niveau.
 export interface BuildTimeParams {
   buildingId: number
   currentLevel: number
@@ -253,8 +253,8 @@ export function getBuildingTime(params: BuildTimeParams): number {
   const cost = getBuildingCost(buildingId, currentLevel)
 
   // Base time calculation (in seconds)
-  const baseDivisor = 2500 * (1 + roboticsLevel) * Math.pow(2, naniteLevel)
-  let buildTime = (cost.metal + cost.crystal) / baseDivisor
+  const baseDivisor = 75 * (1 + roboticsLevel) * Math.pow(2, naniteLevel)
+  let buildTime = 30 * (cost.metal + cost.crystal) / baseDivisor
 
   // Apply engineer bonus (-5% per level)
   if (engineerLevel > 0) {
