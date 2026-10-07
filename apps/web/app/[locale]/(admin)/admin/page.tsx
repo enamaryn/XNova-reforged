@@ -19,13 +19,14 @@ import { useI18n } from '@/lib/i18n';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { isSuperAdmin } from '@/lib/roles';
 import { SmtpSettingsPanel } from './SmtpSettingsPanel';
+import { PlayersPanel } from './PlayersPanel';
 
 export default function AdminPage() {
   const { t } = useI18n();
   const { user } = useAuthStore();
   const isSuperAdminUser = isSuperAdmin(user?.role);
   const queryClient = useQueryClient();
-  const [tab, setTab] = useState<'general' | 'smtp'>('general');
+  const [tab, setTab] = useState<'general' | 'smtp' | 'players'>('general');
   const [form, setForm] = useState<AdminConfig | null>(null);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
   const [roleForm, setRoleForm] = useState({ username: '', role: 'MODERATOR' });
@@ -185,9 +186,14 @@ export default function AdminPage() {
             {t('admin.tabSmtp')}
           </button>
         )}
+        <button role="tab" aria-selected={tab === 'players'} onClick={() => setTab('players')}
+          className={`px-4 py-2 text-xs uppercase tracking-[0.2em] ${tab === 'players' ? 'border-b-2 border-blue-400 text-white' : 'text-slate-500 hover:text-slate-300'}`}>
+          Joueurs
+        </button>
       </div>
 
       {tab === 'smtp' && isSuperAdminUser && <SmtpSettingsPanel />}
+      {tab === 'players' && <PlayersPanel />}
 
       {tab === 'general' && (
         <>
@@ -443,37 +449,47 @@ export default function AdminPage() {
                 className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
               />
               <div className="grid grid-cols-3 gap-2">
+                <label className="text-xs text-slate-400">{t('admin.days')}
                 <input
                   type="number"
                   min={0}
+                  max={365}
                   value={banForm.days}
                   onChange={(event) =>
                     setBanForm((prev) => ({ ...prev, days: Number(event.target.value) }))
                   }
                   placeholder={t('admin.days')}
-                  className="rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                  className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
                 />
+                </label>
+                <label className="text-xs text-slate-400">{t('admin.hours')}
                 <input
                   type="number"
                   min={0}
+                  max={240}
                   value={banForm.hours}
                   onChange={(event) =>
                     setBanForm((prev) => ({ ...prev, hours: Number(event.target.value) }))
                   }
                   placeholder={t('admin.hours')}
-                  className="rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                  className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
                 />
+                </label>
+                <label className="text-xs text-slate-400">{t('admin.minutes')}
                 <input
                   type="number"
                   min={0}
+                  max={600}
                   value={banForm.minutes}
                   onChange={(event) =>
                     setBanForm((prev) => ({ ...prev, minutes: Number(event.target.value) }))
                   }
                   placeholder={t('admin.minutes')}
-                  className="rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                  className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
                 />
+                </label>
               </div>
+              <p className="text-xs text-slate-400">Durée du bannissement. Jours, heures et minutes s’additionnent. Tout à zéro = bannissement permanent.</p>
               <button
                 onClick={() =>
                   banForm.username &&

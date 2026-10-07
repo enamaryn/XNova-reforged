@@ -23,6 +23,23 @@ export interface BuildingInfo {
   inQueue: boolean;
   queueEndTime?: string;
   missingRequirements: string[];
+  upgrade: {
+    nextLevel: number;
+    energyLimited: boolean;
+    unlocks: string[];
+    effects: BuildingUpgradeEffect[];
+  } | null;
+}
+
+export interface BuildingUpgradeEffect {
+  key: string;
+  label: string;
+  unit: 'perHour' | 'energy' | 'capacity' | 'percent' | 'fields';
+  current: number;
+  next: number;
+  delta: number;
+  beneficial: boolean;
+  compact: boolean;
 }
 
 export interface PlanetBuildings {

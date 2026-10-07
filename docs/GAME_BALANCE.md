@@ -172,10 +172,13 @@ cost(level) = baseCost * 1.8^level
 ### Temps de construction
 
 ```typescript
-// Formule inchangée (référence GAME_FORMULAS.md)
-buildTime = (metal + crystal) / (2500 * (1 + roboticsLevel) * 2^naniteLevel)
-
-// Avec nouveaux coûts, temps réduit de 65% au niveau 10
+// Secondes : mine de métal niveau 1 = 30 s à vitesse ×1, sans robots/nanites.
+buildTime = 30 * (metal + crystal) / (75 * (1 + roboticsLevel) * 2^naniteLevel)
+// Recherche : Ordinateur niveau 1 = 30 s à vitesse ×1 avec laboratoire niveau 1.
+researchTime = 30 * (metal + crystal) / (200 * (1 + labLevel))
+// Les coûts augmentent exponentiellement avec le niveau.
+// Les multiplicateurs de coût s’appliquent aussi aux durées ; gameSpeed divise la durée.
+// Arrondi inférieur, minimum d’une seconde. Les files déjà lancées restent inchangées.
 ```
 
 ### Production de ressources

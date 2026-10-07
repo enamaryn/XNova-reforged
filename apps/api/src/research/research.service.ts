@@ -44,17 +44,18 @@ export class ResearchService {
     });
 
     const queueBlocked = queue.length > 0;
-    const { maxTechnologyLevel, researchCostMultiplier } =
+    const { maxTechnologyLevel, researchCostMultiplier, gameSpeed } =
       await this.serverConfig.getConfig();
 
     const technologies = Object.values(TECHNOLOGIES).map((tech) => {
       const currentLevel = techLevels[tech.id] || 0;
       const rawCost = getTechnologyCost(tech.id, currentLevel);
       const cost = this.applyCostMultiplier(rawCost, researchCostMultiplier);
-      const buildTime = this.getResearchTimeSeconds({
+      const baseBuildTime = this.getResearchTimeSeconds({
         cost,
         labLevel: planet.researchLab,
       });
+      const buildTime = Math.max(1, Math.floor(baseBuildTime / gameSpeed));
       const requirements = this.checkTechRequirements(
         tech.id,
         this.extractBuildingLevels(planet),
@@ -508,8 +509,10 @@ export class ResearchService {
     labLevel: number;
   }) {
     const base = params.cost.metal + params.cost.crystal;
-    const divisor = 1000 * (1 + params.labLevel);
-    return Math.max(1, Math.floor(base / divisor));
+    // 30 s pour Ordinateur niveau 1 (400 métal/cristal) avec le labo niveau 1.
+    // Les coûts exponentiels prolongent les niveaux suivants ; le labo accélère la recherche.
+    const divisor = 200 * (1 + params.labLevel);
+    return Math.max(1, Math.floor(30 * base / divisor));
   }
 
 }

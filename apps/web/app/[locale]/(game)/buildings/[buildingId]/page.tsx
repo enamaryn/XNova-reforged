@@ -9,6 +9,7 @@ import { buildingsApi } from '@/lib/api/buildings';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { usePlanetStore } from '@/lib/stores/planet-store';
 import { designTokens } from '@/lib/design-tokens';
+import { BuildingUpgradeEffects } from '@/components/game/BuildingUpgradeEffects';
 
 export default function BuildingDetailPage() {
   const shouldReduceMotion = useReducedMotion();
@@ -25,6 +26,7 @@ export default function BuildingDetailPage() {
     queryKey: ['buildings', planetId],
     queryFn: () => buildingsApi.getPlanetBuildings(planetId!),
     enabled: !!planetId,
+    refetchInterval: 30000,
   });
 
   const building = useMemo(
@@ -96,6 +98,9 @@ export default function BuildingDetailPage() {
       <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
         <div className="rounded-3xl border border-slate-800/80 bg-slate-950/60 p-6">
           <p className="text-sm text-slate-300">{building.description}</p>
+          <div className="mt-6">
+            <BuildingUpgradeEffects building={building} detailed />
+          </div>
           <div className="mt-6 grid gap-3 text-sm text-slate-400">
             <div className="flex items-center justify-between rounded-xl bg-slate-900/60 px-4 py-3">
               <span>Durée de construction</span>

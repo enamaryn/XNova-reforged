@@ -91,6 +91,9 @@ Ce document recense les principaux endpoints exposés par `apps/api`, avec la m�
 | Méthode | Endpoint | Description |
 |---------|----------|-------------|
 | GET | `/admin/overview` | Synthèse serveur (obligatoire modérateur+). |
+| GET | `/admin/players?search=...&page=1` | Liste paginée (25 joueurs), recherche par pseudo, états et classement (modérateur+). |
+| GET | `/admin/players/:id` | Fiche : niveaux des bâtiments et technologies, ressources actuelles par planète (modérateur+). |
+| PUT | `/admin/players/:id/email` | Corrige l’email, révoque les sessions et envoie une vérification obligatoire (administrateur+ ; seul le super admin peut modifier un super admin). |
 | GET | `/admin/config` | Valeurs courantes `ServerConfigValues`. |
 | PUT | `/admin/config` | Met à jour les multiplicateurs + gameSpeed. |
 | PUT | `/admin/roles` | Changer le rôle d’un joueur (SUPER_ADMIN). |

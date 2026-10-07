@@ -43,6 +43,8 @@
       "newCommander": "Nouveau commandant ?",
       "createAccount": "Créer un compte",
       "success": "Connexion réussie",
+      "errorTitle": "Connexion impossible",
+      "closeError": "Réessayer",
       "error": {
         "invalidCredentials": "Email ou mot de passe incorrect",
         "generic": "Une erreur est survenue lors de la connexion"

@@ -25,6 +25,7 @@
 /* Smooth scroll */
 html {
   scroll-behavior: smooth;
+  overflow-y: auto;
 }
 
 /* Selection color */
@@ -35,7 +36,9 @@ html {
 html,
 body {
   width: 100%;
-  overflow-x: hidden;
+  /* clip masque le débordement horizontal sans créer un second conteneur de
+     défilement vertical (hidden transforme overflow-y: visible en auto). */
+  overflow-x: clip;
 }
 
 body {

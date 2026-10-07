@@ -82,7 +82,7 @@ export class GameEventsGateway
           userId: true,
           revokedAt: true,
           expiresAt: true,
-          user: { select: { bannedAt: true, bannedUntil: true } },
+          user: { select: { bannedAt: true, bannedUntil: true, mustVerifyEmail: true } },
         },
       });
       if (
@@ -90,7 +90,7 @@ export class GameEventsGateway
         session.userId !== payload.sub ||
         session.revokedAt ||
         session.expiresAt <= new Date() ||
-        isBanned(session.user)
+        isBanned(session.user) || session.user.mustVerifyEmail
       ) {
         this.logger.warn(`Client ${client.id} rejected: Session revoked or user banned`);
         client.disconnect();

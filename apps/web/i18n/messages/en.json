@@ -43,6 +43,8 @@
       "newCommander": "New commander?",
       "createAccount": "Create an account",
       "success": "Login successful",
+      "errorTitle": "Unable to sign in",
+      "closeError": "Try again",
       "error": {
         "invalidCredentials": "Invalid email or password",
         "generic": "An error occurred during login"
