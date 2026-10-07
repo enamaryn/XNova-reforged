@@ -60,6 +60,8 @@ test("assistant d'installation : du code au verrouillage", async ({ page, reques
   expect(link).not.toBeNull();
   const verifyPage = await page.context().newPage();
   await verifyPage.goto(new URL(link![0]).pathname + new URL(link![0]).search);
+  // Attendre le résultat : fermer la page trop tôt annulerait la requête de confirmation (hydratation lente en CI)
+  await expect(verifyPage.getByTestId('verify-result')).toContainText('Adresse email confirmée', { timeout: 60_000 });
   await verifyPage.close();
 
   // L'assistant se met à jour tout seul, puis disparaît

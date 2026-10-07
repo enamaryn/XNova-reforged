@@ -12,7 +12,8 @@ export function SetupRedirect() {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (pathname?.includes("/setup")) return;
+    // /verify-email : le lien reçu par le super admin termine l'installation, il ne doit pas être détourné
+    if (pathname?.includes("/setup") || pathname?.includes("/verify-email")) return;
     let cancelled = false;
     getSetupStatus()
       .then((status) => {
