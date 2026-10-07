@@ -204,12 +204,14 @@ server {
 `;
 }
 
-export function renderService(root, component, nodePath) {
+export function renderService(root, component, nodePath, state) {
   if (!/^\/[a-zA-Z0-9/_.-]+$/.test(root) || !/^\/[a-zA-Z0-9/_.-]+$/.test(nodePath)) throw new Error('Chemins absolus simples requis pour systemd (sans espaces ni caractères spéciaux).');
   if (!['api', 'web'].includes(component)) throw new Error('Service inconnu.');
+  // Un proxy existant peut être sur le NAS/hôte Proxmox, hors du serveur applicatif.
+  const webHost = state?.tls === 'proxy' ? '0.0.0.0' : '127.0.0.1';
   const executable = component === 'api'
     ? `${nodePath} dist/main.js`
-    : `/usr/bin/env NODE_ENV=production ${nodePath} ../../node_modules/next/dist/bin/next start --hostname 127.0.0.1`;
+    : `/usr/bin/env NODE_ENV=production ${nodePath} ../../node_modules/next/dist/bin/next start --hostname ${webHost}`;
   return `${MARKER}
 [Unit]
 Description=XNova Reforged ${component}

@@ -8,8 +8,10 @@ if [[ " ${*} " == *" --help "* || " ${*} " == *" -h "* ]]; then
 Assistant web d'installation initiale XNova (Ubuntu 24.04 / systemd)
   sudo bash scripts/install.sh
 Le navigateur demande le mode, l'adresse web, la base locale/externe et le HTTPS.
-Un code d'accès temporaire s'affiche dans le terminal. Le service écoute sur
-127.0.0.1:3000 : utilisez un proxy HTTPS existant ou un tunnel SSH.
+Un code d'accès temporaire et les adresses web s'affichent dans le terminal.
+Ouvrez http://ADRESSE_IP_DU_SERVEUR:3000 depuis votre ordinateur.
+Pour limiter l'écoute à un proxy local ou un tunnel SSH :
+  sudo env XNOVA_BOOTSTRAP_HOST=127.0.0.1 bash scripts/install.sh
 Une relance reprend la configuration créée par cet installateur sans renouveler
 les mots de passe ni effacer la base. Aucun paquet npm n'est requis pour la page.
 HELP
