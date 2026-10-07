@@ -86,7 +86,8 @@ jobs:
         working-directory: packages/database
 
       - name: Tests d'intégration
-        run: npm run test:integration
+        # Les suites partagent la même base et l'état global setup.completedAt.
+        run: npm run test:integration -- --runInBand
 
   database:
     name: Migrations, sauvegarde et restauration
