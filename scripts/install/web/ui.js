@@ -43,13 +43,16 @@ function adopt(data) {
   current = data;
   if (data.csrf) csrf = data.csrf;
   element('auth').hidden = true;
+  const services = data.existingServices || [];
+  element('existing-services').hidden = services.length === 0;
+  element('services-found').textContent = services.join(', ');
+  for (const id of ['keep-services', 'recreate-services']) element(id).required = services.length > 0;
   if (data.config) {
     for (const id of ['mode', 'url', 'database', 'tls']) {
       element(id).value = data.config[id];
       element(id).disabled = true;
     }
     element('email').value = data.config.email;
-    element('replace-services').checked = data.config.replaceServices;
     element('resume-info').hidden = false;
     element('install-button').textContent = 'Reprendre l’installation';
     element('database-summary').textContent = data.config.databaseName
@@ -96,10 +99,17 @@ element('configuration').addEventListener('submit', async event => {
   try {
     const options = Object.fromEntries(['mode', 'url', 'database', 'tls', 'email'].map(id => [id, element(id).value.trim()]));
     options.databaseUrl = element('database-url').value.trim();
-    options.replaceServices = element('replace-services').checked;
+    const action = document.querySelector('input[name="service-action"]:checked')?.value;
+    if (action) options.serviceAction = action;
     adopt(await request('install', options));
     element('database-url').value = '';
-  } catch (e) { error(e.message); }
+  } catch (e) {
+    // Une autre installation peut avoir créé des services depuis l'ouverture du formulaire.
+    if (e.status === 400) {
+      try { adopt(await request('status')); } catch { /* Garder l'erreur initiale. */ }
+    }
+    error(e.message);
+  }
   finally { element('install-button').disabled = false; }
 });
 element('continue').addEventListener('click', async () => {

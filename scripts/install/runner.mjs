@@ -1,7 +1,44 @@
 import { spawn } from 'node:child_process';
-import { readFileSync, realpathSync, existsSync, lstatSync, writeFileSync } from 'node:fs';
+import { readFileSync, realpathSync, existsSync, lstatSync, writeFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
+import { request as httpRequest } from 'node:http';
+import { request as httpsRequest } from 'node:https';
 import { managedFile, MARKER, renderService, renderProxy } from './config.mjs';
+
+const SERVICE_NAMES = ['xnova-api.service', 'xnova-web.service'];
+const SERVICE_DIRECTORIES = ['/etc/systemd/system', '/run/systemd/system'];
+function pathExists(path) {
+  try { lstatSync(path); return true; } catch (error) {
+    if (error.code === 'ENOENT') return false;
+    throw error;
+  }
+}
+
+export function findExistingServices(directories = [...SERVICE_DIRECTORIES, '/usr/lib/systemd/system', '/lib/systemd/system']) {
+  return SERVICE_NAMES.filter(unit => directories.some(directory =>
+    pathExists(join(directory, unit)) || pathExists(join(directory, `${unit}.d`)),
+  ));
+}
+
+export async function resetServices(run = command, directories = SERVICE_DIRECTORIES) {
+  const listed = await run('systemctl', ['list-unit-files', ...SERVICE_NAMES, '--no-legend', '--no-pager'], { capture: true });
+  const loaded = await run('systemctl', ['list-units', '--all', '--plain', '--no-legend', '--no-pager', ...SERVICE_NAMES], { capture: true });
+  const names = text => new Set(text.trim().split('\n').map(line => line.trim().split(/\s+/)[0]));
+  const files = names(listed), active = names(loaded);
+  for (const unit of SERVICE_NAMES) {
+    if (active.has(unit)) {
+      await run('systemctl', ['stop', unit]);
+      await run('systemctl', ['reset-failed', unit]);
+    }
+    if (files.has(unit)) await run('systemctl', ['disable', unit]);
+    for (const directory of directories) {
+      // Chemins fixes XNova ; unlink/rm retire les liens sans suivre leurs cibles.
+      rmSync(join(directory, unit), { force: true });
+      rmSync(join(directory, `${unit}.d`), { force: true, recursive: true });
+    }
+  }
+  await run('systemctl', ['daemon-reload']);
+}
 
 export function command(program, args, { cwd, env = process.env, input, capture = false } = {}) {
   return new Promise((resolve, reject) => {
@@ -17,14 +54,41 @@ export function command(program, args, { cwd, env = process.env, input, capture 
   });
 }
 
+async function requestJson(url, headers, redirects = 0) {
+  const target = new URL(url);
+  const request = target.protocol === 'https:' ? httpsRequest : httpRequest;
+  const response = await new Promise((resolve, reject) => {
+    const req = request(target, { headers }, res => {
+      let body = '';
+      res.setEncoding('utf8');
+      res.on('data', chunk => {
+        body += chunk;
+        if (Buffer.byteLength(body) > 65536) req.destroy(new Error('Réponse trop volumineuse.'));
+      });
+      res.on('error', reject);
+      res.on('end', () => resolve({ status: res.statusCode, location: res.headers.location, body }));
+    });
+    const timer = setTimeout(() => req.destroy(new Error('Délai de vérification dépassé.')), 2000);
+    timer.unref();
+    req.on('close', () => clearTimeout(timer));
+    req.on('error', reject);
+    req.end();
+  });
+  if (response.status >= 300 && response.status < 400 && response.location && redirects < 5) {
+    // Après une redirection HTTPS de Certbot, le Host est celui de la nouvelle URL.
+    const nextHeaders = Object.fromEntries(Object.entries(headers || {}).filter(([key]) => key.toLowerCase() !== 'host'));
+    return requestJson(new URL(response.location, target), nextHeaders, redirects + 1);
+  }
+  if (response.status < 200 || response.status >= 300) throw new Error('Réponse HTTP non valide.');
+  return JSON.parse(response.body);
+}
+
 export async function waitForJson(url, validate, { attempts = 60, delay = 1000, headers } = {}) {
   for (let i = 0; i < attempts; i++) {
     try {
-      const response = await fetch(url, { headers, signal: AbortSignal.timeout(2000) });
-      if (response.ok) {
-        const json = await response.json();
-        if (validate(json)) return json;
-      }
+      // fetch ignore Host : nginx doit recevoir le domaine/IP choisi, pas 127.0.0.1.
+      const json = await requestJson(url, headers);
+      if (validate(json)) return json;
     } catch { /* Attendre un service qui démarre. */ }
     if (i < attempts - 1) await new Promise(resolve => setTimeout(resolve, delay));
   }
@@ -74,8 +138,12 @@ export function installService(path, content, adopt) {
 export async function prepareInstallation(root, config, accessCode, report, { run = command } = {}) {
   const { state, env } = config;
   renderService(root, 'api', realpathSync(process.execPath), state); // Valider avant les mutations système.
-  for (const component of ['api', 'web']) preflightFile(`/etc/systemd/system/xnova-${component}.service`, state.replaceServices);
   const step = async (label, action) => { report(label); await action(); };
+  if (state.replaceServices) {
+    for (const component of ['api', 'web']) preflightFile(`/etc/systemd/system/xnova-${component}.service`, true);
+  } else {
+    await step('Suppression des anciens services XNova', () => resetServices(run));
+  }
   const packages = ['build-essential', 'python3', 'ca-certificates', 'curl', 'openssl', 'redis-server'];
   if (state.database === 'local') packages.push('postgresql', 'postgresql-client');
   if (state.tls !== 'proxy') packages.push('nginx');

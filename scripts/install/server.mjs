@@ -30,7 +30,7 @@ async function jsonBody(req) {
   try { return JSON.parse(body); } catch { throw Object.assign(new Error('JSON invalide.'), { status: 400 }); }
 }
 
-export function createBootstrapServer({ root, accessCode, install, handoff, now = Date.now, logError = console.error }) {
+export function createBootstrapServer({ root, accessCode, install, handoff, existingServices = () => [], now = Date.now, logError = console.error }) {
   // Aucun appel apt, npm, PostgreSQL ou Prisma lors de la création du serveur.
   let config = readConfiguration(root);
   let state = { phase: 'idle', stage: '', error: null };
@@ -41,6 +41,7 @@ export function createBootstrapServer({ root, accessCode, install, handoff, now 
   const csrf = randomBytes(32).toString('hex');
   const summary = () => ({
     ...state,
+    existingServices: existingServices(),
     config: config ? { ...config.state } : null,
   });
   const server = createServer(async (req, res) => {
@@ -90,6 +91,10 @@ export function createBootstrapServer({ root, accessCode, install, handoff, now 
         if (['running', 'ready', 'handoff'].includes(state.phase)) return reply(409, { error: 'L’installation est déjà en cours ou prête.' });
         const options = await jsonBody(req);
         if (!options || Array.isArray(options) || typeof options !== 'object') return reply(400, { error: 'Configuration invalide.' });
+        if ((existingServices().length || options.serviceAction !== undefined) && !['keep', 'recreate'].includes(options.serviceAction)) {
+          return reply(400, { error: 'Des services existent déjà. Choisissez « Garder et reprendre » ou « Supprimer et recréer ».' });
+        }
+        if (options.serviceAction !== undefined) options.replaceServices = options.serviceAction === 'keep';
         const origin = new URL(requestOrigin(req));
         if (options.database === 'external' && origin.protocol !== 'https:' && !['localhost', '127.0.0.1', '[::1]'].includes(origin.hostname)) {
           return reply(400, { error: 'Utilisez HTTPS ou un tunnel SSH local pour transmettre l’URL de la base externe.' });
