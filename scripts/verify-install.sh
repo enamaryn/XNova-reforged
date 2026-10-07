@@ -39,4 +39,14 @@ for PKG in @sentry/nextjs @sentry/node next; do
   fi
 done
 
+# Client Prisma généré : sans lui l'API plante au démarrage (« Cannot convert undefined or null to object » dans IsEnum)
+if node -e '
+const c = require("@prisma/client");
+process.exit(c.UserRole && Object.keys(c.UserRole).length > 0 ? 0 : 1);
+' >/dev/null 2>&1; then
+  pass "client Prisma généré (enums disponibles)"
+else
+  fail "client Prisma absent ou périmé : lancer « npx prisma generate --schema packages/database/prisma/schema.prisma »"
+fi
+
 [ "$FAIL" = "0" ] && echo "RÉSULTAT : installation conforme au lockfile" || { echo "RÉSULTAT : $FAIL contrôle(s) en échec"; exit 1; }

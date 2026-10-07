@@ -129,6 +129,7 @@ compilation native de `@sentry/profiling-node` (`npm ci` sans `--ignore-scripts`
 ```bash
 git pull
 npm ci                          # sans --ignore-scripts : le profilage Sentry de l'API compile un module natif
+npx prisma generate --schema packages/database/prisma/schema.prisma   # client de base de données (sinon l'API plante : IsEnum / undefined)
 bash scripts/verify-install.sh  # Node, arbre de dépendances, versions de @sentry/nextjs, @sentry/node et next
 npm run build
 npx prisma migrate deploy --schema packages/database/prisma/schema.prisma   # avec DATABASE_URL de production

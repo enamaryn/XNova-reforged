@@ -135,12 +135,15 @@ Le détail des variables et du proxy : [docs/OPERATIONS.md](docs/OPERATIONS.md).
 
 ```bash
 sudo -u xnova bash -c 'cd /home/xnova/XNova-reforged && set -a && . ./.env && set +a \
-  && npm ci && bash scripts/verify-install.sh \
+  && npm ci \
+  && npx prisma generate --schema packages/database/prisma/schema.prisma \
+  && bash scripts/verify-install.sh \
   && npx prisma migrate deploy --schema packages/database/prisma/schema.prisma \
   && npm run build'
 ```
 
 `npm ci` (et non `npm install`) garantit les versions du `package-lock.json` ; ne pas ajouter `--ignore-scripts`.
+`prisma generate` crée le client de base de données : sans lui l'API s'arrête au démarrage avec `Cannot convert undefined or null to object` (`IsEnum`).
 
 **6. Services systemd**
 
@@ -177,7 +180,7 @@ Si le conteneur est derrière un autre proxy, `TRUST_PROXY` doit refléter le no
 **9. Sauvegardes** : `scripts/backup-db.sh` (sauvegarde vérifiée, rétention 7 jours), à planifier par cron/timer, et `scripts/restore-db.sh` pour restaurer ;
 procédure et test dans [docs/OPERATIONS.md](docs/OPERATIONS.md).
 
-**Mise à jour ultérieure** (`git pull`, `npm ci`, `scripts/verify-install.sh`, `npx prisma migrate deploy`, `npm run build`, redémarrage) : voir « Déploiement » dans [docs/OPERATIONS.md](docs/OPERATIONS.md).
+**Mise à jour ultérieure** (`git pull`, `npm ci`, `npx prisma generate`, `scripts/verify-install.sh`, `npx prisma migrate deploy`, `npm run build`, redémarrage) : voir « Déploiement » dans [docs/OPERATIONS.md](docs/OPERATIONS.md).
 
 ### Première connexion : assistant d'installation
 
