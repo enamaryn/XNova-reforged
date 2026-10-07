@@ -1,0 +1,20 @@
+:root { color-scheme: dark; font-family: system-ui, sans-serif; background: #070d1d; color: #f1f5f9; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 48px 20px; }
+main { max-width: 700px; margin: auto; padding: 36px; border: 1px solid #334155; border-radius: 24px; background: #111b30; }
+.eyebrow { color: #67e8f9; letter-spacing: .2em; font-size: 12px; }
+h1 { font-size: 30px; line-height: 1.2; }
+h2 { font-size: 19px; margin-top: 28px; }
+p { line-height: 1.6; color: #cbd5e1; }
+label { display: block; margin: 18px 0 8px; }
+input, select, button { width: 100%; padding: 12px; border-radius: 10px; font: inherit; }
+input, select { background: #0b1325; color: #fff; border: 1px solid #64748b; }
+input:focus, select:focus, button:focus-visible { outline: 3px solid #22d3ee; outline-offset: 2px; }
+button { margin-top: 20px; background: #67e8f9; color: #082f49; border: 0; font-weight: 700; cursor: pointer; }
+button:disabled { opacity: .6; cursor: wait; }
+.hint { color: #94a3b8; font-size: 13px; }
+.checkbox { display: flex; align-items: center; gap: 12px; font-size: 14px; }
+.checkbox input { width: auto; flex-shrink: 0; }
+#error { color: #fecdd3; border: 1px solid #fb7185; padding: 12px; border-radius: 10px; }
+[hidden] { display: none !important; }
+@media (max-width: 500px) { body { padding: 16px; } main { padding: 22px; } }

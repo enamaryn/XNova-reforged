@@ -114,6 +114,12 @@ export function SetupWizard() {
   useEffect(() => {
     (async () => {
       try {
+        // Le bootstrap transmet le code dans le fragment : jamais dans les logs HTTP ni le Referer.
+        const bootstrapToken = new URLSearchParams(window.location.hash.slice(1)).get("bootstrap-token");
+        if (bootstrapToken) {
+          window.history.replaceState(null, "", window.location.pathname + window.location.search);
+          if (/^[a-f0-9]{64}$/.test(bootstrapToken)) sessionStorage.setItem(TOKEN_KEY, bootstrapToken);
+        }
         const status = await getSetupStatus();
         if (!status.setupRequired) {
           window.location.replace("/login");

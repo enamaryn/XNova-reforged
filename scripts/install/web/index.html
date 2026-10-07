@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Installation XNova Reforged</title>
+  <link rel="stylesheet" href="/bootstrap/ui.css">
+  <script src="/bootstrap/ui.js" defer></script>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">XNOVA REFORGED</p>
+    <h1>Installons votre serveur.</h1>
+    <p>La base, la configuration et les services seront préparés ici. Vous configurerez ensuite les emails et votre compte administrateur.</p>
+    <p id="error" role="alert" hidden></p>
+    <form id="auth">
+      <label for="code">Code d’accès temporaire</label>
+      <input id="code" type="password" required autocomplete="off" spellcheck="false">
+      <p class="hint">Recopiez le code affiché au lancement de l’installateur sur le serveur.</p>
+      <button>Ouvrir l’assistant</button>
+    </form>
+    <form id="configuration" hidden>
+      <h2>Votre serveur</h2>
+      <label for="mode">Utilisation</label>
+      <select id="mode"><option value="production">Production</option><option value="development">Développement / test</option></select>
+      <label for="url">Adresse publique du site</label>
+      <input id="url" type="url" placeholder="https://jeu.exemple.fr" required>
+      <p class="hint">L’adresse que les joueurs utiliseront, sans chemin. HTTPS est obligatoire en production.</p>
+
+      <h2>Base de données</h2>
+      <label for="database">Où stocker les données ?</label>
+      <select id="database"><option value="local">Créer une base locale automatiquement</option><option value="external">Utiliser une base PostgreSQL externe</option></select>
+      <p id="local-help" class="hint">La base, son utilisateur et son mot de passe seront créés sur ce serveur. Les secrets seront générés et enregistrés dans sa configuration.</p>
+      <div id="external-fields" hidden>
+        <label for="database-url">URL de connexion PostgreSQL</label>
+        <input id="database-url" type="password" autocomplete="off" spellcheck="false" placeholder="postgresql://utilisateur:motdepasse@hote:5432/base">
+        <p class="hint">La base doit déjà exister. L’utilisateur doit pouvoir appliquer les migrations. L’URL reste sur le serveur et n’est pas affichée dans le suivi.</p>
+      </div>
+
+      <h2>Accès web</h2>
+      <label for="tls">Comment le site sera-t-il accessible ?</label>
+      <select id="tls">
+        <option value="proxy">HTTPS déjà géré par mon reverse proxy</option>
+        <option value="certbot">Configurer HTTPS sur ce serveur avec Let’s Encrypt</option>
+        <option value="none">HTTP pour le développement / test</option>
+      </select>
+      <p id="proxy-help" class="hint">Votre proxy doit transmettre le site vers le port 3000 de ce serveur. Les appels API passeront automatiquement par le site.</p>
+      <div id="certificate-fields" hidden>
+        <label for="email">Email pour le certificat HTTPS</label>
+        <input id="email" type="email" autocomplete="email">
+        <p class="hint">Le DNS du domaine doit déjà pointer vers ce serveur, accessible sur les ports 80 et 443.</p>
+      </div>
+      <label class="checkbox"><input id="replace-services" type="checkbox"> Reprendre les services xnova-api et xnova-web s’ils existent déjà</label>
+      <p class="hint">Ce choix remplace leur configuration système. Leur configuration précédente sera conservée sur le serveur.</p>
+      <p id="resume-info" class="hint" hidden>Une configuration a déjà été créée. La reprise conserve la base et les secrets ; vous pouvez corriger l’URL externe ou l’email du certificat.</p>
+      <button id="install-button">Préparer le serveur</button>
+    </form>
+    <section id="progress" aria-live="polite" hidden>
+      <h2>Préparation du serveur</h2>
+      <p id="stage"></p>
+      <p id="database-summary" class="hint"></p>
+      <p class="hint">Vous pouvez laisser cette page ouverte pendant l’installation et la compilation.</p>
+      <button id="continue" hidden>Continuer : SMTP et compte administrateur</button>
+    </section>
+  </main>
+</body>
+</html>
