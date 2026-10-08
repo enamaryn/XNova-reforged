@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import type { BuildQueueItem } from '@/lib/api/buildings';
+import { useEffect, useState } from "react";
+import type { BuildQueueItem } from "@/lib/api/buildings";
 
 interface BuildQueueProps {
   queue: BuildQueueItem[];
@@ -10,7 +10,7 @@ interface BuildQueueProps {
 
 // Formater le temps restant
 function formatTimeRemaining(seconds: number): string {
-  if (seconds <= 0) return 'Terminé!';
+  if (seconds <= 0) return "Terminé!";
   if (seconds < 60) return `${seconds}s`;
   if (seconds < 3600) {
     const mins = Math.floor(seconds / 60);
@@ -30,7 +30,9 @@ function QueueItem({
   item: BuildQueueItem;
   onCancel: (queueId: string) => Promise<void>;
 }) {
-  const [remainingSeconds, setRemainingSeconds] = useState(item.remainingSeconds);
+  const [remainingSeconds, setRemainingSeconds] = useState(
+    item.remainingSeconds,
+  );
   const [canceling, setCanceling] = useState(false);
 
   // Countdown timer
@@ -64,38 +66,50 @@ function QueueItem({
   const endTime = new Date(item.endTime).getTime();
   const totalDuration = endTime - startTime;
   const elapsed = Date.now() - startTime;
-  const progress = Math.min(100, Math.max(0, (elapsed / totalDuration) * 100));
+  const progress =
+    totalDuration > 0
+      ? Math.min(100, Math.max(0, (elapsed / totalDuration) * 100))
+      : 100;
 
   return (
-    <div className="rounded-2xl border border-blue-500/30 bg-slate-900/60 p-4 shadow-[0_0_24px_rgba(2,132,199,0.12)]">
-      <div className="mb-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h4 className="font-semibold text-white">{item.buildingName}</h4>
-          <span className="text-xs text-slate-500">Niveau {item.targetLevel}</span>
-        </div>
-        <div className="text-left sm:text-right">
-          <div className="font-mono text-lg font-bold text-blue-300">
-            {formatTimeRemaining(remainingSeconds)}
-          </div>
-          <button
-            onClick={handleCancel}
-            disabled={canceling}
-            className="text-[11px] uppercase tracking-[0.18em] text-red-300 hover:text-red-200 transition-colors"
-          >
-            {canceling ? 'Annulation...' : 'Annuler'}
-          </button>
-        </div>
+    <div
+      aria-label={`${item.buildingName}, niveau ${item.targetLevel}`}
+      className="relative overflow-hidden rounded-xl border border-blue-500/30 bg-slate-900/60 px-3 py-1"
+    >
+      <div className="flex min-h-11 items-center gap-2">
+        <h4
+          className="min-w-0 flex-1 truncate text-xs font-semibold text-white sm:text-sm"
+          title={item.buildingName}
+        >
+          {item.buildingName}
+        </h4>
+        <span className="shrink-0 text-xs text-slate-400">
+          Niv. {item.targetLevel}
+        </span>
+        <span className="shrink-0 font-mono text-xs font-bold text-blue-300">
+          {formatTimeRemaining(remainingSeconds)}
+        </span>
+        <button
+          onClick={handleCancel}
+          disabled={canceling}
+          aria-label={`Annuler ${item.buildingName}`}
+          className="min-h-11 shrink-0 px-1 text-xs text-red-300 transition-colors hover:text-red-200 disabled:opacity-50"
+        >
+          {canceling ? "…" : "Annuler"}
+        </button>
       </div>
-
-      {/* Barre de progression */}
-      <div className="h-2 w-full overflow-hidden rounded-full bg-slate-800">
+      <div
+        role="progressbar"
+        aria-label={`Avancement ${item.buildingName}`}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={Math.round(progress)}
+        className="absolute inset-x-0 bottom-0 h-1 overflow-hidden bg-slate-800"
+      >
         <div
-          className="h-full bg-gradient-to-r from-sky-400 via-blue-500 to-blue-600 transition-all duration-1000"
+          className="h-full bg-gradient-to-r from-sky-400 to-blue-600 transition-all duration-1000"
           style={{ width: `${progress}%` }}
         />
-      </div>
-      <div className="mt-1 text-right text-xs text-slate-500">
-        {progress.toFixed(0)}%
       </div>
     </div>
   );
@@ -104,10 +118,10 @@ function QueueItem({
 export function BuildQueue({ queue, onCancel }: BuildQueueProps) {
   if (queue.length === 0) {
     return (
-      <div className="rounded-2xl border border-slate-800/80 bg-slate-900/40 p-6 text-center">
-        <div className="text-3xl mb-2">🏗️</div>
+      <div className="rounded-2xl border border-slate-800/80 bg-slate-900/40 px-3 py-2 text-center sm:p-6">
+        <div className="hidden text-3xl mb-2 sm:block">🏗️</div>
         <p className="text-slate-300">Aucune construction en cours</p>
-        <p className="text-xs text-slate-500 mt-1">
+        <p className="hidden text-xs text-slate-500 mt-1 sm:block">
           Sélectionnez un bâtiment pour commencer la construction
         </p>
       </div>
@@ -115,8 +129,8 @@ export function BuildQueue({ queue, onCancel }: BuildQueueProps) {
   }
 
   return (
-    <div className="space-y-3">
-      <h3 className="flex flex-wrap items-center gap-2 text-lg font-semibold text-white">
+    <div className="space-y-2">
+      <h3 className="flex flex-wrap items-center gap-2 text-sm font-semibold sm:text-lg text-white">
         🔨 File de construction
         <span className="rounded-full bg-blue-500/20 px-2 py-0.5 text-xs text-blue-300">
           {queue.length} en cours

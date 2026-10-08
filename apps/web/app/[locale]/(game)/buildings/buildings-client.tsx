@@ -1,25 +1,19 @@
-'use client';
+"use client";
 
-import { useEffect, useState, useCallback, useMemo } from 'react';
-import { useQuery, useMutation } from '@tanstack/react-query';
-import { motion, useReducedMotion, type MotionProps } from 'framer-motion';
-import { buildingsApi } from '@/lib/api/buildings';
-import { useAuthStore } from '@/lib/stores/auth-store';
-import { usePlanetStore } from '@/lib/stores/planet-store';
-import { useSocket } from '@/lib/providers/socket-provider';
-import { BuildQueue } from '@/components/game/BuildQueue';
-import { BuildingCard } from '@/components/game/BuildingCard';
-import { designTokens } from '@/lib/design-tokens';
+import { useEffect, useState, useCallback, useMemo } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { buildingsApi } from "@/lib/api/buildings";
+import { useAuthStore } from "@/lib/stores/auth-store";
+import { usePlanetStore } from "@/lib/stores/planet-store";
+import { useSocket } from "@/lib/providers/socket-provider";
+import { BuildQueue } from "@/components/game/BuildQueue";
+import { BuildingCard } from "@/components/game/BuildingCard";
 
 export default function BuildingsClient() {
-  const shouldReduceMotion = useReducedMotion();
-  const fadeInProps: MotionProps = shouldReduceMotion ? {} : designTokens.animations.fadeIn;
-  const slideUpProps: MotionProps = shouldReduceMotion ? {} : designTokens.animations.slideUp;
-
   const { user } = useAuthStore();
   const { selectedPlanetId, setSelectedPlanetId } = usePlanetStore();
   const { socket } = useSocket();
-  const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [activeCategory, setActiveCategory] = useState<string>("all");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Initialiser la planète sélectionnée
@@ -38,18 +32,15 @@ export default function BuildingsClient() {
     error,
     refetch: refetchBuildings,
   } = useQuery({
-    queryKey: ['buildings', planetId],
+    queryKey: ["buildings", planetId],
     queryFn: () => buildingsApi.getPlanetBuildings(planetId!),
     enabled: !!planetId,
     refetchInterval: 30000,
   });
 
   // Récupérer la file d'attente
-  const {
-    data: queueData,
-    refetch: refetchQueue,
-  } = useQuery({
-    queryKey: ['build-queue', planetId],
+  const { data: queueData, refetch: refetchQueue } = useQuery({
+    queryKey: ["build-queue", planetId],
     queryFn: () => buildingsApi.getBuildQueue(planetId!),
     enabled: !!planetId,
     refetchInterval: 5000,
@@ -85,29 +76,32 @@ export default function BuildingsClient() {
   useEffect(() => {
     if (!socket || !planetId) return;
 
-    socket.emit('subscribe:planet', { planetId });
+    socket.emit("subscribe:planet", { planetId });
 
     const handleUpdate = () => {
       refetchBuildings();
       refetchQueue();
     };
 
-    const handleCompleted = (payload?: { buildingName?: string; newLevel?: number }) => {
+    const handleCompleted = (payload?: {
+      buildingName?: string;
+      newLevel?: number;
+    }) => {
       handleUpdate();
-      const name = payload?.buildingName || 'Bâtiment';
-      const level = payload?.newLevel ? ` niv. ${payload.newLevel}` : '';
+      const name = payload?.buildingName || "Bâtiment";
+      const level = payload?.newLevel ? ` niv. ${payload.newLevel}` : "";
       pushToast(`Construction terminée : ${name}${level}`);
     };
 
-    socket.on('building:started', handleUpdate);
-    socket.on('building:completed', handleCompleted);
-    socket.on('building:cancelled', handleUpdate);
+    socket.on("building:started", handleUpdate);
+    socket.on("building:completed", handleCompleted);
+    socket.on("building:cancelled", handleUpdate);
 
     return () => {
-      socket.emit('unsubscribe:planet', { planetId });
-      socket.off('building:started', handleUpdate);
-      socket.off('building:completed', handleCompleted);
-      socket.off('building:cancelled', handleUpdate);
+      socket.emit("unsubscribe:planet", { planetId });
+      socket.off("building:started", handleUpdate);
+      socket.off("building:completed", handleCompleted);
+      socket.off("building:cancelled", handleUpdate);
     };
   }, [socket, planetId, refetchBuildings, refetchQueue, pushToast]);
 
@@ -115,31 +109,31 @@ export default function BuildingsClient() {
     async (buildingId: number) => {
       await buildMutation.mutateAsync(buildingId);
     },
-    [buildMutation]
+    [buildMutation],
   );
 
   const handleCancel = useCallback(
     async (queueId: string) => {
       await cancelMutation.mutateAsync(queueId);
     },
-    [cancelMutation]
+    [cancelMutation],
   );
 
   // Calculs dérivés - DOIVENT être avant les returns conditionnels
   // Utiliser buildingsData entier comme dépendance, pas buildingsData.buildings
   const buildings = useMemo(
     () => buildingsData?.buildings || [],
-    [buildingsData]
+    [buildingsData],
   );
   const queue = queueData || [];
 
   const categories = useMemo(
-    () => ['all', ...new Set(buildings.map((building) => building.category))],
+    () => ["all", ...new Set(buildings.map((building) => building.category))],
     [buildings],
   );
   const filteredBuildings = useMemo(
     () =>
-      activeCategory === 'all'
+      activeCategory === "all"
         ? buildings
         : buildings.filter((building) => building.category === activeCategory),
     [activeCategory, buildings],
@@ -186,13 +180,17 @@ export default function BuildingsClient() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3 sm:space-y-6">
       {/* Header de page */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex items-center justify-between gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">Infrastructure</p>
-          <h1 className="mt-2 text-2xl font-semibold text-white">Bâtiments</h1>
-          <p className="text-sm text-slate-400">
+          <p className="hidden text-[10px] uppercase tracking-[0.3em] sm:block text-slate-500">
+            Infrastructure
+          </p>
+          <h1 className="text-xl sm:mt-2 sm:text-2xl font-semibold text-white">
+            Bâtiments
+          </h1>
+          <p className="hidden text-sm text-slate-400 sm:block">
             Construisez et améliorez les infrastructures de votre planète
           </p>
         </div>
@@ -202,29 +200,29 @@ export default function BuildingsClient() {
       </div>
 
       {/* File de construction */}
-      <div>
+      <div className={queue.length ? "" : "hidden sm:block"}>
         <BuildQueue queue={queue} onCancel={handleCancel} />
       </div>
 
       {/* Filtres par catégorie */}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex gap-2 overflow-x-auto pb-1 sm:flex-wrap">
         {categories.map((cat) => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`rounded-full border px-4 py-2 text-xs uppercase tracking-[0.2em] transition-colors ${
+            className={`min-h-11 shrink-0 rounded-full border px-3 py-2 text-xs sm:px-4 sm:uppercase sm:tracking-[0.2em] transition-colors ${
               activeCategory === cat
-                ? 'border-blue-400/60 bg-blue-500/10 text-blue-200'
-                : 'border-slate-800 text-slate-400 hover:border-slate-600 hover:text-white'
+                ? "border-blue-400/60 bg-blue-500/10 text-blue-200"
+                : "border-slate-800 text-slate-400 hover:border-slate-600 hover:text-white"
             }`}
           >
-            {cat === 'all' ? 'Tous' : getCategoryLabel(cat)}
+            {cat === "all" ? "Tous" : getCategoryLabel(cat)}
           </button>
         ))}
       </div>
 
       {/* Liste des bâtiments */}
-      <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-2 sm:gap-4 lg:grid-cols-2 xl:grid-cols-3">
         {filteredBuildings.map((building) => (
           <div key={building.id}>
             <BuildingCard
@@ -256,11 +254,11 @@ export default function BuildingsClient() {
 
 function getCategoryLabel(category: string): string {
   const labels: Record<string, string> = {
-    resource: 'Ressource',
-    facility: 'Installations',
-    station: 'Stations',
-    defense: 'Défense',
-    moon: 'Lunaire',
+    resource: "Ressource",
+    facility: "Installations",
+    station: "Stations",
+    defense: "Défense",
+    moon: "Lunaire",
   };
   return labels[category] || category;
 }

@@ -42,7 +42,8 @@
     "setup:token": "npm run setup:token -w @xnova/api --",
     "setup:reset": "npm run setup:reset -w @xnova/api --",
     "setup:create-admin": "npm run setup:create-admin -w @xnova/api --",
-    "admin:reset-password": "npm run admin:reset-password -w @xnova/api --"
+    "admin:reset-password": "npm run admin:reset-password -w @xnova/api --",
+    "test:mobile-ui": "playwright test --config playwright.mobile.config.ts --workers=1"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",

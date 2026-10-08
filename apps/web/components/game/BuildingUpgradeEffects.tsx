@@ -38,9 +38,15 @@ export function BuildingUpgradeEffects({
   return (
     <section
       aria-label={`Effets du niveau ${upgrade.nextLevel}`}
-      className="space-y-3"
+      className={detailed ? "space-y-3" : "space-y-1 sm:space-y-3"}
     >
-      <h2 className="text-sm font-semibold text-slate-200">
+      <h2
+        className={
+          detailed
+            ? "text-sm font-semibold text-slate-200"
+            : "hidden text-sm font-semibold text-slate-200 sm:block"
+        }
+      >
         Au niveau {upgrade.nextLevel}
       </h2>
       {detailed ? (
