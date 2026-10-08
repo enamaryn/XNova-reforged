@@ -124,7 +124,15 @@ compilation native de `@sentry/profiling-node` (`npm ci` sans `--ignore-scripts`
 
 ## Déploiement : procédure et vérification de l'installation
 
-À chaque mise à jour du code sur un serveur :
+Pour une installation existante Ubuntu / LXC avec les services `xnova-api` et `xnova-web`, la commande recommandée est désormais :
+
+```bash
+sudo bash scripts/update.sh
+```
+
+Le [guide de mise à jour](UPDATE.md) décrit les contrôles, sauvegardes, vérifications et procédures de reprise. `--check` vérifie et affiche la version disponible sans arrêter les services. L’installateur initial `scripts/install.sh` n’est pas utilisé pour les mises à jour.
+
+La procédure manuelle ci-dessous reste disponible :
 
 ```bash
 git pull
