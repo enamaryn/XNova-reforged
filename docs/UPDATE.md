@@ -28,7 +28,7 @@ sudo bash scripts/update.sh --check
 3. Récupération de `origin/main` ; refus d’un historique divergent. Aucune suppression ni réinitialisation Git automatique.
 4. Création d’un dossier privé `backups/update-XXXXXXXX/` et copie de `.env`, `.xnova-install.json` et `packages/database/.env` quand présents. Enregistrement des commits avant/après dans `update.json`.
 5. Arrêt des deux services ; sauvegarde PostgreSQL avec `backup-db.sh`, copie de l’archive vérifiée dans le dossier de reprise. La sauvegarde doit réussir avant tout remplacement du code ou des dépendances.
-6. Avance rapide vers le commit fixé au précontrôle, `npm ci --include=dev`, génération Prisma, vérification de l’installation et compilation avec le `.env` existant chargé. Les commandes du dépôt tournent avec le compte des services, pas avec root. Si npm système n’est pas de génération 10, npm 10.9.4 est utilisé via npx sans remplacer npm système.
+6. Avance rapide vers le commit fixé au précontrôle, `npm ci --include=dev`, génération Prisma, vérification de l’installation et compilation des espaces de travail dans le même ordre que l’installateur, avec le `.env` existant chargé et le web compilé en production. Les commandes du dépôt tournent avec le compte des services, pas avec root. Si npm système n’est pas de génération 10, npm 10.9.4 est utilisé via npx sans remplacer npm système.
 7. Application des migrations versionnées avec `prisma migrate deploy`, sans `db push`, reset, ni baseline implicite.
 8. Démarrage et contrôle de l’API (`/health/ready`, base joignable), du web (`/fr/login`) et de chacun des deux services. Le test HTTP est local ; vérifier ensuite le domaine public et HTTPS depuis un navigateur.
 

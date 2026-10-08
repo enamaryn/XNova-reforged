@@ -97,7 +97,7 @@ export async function updateInstallation({
     for (const value of Object.values(ports)) if (!/^\d+$/.test(value) || Number(value) < 1 || Number(value) > 65535) throw new Error('Port API/web invalide dans .env.');
     const npmVersion = (await asUser('npm', ['--version'], { capture: true })).trim();
     // Même génération npm que l’installateur et la CI, sans remplacer npm système.
-    const npm = (args, env = false) => (env ? configured : asUser)('npm', args);
+    const npm = args => asUser('npm', args);
     await asUser('git', ['fetch', 'origin', 'refs/heads/main:refs/remotes/origin/main']);
     previous = (await asUser('git', ['rev-parse', 'HEAD'], { capture: true })).trim();
     const target = (await asUser('git', ['rev-parse', 'refs/remotes/origin/main'], { capture: true })).trim();
@@ -140,7 +140,10 @@ export async function updateInstallation({
     phase = 'compilation';
     await configured('npx', ['--no-install', 'prisma', 'generate', '--schema', 'packages/database/prisma/schema.prisma']);
     await configured('bash', ['scripts/verify-install.sh']);
-    await npm(['run', 'build'], true);
+    // Même ordre et même environnement que l’installateur ; Turbo peut filtrer les variables publiques.
+    for (const workspace of ['game-config', 'game-engine', 'api', 'web']) {
+      await configured('env', [...(workspace === 'web' ? ['NODE_ENV=production'] : []), 'npm', 'run', 'build', `--workspace=@xnova/${workspace}`]);
+    }
     phase = 'migrations';
     await configured('npx', ['--no-install', 'prisma', 'migrate', 'deploy', '--schema', 'packages/database/prisma/schema.prisma']);
     phase = 'redémarrage';

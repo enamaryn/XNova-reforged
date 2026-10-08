@@ -22,7 +22,7 @@ async function fixture(t, failure, { inactive = [], differentUser = false, badDi
   await git(['remote', 'add', 'origin', origin]); await git(['push', '-u', 'origin', 'main']);
   await command('git', ['clone', '--branch', 'main', origin, root], { capture: true });
   const previous = (await command('git', ['rev-parse', 'HEAD'], { cwd: root, capture: true })).trim();
-  const config = 'NODE_ENV=production\nDATABASE_URL="postgresql://fixture:secret@localhost/players"\nAPI_PORT=3001\nPORT=3000\nJWT_SECRET=keep-this-secret\n';
+  const config = 'NODE_ENV=development\nDATABASE_URL="postgresql://fixture:secret@localhost/players"\nAPI_PORT=3001\nPORT=3000\nJWT_SECRET=keep-this-secret\n';
   await writeFile(join(root, '.env'), config, { mode: 0o600 });
   await writeFile(join(root, '.xnova-install.json'), '{"installed":true}', { mode: 0o600 });
   await writeFile(join(root, 'packages/database/.env'), 'DATABASE_URL=preserved\n', { mode: 0o600 });
@@ -92,6 +92,9 @@ test('real Git fast-forward, backup before code/dependencies, configuration pres
   assert.equal((await stat(join(result.snapshot, 'database.sql.gz'))).mode & 0o777, 0o600);
   assert.equal(JSON.parse(await readFile(join(result.snapshot, 'update.json'), 'utf8')).status, 'success');
   assert.equal(f.active.size, 2);
+  const builds = f.calls.filter(call => call.includes('build'));
+  assert.deepEqual(builds.map(call => call.at(-1)), ['--workspace=@xnova/game-config', '--workspace=@xnova/game-engine', '--workspace=@xnova/api', '--workspace=@xnova/web']);
+  assert.ok(builds.at(-1).includes('NODE_ENV=production'));
   assert.ok(!f.calls.some(call => call.includes('reset') || call.includes('push') || call.includes('disable')));
   assert.ok(!f.logs.join('\n').includes('keep-this-secret'));
 });
