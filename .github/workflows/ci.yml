@@ -16,6 +16,8 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -28,7 +30,7 @@ jobs:
         run: |
           sudo mkdir -p /opt/xnova-bootstrap-test
           sudo cp -a . /opt/xnova-bootstrap-test/
-      - name: Base locale, relais web et SMTP réel
+      - name: Installation et mise à jour avec PostgreSQL et SMTP réel
         run: |
           cd /opt/xnova-bootstrap-test
           sudo env PATH="$PATH" XNOVA_INSTALL_SMOKE=disposable-ci node scripts/install/test/smoke-native.mjs
