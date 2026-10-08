@@ -1,12 +1,13 @@
-import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
-import { notFound } from 'next/navigation';
-import { locales } from '@/i18n/config';
-import Providers from './providers';
-import { Footer } from '@/components/layout/Footer';
-import { Header } from '@/components/layout/Header';
-import { Toaster } from '@/components/ui/toaster';
-import { OfflineBanner } from '@/components/offline-banner';
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages } from "next-intl/server";
+import { notFound } from "next/navigation";
+import { locales } from "@/i18n/config";
+import Providers from "./providers";
+import { Footer } from "@/components/layout/Footer";
+import { Header } from "@/components/layout/Header";
+import { Toaster } from "@/components/ui/toaster";
+import { LocaleShell } from "@/components/layout/LocaleShell";
+import { OfflineBanner } from "@/components/offline-banner";
 
 export default async function LocaleLayout({
   children,
@@ -30,11 +31,9 @@ export default async function LocaleLayout({
       <body>
         <NextIntlClientProvider messages={messages}>
           <Providers>
-            <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900">
-              <Header />
-              <main className="w-full">{children}</main>
-              <Footer />
-            </div>
+            <LocaleShell header={<Header />} footer={<Footer />}>
+              {children}
+            </LocaleShell>
           </Providers>
           <Toaster />
           <OfflineBanner />

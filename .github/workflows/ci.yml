@@ -179,18 +179,18 @@ jobs:
           --health-retries 10
 
     env:
-      CI: 'true'
+      CI: "true"
       DATABASE_URL: postgresql://xnova:xnova_ci@localhost:5432/xnova_e2e?schema=public
       JWT_SECRET: e2e-secret-e2e-secret-e2e-secret
       JWT_REFRESH_SECRET: e2e-refresh-e2e-refresh-e2e-refresh
       JWT_EXPIRES_IN: 1h
       JWT_REFRESH_EXPIRES_IN: 7d
       # Les parcours E2E créent de nombreux comptes depuis la même IP
-      RATE_LIMIT_LOGIN_MAX: '1000'
-      RATE_LIMIT_REGISTER_MAX: '1000'
-      RATE_LIMIT_ACCOUNT_MAX: '1000'
+      RATE_LIMIT_LOGIN_MAX: "1000"
+      RATE_LIMIT_REGISTER_MAX: "1000"
+      RATE_LIMIT_ACCOUNT_MAX: "1000"
       # Les parcours E2E créent des comptes sans SMTP ; la confirmation obligatoire est couverte par l'intégration
-      EMAIL_VERIFICATION_REQUIRED: 'false'
+      EMAIL_VERIFICATION_REQUIRED: "false"
       # Code d'installation connu des tests (assistant SETUP-01)
       SETUP_TOKEN: E2E0-SETU-PCOD-E123
 
@@ -215,11 +215,14 @@ jobs:
         working-directory: packages/database
 
       # Navigateur à la version exacte de @playwright/test verrouillée dans package-lock.json
-      - name: Installation de Chromium
-        run: npx playwright install --with-deps chromium
+      - name: Installation de Chromium et WebKit
+        run: npx playwright install --with-deps chromium webkit
 
       - name: Tests E2E
         run: npm run test:e2e
+
+      - name: Rendu mobile et navigation (API simulée)
+        run: npm run test:mobile-ui
 
       - name: Rapport Playwright (échec)
         if: failure()
