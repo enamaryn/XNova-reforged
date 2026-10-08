@@ -3,8 +3,9 @@
 import assert from 'node:assert/strict';
 import { spawn, spawnSync } from 'node:child_process';
 import { createServer } from 'node:net';
-import { statSync, writeFileSync, mkdirSync, existsSync, readFileSync } from 'node:fs';
+import { statSync, writeFileSync, mkdirSync, existsSync, readFileSync, mkdtempSync, readdirSync, rmSync } from 'node:fs';
 import { networkInterfaces } from 'node:os';
+import { command } from '../runner.mjs';
 import { readConfiguration } from '../config.mjs';
 
 if (process.env.XNOVA_INSTALL_SMOKE !== 'disposable-ci' || process.getuid?.() !== 0) {
@@ -37,6 +38,7 @@ assert.ok(address, 'Une interface réseau non locale est nécessaire pour ce tes
 const web = `http://${address}`;
 const origin = `${web}:3000`;
 let auth = {};
+let updateTemp;
 async function call(base, path, body, method = body === undefined ? 'GET' : 'POST', headers = {}) {
   return fetch(`${base}${path}`, {
     method,
@@ -137,12 +139,55 @@ try {
   assert.equal((await (await call(web, '/api/setup/status')).json()).setupRequired, false);
   assert.equal((await call(web, '/api/setup/state', undefined, 'GET', tokenHeaders)).status, 404);
   console.log('PASS : SMTP réel, compte super admin confirmé et assistant verrouillé.');
+
+  // Publication locale uniquement : aucune écriture dans le dépôt GitHub.
+  updateTemp = mkdtempSync('/tmp/xnova-update-smoke-');
+  await command('chown', ['xnova:xnova', updateTemp]);
+  const asUser = (program, args, cwd = root) => command('runuser', ['-u', 'xnova', '--', program, ...args], { cwd, capture: true });
+  const git = args => asUser('git', args);
+  const envBefore = readFileSync(`${root}/.env`, 'utf8');
+  const stateBefore = readFileSync(`${root}/.xnova-install.json`, 'utf8');
+  const servicesBefore = ['api', 'web'].map(part => readFileSync(`/etc/systemd/system/xnova-${part}.service`, 'utf8'));
+  const previous = (await git(['rev-parse', 'HEAD'])).trim();
+  await git(['switch', '-C', 'main', 'HEAD']);
+  const remote = `${updateTemp}/origin.git`, publisher = `${updateTemp}/publisher`;
+  await asUser('git', ['init', '--bare', '--initial-branch=main', remote]);
+  await git(['remote', 'set-url', 'origin', remote]);
+  await git(['push', '-u', 'origin', 'main']);
+  await asUser('git', ['clone', remote, publisher]);
+  await asUser('bash', ['-c', 'printf "update smoke\\n" > docs/update-smoke.txt'], publisher);
+  await asUser('git', ['add', 'docs/update-smoke.txt'], publisher);
+  await asUser('git', ['-c', 'user.name=Update CI', '-c', 'user.email=update@example.test', 'commit', '-m', 'Local update fixture'], publisher);
+  await asUser('git', ['push'], publisher);
+  const target = (await asUser('git', ['rev-parse', 'HEAD'], publisher)).trim();
+  const adminLogin = () => call(web, '/api/auth/login', { identifier: 'fresh_admin', password: 'FreshAdmin1234!' });
+  assert.equal((await adminLogin()).status, 200);
+  await command('bash', ['scripts/update.sh', '--check'], { cwd: root });
+  assert.equal((await git(['rev-parse', 'HEAD'])).trim(), previous);
+  await command('bash', ['scripts/update.sh'], { cwd: root });
+  assert.equal((await git(['rev-parse', 'HEAD'])).trim(), target);
+  assert.equal(readFileSync(`${root}/.env`, 'utf8'), envBefore);
+  assert.equal(readFileSync(`${root}/.xnova-install.json`, 'utf8'), stateBefore);
+  for (const [index, part] of ['api', 'web'].entries()) {
+    assert.equal(readFileSync(`/etc/systemd/system/xnova-${part}.service`, 'utf8'), servicesBefore[index]);
+    await command('systemctl', ['is-active', '--quiet', `xnova-${part}`]);
+  }
+  const snapshots = readdirSync(`${root}/backups`).filter(name => name.startsWith('update-'));
+  assert.equal(snapshots.length, 1);
+  const snapshot = `${root}/backups/${snapshots[0]}`;
+  await command('gzip', ['-t', `${snapshot}/database.sql.gz`]);
+  assert.equal(JSON.parse(readFileSync(`${snapshot}/update.json`, 'utf8')).status, 'success');
+  assert.equal((await adminLogin()).status, 200);
+  assert.equal((await (await call(web, '/api/setup/status')).json()).setupRequired, false);
+  console.log('PASS : mise à jour réelle, sauvegarde PostgreSQL, configuration et compte administrateur conservés.');
+
 } catch (error) {
   console.error(`::error::${error.message.replace(/[a-f0-9]{32,}/gi, '[secret masqué]').replace(/\r?\n/g, '%0A')}`);
   // Les sorties du lanceur peuvent contenir des secrets générés : les masquer dans les diagnostics CI.
   console.error(output.replace(/[a-f0-9]{32,}/gi, '[secret masqué]'));
   process.exitCode = 1;
 } finally {
+  if (updateTemp) rmSync(updateTemp, { recursive: true, force: true });
   bootstrap.kill('SIGTERM');
   spawnSync('systemctl', ['stop', 'xnova-api', 'xnova-web']);
   await new Promise(resolve => smtp.close(resolve));

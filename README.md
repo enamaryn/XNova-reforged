@@ -193,7 +193,7 @@ Si le conteneur est derrière un autre proxy, `TRUST_PROXY` doit refléter le no
 **9. Sauvegardes** : `scripts/backup-db.sh` (sauvegarde vérifiée, rétention 7 jours), à planifier par cron/timer, et `scripts/restore-db.sh` pour restaurer ;
 procédure et test dans [docs/OPERATIONS.md](docs/OPERATIONS.md).
 
-**Mise à jour ultérieure** (`git pull`, `npm ci --include=dev`, `npx prisma generate`, `scripts/verify-install.sh`, `npx prisma migrate deploy`, `npm run build`, redémarrage) : voir « Déploiement » dans [docs/OPERATIONS.md](docs/OPERATIONS.md).
+**Mise à jour d’une installation existante** : depuis le dossier du dépôt, lancer `sudo bash scripts/update.sh`. Le script vérifie le clone et les services, sauvegarde la base et la configuration, récupère `origin/main`, installe les dépendances, compile, applique les migrations et vérifie le redémarrage. Il conserve les comptes, réglages, SMTP, secrets, services et nginx. Pour afficher la version disponible sans arrêter les services : `sudo bash scripts/update.sh --check`. Première récupération du script sur un ancien clone : `git pull --ff-only origin main`, puis lancer le script (il compile aussi lorsque le code est déjà à jour). Procédure et reprise après erreur : [docs/UPDATE.md](docs/UPDATE.md).
 
 ### Première connexion : assistant d'installation
 
