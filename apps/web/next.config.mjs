@@ -1,4 +1,7 @@
 import os from "node:os";
+import { fileURLToPath } from 'node:url';
+import { PHASE_PRODUCTION_BUILD, PHASE_PRODUCTION_SERVER } from 'next/constants.js';
+import { resolveBuildInfo } from '../../scripts/build-info/build-info.mjs';
 import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
@@ -93,4 +96,16 @@ export async function resolveWithSentryConfig(importers = [
 
 const withSentryConfig = await resolveWithSentryConfig();
 
-export default withSentryConfig(withNextIntl(nextConfig), sentryWebpackPluginOptions);
+export default async function config(phase, context) {
+  const info = resolveBuildInfo({
+    root: fileURLToPath(new URL('../..', import.meta.url)),
+    output: fileURLToPath(new URL('./.build-info.json', import.meta.url)),
+    productionBuild: phase === PHASE_PRODUCTION_BUILD,
+    productionServer: phase === PHASE_PRODUCTION_SERVER,
+  });
+  const configured = withSentryConfig(withNextIntl({
+    ...nextConfig,
+    env: { NEXT_PUBLIC_XNOVA_BUILD_INFO: JSON.stringify(info) },
+  }), sentryWebpackPluginOptions);
+  return typeof configured === 'function' ? configured(phase, context) : configured;
+}

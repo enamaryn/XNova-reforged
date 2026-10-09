@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { BuildVersion } from '@/components/BuildVersion';
 import { usePathname } from 'next/navigation';
 import { useMemo } from 'react';
 import { useI18n } from '@/lib/i18n';
@@ -138,7 +139,7 @@ export function GameSidebar({ isOpen, onClose }: GameSidebarProps) {
         {/* Info bas de sidebar */}
         <div className="shrink-0 px-3 py-2 border-t border-slate-800/60 bg-slate-950/90">
           <div className="text-center">
-            <p className="text-[10px] text-slate-500">XNova Reforged · v0.1.0 Alpha</p>
+            <p className="text-[10px] text-slate-500">XNova Reforged · <BuildVersion /></p>
           </div>
         </div>
       </aside>

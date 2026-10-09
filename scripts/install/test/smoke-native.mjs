@@ -160,12 +160,21 @@ try {
   await asUser('git', ['-c', 'user.name=Update CI', '-c', 'user.email=update@example.test', 'commit', '-m', 'Local update fixture'], publisher);
   await asUser('git', ['push'], publisher);
   const target = (await asUser('git', ['rev-parse', 'HEAD'], publisher)).trim();
+  const installedVersion = async () => {
+    const response = await call(web, '/build-version.json');
+    assert.equal(response.status, 200, 'Métadonnées du build accessibles derrière nginx');
+    return response.json();
+  };
   const adminLogin = () => call(web, '/api/auth/login', { identifier: 'fresh_admin', password: 'FreshAdmin1234!' });
   assert.equal((await adminLogin()).status, 200);
+  assert.equal((await installedVersion()).commit, previous);
   await command('bash', ['scripts/update.sh', '--check'], { cwd: root });
+  assert.equal((await installedVersion()).commit, previous);
   assert.equal((await git(['rev-parse', 'HEAD'])).trim(), previous);
   await command('bash', ['scripts/update.sh'], { cwd: root });
   assert.equal((await git(['rev-parse', 'HEAD'])).trim(), target);
+  assert.equal((await installedVersion()).commit, target);
+  assert.ok((await (await fetch(`${web}/fr/login`)).text()).includes(target.slice(0, 7)));
   assert.equal(readFileSync(`${root}/.env`, 'utf8'), envBefore);
   assert.equal(readFileSync(`${root}/.xnova-install.json`, 'utf8'), stateBefore);
   for (const [index, part] of ['api', 'web'].entries()) {
