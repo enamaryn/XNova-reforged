@@ -8,6 +8,8 @@ Le socle existe et démarre sur LXC, mais aucun pourcentage global d'achèvement
 
 Implémentation proposée dans la [PR #34](https://github.com/enamaryn/XNova-reforged/pull/34), validation finale en cours : commandant 1–100 basé sur bâtiments/recherches ; puissance incluant développement, unités et colonies, sans stocks ; capacités 1/2/3 par planète avec recherches et commandant niveau 50 ; production en attente prépayée et retrait remboursé à 90 %. Les constructions existantes sont conservées. Règles et premier équilibrage : [PROGRESSION.md](docs/PROGRESSION.md). Ce commandant de joueur est distinct des officiers et héros prévus dans la roadmap historique.
 
+- [x] **UI-COMMANDANT (demande du propriétaire, 9 octobre 2026)** — Niveau du commandant et puissance visibles dans le bandeau fixe du jeu sur PC et mobile. Vue d’ensemble et fiche harmonisées ; rang réel calculé, avec lien vers le classement, au lieu du champ historique « Rang #0 ». Valeurs de `/progression` partagées ; compte technique des planètes abandonnées exclu du classement. Aucun changement des formules ni migration. Validation locale : 33 contrôles de rendu PC/mobile réussis, 8 intégration classement/progression/production ; compilations API/web et lint sans erreur ; lien de PR et CI à compléter avant revue.
+
 ## Ordre de réalisation
 
 Les travaux de sécurité et d'intégrité économique peuvent avancer en parallèle, sans attendre la finition des écrans. Attribuer chaque ID à une PR corrective et reprendre son critère d'acceptation. Une case ne passe à terminée qu'avec PR/commit et résultat de validation ; une PR documentaire ne clôture aucun défaut.

@@ -7,6 +7,9 @@ export * from "./production";
 export * from "./multipliers";
 export * from "./progression";
 
+// Compte technique propriétaire des planètes abandonnées, exclu du classement des joueurs.
+export const ABANDONED_USERNAME = "__abandoned__";
+
 // Game constants
 export const GAME_CONSTANTS = {
   // Universe

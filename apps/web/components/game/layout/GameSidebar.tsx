@@ -86,7 +86,7 @@ export function GameSidebar({ isOpen, onClose }: GameSidebarProps) {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-14 left-0 bottom-[calc(4rem_+_env(safe-area-inset-bottom))] md:bottom-0 flex w-64 flex-col bg-slate-950/95 border-r border-slate-800/60 z-40 transform transition-transform duration-200 ease-in-out ${
+        className={`fixed top-32 md:top-[88px] left-0 bottom-[calc(4rem_+_env(safe-area-inset-bottom))] md:bottom-0 flex w-64 flex-col bg-slate-950/95 border-r border-slate-800/60 z-40 transform transition-transform duration-200 ease-in-out ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0`}
       >

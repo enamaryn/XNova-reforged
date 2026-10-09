@@ -11,6 +11,25 @@
 
 Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DOUBLE_AUDIT_2026-10.md), [roadmap historique](docs/history/ROADMAP_MVP_AVANT_AUDIT.md).
 
+## Session — niveau, puissance et rang dans l’interface
+
+**Date :** 9 octobre 2026. **Objectif :** afficher le niveau et la puissance dans le bandeau haut et corriger le rang du seul joueur du serveur, sur la base de la PR #34 fusionnée.
+
+- [x] `CommanderStatus.tsx` : bandeau fixe sur PC et mobile, valeurs de `/progression` partagées et actualisées toutes les 10 secondes ; valeurs indisponibles « — » et bouton de reprise.
+- [x] Vue d’ensemble et menu utilisateur : niveau, puissance et rang calculé via `/statistics` ; suppression de l’affichage des anciens champs `User.rank`/`User.points`. Le rang ouvre le classement complet et s’actualise toutes les 60 secondes sur la vue d’ensemble ou pendant l’ouverture du menu.
+- [x] Défaut supplémentaire reproduit : le compte technique `__abandoned__` et ses 200 planètes apparaissaient dans le classement. Constante de nom partagée avec le semis de galaxie ; exclusion de ce compte dans les statistiques, sans modifier les données ni les formules de progression.
+- [x] Hauteur réservée au bandeau et menu latéral adaptés ; espacement mobile des bâtiments et de la file réduit pour conserver les constructions visibles avec le nouveau bandeau.
+- [x] `commander-ranking.integration.spec.ts` : schéma PostgreSQL temporaire, un seul joueur humain avec champs historiques à zéro ; rang réel 1 et compte technique absent du top.
+- [x] Intégration locale : 8/8 tests classement/progression/production ; compilation API réussie.
+- [x] Rendu Chromium local : 30 tests existants et nouveaux sur PC, mobile 390 px et mobile 320 px, puis 3 contrôles de puissance maximale, tous réussis. Lint API/web sans erreur (avertissements existants).
+- [x] Compilations finales API et frontend réussies.
+- [ ] CI de la PR.
+- [x] Demande ajoutée dans `ROADMAP_MVP.md` et explication rang/niveau/puissance dans `docs/PROGRESSION.md`.
+
+**État :** changement d’affichage et correction du classement, aucune migration ou réinitialisation des comptes ; aucun déploiement sur le serveur du propriétaire.
+
+**Prochaines étapes :** revue de la PR, mise à jour du serveur de test par le propriétaire ; équilibrage et autres étapes du parcours de jeu restent à valider.
+
 ## Session — vérification de la première heure à vitesse ×1
 
 **Date :** 9 octobre 2026. **Objectif :** mesurer la progression depuis une inscription neuve sur le code fusionné jusqu’à la PR #31, sans intervenir sur le compte ni sur le serveur de test du propriétaire.

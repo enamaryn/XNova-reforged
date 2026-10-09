@@ -129,7 +129,7 @@ export function BuildQueue({ queue, onCancel }: BuildQueueProps) {
   }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-1 sm:space-y-2">
       <h3 className="flex flex-wrap items-center gap-2 text-sm font-semibold sm:text-lg text-white">
         🔨 File de construction
         <span className="rounded-full bg-blue-500/20 px-2 py-0.5 text-xs text-blue-300">

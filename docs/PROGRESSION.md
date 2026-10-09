@@ -2,6 +2,12 @@
 
 Le niveau du commandant et la puissance sont calculés depuis les possessions actuelles, sans dépendre des anciens champs `User.points` et `User.rank`. Les comptes existants sont immédiatement pris en compte ; aucune remise à zéro ni migration de données n'est nécessaire. Le classement des joueurs et des alliances utilise désormais la puissance calculée, dans un instantané transactionnel cohérent.
 
+## Affichage et classement
+
+Le bandeau fixe du jeu affiche le **niveau du commandant /100** et la **puissance actuelle** dès l’ouverture de la vue d’ensemble, sur ordinateur et mobile, puis sur les autres pages du jeu. Ces valeurs proviennent de `/progression` et sont actualisées toutes les 10 secondes via le cache partagé avec les écrans de développement. Une valeur indisponible est affichée « — », jamais comme un niveau ou une puissance de zéro.
+
+Le **rang** désigne la position dans le classement des joueurs par puissance (1 = premier), pas le niveau. Les anciens champs `User.rank` et `User.points` ne sont plus présentés dans le menu utilisateur ni dans la fiche de la vue d’ensemble : ils peuvent être à zéro sur un compte pourtant classé. Le rang affiché dans la vue d’ensemble, sa fiche et le menu utilisateur provient de `/statistics`, partagé en cache et actualisé toutes les 60 secondes sur la vue d’ensemble ou lorsque le menu est ouvert. Le compte technique `__abandoned__`, propriétaire des planètes abandonnées, est exclu du classement. Un seul compte joueur a donc le rang **1**, même si son ancien champ `User.rank` vaut zéro. Le rang est aussi un lien vers le classement complet ; en cas d’indisponibilité, « — » remplace le chiffre.
+
 ## Développement et niveau
 
 Le développement correspond à l'investissement cumulé théorique dans les niveaux de bâtiments de toutes les planètes et dans les recherches du joueur (comptées une seule fois), divisé par 1 000 et arrondi à l'entier inférieur par catégorie. Les coûts de référence sont ceux de la configuration du jeu, sans multiplicateurs de prix du serveur : changer un tarif ne modifie pas rétroactivement le développement. Pour Graviton, l'exigence énergétique compte comme investissement de référence afin que cette recherche contribue également au développement.
