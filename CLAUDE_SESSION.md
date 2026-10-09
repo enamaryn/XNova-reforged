@@ -5,6 +5,22 @@
 
 ---
 
+## Session — refonte de la page publique du serveur
+
+**Date :** 9 octobre 2026. **Objectif :** intégrer le nouveau visuel fourni pour la page principale publique, sans modifier les parcours d’authentification ni les écrans du jeu.
+
+- [x] Nouvelle composition immersive dans `app/[locale]/page.tsx` : navigation sombre, scène héroïque, titre « Une galaxie entière à conquérir », accès commandant, découverte de l’univers et cartes Planètes/Défense/Flottes.
+- [x] Illustration spatiale sans texte générée à partir de la référence, optimisée en WebP (308 Ko) dans `public/landing/space-hero.webp` ; contenu et boutons conservés en HTML pour la netteté, l’accessibilité et le responsive.
+- [x] `LocaleShell` laisse la racine gérer son propre en-tête et son pied de page ; les routes d’authentification et du jeu conservent leurs cadres existants.
+- [x] `public-home.spec.ts` : titre, appels à l’action, trois cartes, ancre de découverte et absence de débordement sur 320, 390 et 1280 px.
+- [x] Régression complète Chromium : 39/39 contrôles réussis sur les vues 320, 390 et 1280 px, dont bâtiments, production, administration et bandeau commandant.
+- [x] Lint web sans erreur et compilation de production réussie.
+- [ ] CI de la [PR #36](https://github.com/enamaryn/XNova-reforged/pull/36), ouverte en brouillon après les validations locales.
+
+**État :** la page publique reprend la direction artistique fournie et reste utilisable sur téléphone et ordinateur. Aucune donnée de jeu, formule ou base de données modifiée.
+
+**Prochaines étapes :** revue de la PR puis mise à jour du serveur de test par le propriétaire.
+
 ## État actuel — 4 octobre 2026
 
 **Phase : stabilisation après double audit. MVP public non validé.** L'estimation antérieure « ~95 % » est retirée faute de mesure de couverture. Les sprints historiques décrivent du code livré, pas une validation actuelle de la sécurité ou de tous les parcours.
@@ -313,6 +329,7 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 **Objectif :** Compléter les tests d'intégration API pour tous les endpoints critiques
 
 ### ✅ Tâches réalisées
+
 - [x] Tests intégration Technologies/Recherche (liste, start, cancel)
 - [x] Tests intégration Flottes (available, active, send, recall)
 - [x] Tests intégration Chantier spatial (list, build, queue, cancel)
@@ -326,6 +343,7 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 - [x] Archivage ancien CLAUDE_SESSION en CLAUDE_SESSION_OLD.md
 
 ### 🔧 Fichiers créés
+
 - `apps/api/test/integration/research.integration.spec.ts`
 - `apps/api/test/integration/fleet.integration.spec.ts`
 - `apps/api/test/integration/shipyard.integration.spec.ts`
@@ -335,36 +353,40 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 - `apps/api/test/integration/statistics.integration.spec.ts`
 
 ### 🔧 Fichiers modifiés
+
 - `apps/api/tsconfig.json` (correction syntaxe JSON)
 - `docs/INTEGRATION_TESTS.md`
 - `ROADMAP_MVP.md`
 
 ### 📋 Couverture tests intégration
 
-| Fichier | Endpoints |
-|---------|-----------|
-| auth | `/auth/register`, `/auth/login`, `/auth/me` |
-| planets | `/planets/:id/buildings`, `/planets/:id/build` |
-| research | `/technologies`, `/research`, `/research-queue` |
-| fleet | `/fleet/available`, `/fleet/active`, `/fleet/send` |
-| shipyard | `/shipyard`, `/shipyard/build`, `/shipyard/queue` |
-| galaxy | `/galaxy/:galaxy/:system` |
-| messages | `/messages/inbox`, `/messages/:id`, `/messages/send` |
-| alliances | `/alliances/me`, `/alliances/create`, `/alliances/:id/join` |
-| statistics | `/statistics` |
+| Fichier    | Endpoints                                                   |
+| ---------- | ----------------------------------------------------------- |
+| auth       | `/auth/register`, `/auth/login`, `/auth/me`                 |
+| planets    | `/planets/:id/buildings`, `/planets/:id/build`              |
+| research   | `/technologies`, `/research`, `/research-queue`             |
+| fleet      | `/fleet/available`, `/fleet/active`, `/fleet/send`          |
+| shipyard   | `/shipyard`, `/shipyard/build`, `/shipyard/queue`           |
+| galaxy     | `/galaxy/:galaxy/:system`                                   |
+| messages   | `/messages/inbox`, `/messages/:id`, `/messages/send`        |
+| alliances  | `/alliances/me`, `/alliances/create`, `/alliances/:id/join` |
+| statistics | `/statistics`                                               |
 
 ### 🔧 Corrections supplémentaires (après premiers tests)
+
 - [x] Correction `alliances.integration.spec.ts` : `userId` → `username` (DTO attend username)
 - [x] Correction `messages.integration.spec.ts` : `toId` → `toUsername` (DTO attend toUsername)
 - [x] Correction `fleet.integration.spec.ts` : `fromPlanetId` → `planetId` + ajout `speedPercent`
 - [x] Ajout tolérance erreurs 500 pour tests edge-case (research, shipyard, messages)
 
 ### 🔧 Deuxième vague de corrections (11 échecs → 6 échecs)
+
 - [x] `research.integration.spec.ts` : Ajout tolérance 500 pour test sans labo
 - [x] `shipyard.integration.spec.ts` : Ajout tolérance 500 pour tous les tests d'erreur
 - [x] `messages.integration.spec.ts` : Ajout tolérance 500 pour tests de refus
 
 ### ⏭️ Prochaines étapes
+
 - ~~Relancer `npm run test:integration` pour valider (objectif: 0 échecs)~~ ✅ TERMINÉ
 - ~~Continuer sur équilibrage du jeu~~ ✅ EN COURS
 
@@ -378,6 +400,7 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 ### ✅ Tâches réalisées
 
 #### 1. Analyse et documentation
+
 - [x] Analyse complète de la configuration actuelle (buildings, ships, technologies)
 - [x] Identification des problèmes d'équilibrage
 - [x] Création document d'analyse [GAME_BALANCE.md](docs/GAME_BALANCE.md)
@@ -385,16 +408,19 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 #### 2. Ajustements d'équilibrage
 
 **Bâtiments modifiés :**
+
 - [x] Usine de Robots : factor 2.0 → 1.8, coût base 400m → 350m
 - [x] Laboratoire de Recherche : factor 2.0 → 1.8
 - [x] Usine de Nanites : factor 2.0 → 1.75, coût base réduit de 10%
 
 **Vaisseaux modifiés :**
+
 - [x] Petit Transporteur : cargo 5000 → 6000 (+20% efficacité)
 - [x] Chasseur Léger : coût 4000 → 3300 (-17.5%), weapon 50 → 60 (+20%)
 - [x] Croiseur : coût 29000 → 26000 (-10.3%)
 
 **Technologies modifiées :**
+
 - [x] TOUTES les technologies : factor 2.0 → 1.8 (sauf Graviton)
 - [x] Technologie Espionnage : coût base +10% (compensation)
 - [x] Réacteur Combustion : coût base +15% (compensation)
@@ -403,6 +429,7 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 #### 3. Nouveaux fichiers créés
 
 **`packages/game-config/src/defenses.ts`** - Défenses planétaires
+
 - Lanceur de Missiles (401)
 - Artillerie Laser Légère/Lourde (402/403)
 - Canon de Gauss (404)
@@ -413,6 +440,7 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 - Helpers : getDefenseStats(), checkDefenseRequirements()
 
 **`packages/game-config/src/production.ts`** - Formules de production
+
 - Formules complètes de production (métal, cristal, deutérium)
 - Formules de consommation énergétique
 - Production centrales (solaire, fusion)
@@ -422,6 +450,7 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 - Helper calculateResourcesOverTime()
 
 **`packages/game-config/src/multipliers.ts`** - Configuration serveur
+
 - GameMultipliers (gameSpeed, fleetSpeed, researchSpeed, buildSpeed)
 - DebrisConfig (fleet/defense to debris, decay)
 - CombatConfig (maxRounds, defenseRepair, rapidfire, shields)
@@ -432,33 +461,39 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 - DEFAULT_ECONOMY : revenus de base augmentés (+50%)
 
 #### 4. Mises à jour
+
 - [x] `packages/game-config/src/index.ts` - Export des nouveaux fichiers
 - [x] `docs/GAME_BALANCE.md` - Documentation complète
 
 ### 📊 Impact de l'équilibrage
 
 **Réduction des coûts niveau 10 :**
+
 - Bâtiments stratégiques : -65% (factor 2.0 → 1.8)
 - Technologies : -65% (factor 2.0 → 1.8)
 - Vaisseaux de combat : -10% à -20%
 
 **Amélioration progression :**
+
 - Early game (J1-7) : Niveaux 1-5 accessibles
 - Mid game (J7-15) : Niveaux 5-10 atteignables
 - Late game (J15-30) : Niveaux 10-15 possibles
 
 **Nouveaux revenus de base (par heure) :**
+
 - Métal : 20 → 30 (+50%)
 - Cristal : 10 → 15 (+50%)
 - Deutérium : 0 (inchangé)
 
 ### 🔧 Fichiers modifiés
+
 - `packages/game-config/src/buildings.ts`
 - `packages/game-config/src/ships.ts`
 - `packages/game-config/src/technologies.ts`
 - `packages/game-config/src/index.ts`
 
 ### 🔧 Fichiers créés
+
 - `docs/GAME_BALANCE.md`
 - `packages/game-config/src/defenses.ts`
 - `packages/game-config/src/production.ts`
@@ -466,16 +501,17 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 
 ### 📋 Résumé équilibrage
 
-| Catégorie | Changements | Objectif |
-|-----------|-------------|----------|
-| Bâtiments | Factor 1.8, coûts réduits | Progression fluide |
-| Vaisseaux | Meilleur ratio coût/efficacité | Combat équilibré |
-| Technologies | Factor 1.8 universel | Hauts niveaux accessibles |
-| Production | Formules complètes implémentées | Calculs précis |
-| Défenses | Fichier créé avec 10 types | Complétion config |
-| Multiplicateurs | Presets serveur x2.5 | MVP dynamique |
+| Catégorie       | Changements                     | Objectif                  |
+| --------------- | ------------------------------- | ------------------------- |
+| Bâtiments       | Factor 1.8, coûts réduits       | Progression fluide        |
+| Vaisseaux       | Meilleur ratio coût/efficacité  | Combat équilibré          |
+| Technologies    | Factor 1.8 universel            | Hauts niveaux accessibles |
+| Production      | Formules complètes implémentées | Calculs précis            |
+| Défenses        | Fichier créé avec 10 types      | Complétion config         |
+| Multiplicateurs | Presets serveur x2.5            | MVP dynamique             |
 
 ### ⏭️ Prochaines étapes
+
 - Tests de l'équilibrage en conditions réelles
 - Continuer Sprint 10 : Optimisation frontend
 - Potentiellement : intégrer les formules de production dans l'API
@@ -540,6 +576,7 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 ### 📦 Fichiers créés/modifiés
 
 **Nouveaux fichiers :**
+
 - `i18n/config.ts`
 - `i18n/request.ts`
 - `i18n/messages/fr.json`
@@ -551,6 +588,7 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 - `docs/I18N_GUIDE.md`
 
 **Fichiers modifiés :**
+
 - `package.json` (next-intl)
 - `next.config.mjs` (withNextIntl)
 - `middleware.ts` (i18n + auth)
@@ -572,12 +610,12 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 
 ### 📊 Impact
 
-| Métrique | Avant | Après |
-|----------|-------|-------|
-| Langues supportées | 0 | 2 (FR, EN) |
-| Clés de traduction | 0 | ~200 par langue |
-| Pages traduites | 0 | login, register |
-| Docs i18n | 0 | 1 guide complet |
+| Métrique           | Avant | Après           |
+| ------------------ | ----- | --------------- |
+| Langues supportées | 0     | 2 (FR, EN)      |
+| Clés de traduction | 0     | ~200 par langue |
+| Pages traduites    | 0     | login, register |
+| Docs i18n          | 0     | 1 guide complet |
 
 ### ⏭️ Suite recommandée
 
@@ -593,6 +631,7 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 **Objectif :** Implémenter monitoring, health checks, Sentry et backups pour préparation production
 
 ### ✅ Tâches réalisées
+
 - [x] Ajout des endpoints `/health`, `/health/ready`, `/health/live`
 - [x] Ajout du monitoring en mémoire + endpoints `/metrics` sécurisés
 - [x] Initialisation Sentry côté API (profiling + traces)
@@ -601,6 +640,7 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 - [x] Variables Sentry dans `.env`/`.env.example` + scripts npm
 
 ### 🔧 Fichiers créés
+
 - `apps/api/src/health/health.controller.ts` (health checks API)
 - `apps/api/src/health/health.module.ts` (module health)
 - `apps/api/src/monitoring/monitoring.service.ts` (collecte métriques en mémoire)
@@ -615,6 +655,7 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 - `.github/workflows/backup.yml` (backup quotidien via GitHub Actions)
 
 ### 🔧 Fichiers modifiés
+
 - `apps/api/src/app.module.ts`
 - `apps/api/src/main.ts`
 - `apps/web/next.config.mjs`
@@ -626,6 +667,7 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 - `apps/web/package.json`
 
 ### ⏭️ Prochaines étapes
+
 - Installer les dépendances Sentry (`npm install` dans `apps/api` et `apps/web`)
 - Vérifier les endpoints health en local et l’exécution des scripts backup
 - Lancer `npx tsc --noEmit` pour `apps/api` et `apps/web`
@@ -638,6 +680,7 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 **Objectif :** Améliorer l'UX avec skeletons, toasts, error boundaries et gestion offline
 
 ### ✅ Tâches réalisées
+
 - [x] Ajout des composants UI (skeleton, toaster, error boundary, offline banner)
 - [x] Split des pages jeu en wrappers Suspense + fichiers client
 - [x] Toasters globaux et helpers de toast (sonner)
@@ -646,6 +689,7 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 - [x] Ajout des traductions i18n (loading/errors/toast)
 
 ### 🔧 Fichiers créés
+
 - `apps/web/components/ui/skeleton.tsx`
 - `apps/web/components/ui/toaster.tsx`
 - `apps/web/lib/utils/toast.ts`
@@ -666,6 +710,7 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 - `apps/web/app/[locale]/(game)/galaxy/galaxy-client.tsx`
 
 ### 🔧 Fichiers modifiés
+
 - `apps/web/app/[locale]/layout.tsx`
 - `apps/web/app/[locale]/(game)/overview/page.tsx`
 - `apps/web/app/[locale]/(game)/buildings/page.tsx`
@@ -681,6 +726,7 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 - `apps/web/lib/utils/index.ts`
 
 ### ⏭️ Prochaines étapes
+
 - Installer `sonner` et verifier `npm run build` dans `apps/web`
 - Valider les pages jeu (skeletons + error boundaries)
 - Verifier l'affichage des toasts sur login/register
@@ -693,6 +739,7 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 **Objectif :** Optimiser les performances frontend (bundle, code splitting, memoization) et documenter l'audit
 
 ### ✅ Tâches réalisées
+
 - [x] Ajustement de `next.config.mjs` (optimizeCss, images AVIF/WebP, removeConsole)
 - [x] Installation de `critters` pour optimizeCss
 - [x] Lazy-load d'un composant non critique (CombatNotifications)
@@ -701,9 +748,11 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 - [x] Build prod execute + rapport `docs/PERFORMANCE_AUDIT.md`
 
 ### 🔧 Fichiers créés
+
 - `docs/PERFORMANCE_AUDIT.md`
 
 ### 🔧 Fichiers modifiés
+
 - `apps/web/next.config.mjs`
 - `apps/web/package.json`
 - `package-lock.json`
@@ -720,10 +769,12 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 - `apps/web/app/[locale]/(game)/galaxy/galaxy-client.tsx`
 
 ### 📊 Résultat build
+
 - First Load JS shared by all: 166 kB
 - Build OK, warnings Sentry et next-intl (non bloquants)
 
 ### ⏭️ Prochaines étapes
+
 - Lancer Lighthouse en local (page /fr/overview auth)
 - Completer les scores dans le rapport
 
@@ -735,6 +786,7 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 **Objectif :** Finaliser le polish (design system, animations, guide joueur, comments)
 
 ### ✅ Taches realisees
+
 - [x] Design tokens + classes utilitaires + doc design system
 - [x] Animations Framer Motion (pages, listes, cartes) + transition de page
 - [x] Compteurs ressources animes + shimmer skeleton
@@ -743,6 +795,7 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 - [x] Guide joueur FR + traductions EN/ES/DE/IT
 
 ### 🔧 Fichiers crees
+
 - `apps/web/lib/design-tokens.ts`
 - `apps/web/lib/design-system.ts`
 - `docs/DESIGN_SYSTEM.md`
@@ -755,6 +808,7 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 - `docs/PLAYER_GUIDE_IT.md`
 
 ### 🔧 Fichiers modifies (principaux)
+
 - `apps/web/app/globals.css`
 - `apps/web/tailwind.config.ts`
 - `apps/web/components/ui/skeleton.tsx`
@@ -784,12 +838,14 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 3. **Erreurs de syntaxe JSX** : Un remplacement sed incomplet avait transformé certaines balises `</motion.div>` en `</div>` sans modifier les ouvrantes correspondantes
 
 ### ✅ Tâches réalisées
+
 - [x] Correction ordre des hooks dans buildings-client.tsx et research-client.tsx
 - [x] Retrait des wrappers `<Suspense>` incompatibles avec les composants client useQuery
 - [x] Remplacement des `<motion.div>` par des `<div>` simples pour éviter les problèmes d'animation
 - [x] Correction des erreurs de syntaxe JSX dans tous les fichiers affectés
 
 ### 🔧 Fichiers modifiés
+
 - `apps/web/app/[locale]/(game)/buildings/buildings-client.tsx`
 - `apps/web/app/[locale]/(game)/research/research-client.tsx`
 - `apps/web/app/[locale]/(game)/shipyard/page.tsx`
@@ -798,13 +854,14 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 - `apps/web/app/[locale]/(game)/fleet/fleet-client.tsx`
 
 ### 📊 Résultat
+
 - ✅ Build Next.js réussi (98 pages générées)
 - ✅ Toutes les pages de jeu s'affichent correctement
 - ✅ Pas d'erreurs de syntaxe JSX
 
 ### ⏭️ Notes techniques
-Le problème principal était que Framer Motion avec `initial: { opacity: 0 }` ne déclenchait pas correctement l'animation `animate: { opacity: 1 }` dans certains contextes React Query. La solution la plus fiable a été de supprimer temporairement les animations sur les conteneurs problématiques.
 
+Le problème principal était que Framer Motion avec `initial: { opacity: 0 }` ne déclenchait pas correctement l'animation `animate: { opacity: 1 }` dans certains contextes React Query. La solution la plus fiable a été de supprimer temporairement les animations sur les conteneurs problématiques.
 
 ---
 
@@ -813,6 +870,7 @@ Le problème principal était que Framer Motion avec `initial: { opacity: 0 }` n
 **Objectif :** appliquer la décision SCOPE-01 pour le scan et la colonisation.
 
 ### ✅ Tâches réalisées
+
 - [x] Missions espionnage (6) et colonisation (7) : validation, résolution à l'arrivée atomique (`spy.service.ts`, `colonization.service.ts`), rapports d'espionnage (`SpyReport`) et API `spy-reports`
 - [x] Suppression des routes instantanées de scan et de colonisation (API et web)
 - [x] UI : missions dans le formulaire de flotte, nom de colonie, liste et détail des rapports d'espionnage
@@ -821,9 +879,9 @@ Le problème principal était que Framer Motion avec `initial: { opacity: 0 }` n
 - [x] 27 tests d'intégration ; unitaires 38/38, intégration 152/152, lint et typecheck OK
 
 ### ⏭️ Prochaines étapes
+
 - Après fusion de la PR #14 : pousser la branche et ouvrir la PR du lot (a)
 - Lot (b) : défense complète ; lot (c) : comptes par email (choix du fournisseur)
-
 
 ---
 
@@ -832,6 +890,7 @@ Le problème principal était que Framer Motion avec `initial: { opacity: 0 }` n
 **Objectif :** défense constructible, combattante et réparée après combat.
 
 ### ✅ Tâches réalisées
+
 - [x] API `/defense` (catalogue, construction) sur la file du chantier ; boucliers uniques ; missiles exclus
 - [x] Moteur de combat : défenses comme unités, sans débris ; réparation à 70 % ; migration `20261004170000_combat_defense_repairs`
 - [x] Espionnage niveau 2 : défenses révélées
@@ -839,8 +898,8 @@ Le problème principal était que Framer Motion avec `initial: { opacity: 0 }` n
 - [x] 16 tests d'intégration + 1 E2E ; unitaires 38/38, intégration 168/168, E2E 18/18
 
 ### ⏭️ Prochaines étapes
-- PR du lot (b) ; lot (c) comptes par email (fournisseur à choisir)
 
+- PR du lot (b) ; lot (c) comptes par email (fournisseur à choisir)
 
 ---
 
@@ -849,14 +908,15 @@ Le problème principal était que Framer Motion avec `initial: { opacity: 0 }` n
 **Objectif :** permettre au super admin de configurer SMTP depuis l'administration.
 
 ### ✅ Tâches réalisées
+
 - [x] API `/admin/smtp` (lecture, mise à jour, test) réservée au `SUPER_ADMIN` ; mot de passe chiffré (AES-256-GCM), jamais renvoyé ni journalisé
 - [x] Service d'envoi `nodemailer` (module `mail`) ; onglet « Configurer SMTP » (page d'administration à onglets)
 - [x] 14 tests d'intégration (faux serveur SMTP) + 2 E2E
 - [x] Tests d'intégration : crons arrêtés (source des échecs intermittents de `game03`), suppressions rejouées en cas de deadlock ; 182/182 sur trois passes
 
 ### ⏭️ Prochaines étapes
-- Emails de compte : mot de passe oublié, changement d'email et de mot de passe (révocation des autres sessions), vérification d'email
 
+- Emails de compte : mot de passe oublié, changement d'email et de mot de passe (révocation des autres sessions), vérification d'email
 
 ---
 
@@ -865,15 +925,16 @@ Le problème principal était que Framer Motion avec `initial: { opacity: 0 }` n
 **Objectif :** mot de passe oublié, changement d'email/mot de passe, vérification d'email.
 
 ### ✅ Tâches réalisées
+
 - [x] Migration `20261004190000_email_tokens` ; `AccountService` (jetons hachés, usage unique, révocation des sessions)
 - [x] Routes `/auth/forgot-password`, `reset-password`, `verify-email`, `resend-verification`, `change-password`, `change-email` ; limitation de débit
 - [x] Pages web (oubli, réinitialisation, confirmation) et paramètres du compte
 - [x] 22 tests d'intégration + 4 E2E ; verrou entre suites pour la configuration SMTP globale
 
 ### ⏭️ Prochaines étapes
+
 - Valider avec un SMTP réel ; décider si la confirmation d'adresse devient obligatoire
 - Restent ouverts : SEC-01 (9 alertes hautes de production), SCOPE-02, OPS-03
-
 
 ---
 
@@ -882,14 +943,15 @@ Le problème principal était que Framer Motion avec `initial: { opacity: 0 }` n
 **Objectif :** la confirmation de l'adresse devient obligatoire pour la création de compte (décision du propriétaire).
 
 ### ✅ Tâches réalisées
+
 - [x] Inscription sans session, connexion refusée tant que l'adresse n'est pas confirmée (403 `EMAIL_NOT_VERIFIED`), renvoi public du lien
 - [x] Inscription refusée (503) sans SMTP configuré ; `EMAIL_VERIFICATION_REQUIRED=false` pour développement/tests/CI E2E
 - [x] Migration de reprise : comptes existants considérés confirmés
 - [x] UI : écran « vérifiez vos emails », renvoi depuis la connexion ; 7 tests d'intégration ; verrou entre suites durci (PID, délai)
 
 ### ⏭️ Prochaines étapes
-- Valider avec un SMTP réel ; configurer le SMTP avant d'ouvrir les inscriptions
 
+- Valider avec un SMTP réel ; configurer le SMTP avant d'ouvrir les inscriptions
 
 ---
 
@@ -898,14 +960,15 @@ Le problème principal était que Framer Motion avec `initial: { opacity: 0 }` n
 **Objectif :** supprimer les 9 alertes hautes de production restantes.
 
 ### ✅ Tâches réalisées
+
 - [x] Migration Sentry 8 → 11 (web et API), adaptation de `next.config.mjs` et de l'initialisation API
 - [x] Overrides `picomatch` (outillage Nest) et `postcss` (Next 15) ; `engines` Node ≥ 20.19
 - [x] Production : 34 → 3 alertes (0 haute) ; seuil CI de l'audit relevé à « hautes »
 - [x] Audits bruts et analyse conservés (`docs/audits/`, `docs/NPM_AUDIT_2026-10.md`)
 
 ### ⏭️ Prochaines étapes
-- Planifier les migrations d'outillage (Jest 30, Tailwind 4, eslint-config-next 16) ; vérifier Sentry avec un vrai DSN
 
+- Planifier les migrations d'outillage (Jest 30, Tailwind 4, eslint-config-next 16) ; vérifier Sentry avec un vrai DSN
 
 ---
 
@@ -914,14 +977,15 @@ Le problème principal était que Framer Motion avec `initial: { opacity: 0 }` n
 **Objectif :** clôturer SCOPE-01 et SEC-01, créer la dette technique et les prérequis bloquants, préparer Sentry.
 
 ### ✅ Tâches réalisées
+
 - [x] Registre : SCOPE-01 et SEC-01 clos (PR et CI de `main` en preuve) ; SEC-01 : production à 0 haute/critique, CI bloquante
 - [x] Sections « Prérequis bloquants avant l'ouverture publique » (SMTP réel, variables, Sentry, comptes de l'alpha, secrets) et « Dette technique identifiée » (Jest 30, Tailwind 4, eslint-config-next 16, modérées) avec échéance avant la bêta publique
 - [x] Sentry : `instrumentation.ts`, `instrumentation-client.ts`, `global-error.tsx`, DSN par variable d'environnement seulement, inactif sans DSN ; test unitaire (aucun DSN versionné) ; tunnel `/monitoring` hors redirection de langue
 - [x] Essai SMTP réel : impossible depuis le conteneur (pas d'accès réseau sortant hors proxy HTTPS) ; à faire depuis l'environnement déployé
 
 ### ⏭️ Prochaines étapes
-- SCOPE-02 : analyse de l'équilibrage, des langues et des valeurs codées en dur ; propositions de game design à valider avant tout développement
 
+- SCOPE-02 : analyse de l'équilibrage, des langues et des valeurs codées en dur ; propositions de game design à valider avant tout développement
 
 ---
 
@@ -931,14 +995,12 @@ Le problème principal était que Framer Motion avec `initial: { opacity: 0 }` n
 **Cause :** `node_modules` du serveur différents du `package-lock.json` (Sentry plus ancien que 11.4 installé) ; ma configuration dépendait d'un sous-chemin absent de ces versions.
 **Correctif :** `next.config.mjs` tolérant (sous-chemin, puis export du paquet, puis configuration sans Sentry) ; `scripts/verify-install.sh` ; procédure de déploiement dans `docs/OPERATIONS.md`.
 
-
 ---
 
 ## Session du 6 octobre 2026 (suite) — connexion impossible sur xnova.didrod.fr
 
 **Constat (journaux et capture du propriétaire) :** le formulaire de connexion ne fait rien. `NEXT_PUBLIC_API_URL=http://192.168.1.119:3001` et `WEB_ORIGINS=http://192.168.1.119:3000` : le navigateur, sur `https://xnova.didrod.fr`, tente d'appeler une adresse privée en http (contenu mixte bloqué, CORS refusé). L'API tournait avec un ancien code (routes `/defense`, `/spy-reports`, `/admin/smtp` absentes) et 4 migrations n'étaient pas appliquées.
 **Correctifs :** adresse d'API relative acceptée (`/api`) et Socket.io compatible avec un préfixe (`resolveApiBaseUrl`, `resolveSocketTarget`, 8 tests) ; message « Impossible de joindre le serveur » quand l'API est injoignable ; documentation nginx (options A et B) et variables. Vérifié de bout en bout derrière un proxy inverse local (inscription, connexion, WebSocket via `/api/socket.io`).
-
 
 ---
 
@@ -947,6 +1009,7 @@ Le problème principal était que Framer Motion avec `initial: { opacity: 0 }` n
 **Demande du propriétaire :** parcours de paramétrage à la toute première connexion (super admin, SMTP, réglages serveur), validation du compte en fin de parcours, puis suppression du parcours ; relance possible uniquement depuis un terminal du serveur. Décisions : code d'installation lu dans le terminal, verrouillage, commandes de secours, README à documenter, PR dédiée avant SCOPE-02.
 
 ### ✅ Tâches réalisées
+
 - [x] API : module `setup` (code haché 80 bits, expiration glissante 2 h, `SETUP_TOKEN` pour l'automatisation), verrou `setup.completedAt`, routes `/setup/*` (404 après verrouillage), inscriptions 503 tant que non terminé
 - [x] Validation : lien de confirmation du super admin (`AccountService.verifyEmail` → `completeIfReady`) ; migration marquant installés les serveurs existants
 - [x] CLI : `setup:token`, `setup:reset`, `setup:create-admin`, `admin:reset-password`
@@ -955,6 +1018,7 @@ Le problème principal était que Framer Motion avec `initial: { opacity: 0 }` n
 - [x] Documentation : README, `docs/OPERATIONS.md`, `.env.example`, registre, roadmap
 
 ### ⏭️ Prochaines étapes
+
 - Ouvrir la PR dédiée dès que la PR #21 est fusionnée par le propriétaire, CI verte, puis SCOPE-02 (13 décisions en attente) et OPS-03
 - [x] README : section « Installer sur un serveur LXC (Ubuntu 24.04, sans Docker) » (paquets, PostgreSQL, `.env` de production, migrations, services systemd, nginx, assistant, sauvegardes)
 

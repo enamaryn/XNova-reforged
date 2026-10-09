@@ -34,6 +34,8 @@ export function LocaleShell({
   const page = locales.includes(segments[0] as (typeof locales)[number])
     ? segments[1]
     : segments[0];
+  // La page d'accueil possède son propre cadre immersif, navigation et pied de page.
+  if (!page) return <>{children}</>;
   // Game pages already provide their own fixed header, main and navigation.
   if (gamePages.has(page)) return <>{children}</>;
   return (
