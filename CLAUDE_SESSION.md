@@ -23,7 +23,7 @@ Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DO
 - [x] Intégration locale : 8/8 tests classement/progression/production ; compilation API réussie.
 - [x] Rendu Chromium local : 30 tests existants et nouveaux sur PC, mobile 390 px et mobile 320 px, puis 3 contrôles de puissance maximale, tous réussis. Lint API/web sans erreur (avertissements existants).
 - [x] Compilations finales API et frontend réussies.
-- [ ] CI de la PR.
+- [ ] CI de la [PR #35](https://github.com/enamaryn/XNova-reforged/pull/35), ouverte en brouillon après les validations locales.
 - [x] Demande ajoutée dans `ROADMAP_MVP.md` et explication rang/niveau/puissance dans `docs/PROGRESSION.md`.
 
 **État :** changement d’affichage et correction du classement, aucune migration ou réinitialisation des comptes ; aucun déploiement sur le serveur du propriétaire.
