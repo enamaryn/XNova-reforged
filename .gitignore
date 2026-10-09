@@ -75,3 +75,6 @@ backups/
 # Artefacts de tests Playwright
 test-results/
 playwright-report/
+
+# Installed web build identity
+apps/web/.build-info.json

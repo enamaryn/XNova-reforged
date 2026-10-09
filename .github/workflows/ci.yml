@@ -24,6 +24,7 @@ jobs:
       - name: Tests autonomes sans npm install
         run: |
           bash -n scripts/install.sh scripts/update.sh
+          node --test scripts/build-info/test/*.test.mjs
           node --test scripts/update/test/*.test.mjs
           node --test scripts/install/test/*.test.mjs
       - name: Clone dédié sur la machine jetable
