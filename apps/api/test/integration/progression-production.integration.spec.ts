@@ -91,6 +91,36 @@ describe("Commander, power and production capacities", () => {
       await db.buildQueue.count({ where: { planetId, completed: false } }),
     ).toBe(3); // Existing work survives downgrade.
   });
+  it("keeps building capacity independent between a player's planets", async () => {
+    await build(1);
+    const home = await db.planet.findUniqueOrThrow({ where: { id: planetId } });
+    const occupied = await db.planet.findMany({
+      where: { galaxy: home.galaxy, system: home.system },
+      select: { position: true },
+    });
+    const position = Array.from({ length: 15 }, (_, i) => i + 1).find(
+      (p) => !occupied.some((row) => row.position === p),
+    )!;
+    const colony = await db.planet.create({
+      data: {
+        userId,
+        name: "Colonie",
+        galaxy: home.galaxy,
+        system: home.system,
+        position,
+        fieldsMax: 163,
+      },
+    });
+    await buildings.startConstruction(colony.id, 1, userId);
+    expect(
+      await db.buildQueue.count({
+        where: { planetId: colony.id, completed: false },
+      }),
+    ).toBe(1);
+    expect(
+      await db.buildQueue.count({ where: { planetId, completed: false } }),
+    ).toBe(1);
+  });
   it("requires the technology even for a level-100 commander", async () => {
     await db.planet.update({
       where: { id: planetId },
@@ -102,6 +132,7 @@ describe("Commander, power and production capacities", () => {
     expect(p.productionCapacity).toBe(1);
   });
   it("queues prepaid lots, refunds 90 % only once and rejects cancellation of started work", async () => {
+    const initialScore = await progression.get(userId);
     const active = await yard.startBuild(planetId, 202, 1000, userId);
     const before = await db.planet.findUniqueOrThrow({
       where: { id: planetId },
@@ -119,6 +150,7 @@ describe("Commander, power and production capacities", () => {
     const after = await db.planet.findUniqueOrThrow({
       where: { id: planetId },
     });
+    expect(await progression.get(userId)).toEqual(initialScore);
     expect(before.metal - after.metal).toBe(pending.cost.metal);
     await expect(
       yard.cancelBuild(active.queueId, userId),

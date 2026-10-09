@@ -126,12 +126,23 @@ test("shows commander, power and separate waiting/active production on narrow sc
   page,
 }) => {
   await fixture(page);
-  await expect(page.getByText("Commandant : niveau 50/100")).toBeVisible();
+  await expect(
+    page.getByText("Commandant : niveau 50/100 · 3 chantiers · 3 lignes"),
+  ).toBeVisible();
+  await page
+    .locator("summary")
+    .filter({ hasText: "Commandant : niveau 50/100" })
+    .click();
   await expect(
     page.getByText(
       "Par planète : 3 bâtiment(s) simultané(s) · 3 ligne(s) de production.",
     ),
   ).toBeVisible();
+  await expect(page.getByText(/Puissance :/)).toBeVisible();
+  await page
+    .locator("summary")
+    .filter({ hasText: "Commandant : niveau 50/100" })
+    .click();
   const queue = page.getByRole("region", {
     name: "File du chantier",
     exact: true,

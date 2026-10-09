@@ -95,7 +95,7 @@ export default function DefensePage() {
 
   return (
     <div className="space-y-6">
-      <CommanderSummary />
+      <CommanderSummary compact />
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">

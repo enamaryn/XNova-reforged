@@ -64,7 +64,7 @@ export function ProgressionSummary({
     </section>
   );
 }
-export function CommanderSummary() {
+export function CommanderSummary({ compact = false }: { compact?: boolean }) {
   const query = useQuery({
     queryKey: ["progression"],
     queryFn: getProgression,
@@ -79,6 +79,19 @@ export function CommanderSummary() {
   if (!query.data)
     return (
       <p className="text-xs text-slate-400">Chargement du développement…</p>
+    );
+  if (compact)
+    return (
+      <details className="rounded-xl border border-blue-500/30 bg-slate-950/60 p-2 text-xs">
+        <summary className="cursor-pointer">
+          Commandant : niveau {query.data.commanderLevel}/100 ·{" "}
+          {query.data.buildingCapacity} chantiers ·{" "}
+          {query.data.productionCapacity} lignes
+        </summary>
+        <div className="mt-2">
+          <ProgressionSummary progression={query.data} />
+        </div>
+      </details>
     );
   return <ProgressionSummary progression={query.data} />;
 }
