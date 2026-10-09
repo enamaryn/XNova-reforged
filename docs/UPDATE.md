@@ -25,7 +25,7 @@ sudo bash scripts/update.sh --check
 
 La version apparaît en bas du menu du jeu (ouvrir le menu sur mobile) et des pages publiques, par exemple `v0.1.0 Alpha · PR #29 · fdb8c94`. Le lien ouvre le commit correspondant. Le numéro de PR est affiché quand le message du commit de fusion permet de l’identifier ; le hash est la référence exacte. `+local` signale une compilation avec des modifications locales. `build inconnu` indique que l’origine n’a pas pu être identifiée.
 
-Le numéro de version et le statut viennent de `apps/web/version.json`. Le commit est figé pendant la compilation et conservé au redémarrage : un simple `git pull` ne change pas la version affichée avant recompilation. `/api/version` renvoie les mêmes informations sans secrets ni accès à la base. Après mise à jour, recharger la page permet de charger le nouveau build.
+Le numéro de version et le statut viennent de `apps/web/version.json`. Le commit est figé pendant la compilation et conservé au redémarrage : un simple `git pull` ne change pas la version affichée avant recompilation. `/build-version.json` renvoie les mêmes informations sans secrets ni accès à la base. Après mise à jour, recharger la page permet de charger le nouveau build.
 
 ## Déroulement
 
