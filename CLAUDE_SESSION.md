@@ -11,6 +11,21 @@
 
 Références : [roadmap MVP](ROADMAP_MVP.md), [registre des corrections](docs/DOUBLE_AUDIT_2026-10.md), [roadmap historique](docs/history/ROADMAP_MVP_AVANT_AUDIT.md).
 
+## Session — vérification de la première heure à vitesse ×1
+
+**Date :** 9 octobre 2026. **Objectif :** mesurer la progression depuis une inscription neuve sur le code fusionné jusqu’à la PR #31, sans intervenir sur le compte ni sur le serveur de test du propriétaire.
+
+- [x] PostgreSQL local et schémas temporaires isolés ; sept parcours d’une heure simulée, sans ajout de ressources, via HTTP et services planifiés réels.
+- [x] `first-hour-progression.integration.spec.ts` : production indépendante par intervalle, dépenses, durées annoncées/réelles, énergie, cases, refus sans débit et renouvellement de session. Stocks, revenus et événements exportables en JSON.
+- [x] Défaut reproduit : changement de niveau avant règlement de l’ancien rendement, trois des cinq premiers parcours en échec. `buildings.service.ts` solde désormais l’ancien rendement sous verrou avant d’appliquer le nouveau, dans la transaction de finalisation.
+- [x] `building-production-transition.integration.spec.ts` : quatre tests mine/centrale/déficit/finalisations simultanées ; finalisation répétée sans double effet.
+- [x] Validation locale : compilation API et lint sans erreur, 68 unitaires et 265 intégration sur la matrice initiale ; matrice finale de sept parcours et quatre tests ciblés, 11/11 réussis.
+- [x] Rapport [FIRST_HOUR_SIMULATION.md](docs/FIRST_HOUR_SIMULATION.md) et résultats [JSON](docs/audits/first-hour-progression-2026-10-09.json) ; roadmap actualisée sans clôturer équilibrage ni parcours complet.
+
+**État :** cinq à sept constructions dans les ordres testés, pas de laboratoire dans l’heure ; rythme limité surtout par les ressources. Aucun changement des coûts, stocks de départ ou multiplicateurs. Le détail d’affichage des `Float` juste sous un entier est documenté.
+
+**Prochaines étapes :** décider du rythme initial souhaité, compléter les étapes recherche/chantier/flotte/rapport et mesurer la charge. Les données du propriétaire restent intactes.
+
 ## Session — mise à jour du registre et préparation de SCOPE-01
 
 **Date :** 4 octobre 2026. **Objectif :** refléter les clôtures prouvées dans le registre et la roadmap.
