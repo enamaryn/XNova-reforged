@@ -1,137 +1,91 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { DatabaseService } from '../database/database.service';
-import { RedisService } from '../redis/redis.service';
-
-const TOP_PLAYERS_CACHE_KEY = 'xnova:stats:top-players';
-const TOP_ALLIANCES_CACHE_KEY = 'xnova:stats:top-alliances';
-const STATS_CACHE_TTL_SECONDS = 60;
-
-type TopPlayer = {
-  id: string;
-  username: string;
-  points: number;
-  rank: number;
-};
-
-type TopAlliance = {
-  id: string;
-  tag: string;
-  name: string;
-  members: number;
-  points: number;
-};
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { DatabaseService } from "../database/database.service";
+import {
+  progressionInclude,
+  progressionOf,
+} from "../progression/progression.service";
 
 @Injectable()
 export class StatisticsService {
-  constructor(
-    private readonly database: DatabaseService,
-    private readonly redis: RedisService,
-  ) {}
+  constructor(private readonly database: DatabaseService) {}
 
   async getOverview(userId: string) {
-    const [user, cachedPlayers, cachedAlliances] = await Promise.all([
-      this.database.user.findUnique({
-        where: { id: userId },
-        select: {
-          id: true,
-          username: true,
-          points: true,
-          rank: true,
-          createdAt: true,
-          allianceMember: {
-            select: {
-              alliance: {
-                select: {
-                  id: true,
-                  tag: true,
-                  name: true,
-                },
-              },
-            },
+    // One repeatable snapshot avoids counting a deployed fleet both in orbit and on its destination.
+    return this.database.$transaction(
+      async (tx) => {
+        const users = await tx.user.findMany({
+          include: {
+            ...progressionInclude,
+            allianceMember: { include: { alliance: true } },
           },
-          _count: {
-            select: {
-              planets: true,
-            },
-          },
-        },
-      }),
-      this.redis.getJson<TopPlayer[]>(TOP_PLAYERS_CACHE_KEY),
-      this.redis.getJson<TopAlliance[]>(TOP_ALLIANCES_CACHE_KEY),
-    ]);
-
-    if (!user) {
-      throw new NotFoundException('Utilisateur introuvable');
-    }
-
-    let topPlayers = cachedPlayers;
-    if (!topPlayers) {
-      topPlayers = await this.database.user.findMany({
-        orderBy: { points: 'desc' },
-        take: 20,
-        select: {
-          id: true,
-          username: true,
-          points: true,
-          rank: true,
-        },
-      });
-      await this.redis.setJson(TOP_PLAYERS_CACHE_KEY, topPlayers, STATS_CACHE_TTL_SECONDS);
-    }
-
-    let topAlliances = cachedAlliances;
-    if (!topAlliances) {
-      const alliances = await this.database.alliance.findMany({
-        select: {
-          id: true,
-          tag: true,
-          name: true,
-          members: {
-            select: {
-              user: {
-                select: {
-                  points: true,
-                },
-              },
-            },
-          },
-        },
-      });
-
-      topAlliances = alliances
-        .map((alliance) => {
-          const members = alliance.members.length;
-          const points = alliance.members.reduce(
-            (total, member) => total + member.user.points,
-            0,
+        });
+        const ranked = users
+          .map((user) => ({ user, progression: progressionOf(user) }))
+          .sort(
+            (a, b) =>
+              b.progression.power - a.progression.power ||
+              a.user.createdAt.getTime() - b.user.createdAt.getTime() ||
+              a.user.id.localeCompare(b.user.id),
           );
-
-          return {
+        const index = ranked.findIndex((row) => row.user.id === userId);
+        if (index < 0) throw new NotFoundException("Utilisateur introuvable");
+        const { user, progression } = ranked[index];
+        const alliances = new Map<
+          string,
+          {
+            id: string;
+            tag: string;
+            name: string;
+            members: number;
+            points: number;
+          }
+        >();
+        for (const row of ranked) {
+          const alliance = row.user.allianceMember?.alliance;
+          if (!alliance) continue;
+          const entry = alliances.get(alliance.id) ?? {
             id: alliance.id,
             tag: alliance.tag,
             name: alliance.name,
-            members,
-            points,
+            members: 0,
+            points: 0,
           };
-        })
-        .sort((a, b) => b.points - a.points)
-        .slice(0, 10);
-
-      await this.redis.setJson(TOP_ALLIANCES_CACHE_KEY, topAlliances, STATS_CACHE_TTL_SECONDS);
-    }
-
-    return {
-      personal: {
-        id: user.id,
-        username: user.username,
-        points: user.points,
-        rank: user.rank,
-        createdAt: user.createdAt,
-        planets: user._count.planets,
-        alliance: user.allianceMember?.alliance ?? null,
+          entry.members++;
+          entry.points += row.progression.power;
+          alliances.set(alliance.id, entry);
+        }
+        return {
+          personal: {
+            id: user.id,
+            username: user.username,
+            points: progression.power,
+            rank: index + 1,
+            createdAt: user.createdAt,
+            planets: user.planets.filter((p) => p.planetType !== "moon").length,
+            alliance: user.allianceMember?.alliance
+              ? {
+                  id: user.allianceMember.alliance.id,
+                  tag: user.allianceMember.alliance.tag,
+                  name: user.allianceMember.alliance.name,
+                }
+              : null,
+            progression,
+          },
+          topPlayers: ranked
+            .slice(0, 20)
+            .map((row, i) => ({
+              id: row.user.id,
+              username: row.user.username,
+              points: row.progression.power,
+              rank: i + 1,
+              commanderLevel: row.progression.commanderLevel,
+            })),
+          topAlliances: [...alliances.values()]
+            .sort((a, b) => b.points - a.points || a.id.localeCompare(b.id))
+            .slice(0, 10),
+        };
       },
-      topPlayers,
-      topAlliances,
-    };
+      { isolationLevel: "RepeatableRead" },
+    );
   }
 }

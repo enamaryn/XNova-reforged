@@ -1,5 +1,6 @@
 "use client";
 
+import { CommanderSummary } from "@/components/game/CommanderSummary";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { buildingsApi } from "@/lib/api/buildings";
@@ -181,6 +182,7 @@ export default function BuildingsClient() {
 
   return (
     <div className="space-y-3 sm:space-y-6">
+      <CommanderSummary />
       {/* Header de page */}
       <div className="flex items-center justify-between gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>

@@ -1,4 +1,5 @@
 "use client";
+import { ProgressionSummary } from "@/components/game/CommanderSummary";
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -105,8 +106,9 @@ function PlayerDetails({ player }: { player: AdminPlayerDetail }) {
       <div>
         <h2 className="text-xl font-semibold">{player.username}</h2>
         <p className="text-sm text-slate-400">
-          {count(player.points)} points · Rang {player.rank || "—"} · Dernière
-          activité : {new Date(player.lastActive).toLocaleString("fr-FR")}
+          {count(player.progression?.power ?? player.points)} de puissance ·
+          Rang {player.rank || "—"} · Dernière activité :{" "}
+          {new Date(player.lastActive).toLocaleString("fr-FR")}
         </p>
         {player.banned && (
           <p className="mt-2 text-sm text-red-300">
@@ -118,6 +120,9 @@ function PlayerDetails({ player }: { player: AdminPlayerDetail }) {
           </p>
         )}
       </div>
+      {player.progression && (
+        <ProgressionSummary progression={player.progression} />
+      )}
       <PlayerActions player={player} />
       {canEditEmail && (
         <form

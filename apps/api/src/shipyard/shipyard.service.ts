@@ -3,9 +3,12 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
-} from '@nestjs/common';
-import { ServerConfigService } from '../server-config/server-config.service';
+} from "@nestjs/common";
+import { Prisma } from "@prisma/client";
+import { ProgressionService } from "../progression/progression.service";
+import { ServerConfigService } from "../server-config/server-config.service";
 import {
+  scheduleProduction,
   BUILDINGS,
   DEFENSES,
   IMPLEMENTED_DEFENSES,
@@ -13,20 +16,21 @@ import {
   SINGLE_UNIT_DEFENSES,
   TECHNOLOGIES,
   type ShipCost,
-} from '@xnova/game-config';
-import { DatabaseService } from '../database/database.service';
-import { debitResources, lockPlanet } from '../common/atomic';
+} from "@xnova/game-config";
+import { DatabaseService } from "../database/database.service";
+import { debitResources, lockPlanet } from "../common/atomic";
 
 @Injectable()
 export class ShipyardService {
   constructor(
     private readonly database: DatabaseService,
     private readonly serverConfig: ServerConfigService,
+    private readonly progression: ProgressionService,
   ) {}
 
   async getShipyard(planetId: string, userId: string) {
     if (!planetId) {
-      throw new BadRequestException('planetId requis');
+      throw new BadRequestException("planetId requis");
     }
 
     const planet = await this.getPlanetOrFail(planetId, userId);
@@ -50,19 +54,25 @@ export class ShipyardService {
 
     const queue = await this.database.shipQueue.findMany({
       where: { planetId, completed: false },
-      orderBy: { endTime: 'asc' },
+      orderBy: { endTime: "asc" },
     });
 
     const inQueue = new Set(queue.map((entry) => entry.shipId));
-    const { shipCostMultiplier } = await this.serverConfig.getConfig();
+    const { shipCostMultiplier, gameSpeed } =
+      await this.serverConfig.getConfig();
 
     const ships = Object.values(SHIPS).map((ship) => {
       const cost = this.applyCostMultiplier(ship.cost, shipCostMultiplier);
-      const buildTime = this.getShipBuildTimeSeconds({
-        cost,
-        shipyardLevel: planet.shipyard,
-        naniteLevel: planet.naniteFactory,
-      });
+      const buildTime = Math.max(
+        1,
+        Math.floor(
+          this.getShipBuildTimeSeconds({
+            cost,
+            shipyardLevel: planet.shipyard,
+            naniteLevel: planet.naniteFactory,
+          }) / gameSpeed,
+        ),
+      );
 
       const requirements = this.checkShipRequirements(
         ship.id,
@@ -92,6 +102,7 @@ export class ShipyardService {
     return {
       planetId,
       ships,
+      progression: await this.progression.get(userId),
       resources: {
         metal: planet.metal,
         crystal: planet.crystal,
@@ -102,7 +113,7 @@ export class ShipyardService {
 
   async getDefenses(planetId: string, userId: string) {
     if (!planetId) {
-      throw new BadRequestException('planetId requis');
+      throw new BadRequestException("planetId requis");
     }
 
     const planet = await this.getPlanetOrFail(planetId, userId);
@@ -113,29 +124,47 @@ export class ShipyardService {
     });
     const amounts = new Map(rows.map((row) => [row.defenseId, row.amount]));
 
-    const techRows = await this.database.technology.findMany({ where: { userId } });
+    const techRows = await this.database.technology.findMany({
+      where: { userId },
+    });
     const techLevels: Record<number, number> = {};
     techRows.forEach((row) => {
       techLevels[row.techId] = row.level;
     });
 
     const queue = await this.database.shipQueue.findMany({
-      where: { planetId, completed: false, shipId: { in: [...IMPLEMENTED_DEFENSES] } },
+      where: {
+        planetId,
+        completed: false,
+        shipId: { in: [...IMPLEMENTED_DEFENSES] },
+      },
     });
     const queued = new Map<number, number>();
-    queue.forEach((entry) => queued.set(entry.shipId, (queued.get(entry.shipId) ?? 0) + entry.amount));
+    queue.forEach((entry) =>
+      queued.set(entry.shipId, (queued.get(entry.shipId) ?? 0) + entry.amount),
+    );
 
-    const { shipCostMultiplier } = await this.serverConfig.getConfig();
+    const { shipCostMultiplier, gameSpeed } =
+      await this.serverConfig.getConfig();
 
     const defenses = IMPLEMENTED_DEFENSES.map((id) => {
       const defense = DEFENSES[id];
       const cost = this.applyCostMultiplier(defense.cost, shipCostMultiplier);
-      const buildTime = this.getShipBuildTimeSeconds({
-        cost,
-        shipyardLevel: planet.shipyard,
-        naniteLevel: planet.naniteFactory,
-      });
-      const requirements = this.checkRequirements(id, this.extractBuildingLevels(planet), techLevels);
+      const buildTime = Math.max(
+        1,
+        Math.floor(
+          this.getShipBuildTimeSeconds({
+            cost,
+            shipyardLevel: planet.shipyard,
+            naniteLevel: planet.naniteFactory,
+          }) / gameSpeed,
+        ),
+      );
+      const requirements = this.checkRequirements(
+        id,
+        this.extractBuildingLevels(planet),
+        techLevels,
+      );
       const canAfford =
         planet.metal >= cost.metal &&
         planet.crystal >= cost.crystal &&
@@ -145,7 +174,7 @@ export class ShipyardService {
       const single = SINGLE_UNIT_DEFENSES.includes(id);
       const missingRequirements = [...requirements.missingRequirements];
       if (single && currentAmount + inQueue >= 1) {
-        missingRequirements.push('Une seule unité par planète');
+        missingRequirements.push("Une seule unité par planète");
       }
 
       return {
@@ -167,7 +196,12 @@ export class ShipyardService {
     return {
       planetId,
       defenses,
-      resources: { metal: planet.metal, crystal: planet.crystal, deuterium: planet.deuterium },
+      progression: await this.progression.get(userId),
+      resources: {
+        metal: planet.metal,
+        crystal: planet.crystal,
+        deuterium: planet.deuterium,
+      },
     };
   }
 
@@ -176,10 +210,10 @@ export class ShipyardService {
     shipId: number,
     amount: number,
     userId: string,
-    kind: 'ship' | 'defense' = 'ship',
+    kind: "ship" | "defense" = "ship",
   ) {
     const planet = await this.getPlanetOrFail(planetId, userId);
-    const isDefense = kind === 'defense';
+    const isDefense = kind === "defense";
     const ship = isDefense
       ? IMPLEMENTED_DEFENSES.includes(shipId)
         ? DEFENSES[shipId]
@@ -188,7 +222,9 @@ export class ShipyardService {
 
     if (!ship) {
       throw new BadRequestException(
-        isDefense ? `Defense ${shipId} inexistante ou indisponible` : `Vaisseau ${shipId} inexistant`,
+        isDefense
+          ? `Defense ${shipId} inexistante ou indisponible`
+          : `Vaisseau ${shipId} inexistant`,
       );
     }
 
@@ -208,17 +244,24 @@ export class ShipyardService {
       techLevels,
     );
 
-    if (isDefense && SINGLE_UNIT_DEFENSES.includes(shipId) && safeAmount !== 1) {
-      throw new BadRequestException('Un bouclier planetaire ne se construit qu\'en un seul exemplaire');
+    if (
+      isDefense &&
+      SINGLE_UNIT_DEFENSES.includes(shipId) &&
+      safeAmount !== 1
+    ) {
+      throw new BadRequestException(
+        "Un bouclier planetaire ne se construit qu'en un seul exemplaire",
+      );
     }
 
     if (!requirements.canBuild) {
       throw new BadRequestException(
-        `Prerequis manquants: ${requirements.missingRequirements.join(', ')}`,
+        `Prerequis manquants: ${requirements.missingRequirements.join(", ")}`,
       );
     }
 
-    const { gameSpeed, shipCostMultiplier } = await this.serverConfig.getConfig();
+    const { gameSpeed, shipCostMultiplier } =
+      await this.serverConfig.getConfig();
     const unitCost = this.applyCostMultiplier(ship.cost, shipCostMultiplier);
 
     const totalCost = {
@@ -232,7 +275,7 @@ export class ShipyardService {
       planet.crystal < totalCost.crystal ||
       planet.deuterium < totalCost.deuterium
     ) {
-      throw new BadRequestException('Ressources insuffisantes');
+      throw new BadRequestException("Ressources insuffisantes");
     }
 
     const timePerUnit = this.getShipBuildTimeSeconds({
@@ -247,27 +290,26 @@ export class ShipyardService {
     const now = new Date();
 
     // Debit conditionnel et calcul de la file dans une transaction verrouillee sur la planete (ECO-03)
-    const { updatedPlanet, queueEntry, startTime, endTime } = await this.database.$transaction(
-      async (tx) => {
+    const { updatedPlanet, queueEntry, startTime, endTime } =
+      await this.database.$transaction(async (tx) => {
         await lockPlanet(tx, planetId);
 
         if (isDefense && SINGLE_UNIT_DEFENSES.includes(shipId)) {
           const built = await tx.defense.findUnique({
             where: { planetId_defenseId: { planetId, defenseId: shipId } },
           });
-          const pending = await tx.shipQueue.count({ where: { planetId, shipId, completed: false } });
+          const pending = await tx.shipQueue.count({
+            where: { planetId, shipId, completed: false },
+          });
           if ((built?.amount ?? 0) + pending >= 1) {
-            throw new BadRequestException('Ce bouclier existe deja sur cette planete');
+            throw new BadRequestException(
+              "Ce bouclier existe deja sur cette planete",
+            );
           }
         }
 
-        const lastEntry = await tx.shipQueue.findFirst({
-          where: { planetId, completed: false },
-          orderBy: { endTime: 'desc' },
-        });
-
-        const startTime =
-          lastEntry && lastEntry.endTime > now ? lastEntry.endTime : now;
+        // Insert as waiting; scheduler assigns a free lane and serializes identical types.
+        const startTime = new Date(now.getTime() + 1);
         const endTime = new Date(startTime.getTime() + adjustedTime * 1000);
 
         await debitResources(tx, planetId, totalCost);
@@ -286,10 +328,20 @@ export class ShipyardService {
             },
           },
         });
-        const updatedPlanet = await tx.planet.findUniqueOrThrow({ where: { id: planetId } });
-        return { updatedPlanet, queueEntry, startTime, endTime };
-      },
-    );
+        const updatedPlanet = await tx.planet.findUniqueOrThrow({
+          where: { id: planetId },
+        });
+        await this.reflowQueueTimes(tx, planetId, userId, now);
+        const scheduled = await tx.shipQueue.findUniqueOrThrow({
+          where: { id: queueEntry.id },
+        });
+        return {
+          updatedPlanet,
+          queueEntry: scheduled,
+          startTime: scheduled.startTime,
+          endTime: scheduled.endTime,
+        };
+      });
 
     return {
       success: true,
@@ -311,17 +363,27 @@ export class ShipyardService {
   async getShipyardQueue(planetId: string, userId: string) {
     await this.getPlanetOrFail(planetId, userId);
 
+    await this.database.$transaction(async (tx) => {
+      await lockPlanet(tx, planetId);
+      await this.reflowQueueTimes(tx, planetId, userId, new Date());
+    });
     const queue = await this.database.shipQueue.findMany({
       where: { planetId, completed: false },
-      orderBy: { startTime: 'asc' },
+      orderBy: { startTime: "asc" },
     });
 
     return queue.map((item) => ({
       id: item.id,
       shipId: item.shipId,
-      shipName: SHIPS[item.shipId]?.name || DEFENSES[item.shipId]?.name || `Ship ${item.shipId}`,
-      kind: item.shipId >= 400 ? 'defense' : 'ship',
+      shipName:
+        SHIPS[item.shipId]?.name ||
+        DEFENSES[item.shipId]?.name ||
+        `Ship ${item.shipId}`,
+      kind: item.shipId >= 400 ? "defense" : "ship",
       amount: item.amount,
+      status: item.startTime.getTime() > Date.now() ? "waiting" : "active",
+      canCancel: item.startTime.getTime() > Date.now(),
+      refund: this.refundFor(item),
       startTime: item.startTime,
       endTime: item.endTime,
       remainingSeconds: Math.max(
@@ -338,63 +400,48 @@ export class ShipyardService {
     });
 
     if (!queueEntry) {
-      throw new NotFoundException('Construction introuvable');
+      throw new NotFoundException("Construction introuvable");
     }
 
     if (queueEntry.planet.userId !== userId) {
-      throw new ForbiddenException('Acces refuse');
+      throw new ForbiddenException("Acces refuse");
     }
 
     if (queueEntry.completed) {
-      throw new BadRequestException('Construction deja terminee');
+      throw new BadRequestException("Construction deja terminee");
     }
 
     const ship = SHIPS[queueEntry.shipId] ?? DEFENSES[queueEntry.shipId];
     if (!ship) {
-      throw new BadRequestException('Vaisseau invalide');
+      throw new BadRequestException("Vaisseau invalide");
     }
 
-    // Rembourse exactement le montant debite (ECO-05), meme si le multiplicateur a change depuis
-    const paid = queueEntry.paidCost as
-      | Partial<Record<'metal' | 'crystal' | 'deuterium', number>>
-      | null;
-    let refund: { metal: number; crystal: number; deuterium: number };
-    if (paid && typeof paid === 'object') {
-      refund = {
-        metal: Number(paid.metal) || 0,
-        crystal: Number(paid.crystal) || 0,
-        deuterium: Number(paid.deuterium) || 0,
-      };
-    } else {
-      // Entrees anterieures a l'enregistrement du cout : meilleur effort avec la configuration courante
-      const { shipCostMultiplier } = await this.serverConfig.getConfig();
-      const unitCost = this.applyCostMultiplier(ship.cost, shipCostMultiplier);
-      refund = {
-        metal: unitCost.metal * queueEntry.amount,
-        crystal: unitCost.crystal * queueEntry.amount,
-        deuterium: unitCost.deuterium * queueEntry.amount,
-      };
-    }
-
-    const updatedPlanet = await this.database.$transaction(async (tx) => {
-      const claimed = await tx.shipQueue.deleteMany({
-        where: { id: queueId, completed: false },
-      });
-      if (claimed.count !== 1) {
-        throw new BadRequestException('Construction deja terminee');
-      }
-
-      return tx.planet.update({
-        where: { id: queueEntry.planetId },
-        data: {
-          metal: { increment: refund.metal },
-          crystal: { increment: refund.crystal },
-          deuterium: { increment: refund.deuterium },
-        },
-      });
-    });
-
-    await this.reflowQueueTimes(queueEntry.planetId, new Date());
+    const { updatedPlanet, refund } = await this.database.$transaction(
+      async (tx) => {
+        await lockPlanet(tx, queueEntry.planetId);
+        const current = await tx.shipQueue.findUnique({
+          where: { id: queueId },
+        });
+        if (!current || current.completed)
+          throw new BadRequestException("Commande déjà terminée ou annulée");
+        if (current.startTime <= new Date())
+          throw new BadRequestException(
+            "La production a déjà démarré ; seules les commandes en attente peuvent être retirées.",
+          );
+        const refund = this.refundFor(current);
+        await tx.shipQueue.delete({ where: { id: queueId } });
+        const updatedPlanet = await tx.planet.update({
+          where: { id: current.planetId },
+          data: {
+            metal: { increment: refund.metal },
+            crystal: { increment: refund.crystal },
+            deuterium: { increment: refund.deuterium },
+          },
+        });
+        await this.reflowQueueTimes(tx, current.planetId, userId, new Date());
+        return { updatedPlanet, refund };
+      },
+    );
 
     return {
       success: true,
@@ -421,6 +468,13 @@ export class ShipyardService {
     }
 
     await this.database.$transaction(async (tx) => {
+      await lockPlanet(tx, queueEntry.planetId);
+      const current = await tx.shipQueue.findUnique({
+        where: { id: queueEntry.id },
+      });
+      if (!current || current.completed || current.endTime > new Date()) return;
+      // Use the database lot, never stale caller quantities.
+      queueEntry = current;
       // Prise en charge atomique : ignore une commande deja annulee ou terminee
       const claimed = await tx.shipQueue.updateMany({
         where: { id: queueEntry.id, completed: false },
@@ -431,7 +485,10 @@ export class ShipyardService {
       if (defense && !ship) {
         await tx.defense.upsert({
           where: {
-            planetId_defenseId: { planetId: queueEntry.planetId, defenseId: queueEntry.shipId },
+            planetId_defenseId: {
+              planetId: queueEntry.planetId,
+              defenseId: queueEntry.shipId,
+            },
           },
           update: { amount: { increment: queueEntry.amount } },
           create: {
@@ -457,11 +514,19 @@ export class ShipyardService {
           amount: queueEntry.amount,
         },
       });
-
     });
   }
 
   async getCompletedBuilds() {
+    const planets = await this.database.planet.findMany({
+      where: { shipQueue: { some: { completed: false } } },
+      select: { id: true, userId: true },
+    });
+    for (const planet of planets)
+      await this.database.$transaction(async (tx) => {
+        await lockPlanet(tx, planet.id);
+        await this.reflowQueueTimes(tx, planet.id, planet.userId, new Date());
+      });
     return this.database.shipQueue.findMany({
       where: {
         completed: false,
@@ -470,37 +535,38 @@ export class ShipyardService {
     });
   }
 
-  private async reflowQueueTimes(planetId: string, now: Date) {
-    const queue = await this.database.shipQueue.findMany({
+  private refundFor(entry: {
+    paidCost: Prisma.JsonValue;
+    shipId: number;
+    amount: number;
+  }) {
+    const paid = entry.paidCost as Partial<ShipCost> | null;
+    // Legacy rows predate paidCost; preserve their base-cost fallback explicitly.
+    const cost = (SHIPS[entry.shipId] ?? DEFENSES[entry.shipId]).cost;
+    const refund = (key: keyof ShipCost) =>
+      Math.floor((paid?.[key] ?? cost[key] * entry.amount) * 0.9);
+    return {
+      metal: refund("metal"),
+      crystal: refund("crystal"),
+      deuterium: refund("deuterium"),
+    };
+  }
+
+  private async reflowQueueTimes(
+    tx: Prisma.TransactionClient,
+    planetId: string,
+    userId: string,
+    now: Date,
+  ) {
+    const queue = await tx.shipQueue.findMany({
       where: { planetId, completed: false },
-      orderBy: { startTime: 'asc' },
     });
-
-    if (queue.length <= 1) return;
-
-    const activeEntry = queue.find(
-      (entry) => entry.startTime <= now && entry.endTime > now,
-    );
-
-    let cursor = activeEntry ? activeEntry.endTime : now;
-
-    const updates = queue
-      .filter((entry) => entry.id !== activeEntry?.id)
-      .filter((entry) => entry.startTime > now)
-      .map((entry) => {
-        const durationMs = entry.endTime.getTime() - entry.startTime.getTime();
-        const startTime = cursor > now ? cursor : now;
-        const endTime = new Date(startTime.getTime() + durationMs);
-        cursor = endTime;
-
-        return this.database.shipQueue.update({
-          where: { id: entry.id },
-          data: { startTime, endTime },
-        });
+    const { productionCapacity } = await this.progression.get(userId, tx);
+    for (const entry of scheduleProduction(queue, productionCapacity, now)) {
+      await tx.shipQueue.update({
+        where: { id: entry.id },
+        data: { startTime: entry.startTime, endTime: entry.endTime },
       });
-
-    if (updates.length > 0) {
-      await this.database.$transaction(updates);
     }
   }
 
@@ -540,7 +606,7 @@ export class ShipyardService {
   ): { canBuild: boolean; missingRequirements: string[] } {
     const ship = SHIPS[shipId] ?? DEFENSES[shipId];
     if (!ship) {
-      return { canBuild: false, missingRequirements: ['Element introuvable'] };
+      return { canBuild: false, missingRequirements: ["Element introuvable"] };
     }
 
     const missingRequirements: string[] = [];
@@ -555,8 +621,8 @@ export class ShipyardService {
         if (currentLevel < reqLevel) {
           const name =
             reqIdNum < 100
-              ? (BUILDINGS[reqIdNum]?.name || `Batiment ${reqIdNum}`)
-              : (TECHNOLOGIES[reqIdNum]?.name || `Technologie ${reqIdNum}`);
+              ? BUILDINGS[reqIdNum]?.name || `Batiment ${reqIdNum}`
+              : TECHNOLOGIES[reqIdNum]?.name || `Technologie ${reqIdNum}`;
           missingRequirements.push(
             `${name} niveau ${reqLevel} requis (actuel: ${currentLevel})`,
           );
@@ -576,11 +642,11 @@ export class ShipyardService {
     });
 
     if (!planet) {
-      throw new NotFoundException('Planete introuvable');
+      throw new NotFoundException("Planete introuvable");
     }
 
     if (planet.userId !== userId) {
-      throw new ForbiddenException('Acces refuse');
+      throw new ForbiddenException("Acces refuse");
     }
 
     return planet;
@@ -627,5 +693,4 @@ export class ShipyardService {
       43: planet.jumpGate,
     };
   }
-
 }

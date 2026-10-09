@@ -1,3 +1,4 @@
+import type { Progression } from "./progression";
 import { apiClient } from "./client";
 
 export interface AdminConfig {
@@ -38,6 +39,7 @@ export interface AdminPlayerSummary {
 }
 
 export interface AdminPlayerDetail extends Omit<AdminPlayerSummary, "planets"> {
+  progression?: Progression;
   mustVerifyEmail: boolean;
   createdAt: string;
   banReason: string | null;

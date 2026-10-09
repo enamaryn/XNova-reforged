@@ -1,126 +1,146 @@
-'use client';
+"use client";
+import { useEffect, useState } from "react";
+import type { ShipyardQueueItem } from "@/lib/api/shipyard";
 
-import { useEffect, useState } from 'react';
-import type { ShipyardQueueItem } from '@/lib/api/shipyard';
-
-interface ShipyardQueueProps {
-  queue: ShipyardQueueItem[];
-  onCancel: (queueId: string) => Promise<void>;
-}
-
-function formatTimeRemaining(seconds: number): string {
-  if (seconds <= 0) return 'Terminé!';
+function duration(seconds: number) {
+  if (seconds <= 0) return "Finalisation…";
   if (seconds < 60) return `${seconds}s`;
-  if (seconds < 3600) {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}m ${secs}s`;
-  }
-  const hours = Math.floor(seconds / 3600);
-  const mins = Math.floor((seconds % 3600) / 60);
-  const secs = seconds % 60;
-  return `${hours}h ${mins}m ${secs}s`;
+  if (seconds < 3600) return `${Math.floor(seconds / 60)}m ${seconds % 60}s`;
+  return `${Math.floor(seconds / 3600)}h ${Math.floor((seconds % 3600) / 60)}m`;
 }
-
 function QueueItem({
   item,
   onCancel,
 }: {
   item: ShipyardQueueItem;
-  onCancel: (queueId: string) => Promise<void>;
+  onCancel: (id: string) => Promise<void>;
 }) {
-  const [remainingSeconds, setRemainingSeconds] = useState(item.remainingSeconds);
+  const [now, setNow] = useState(Date.now());
+  const [confirming, setConfirming] = useState(false);
   const [canceling, setCanceling] = useState(false);
-
+  const [error, setError] = useState("");
   useEffect(() => {
-    const endTime = new Date(item.endTime).getTime();
-
-    const updateRemaining = () => {
-      const now = Date.now();
-      const remaining = Math.max(0, Math.floor((endTime - now) / 1000));
-      setRemainingSeconds(remaining);
-    };
-
-    updateRemaining();
-    const interval = setInterval(updateRemaining, 1000);
-
-    return () => clearInterval(interval);
-  }, [item.endTime]);
-
-  const handleCancel = async () => {
-    if (canceling) return;
+    const timer = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+  const start = new Date(item.startTime).getTime(),
+    end = new Date(item.endTime).getTime();
+  const waiting = now < start;
+  const progress = Math.min(
+    100,
+    Math.max(0, (100 * (now - start)) / Math.max(1, end - start)),
+  );
+  const cancel = async () => {
     setCanceling(true);
+    setError("");
     try {
       await onCancel(item.id);
+    } catch (e) {
+      setError((e as Error).message);
     } finally {
       setCanceling(false);
     }
   };
-
-  const startTime = new Date(item.startTime).getTime();
-  const endTime = new Date(item.endTime).getTime();
-  const totalDuration = endTime - startTime;
-  const elapsed = Date.now() - startTime;
-  const progress = Math.min(100, Math.max(0, (elapsed / totalDuration) * 100));
-
   return (
-    <div className="rounded-2xl border border-blue-500/30 bg-slate-900/60 p-4 shadow-[0_0_24px_rgba(2,132,199,0.12)]">
-      <div className="mb-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h4 className="font-semibold text-white">{item.shipName}</h4>
-          <span className="text-xs text-slate-500">x{item.amount}</span>
-        </div>
-        <div className="text-left sm:text-right">
-          <div className="font-mono text-lg font-bold text-blue-300">
-            {formatTimeRemaining(remainingSeconds)}
-          </div>
+    <div className="rounded-xl border border-blue-500/30 bg-slate-900/60 p-3">
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-sm">
+        <strong className="min-w-0">
+          {item.shipName} ×{item.amount}
+        </strong>
+        <span className={waiting ? "text-amber-300" : "text-blue-300"}>
+          {waiting ? "En attente" : "En production"}
+        </span>
+        <span className="font-mono text-xs">
+          {waiting ? "Début dans " : ""}
+          {duration(
+            Math.max(0, Math.ceil(((waiting ? start : end) - now) / 1000)),
+          )}
+        </span>
+        {waiting && (
           <button
-            onClick={handleCancel}
+            className="text-xs text-red-300"
+            onClick={() => setConfirming(!confirming)}
             disabled={canceling}
-            className="text-[11px] uppercase tracking-[0.18em] text-red-300 hover:text-red-200 transition-colors"
           >
-            {canceling ? 'Annulation...' : 'Annuler'}
+            Retirer
+          </button>
+        )}
+      </div>
+      {!waiting && (
+        <div className="mt-2 h-1 overflow-hidden rounded bg-slate-800">
+          <div
+            className="h-full bg-blue-500"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      )}
+      <p className="mt-1 text-[11px] text-slate-500">
+        Fin estimée : {new Date(item.endTime).toLocaleString("fr-FR")}
+      </p>
+      {confirming && waiting && (
+        <div className="mt-2 space-y-2 text-xs">
+          <p>
+            Remboursement : 90 % des ressources payées. Les 10 % restants sont
+            perdus.
+          </p>
+          {item.refund && (
+            <p>
+              Métal : {item.refund.metal} · Cristal : {item.refund.crystal} ·
+              Deutérium : {item.refund.deuterium}
+            </p>
+          )}
+          <button
+            onClick={cancel}
+            disabled={canceling}
+            className="rounded border border-red-500/40 px-2 py-1 text-red-300"
+          >
+            {canceling ? "Retrait…" : "Confirmer le retrait"}
+          </button>
+          <button onClick={() => setConfirming(false)} className="ml-3">
+            Conserver
           </button>
         </div>
-      </div>
-
-      <div className="h-2 w-full overflow-hidden rounded-full bg-slate-800">
-        <div
-          className="h-full bg-gradient-to-r from-sky-400 via-blue-500 to-blue-600 transition-all duration-1000"
-          style={{ width: `${progress}%` }}
-        />
-      </div>
-      <div className="mt-1 text-right text-xs text-slate-500">
-        {progress.toFixed(0)}%
-      </div>
+      )}
+      {error && (
+        <p role="alert" className="mt-2 text-xs text-red-300">
+          {error}
+        </p>
+      )}
     </div>
   );
 }
-
-export function ShipyardQueue({ queue, onCancel }: ShipyardQueueProps) {
-  if (queue.length === 0) {
-    return (
-      <div className="rounded-2xl border border-slate-800/80 bg-slate-900/40 p-6 text-center">
-        <div className="text-3xl mb-2">🚀</div>
-        <p className="text-slate-300">Aucune construction en cours</p>
-        <p className="text-xs text-slate-500 mt-1">
-          Sélectionnez un vaisseau pour lancer la production
-        </p>
-      </div>
-    );
-  }
-
+export function ShipyardQueue({
+  queue,
+  onCancel,
+}: {
+  queue: ShipyardQueueItem[];
+  onCancel: (id: string) => Promise<void>;
+}) {
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    const timer = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+  const active = queue.filter(
+    (q) => new Date(q.startTime).getTime() <= now,
+  ).length;
   return (
-    <div className="space-y-3">
-      <h3 className="flex flex-wrap items-center gap-2 text-lg font-semibold text-white">
-        🛠️ File du chantier
-        <span className="rounded-full bg-blue-500/20 px-2 py-0.5 text-xs text-blue-300">
-          {queue.length} en cours
-        </span>
+    <section aria-label="File du chantier" className="space-y-2">
+      <h3 className="font-semibold">
+        File du chantier · {active} en production · {queue.length - active} en
+        attente
       </h3>
-      {queue.map((item) => (
-        <QueueItem key={item.id} item={item} onCancel={onCancel} />
-      ))}
-    </div>
+      <p className="text-xs text-slate-400">
+        Ressources débitées à la commande. Retrait en attente : remboursement à
+        90 %. Les lots démarrés terminent normalement.
+      </p>
+      {queue.length ? (
+        queue.map((item) => (
+          <QueueItem key={item.id} item={item} onCancel={onCancel} />
+        ))
+      ) : (
+        <p className="text-sm text-slate-400">Aucune construction en cours</p>
+      )}
+    </section>
   );
 }

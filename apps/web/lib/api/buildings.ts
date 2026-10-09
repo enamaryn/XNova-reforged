@@ -1,4 +1,4 @@
-import { apiClient } from './client';
+import { apiClient } from "./client";
 
 // Types pour les bâtiments
 export interface BuildingCost {
@@ -9,10 +9,12 @@ export interface BuildingCost {
 }
 
 export interface BuildingInfo {
+  capacityFull?: boolean;
+  buildingCapacity?: number;
   id: number;
   name: string;
   description: string;
-  category: 'resource' | 'facility' | 'station' | 'defense' | 'moon';
+  category: "resource" | "facility" | "station" | "defense" | "moon";
   currentLevel: number;
   maxLevel: number;
   isMaxLevel: boolean;
@@ -34,7 +36,7 @@ export interface BuildingInfo {
 export interface BuildingUpgradeEffect {
   key: string;
   label: string;
-  unit: 'perHour' | 'energy' | 'capacity' | 'percent' | 'fields';
+  unit: "perHour" | "energy" | "capacity" | "percent" | "fields";
   current: number;
   next: number;
   delta: number;
@@ -96,7 +98,9 @@ export const buildingsApi = {
 
   // Démarrer une construction
   startBuild: (planetId: string, buildingId: number) =>
-    apiClient.post<StartBuildResponse>(`/planets/${planetId}/build`, { buildingId }),
+    apiClient.post<StartBuildResponse>(`/planets/${planetId}/build`, {
+      buildingId,
+    }),
 
   // Récupérer la file d'attente
   getBuildQueue: (planetId: string) =>
@@ -104,5 +108,7 @@ export const buildingsApi = {
 
   // Annuler une construction
   cancelBuild: (planetId: string, queueId: string) =>
-    apiClient.delete<CancelBuildResponse>(`/planets/${planetId}/build-queue/${queueId}`),
+    apiClient.delete<CancelBuildResponse>(
+      `/planets/${planetId}/build-queue/${queueId}`,
+    ),
 };

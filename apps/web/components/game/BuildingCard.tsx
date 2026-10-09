@@ -180,11 +180,13 @@ export const BuildingCard = memo(function BuildingCard({
               ? "🔨 En file"
               : building.isMaxLevel
                 ? "⛔ Niveau max atteint"
-                : !building.canAfford
-                  ? "💰 Ressources insuffisantes"
-                  : building.missingRequirements.length > 0
-                    ? "🔒 Prérequis manquants"
-                    : `🔨 Construire niveau ${building.currentLevel + 1}`}
+                : building.capacityFull
+                  ? `Chantiers occupés (${building.buildingCapacity})`
+                  : !building.canAfford
+                    ? "💰 Ressources insuffisantes"
+                    : building.missingRequirements.length > 0
+                      ? "🔒 Prérequis manquants"
+                      : `🔨 Construire niveau ${building.currentLevel + 1}`}
         </button>
         <Link
           href={`/buildings/${building.id}`}
