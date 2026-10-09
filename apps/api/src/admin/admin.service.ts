@@ -229,6 +229,7 @@ export class AdminService {
     client: Pick<Prisma.TransactionClient, "user">,
     actorId: string,
     target: { id: string; role: string },
+    requireAdministrator = false,
   ) {
     const actor = await client.user.findUnique({
       where: { id: actorId },
@@ -242,6 +243,8 @@ export class AdminService {
     };
     if (
       !actor ||
+      (requireAdministrator &&
+        !["ADMIN", "SUPER_ADMIN"].includes(actor.role)) ||
       target.id === actorId ||
       (ranks[actor.role] ?? 0) <= (ranks[target.role] ?? 0)
     ) {
@@ -273,7 +276,7 @@ export class AdminService {
             },
           });
           if (!target) throw new NotFoundException("Joueur introuvable");
-          await this.assertPlayerManagement(tx, actorId, target);
+          await this.assertPlayerManagement(tx, actorId, target, true);
           if (
             dto.confirmationUsername !== target.username ||
             dto.reason.trim().length < 3

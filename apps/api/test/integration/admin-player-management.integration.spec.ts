@@ -1,6 +1,7 @@
 import { INestApplication } from "@nestjs/common";
 import request from "supertest";
 import { randomUUID } from "crypto";
+import { AdminService } from "../../src/admin/admin.service";
 import { DatabaseService } from "../../src/database/database.service";
 import {
   buildTestUser,
@@ -232,6 +233,16 @@ describe("Fiche joueur et gestion administrative", () => {
     const superAdmin = await account("SUPER_ADMIN");
     const moderator = await account("MODERATOR");
     const url = `/admin/players/${target.id}/reset`;
+    await expect(
+      app
+        .get(AdminService)
+        .managePlayer(
+          moderator.id,
+          target.id,
+          payload(target.username),
+          "reset",
+        ),
+    ).rejects.toMatchObject({ status: 403 });
     await request(app.getHttpServer())
       .post(url)
       .set(auth())
