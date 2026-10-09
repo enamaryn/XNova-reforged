@@ -37,14 +37,22 @@ export interface AdminPlayerSummary {
   bannedUntil: string | null;
 }
 
-export interface AdminPlayerDetail extends Omit<AdminPlayerSummary, 'planets'> {
+export interface AdminPlayerDetail extends Omit<AdminPlayerSummary, "planets"> {
   mustVerifyEmail: boolean;
   createdAt: string;
   banReason: string | null;
+  fleets: AdminFleet[];
+  incomingFleets: AdminFleet[];
+  researchQueue: AdminQueueEntry[];
   technologies: { id: number; name: string; level: number }[];
   planets: {
     id: string;
     name: string;
+    planetType: string;
+    ships: { id: number; name: string; amount: number }[];
+    defenses: { id: number; name: string; amount: number }[];
+    buildQueue: AdminQueueEntry[];
+    shipQueue: AdminQueueEntry[];
     coordinates: string;
     resources: { metal: number; crystal: number; deuterium: number };
     energy: { produced: number; used: number };
@@ -54,16 +62,69 @@ export interface AdminPlayerDetail extends Omit<AdminPlayerSummary, 'planets'> {
   }[];
 }
 
-export function getAdminPlayers(search = '', page = 1) {
-  return apiClient.get<{ players: AdminPlayerSummary[]; total: number; page: number; pageSize: number }>(`/admin/players?${new URLSearchParams({ search, page: String(page) })}`);
+export interface AdminQueueEntry {
+  id: string;
+  name: string;
+  level?: number;
+  amount?: number;
+  endTime: string;
+}
+export interface AdminFleet {
+  id: string;
+  mission: number;
+  status: string;
+  fromGalaxy: number;
+  fromSystem: number;
+  fromPosition: number;
+  toGalaxy: number;
+  toSystem: number;
+  toPosition: number;
+  arrivalTime: string;
+  returnTime: string | null;
+  ships: Record<string, number>;
+  cargo: Record<string, number>;
+}
+export interface ManagePlayerPayload {
+  confirmationUsername: string;
+  reason: string;
+}
+export function resetPlayer(id: string, payload: ManagePlayerPayload) {
+  return apiClient.post<{ success: boolean; username: string }>(
+    `/admin/players/${id}/reset`,
+    payload,
+  );
+}
+export function deletePlayer(id: string, payload: ManagePlayerPayload) {
+  return apiClient.delete<{ success: boolean; username: string }>(
+    `/admin/players/${id}`,
+    { body: JSON.stringify(payload) },
+  );
+}
+
+export function getAdminPlayers(search = "", page = 1) {
+  return apiClient.get<{
+    players: AdminPlayerSummary[];
+    total: number;
+    page: number;
+    pageSize: number;
+  }>(`/admin/players?${new URLSearchParams({ search, page: String(page) })}`);
 }
 
 export function getAdminPlayer(id: string) {
   return apiClient.get<AdminPlayerDetail>(`/admin/players/${id}`);
 }
 
-export function updatePlayerEmail({ id, email }: { id: string; email: string }) {
-  return apiClient.put<{ success: boolean; message: string }>(`/admin/players/${id}/email`, { email });
+export function updatePlayerEmail({
+  id,
+  email,
+}: {
+  id: string;
+  email: string;
+}) {
+  return apiClient.put<{ success: boolean; message: string }>(
+    `/admin/players/${id}/email`,
+    { email },
+  );
 }
 
 export interface AdminAuditLog {
@@ -144,7 +205,10 @@ export function updateUserRole(payload: UpdateRolePayload) {
 }
 
 export function boostDevelopment(payload: BoostDevelopmentPayload) {
-  return apiClient.put<BoostDevelopmentResult>("/admin/boost-development", payload);
+  return apiClient.put<BoostDevelopmentResult>(
+    "/admin/boost-development",
+    payload,
+  );
 }
 
 export function banUser(payload: BanUserPayload) {
@@ -200,5 +264,8 @@ export function updateSmtpSettings(payload: UpdateSmtpPayload) {
 }
 
 export function sendSmtpTest(to?: string) {
-  return apiClient.post<{ success: boolean; to: string }>("/admin/smtp/test", to ? { to } : {});
+  return apiClient.post<{ success: boolean; to: string }>(
+    "/admin/smtp/test",
+    to ? { to } : {},
+  );
 }
