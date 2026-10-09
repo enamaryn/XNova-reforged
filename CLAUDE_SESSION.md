@@ -15,7 +15,7 @@
 - [x] `public-home.spec.ts` : titre, appels à l’action, trois cartes, ancre de découverte et absence de débordement sur 320, 390 et 1280 px.
 - [x] Régression complète Chromium : 39/39 contrôles réussis sur les vues 320, 390 et 1280 px, dont bâtiments, production, administration et bandeau commandant.
 - [x] Lint web sans erreur et compilation de production réussie.
-- [ ] CI et lien de PR.
+- [ ] CI de la [PR #36](https://github.com/enamaryn/XNova-reforged/pull/36), ouverte en brouillon après les validations locales.
 
 **État :** la page publique reprend la direction artistique fournie et reste utilisable sur téléphone et ordinateur. Aucune donnée de jeu, formule ou base de données modifiée.
 
