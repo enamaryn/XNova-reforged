@@ -67,7 +67,7 @@ export function GameLayout({ children }: GameLayoutProps) {
       <GameSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       {/* Contenu principal */}
-      <main className="relative z-10 w-full min-w-0 pt-14 lg:pl-64">
+      <main className="relative z-10 w-full min-w-0 pt-[88px] lg:pl-64">
         {/* Zone de ressources mobile */}
         <div className="md:hidden h-10" />
 

@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { DatabaseService } from "../database/database.service";
+import { ABANDONED_USERNAME } from "@xnova/game-config";
 import {
   progressionInclude,
   progressionOf,
@@ -10,10 +11,11 @@ export class StatisticsService {
   constructor(private readonly database: DatabaseService) {}
 
   async getOverview(userId: string) {
-    // One repeatable snapshot avoids counting a deployed fleet both in orbit and on its destination.
+    // Un instantané cohérent évite de compter deux fois une flotte en cours de déploiement.
     return this.database.$transaction(
       async (tx) => {
         const users = await tx.user.findMany({
+          where: { username: { not: ABANDONED_USERNAME } },
           include: {
             ...progressionInclude,
             allianceMember: { include: { alliance: true } },
@@ -71,15 +73,13 @@ export class StatisticsService {
               : null,
             progression,
           },
-          topPlayers: ranked
-            .slice(0, 20)
-            .map((row, i) => ({
-              id: row.user.id,
-              username: row.user.username,
-              points: row.progression.power,
-              rank: i + 1,
-              commanderLevel: row.progression.commanderLevel,
-            })),
+          topPlayers: ranked.slice(0, 20).map((row, i) => ({
+            id: row.user.id,
+            username: row.user.username,
+            points: row.progression.power,
+            rank: i + 1,
+            commanderLevel: row.progression.commanderLevel,
+          })),
           topAlliances: [...alliances.values()]
             .sort((a, b) => b.points - a.points || a.id.localeCompare(b.id))
             .slice(0, 10),

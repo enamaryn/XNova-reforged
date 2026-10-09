@@ -1,6 +1,7 @@
 "use client";
 
 import { getProgression } from "@/lib/api/progression";
+import { getStatistics } from "@/lib/api/statistics";
 import { CommanderSummary } from "@/components/game/CommanderSummary";
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -95,6 +96,12 @@ export default function OverviewClient() {
     queryFn: getProgression,
     refetchInterval: 10000,
   });
+  const { data: statistics } = useQuery({
+    queryKey: ["statistics"],
+    queryFn: getStatistics,
+    staleTime: 60000,
+    refetchInterval: 60000,
+  });
   const commanderProgress = progression
     ? progression.nextLevelDevelopment === null
       ? 100
@@ -166,9 +173,20 @@ export default function OverviewClient() {
                 {user?.username || "Commandant"}
               </h2>
               <p className="text-xs text-slate-400">
-                Rang #{user?.rank ?? "-"} · {progression?.power ?? "—"} de
-                puissance
+                Niveau {progression?.commanderLevel ?? "—"}/100 · Puissance :{" "}
+                {progression
+                  ? new Intl.NumberFormat("fr-FR").format(progression.power)
+                  : "—"}
               </p>
+              <Link
+                href="/statistics"
+                className="text-xs text-blue-300 hover:underline"
+              >
+                Rang au classement :{" "}
+                {statistics?.personal.rank
+                  ? `#${statistics.personal.rank}`
+                  : "—"}
+              </Link>
             </div>
             <div className="w-full sm:ml-auto sm:min-w-[160px] sm:max-w-[220px]">
               <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.2em] text-slate-500">
@@ -210,15 +228,26 @@ export default function OverviewClient() {
                     </span>
                   </div>
                   <div className="flex items-center justify-between rounded-xl bg-slate-900/60 px-3 py-2">
-                    <span>Rang</span>
-                    <span className="font-mono">#{user?.rank ?? "-"}</span>
+                    <span>Niveau du commandant</span>
+                    <span className="font-mono">
+                      {progression?.commanderLevel ?? "—"}/100
+                    </span>
                   </div>
                   <div className="flex items-center justify-between rounded-xl bg-slate-900/60 px-3 py-2">
-                    <span>Points</span>
+                    <span>Puissance</span>
                     <span className="font-mono">
                       {progression?.power ?? "—"}
                     </span>
                   </div>
+                  <Link
+                    href="/statistics"
+                    className="block rounded-xl bg-slate-900/60 px-3 py-2 text-blue-300 hover:underline"
+                  >
+                    Rang au classement :{" "}
+                    {statistics?.personal.rank
+                      ? `#${statistics.personal.rank}`
+                      : "—"}
+                  </Link>
                   <div className="flex items-center justify-between rounded-xl bg-slate-900/60 px-3 py-2">
                     <span>Email</span>
                     <span className="font-mono text-xs">

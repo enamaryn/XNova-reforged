@@ -1,13 +1,16 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { useAuthStore } from '@/lib/stores/auth-store';
-import { logout } from '@/lib/api/auth';
-import { ResourceBar } from './ResourceBar';
-import { PlanetSelector } from './PlanetSelector';
-import { useI18n } from '@/lib/i18n';
-import { hasAdminAccess } from '@/lib/roles';
+import { useState } from "react";
+import Link from "next/link";
+import { useAuthStore } from "@/lib/stores/auth-store";
+import { logout } from "@/lib/api/auth";
+import { ResourceBar } from "./ResourceBar";
+import { PlanetSelector } from "./PlanetSelector";
+import { useI18n } from "@/lib/i18n";
+import { hasAdminAccess } from "@/lib/roles";
+import { CommanderStatus } from "./CommanderStatus";
+import { useQuery } from "@tanstack/react-query";
+import { getStatistics } from "@/lib/api/statistics";
 
 interface GameHeaderProps {
   onMenuToggle: () => void;
@@ -16,20 +19,27 @@ interface GameHeaderProps {
 export function GameHeader({ onMenuToggle }: GameHeaderProps) {
   const { user } = useAuthStore();
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const { data: statistics } = useQuery({
+    queryKey: ["statistics"],
+    queryFn: getStatistics,
+    enabled: showUserMenu,
+    staleTime: 60000,
+    refetchInterval: showUserMenu ? 60000 : false,
+  });
   const [showLangMenu, setShowLangMenu] = useState(false);
   const { locale, setLocale, t } = useI18n();
-  const langMenuId = 'game-lang-menu';
-  const userMenuId = 'game-user-menu';
+  const langMenuId = "game-lang-menu";
+  const userMenuId = "game-user-menu";
 
   const handleLogout = async () => {
     // Revoque la session serveur puis nettoie l'etat local (SEC-03)
     await logout();
-    window.location.href = '/login';
+    window.location.href = "/login";
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 h-14 border-b border-slate-800/60 bg-slate-950/80 backdrop-blur-md">
-      <div className="flex h-full min-w-0 items-center justify-between gap-2 px-4">
+    <header className="fixed top-0 left-0 right-0 z-50 border-b border-slate-800/60 bg-slate-950/80 backdrop-blur-md">
+      <div className="flex h-14 min-w-0 items-center justify-between gap-2 px-4">
         {/* Gauche: Menu burger + Logo */}
         <div className="flex items-center gap-3">
           <button
@@ -37,8 +47,18 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
             className="lg:hidden rounded-full border border-slate-800 p-2 text-slate-300 transition-colors hover:text-white"
             aria-label="Menu"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
             </svg>
           </button>
           <Link href="/overview" className="flex items-center gap-2">
@@ -53,16 +73,16 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
         </div>
 
         {/* Centre: Ressources + accès rapide */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-3">
           <nav
-            className="flex items-center gap-2 text-xs text-slate-300"
-            aria-label={t('nav.label')}
+            className="hidden xl:flex items-center gap-2 text-xs text-slate-300"
+            aria-label={t("nav.label")}
           >
             {[
-              { href: '/overview', label: t('nav.overview') },
-              { href: '/buildings', label: t('nav.buildings') },
-              { href: '/research', label: t('nav.research') },
-              { href: '/galaxy', label: t('nav.galaxy') },
+              { href: "/overview", label: t("nav.overview") },
+              { href: "/buildings", label: t("nav.buildings") },
+              { href: "/research", label: t("nav.research") },
+              { href: "/galaxy", label: t("nav.galaxy") },
             ].map((item) => (
               <Link
                 key={item.href}
@@ -84,15 +104,17 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
             <button
               onClick={() => setShowLangMenu(!showLangMenu)}
               className="flex items-center gap-2 rounded-full border border-slate-800 px-3 py-1.5 text-xs text-slate-300 hover:border-slate-600 hover:text-white transition-colors"
-              aria-label={t('common.language')}
+              aria-label={t("common.language")}
               aria-haspopup="menu"
               aria-expanded={showLangMenu}
               aria-controls={langMenuId}
             >
               <span className="text-base">
-                {locale === 'fr' ? '🇫🇷' : locale === 'en' ? '🇬🇧' : '🇪🇸'}
+                {locale === "fr" ? "🇫🇷" : locale === "en" ? "🇬🇧" : "🇪🇸"}
               </span>
-              <span className="hidden sm:block uppercase tracking-[0.2em]">{locale}</span>
+              <span className="hidden sm:block uppercase tracking-[0.2em]">
+                {locale}
+              </span>
             </button>
 
             {showLangMenu && (
@@ -105,12 +127,12 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
                   <div
                     id={langMenuId}
                     role="menu"
-                    aria-label={t('nav.languageMenu')}
+                    aria-label={t("nav.languageMenu")}
                   >
                     {[
-                      { code: 'fr', label: 'Français', flag: '🇫🇷' },
-                      { code: 'en', label: 'English', flag: '🇬🇧' },
-                      { code: 'es', label: 'Español', flag: '🇪🇸' },
+                      { code: "fr", label: "Français", flag: "🇫🇷" },
+                      { code: "en", label: "English", flag: "🇬🇧" },
+                      { code: "es", label: "Español", flag: "🇪🇸" },
                     ].map((item) => (
                       <button
                         key={item.code}
@@ -120,8 +142,8 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
                         }}
                         className={`flex w-full items-center gap-2 px-3 py-2 text-sm transition-colors ${
                           locale === item.code
-                            ? 'text-blue-300 bg-blue-500/10'
-                            : 'text-slate-300 hover:bg-slate-900'
+                            ? "text-blue-300 bg-blue-500/10"
+                            : "text-slate-300 hover:bg-slate-900"
                         }`}
                         role="menuitemradio"
                         aria-checked={locale === item.code}
@@ -144,16 +166,28 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
               aria-haspopup="menu"
               aria-expanded={showUserMenu}
               aria-controls={userMenuId}
-              aria-label={t('nav.userMenu')}
+              aria-label={t("nav.userMenu")}
             >
               <div className="w-7 h-7 rounded-full bg-gradient-to-br from-slate-600 to-slate-400 flex items-center justify-center">
                 <span className="text-white text-xs font-bold">
-                  {user?.username?.charAt(0).toUpperCase() || 'U'}
+                  {user?.username?.charAt(0).toUpperCase() || "U"}
                 </span>
               </div>
-              <span className="hidden sm:block">{user?.username || 'Joueur'}</span>
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              <span className="hidden sm:block">
+                {user?.username || "Joueur"}
+              </span>
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             </button>
 
@@ -167,11 +201,23 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
                   <div
                     id={userMenuId}
                     role="menu"
-                    aria-label={t('nav.userMenu')}
+                    aria-label={t("nav.userMenu")}
                   >
                     <div className="px-3 py-2 border-b border-slate-700">
-                      <p className="text-sm font-medium text-white">{user?.username}</p>
-                      <p className="text-xs text-slate-400">Rang #{user?.rank || '-'}</p>
+                      <p className="text-sm font-medium text-white">
+                        {user?.username}
+                      </p>
+                      <Link
+                        href="/statistics"
+                        onClick={() => setShowUserMenu(false)}
+                        role="menuitem"
+                        className="text-xs text-blue-300 hover:underline"
+                      >
+                        Rang au classement :{" "}
+                        {statistics?.personal.rank
+                          ? `#${statistics.personal.rank}`
+                          : "—"}
+                      </Link>
                     </div>
                     <Link
                       href="/settings"
@@ -214,6 +260,8 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
           </div>
         </div>
       </div>
+
+      <CommanderStatus />
 
       {/* Ressources sur mobile (sous le header) */}
       <div className="md:hidden border-t border-slate-800/60 bg-slate-950/90 px-4 py-2">

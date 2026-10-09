@@ -180,7 +180,7 @@ export default function BuildingsClient() {
   }
 
   return (
-    <div className="space-y-3 sm:space-y-6">
+    <div className="space-y-1 sm:space-y-6">
       {/* Header de page */}
       <div className="flex items-center justify-between gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>

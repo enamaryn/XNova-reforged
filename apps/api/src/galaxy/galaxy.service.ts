@@ -1,12 +1,12 @@
 import { BadRequestException, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { GAME_CONSTANTS } from '@xnova/game-config';
+import { ABANDONED_USERNAME, GAME_CONSTANTS } from '@xnova/game-config';
 import { DatabaseService } from '../database/database.service';
 import { ServerConfigService } from '../server-config/server-config.service';
 
 const MAX_POSITIONS = GAME_CONSTANTS.MAX_POSITIONS;
 const ABANDONED_USER = {
-  username: '__abandoned__',
+  username: ABANDONED_USERNAME,
   email: 'abandoned@xnova.local',
 };
 const ABANDONED_PLANETS = 200;
