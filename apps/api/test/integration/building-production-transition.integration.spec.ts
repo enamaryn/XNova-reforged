@@ -22,16 +22,14 @@ describe("Production au changement de niveau d’un bâtiment", () => {
   beforeAll(async () => {
     isolated = await useIsolatedSchema("building_transition");
     ({ app, database } = await createIntegrationApp());
-    await app
-      .get(ServerConfigService)
-      .applyConfig({
-        gameSpeed: 1,
-        resourceMultiplier: 1,
-        buildingCostMultiplier: 1,
-        baseMetal: 20,
-        baseCrystal: 10,
-        baseDeuterium: 0,
-      });
+    await app.get(ServerConfigService).applyConfig({
+      gameSpeed: 1,
+      resourceMultiplier: 1,
+      buildingCostMultiplier: 1,
+      baseMetal: 20,
+      baseCrystal: 10,
+      baseDeuterium: 0,
+    });
     const credentials = buildTestUser();
     username = credentials.username;
     const registered = await request(app.getHttpServer())
@@ -146,6 +144,9 @@ describe("Production au changement de niveau d’un bâtiment", () => {
       data: { solarPlant: 1 },
     });
     const building = app.get(BuildingsService);
+    await database.technology.create({
+      data: { userId, techId: 125, level: 1 },
+    });
     await Promise.all([
       building.startConstruction(planetId, 1, userId),
       building.startConstruction(planetId, 2, userId),

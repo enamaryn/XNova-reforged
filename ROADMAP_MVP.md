@@ -4,6 +4,10 @@ Mise à jour : 6 octobre 2026. **Statut : alpha privée, sortie publique non val
 
 Le socle existe et démarre sur LXC, mais aucun pourcentage global d'achèvement n'est retenu. Le [registre du double audit](docs/DOUBLE_AUDIT_2026-10.md) est la référence des constats, preuves et critères d'acceptation. La [roadmap historique](docs/history/ROADMAP_MVP_AVANT_AUDIT.md) conserve les anciens sprints ; ses cases cochées ne valent pas validation actuelle.
 
+## Développement commandant et production — issue #32
+
+Implémentation proposée dans la [PR #34](https://github.com/enamaryn/XNova-reforged/pull/34), validation finale en cours : commandant 1–100 basé sur bâtiments/recherches ; puissance incluant développement, unités et colonies, sans stocks ; capacités 1/2/3 par planète avec recherches et commandant niveau 50 ; production en attente prépayée et retrait remboursé à 90 %. Les constructions existantes sont conservées. Règles et premier équilibrage : [PROGRESSION.md](docs/PROGRESSION.md). Ce commandant de joueur est distinct des officiers et héros prévus dans la roadmap historique.
+
 ## Ordre de réalisation
 
 Les travaux de sécurité et d'intégrité économique peuvent avancer en parallèle, sans attendre la finition des écrans. Attribuer chaque ID à une PR corrective et reprendre son critère d'acceptation. Une case ne passe à terminée qu'avec PR/commit et résultat de validation ; une PR documentaire ne clôture aucun défaut.
@@ -62,20 +66,20 @@ Ces décisions ne sont pas prises par cette PR ; une exclusion n'autorise pas à
 
 ## Prérequis bloquants et dette technique avant l'ouverture publique
 
-- [ ] **SMTP réel configuré et validé** (email de test, inscription, mot de passe oublié) avant d'ouvrir les inscriptions : sans lui l'inscription répond 503. *(PRE-01 du registre)*
-- [ ] Variables de production vérifiées (secrets JWT distincts, `SECRETS_ENCRYPTION_KEY`, `WEB_ORIGINS`), DSN Sentry par variable d'environnement uniquement. *(PRE-02, PRE-03)*
-- [ ] Reprise des comptes de l'alpha (adresses marquées confirmées) validée. *(PRE-04)*
+- [ ] **SMTP réel configuré et validé** (email de test, inscription, mot de passe oublié) avant d'ouvrir les inscriptions : sans lui l'inscription répond 503. _(PRE-01 du registre)_
+- [ ] Variables de production vérifiées (secrets JWT distincts, `SECRETS_ENCRYPTION_KEY`, `WEB_ORIGINS`), DSN Sentry par variable d'environnement uniquement. _(PRE-02, PRE-03)_
+- [ ] Reprise des comptes de l'alpha (adresses marquées confirmées) validée. _(PRE-04)_
 - [ ] Dette technique d'outillage terminée **avant la bêta publique** : Jest 30, Tailwind 4, eslint-config-next 16 (DETTE-01 à 03) ; revue des 3 modérées de production (DETTE-04).
 
 ## Critères de sortie obligatoires
 
-- [x] SEC-01 à SEC-04 validés *(SEC-01 : production sans haute ni critique ; outillage de développement en dette datée)* ; aucune critique/haute de production non traitée sans analyse explicite et mesure compensatoire acceptée ; suivi des alertes build/dev conservé.
-- [x] ECO-01 à ECO-05 validés : bilan des stocks conservé, aucun stock négatif, aucune duplication sous concurrence ou reprise. *(clos, voir le suivi des clôtures)*
-- [x] GAME-01 à GAME-04 validés ; toutes les fonctions retenues dans SCOPE-01 accessibles et testées ; exclusions annoncées clairement. *(SCOPE-01 clos)*
-- [x] Clone vierge : installation verrouillée, génération Prisma, premier build, lint et suites CI réussis (QUAL-01/02). *(QUAL-01, CI verte)*
-- [x] Tests intégration sur base dédiée vierge, statuts précis et aucun 500 accepté comme succès métier ; E2E réellement exécutés. *(QUAL-02 ; E2E exécutés en CI)*
+- [x] SEC-01 à SEC-04 validés _(SEC-01 : production sans haute ni critique ; outillage de développement en dette datée)_ ; aucune critique/haute de production non traitée sans analyse explicite et mesure compensatoire acceptée ; suivi des alertes build/dev conservé.
+- [x] ECO-01 à ECO-05 validés : bilan des stocks conservé, aucun stock négatif, aucune duplication sous concurrence ou reprise. _(clos, voir le suivi des clôtures)_
+- [x] GAME-01 à GAME-04 validés ; toutes les fonctions retenues dans SCOPE-01 accessibles et testées ; exclusions annoncées clairement. _(SCOPE-01 clos)_
+- [x] Clone vierge : installation verrouillée, génération Prisma, premier build, lint et suites CI réussis (QUAL-01/02). _(QUAL-01, CI verte)_
+- [x] Tests intégration sur base dédiée vierge, statuts précis et aucun 500 accepté comme succès métier ; E2E réellement exécutés. _(QUAL-02 ; E2E exécutés en CI)_
 - [ ] Parcours joueur : inscription, connexion, production, construction, recherche, chantier, transport/déploiement/attaque, rapport/retour, social et refus d'accès interjoueur.
-- [x] Restauration isolée et retour arrière répétés ; migrations versionnées (OPS-01). *(OPS-01, job CI `database`)*
+- [x] Restauration isolée et retour arrière répétés ; migrations versionnées (OPS-01). _(OPS-01, job CI `database`)_
 - [ ] Charge mesurée pour au moins 100 joueurs simulés ; protocole, matériel, durée, jeu de données et p50/p95/p99 publiés. Fixer les seuils API/WebSocket avant exécution.
 - [ ] Objectifs historiques couverture >70 %, Lighthouse >90 et uptime >99 % mesurés ou révisés explicitement avec justification ; aucun résultat supposé acquis.
 - [ ] Documentation README, guide joueur, endpoints et configuration synchronisée avec le périmètre livré.
@@ -84,17 +88,17 @@ Ces décisions ne sont pas prises par cette PR ; une exclusion n'autorise pas à
 
 Dernier état connu (4 octobre 2026) : la CI GitHub (`.github/workflows/ci.yml`) est verte sur `main` (runs n° 2, 5, 7 et 9).
 
-| Vérification | Preuve disponible | Limite |
-|---|---|---|
-| Build | CI : `npm run build` à froid (Turbo, 5 tâches) ; clone vierge local | — |
-| Lint | CI : 0 erreur | 105 avertissements de dette |
-| Unitaires | CI : 44/44 | moteur de combat mocké dans `combat.service.spec.ts` (tests du vrai moteur à part) |
-| Intégration | CI : 125/125 sur PostgreSQL 16 vierge, schéma issu des migrations | processus unique ; pas de test multi-instances |
-| E2E | CI : 17/17 (Playwright, serveurs de production) | 17 parcours ; Chromium seulement |
-| Migrations / sauvegarde / restauration | CI : job `database` (28 contrôles, retour arrière) | données synthétiques ; aucune restauration d'une sauvegarde de production |
-| Dépendances (production) | CI : aucune critique ; 34 alertes dont 9 hautes | 9 hautes sans mesure compensatoire acceptée |
-| Charge | non exécutée | OPS-03 |
-| Couverture, Lighthouse, uptime | non mesurés | objectifs historiques à mesurer ou réviser |
+| Vérification                           | Preuve disponible                                                   | Limite                                                                             |
+| -------------------------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Build                                  | CI : `npm run build` à froid (Turbo, 5 tâches) ; clone vierge local | —                                                                                  |
+| Lint                                   | CI : 0 erreur                                                       | 105 avertissements de dette                                                        |
+| Unitaires                              | CI : 44/44                                                          | moteur de combat mocké dans `combat.service.spec.ts` (tests du vrai moteur à part) |
+| Intégration                            | CI : 125/125 sur PostgreSQL 16 vierge, schéma issu des migrations   | processus unique ; pas de test multi-instances                                     |
+| E2E                                    | CI : 17/17 (Playwright, serveurs de production)                     | 17 parcours ; Chromium seulement                                                   |
+| Migrations / sauvegarde / restauration | CI : job `database` (28 contrôles, retour arrière)                  | données synthétiques ; aucune restauration d'une sauvegarde de production          |
+| Dépendances (production)               | CI : aucune critique ; 34 alertes dont 9 hautes                     | 9 hautes sans mesure compensatoire acceptée                                        |
+| Charge                                 | non exécutée                                                        | OPS-03                                                                             |
+| Couverture, Lighthouse, uptime         | non mesurés                                                         | objectifs historiques à mesurer ou réviser                                         |
 
 ## Historique et extensions
 

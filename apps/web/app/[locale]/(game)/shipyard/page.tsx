@@ -1,13 +1,14 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { motion, useReducedMotion, type MotionProps } from 'framer-motion';
-import { shipyardApi } from '@/lib/api/shipyard';
-import { useAuthStore } from '@/lib/stores/auth-store';
-import { usePlanetStore } from '@/lib/stores/planet-store';
-import { ShipyardQueue } from '@/components/game/ShipyardQueue';
-import { designTokens } from '@/lib/design-tokens';
+import { CommanderSummary } from "@/components/game/CommanderSummary";
+import { useEffect, useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { motion, useReducedMotion, type MotionProps } from "framer-motion";
+import { shipyardApi } from "@/lib/api/shipyard";
+import { useAuthStore } from "@/lib/stores/auth-store";
+import { usePlanetStore } from "@/lib/stores/planet-store";
+import { ShipyardQueue } from "@/components/game/ShipyardQueue";
+import { designTokens } from "@/lib/design-tokens";
 
 function formatNumber(value: number) {
   return new Intl.NumberFormat().format(Math.floor(value));
@@ -29,8 +30,12 @@ function formatDuration(seconds: number) {
 
 export default function ShipyardPage() {
   const shouldReduceMotion = useReducedMotion();
-  const fadeInProps: MotionProps = shouldReduceMotion ? {} : designTokens.animations.fadeIn;
-  const slideUpProps: MotionProps = shouldReduceMotion ? {} : designTokens.animations.slideUp;
+  const fadeInProps: MotionProps = shouldReduceMotion
+    ? {}
+    : designTokens.animations.fadeIn;
+  const slideUpProps: MotionProps = shouldReduceMotion
+    ? {}
+    : designTokens.animations.slideUp;
   const listVariants = {
     hidden: { opacity: 0 },
     show: { opacity: 1, transition: { staggerChildren: 0.05 } },
@@ -58,17 +63,14 @@ export default function ShipyardPage() {
     error,
     refetch: refetchShipyard,
   } = useQuery({
-    queryKey: ['shipyard', planetId],
+    queryKey: ["shipyard", planetId],
     queryFn: () => shipyardApi.getShipyard(planetId!),
     enabled: !!planetId,
     refetchInterval: 30000,
   });
 
-  const {
-    data: queueData,
-    refetch: refetchQueue,
-  } = useQuery({
-    queryKey: ['shipyard-queue', planetId],
+  const { data: queueData, refetch: refetchQueue } = useQuery({
+    queryKey: ["shipyard-queue", planetId],
     queryFn: () => shipyardApi.getQueue(planetId!),
     enabled: !!planetId,
     refetchInterval: 5000,
@@ -153,16 +155,21 @@ export default function ShipyardPage() {
 
   return (
     <div className="space-y-6">
+      <CommanderSummary compact />
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">Infrastructure</p>
-          <h1 className="mt-2 text-2xl font-semibold text-white">Chantier spatial</h1>
+          <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">
+            Infrastructure
+          </p>
+          <h1 className="mt-2 text-2xl font-semibold text-white">
+            Chantier spatial
+          </h1>
           <p className="text-sm text-slate-400">
             Construisez et déployez vos vaisseaux pour dominer la galaxie
           </p>
         </div>
         <div className="rounded-full border border-slate-800/80 bg-slate-900/40 px-4 py-2 text-xs text-slate-400">
-          {queue.length} en cours
+          {queue.length} commande(s)
         </div>
       </div>
 
@@ -198,8 +205,12 @@ export default function ShipyardPage() {
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <h3 className="text-lg font-semibold text-white">{ship.name}</h3>
-                  <p className="mt-1 text-xs text-slate-500">{ship.description}</p>
+                  <h3 className="text-lg font-semibold text-white">
+                    {ship.name}
+                  </h3>
+                  <p className="mt-1 text-xs text-slate-500">
+                    {ship.description}
+                  </p>
                 </div>
                 {ship.inQueue && (
                   <span className="rounded-full border border-blue-400/60 bg-blue-500/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-blue-200">
@@ -211,23 +222,33 @@ export default function ShipyardPage() {
               <div className="mt-4 grid gap-2 text-xs text-slate-400">
                 <div className="flex items-center justify-between">
                   <span>Stock actuel</span>
-                  <span className="text-slate-200">{formatNumber(ship.currentAmount)}</span>
+                  <span className="text-slate-200">
+                    {formatNumber(ship.currentAmount)}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Coût métal</span>
-                  <span className="text-slate-200">{formatNumber(totalCost.metal)}</span>
+                  <span className="text-slate-200">
+                    {formatNumber(totalCost.metal)}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Coût cristal</span>
-                  <span className="text-slate-200">{formatNumber(totalCost.crystal)}</span>
+                  <span className="text-slate-200">
+                    {formatNumber(totalCost.crystal)}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Coût deutérium</span>
-                  <span className="text-slate-200">{formatNumber(totalCost.deuterium)}</span>
+                  <span className="text-slate-200">
+                    {formatNumber(totalCost.deuterium)}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Temps estimé</span>
-                  <span className="text-slate-200">{formatDuration(totalTime)}</span>
+                  <span className="text-slate-200">
+                    {formatDuration(totalTime)}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between text-[11px] text-slate-500">
                   <span>Durée unitaire</span>
@@ -249,23 +270,28 @@ export default function ShipyardPage() {
                   min={1}
                   value={amount}
                   onChange={(event) => {
-                    const value = Math.max(1, Math.floor(Number(event.target.value)) || 1);
+                    const value = Math.max(
+                      1,
+                      Math.floor(Number(event.target.value)) || 1,
+                    );
                     setAmounts((prev) => ({ ...prev, [ship.id]: value }));
                   }}
                   className="w-24 rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
                 />
                 <button
-                  onClick={() => buildMutation.mutate({ shipId: ship.id, amount })}
+                  onClick={() =>
+                    buildMutation.mutate({ shipId: ship.id, amount })
+                  }
                   disabled={!canBuild || buildMutation.isPending}
                   className={`flex-1 rounded-xl py-2 text-xs uppercase tracking-[0.2em] transition ${
                     !canBuild
-                      ? 'border border-slate-800 bg-slate-900/40 text-slate-500'
+                      ? "border border-slate-800 bg-slate-900/40 text-slate-500"
                       : buildMutation.isPending
-                        ? 'border border-slate-800 bg-slate-900 text-slate-500'
-                        : 'border border-blue-500/60 bg-blue-500/10 text-blue-200 hover:bg-blue-500/20'
+                        ? "border border-slate-800 bg-slate-900 text-slate-500"
+                        : "border border-blue-500/60 bg-blue-500/10 text-blue-200 hover:bg-blue-500/20"
                   }`}
                 >
-                  {buildMutation.isPending ? 'Construction...' : 'Construire'}
+                  {buildMutation.isPending ? "Construction..." : "Commander"}
                 </button>
               </div>
             </div>

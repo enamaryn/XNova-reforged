@@ -180,13 +180,11 @@ describe("Durées de construction des bâtiments", () => {
       buildQueue: { findMany: jest.fn().mockResolvedValue([]) },
     };
     const serverConfig = {
-      getConfig: jest
-        .fn()
-        .mockResolvedValue({
-          maxBuildingLevel: 4,
-          buildingCostMultiplier: 2,
-          gameSpeed: 3,
-        }),
+      getConfig: jest.fn().mockResolvedValue({
+        maxBuildingLevel: 4,
+        buildingCostMultiplier: 2,
+        gameSpeed: 3,
+      }),
       getResourceConfig: jest
         .fn()
         .mockResolvedValue({ ...config, gameSpeed: 3 }),
@@ -194,6 +192,7 @@ describe("Durées de construction des bâtiments", () => {
     const service = new BuildingsService(
       database as never,
       serverConfig as never,
+      { get: jest.fn().mockResolvedValue({ buildingCapacity: 1 }) } as never,
       {} as never,
     );
     const list = await service.getAvailableBuildings("planet", "user");

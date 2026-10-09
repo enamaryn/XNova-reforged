@@ -1,18 +1,20 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { motion, useReducedMotion, type MotionProps } from 'framer-motion';
-import { apiClient } from '@/lib/api/client';
-import { usePlanetResources } from '@/lib/hooks/use-planet-resources';
-import { ResourceDisplay } from '@/components/game/ResourceDisplay';
-import { EnergyDisplay } from '@/components/game/EnergyDisplay';
-import { PlanetScene } from '@/components/game/PlanetScene';
-import { usePlanetStore } from '@/lib/stores/planet-store';
-import { useAuthStore } from '@/lib/stores/auth-store';
-import { renamePlanet } from '@/lib/api/planets';
-import { designTokens } from '@/lib/design-tokens';
+import { getProgression } from "@/lib/api/progression";
+import { CommanderSummary } from "@/components/game/CommanderSummary";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { motion, useReducedMotion, type MotionProps } from "framer-motion";
+import { apiClient } from "@/lib/api/client";
+import { usePlanetResources } from "@/lib/hooks/use-planet-resources";
+import { ResourceDisplay } from "@/components/game/ResourceDisplay";
+import { EnergyDisplay } from "@/components/game/EnergyDisplay";
+import { PlanetScene } from "@/components/game/PlanetScene";
+import { usePlanetStore } from "@/lib/stores/planet-store";
+import { useAuthStore } from "@/lib/stores/auth-store";
+import { renamePlanet } from "@/lib/api/planets";
+import { designTokens } from "@/lib/design-tokens";
 
 interface Planet {
   id: string;
@@ -24,8 +26,12 @@ interface Planet {
 
 export default function OverviewClient() {
   const shouldReduceMotion = useReducedMotion();
-  const fadeInProps: MotionProps = shouldReduceMotion ? {} : designTokens.animations.fadeIn;
-  const slideUpProps: MotionProps = shouldReduceMotion ? {} : designTokens.animations.slideUp;
+  const fadeInProps: MotionProps = shouldReduceMotion
+    ? {}
+    : designTokens.animations.fadeIn;
+  const slideUpProps: MotionProps = shouldReduceMotion
+    ? {}
+    : designTokens.animations.slideUp;
   const listVariants = {
     hidden: { opacity: 0 },
     show: { opacity: 1, transition: { staggerChildren: 0.06 } },
@@ -40,13 +46,13 @@ export default function OverviewClient() {
   const { selectedPlanetId, setSelectedPlanetId } = usePlanetStore();
   const [showCommanderPanel, setShowCommanderPanel] = useState(false);
   const [isRenaming, setIsRenaming] = useState(false);
-  const [planetNameDraft, setPlanetNameDraft] = useState('');
+  const [planetNameDraft, setPlanetNameDraft] = useState("");
 
   // Récupérer la liste des planètes de l'utilisateur
   const { data: planets, isLoading: planetsLoading } = useQuery<Planet[]>({
-    queryKey: ['user-planets'],
+    queryKey: ["user-planets"],
     queryFn: async () => {
-      const response = await apiClient.get<{ planets: Planet[] }>('/auth/me');
+      const response = await apiClient.get<{ planets: Planet[] }>("/auth/me");
       return response.planets || [];
     },
   });
@@ -83,8 +89,21 @@ export default function OverviewClient() {
   const selectedPlanet = planets?.find((p) => p.id === selectedPlanetId);
   const coordinates = selectedPlanet
     ? `[${selectedPlanet.galaxy}:${selectedPlanet.system}:${selectedPlanet.position}]`
-    : '';
-  const commanderProgress = user?.points ? Math.min(100, (user.points % 1000) / 10) : 0;
+    : "";
+  const { data: progression } = useQuery({
+    queryKey: ["progression"],
+    queryFn: getProgression,
+    refetchInterval: 10000,
+  });
+  const commanderProgress = progression
+    ? progression.nextLevelDevelopment === null
+      ? 100
+      : Math.min(
+          100,
+          (100 * (progression.development - progression.levelDevelopment)) /
+            (progression.nextLevelDevelopment - progression.levelDevelopment),
+        )
+    : 0;
 
   useEffect(() => {
     if (!isRenaming && selectedPlanet) {
@@ -110,6 +129,7 @@ export default function OverviewClient() {
 
   return (
     <motion.div {...fadeInProps} initial={false} className="space-y-8">
+      <CommanderSummary />
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">
@@ -122,9 +142,9 @@ export default function OverviewClient() {
 
         <div className="flex items-center gap-2 rounded-full border border-slate-800/80 bg-slate-900/40 px-4 py-2 text-xs text-slate-400">
           <span
-            className={`h-2 w-2 rounded-full ${isRealtimeConnected ? 'bg-emerald-400' : 'bg-red-500'}`}
+            className={`h-2 w-2 rounded-full ${isRealtimeConnected ? "bg-emerald-400" : "bg-red-500"}`}
           />
-          {isRealtimeConnected ? 'Temps réel actif' : 'Temps réel inactif'}
+          {isRealtimeConnected ? "Temps réel actif" : "Temps réel inactif"}
         </div>
       </div>
 
@@ -139,14 +159,15 @@ export default function OverviewClient() {
               className="relative h-16 w-16 rounded-full border border-blue-500/40 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 text-2xl text-white shadow-[0_0_16px_rgba(59,130,246,0.3)]"
               aria-label="Ouvrir les statistiques du commandant"
             >
-              {user?.username?.charAt(0).toUpperCase() || 'C'}
+              {user?.username?.charAt(0).toUpperCase() || "C"}
             </button>
             <div>
               <h2 className="text-xl font-semibold text-white">
-                {user?.username || 'Commandant'}
+                {user?.username || "Commandant"}
               </h2>
               <p className="text-xs text-slate-400">
-                Rang #{user?.rank ?? '-'} · {user?.points ?? 0} points
+                Rang #{user?.rank ?? "-"} · {progression?.power ?? "—"} de
+                puissance
               </p>
             </div>
             <div className="w-full sm:ml-auto sm:min-w-[160px] sm:max-w-[220px]">
@@ -184,19 +205,25 @@ export default function OverviewClient() {
                 <div className="mt-3 space-y-2 text-sm text-slate-300">
                   <div className="flex items-center justify-between rounded-xl bg-slate-900/60 px-3 py-2">
                     <span>Planètes</span>
-                    <span className="font-mono">{user?.planets?.length ?? 0}</span>
+                    <span className="font-mono">
+                      {user?.planets?.length ?? 0}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between rounded-xl bg-slate-900/60 px-3 py-2">
                     <span>Rang</span>
-                    <span className="font-mono">#{user?.rank ?? '-'}</span>
+                    <span className="font-mono">#{user?.rank ?? "-"}</span>
                   </div>
                   <div className="flex items-center justify-between rounded-xl bg-slate-900/60 px-3 py-2">
                     <span>Points</span>
-                    <span className="font-mono">{user?.points ?? 0}</span>
+                    <span className="font-mono">
+                      {progression?.power ?? "—"}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between rounded-xl bg-slate-900/60 px-3 py-2">
                     <span>Email</span>
-                    <span className="font-mono text-xs">{user?.email || '-'}</span>
+                    <span className="font-mono text-xs">
+                      {user?.email || "-"}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -218,7 +245,7 @@ export default function OverviewClient() {
             ) : (
               <div>
                 <h3 className="text-xl font-semibold text-white">
-                  {planetNameDraft || selectedPlanet?.name || 'Planète'}
+                  {planetNameDraft || selectedPlanet?.name || "Planète"}
                 </h3>
                 <p className="text-xs text-slate-400">{coordinates}</p>
               </div>
@@ -229,15 +256,19 @@ export default function OverviewClient() {
                   <div className="flex flex-col gap-1 sm:items-end">
                     <button
                       onClick={() => renameMutation.mutate(planetNameDraft)}
-                      disabled={renameMutation.isPending || !planetNameDraft.trim()}
+                      disabled={
+                        renameMutation.isPending || !planetNameDraft.trim()
+                      }
                       className="w-full rounded-full border border-blue-500/50 px-3 py-1 text-xs uppercase tracking-[0.2em] text-blue-200 hover:border-blue-400 disabled:border-slate-800 disabled:text-slate-500 sm:w-auto"
                     >
-                      {renameMutation.isPending ? 'Sauvegarde...' : 'Enregistrer'}
+                      {renameMutation.isPending
+                        ? "Sauvegarde..."
+                        : "Enregistrer"}
                     </button>
                   </div>
                   <button
                     onClick={() => {
-                      setPlanetNameDraft(selectedPlanet?.name || '');
+                      setPlanetNameDraft(selectedPlanet?.name || "");
                       setIsRenaming(false);
                     }}
                     className="w-full text-xs text-slate-400 hover:text-white sm:w-auto"
@@ -267,8 +298,8 @@ export default function OverviewClient() {
               onClick={() => setSelectedPlanetId(planet.id)}
               className={`rounded-full border px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] transition-colors ${
                 planet.id === selectedPlanetId
-                  ? 'border-blue-400/60 bg-blue-500/10 text-blue-200'
-                  : 'border-slate-800 text-slate-400 hover:border-slate-600 hover:text-white'
+                  ? "border-blue-400/60 bg-blue-500/10 text-blue-200"
+                  : "border-slate-800 text-slate-400 hover:border-slate-600 hover:text-white"
               }`}
             >
               {planet.name}
@@ -298,8 +329,8 @@ export default function OverviewClient() {
       ) : resources ? (
         <motion.div
           variants={shouldReduceMotion ? undefined : listVariants}
-          initial={shouldReduceMotion ? undefined : 'hidden'}
-          animate={shouldReduceMotion ? undefined : 'show'}
+          initial={shouldReduceMotion ? undefined : "hidden"}
+          animate={shouldReduceMotion ? undefined : "show"}
           className="grid gap-4 md:grid-cols-2 lg:grid-cols-4"
         >
           {/* Métal */}
@@ -352,17 +383,40 @@ export default function OverviewClient() {
       {/* Navigation rapide */}
       <motion.div
         variants={shouldReduceMotion ? undefined : listVariants}
-        initial={shouldReduceMotion ? undefined : 'hidden'}
-        animate={shouldReduceMotion ? undefined : 'show'}
+        initial={shouldReduceMotion ? undefined : "hidden"}
+        animate={shouldReduceMotion ? undefined : "show"}
         className="grid gap-4 md:grid-cols-2 lg:grid-cols-4"
       >
         {[
-          { href: '/buildings', title: 'Bâtiments', desc: 'Évoluer l’infrastructure', icon: '🏗️' },
-          { href: '/research', title: 'Technologies', desc: 'Débloquer de nouveaux atouts', icon: '🔬' },
-          { href: '/fleet', title: 'Flotte', desc: 'Préparer les mouvements', icon: '🛸' },
-          { href: '/galaxy', title: 'Galaxie', desc: 'Explorer les systèmes', icon: '🌌' },
+          {
+            href: "/buildings",
+            title: "Bâtiments",
+            desc: "Évoluer l’infrastructure",
+            icon: "🏗️",
+          },
+          {
+            href: "/research",
+            title: "Technologies",
+            desc: "Débloquer de nouveaux atouts",
+            icon: "🔬",
+          },
+          {
+            href: "/fleet",
+            title: "Flotte",
+            desc: "Préparer les mouvements",
+            icon: "🛸",
+          },
+          {
+            href: "/galaxy",
+            title: "Galaxie",
+            desc: "Explorer les systèmes",
+            icon: "🌌",
+          },
         ].map((item) => (
-          <motion.div key={item.href} variants={shouldReduceMotion ? undefined : itemVariants}>
+          <motion.div
+            key={item.href}
+            variants={shouldReduceMotion ? undefined : itemVariants}
+          >
             <Link
               href={item.href}
               className="group block rounded-2xl border border-slate-800/80 bg-slate-900/40 p-4 transition hover:border-blue-500/50 hover:bg-slate-900/70"

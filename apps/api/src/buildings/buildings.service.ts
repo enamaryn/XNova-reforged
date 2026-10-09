@@ -3,41 +3,42 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
-} from '@nestjs/common';
-import { ServerConfigService } from '../server-config/server-config.service';
+} from "@nestjs/common";
+import { ProgressionService } from "../progression/progression.service";
+import { ServerConfigService } from "../server-config/server-config.service";
 import {
   BUILDINGS,
   getBuildingCost,
   getBuildingTime,
   checkBuildingRequirements,
   type BuildingCost,
-} from '@xnova/game-config';
-import { DatabaseService } from '../database/database.service';
-import { debitResources, lockPlanet } from '../common/atomic';
-import { GameEventsGateway } from '../game-events/game-events.gateway';
-import { getBuildingUpgradeEffects } from './building-upgrade-effects';
-import { updateResources } from '@xnova/game-engine';
+} from "@xnova/game-config";
+import { DatabaseService } from "../database/database.service";
+import { debitResources, lockPlanet } from "../common/atomic";
+import { GameEventsGateway } from "../game-events/game-events.gateway";
+import { getBuildingUpgradeEffects } from "./building-upgrade-effects";
+import { updateResources } from "@xnova/game-engine";
 
 // Mapping des buildingId vers les champs de la table Planet
 const BUILDING_FIELD_MAP: Record<number, string> = {
-  1: 'metalMine',
-  2: 'crystalMine',
-  3: 'deuteriumMine',
-  4: 'solarPlant',
-  12: 'fusionPlant',
-  14: 'roboticsFactory',
-  15: 'naniteFactory',
-  21: 'shipyard',
-  22: 'metalStorage',
-  23: 'crystalStorage',
-  24: 'deuteriumStorage',
-  31: 'researchLab',
-  33: 'terraformer',
-  34: 'allianceDepot',
-  44: 'missileSilo',
-  41: 'moonBase',
-  42: 'phalanx',
-  43: 'jumpGate',
+  1: "metalMine",
+  2: "crystalMine",
+  3: "deuteriumMine",
+  4: "solarPlant",
+  12: "fusionPlant",
+  14: "roboticsFactory",
+  15: "naniteFactory",
+  21: "shipyard",
+  22: "metalStorage",
+  23: "crystalStorage",
+  24: "deuteriumStorage",
+  31: "researchLab",
+  33: "terraformer",
+  34: "allianceDepot",
+  44: "missileSilo",
+  41: "moonBase",
+  42: "phalanx",
+  43: "jumpGate",
 };
 
 @Injectable()
@@ -45,6 +46,7 @@ export class BuildingsService {
   constructor(
     private readonly database: DatabaseService,
     private readonly serverConfig: ServerConfigService,
+    private readonly progression: ProgressionService,
     private readonly gameEvents: GameEventsGateway,
   ) {}
 
@@ -72,7 +74,7 @@ export class BuildingsService {
     // File d'attente actuelle
     const queue = await this.database.buildQueue.findMany({
       where: { planetId, completed: false },
-      orderBy: { endTime: 'asc' },
+      orderBy: { endTime: "asc" },
     });
 
     const { maxBuildingLevel, buildingCostMultiplier, gameSpeed } =
@@ -80,6 +82,8 @@ export class BuildingsService {
     const costFactor = buildingCostMultiplier > 0 ? buildingCostMultiplier : 1;
     const resourceConfig = await this.serverConfig.getResourceConfig();
 
+    const progression = await this.progression.get(userId);
+    const capacityFull = queue.length >= progression.buildingCapacity;
     const buildingsInfo = Object.values(BUILDINGS).map((building) => {
       const currentLevel = planetBuildings[building.id] || 0;
       const rawCost = getBuildingCost(building.id, currentLevel);
@@ -120,12 +124,28 @@ export class BuildingsService {
         isMaxLevel,
         cost,
         buildTime: time, // en secondes
-        canBuild: requirements.canBuild && canAfford && !inQueue && !isMaxLevel,
+        canBuild:
+          requirements.canBuild &&
+          canAfford &&
+          !inQueue &&
+          !isMaxLevel &&
+          !capacityFull,
+        capacityFull,
+        buildingCapacity: progression.buildingCapacity,
         canAfford,
         inQueue: !!inQueue,
         queueEndTime: inQueue?.endTime,
         missingRequirements: requirements.missingRequirements,
-        upgrade: isMaxLevel ? null : getBuildingUpgradeEffects(building.id, currentLevel, planet, resourceConfig, planetBuildings, techLevels),
+        upgrade: isMaxLevel
+          ? null
+          : getBuildingUpgradeEffects(
+              building.id,
+              currentLevel,
+              planet,
+              resourceConfig,
+              planetBuildings,
+              techLevels,
+            ),
       };
     });
 
@@ -148,7 +168,11 @@ export class BuildingsService {
    * - Absence de construction parallele pour ce batiment.
    * - Niveau max serveur.
    */
-  async startConstruction(planetId: string, buildingId: number, userId: string) {
+  async startConstruction(
+    planetId: string,
+    buildingId: number,
+    userId: string,
+  ) {
     const planet = await this.getPlanetOrFail(planetId, userId);
 
     // Verifier que le batiment existe
@@ -175,7 +199,7 @@ export class BuildingsService {
     const costFactor = buildingCostMultiplier > 0 ? buildingCostMultiplier : 1;
 
     if (currentLevel >= maxBuildingLevel) {
-      throw new BadRequestException('Niveau max atteint');
+      throw new BadRequestException("Niveau max atteint");
     }
 
     // Verifier les prerequis
@@ -194,7 +218,7 @@ export class BuildingsService {
     );
     if (!requirements.canBuild) {
       throw new BadRequestException(
-        `Prerequis manquants: ${requirements.missingRequirements.join(', ')}`,
+        `Prerequis manquants: ${requirements.missingRequirements.join(", ")}`,
       );
     }
 
@@ -208,14 +232,14 @@ export class BuildingsService {
       planet.crystal < cost.crystal ||
       planet.deuterium < cost.deuterium
     ) {
-      throw new BadRequestException('Ressources insuffisantes');
+      throw new BadRequestException("Ressources insuffisantes");
     }
 
     // Verifier les champs disponibles (sauf pour certains batiments)
     const fieldsExempt = [22, 23, 24]; // Hangars de stockage ne prennent pas de champs
     if (!fieldsExempt.includes(buildingId)) {
       if (planet.fieldsUsed >= planet.fieldsMax) {
-        throw new BadRequestException('Plus de champs disponibles');
+        throw new BadRequestException("Plus de champs disponibles");
       }
     }
 
@@ -226,7 +250,10 @@ export class BuildingsService {
       roboticsLevel: planet.roboticsFactory,
       naniteLevel: planet.naniteFactory,
     });
-    const buildTimeSeconds = Math.max(1, Math.floor(baseBuildTimeSeconds * costFactor));
+    const buildTimeSeconds = Math.max(
+      1,
+      Math.floor(baseBuildTimeSeconds * costFactor),
+    );
 
     const adjustedTime = Math.max(1, Math.floor(buildTimeSeconds / gameSpeed));
 
@@ -234,36 +261,53 @@ export class BuildingsService {
     const endTime = new Date(now.getTime() + adjustedTime * 1000);
 
     // Debit conditionnel + file d'attente dans une transaction verrouillee sur la planete (ECO-03)
-    const { updatedPlanet, queueEntry } = await this.database.$transaction(async (tx) => {
-      await lockPlanet(tx, planetId);
+    const { updatedPlanet, queueEntry } = await this.database.$transaction(
+      async (tx) => {
+        await lockPlanet(tx, planetId);
 
-      const duplicate = await tx.buildQueue.findFirst({
-        where: { planetId, buildingId, completed: false },
-      });
-      if (duplicate) {
-        throw new BadRequestException(
-          `${building.name} est deja en cours de construction`,
-        );
-      }
+        const progression = await this.progression.get(userId, tx);
+        const active = await tx.buildQueue.count({
+          where: { planetId, completed: false },
+        });
+        if (active >= progression.buildingCapacity) {
+          throw new BadRequestException(
+            `Capacité de construction atteinte (${active}/${progression.buildingCapacity}). Gestion des chantiers débloque 2 places, puis 3 au niveau 50 du commandant.`,
+          );
+        }
+        const duplicate = await tx.buildQueue.findFirst({
+          where: { planetId, buildingId, completed: false },
+        });
+        if (duplicate) {
+          throw new BadRequestException(
+            `${building.name} est deja en cours de construction`,
+          );
+        }
 
-      await debitResources(tx, planetId, cost);
+        await debitResources(tx, planetId, cost);
 
-      const queueEntry = await tx.buildQueue.create({
-        data: {
-          planetId,
-          buildingId,
-          level: currentLevel + 1,
-          startTime: now,
-          endTime,
-          paidCost: { metal: cost.metal, crystal: cost.crystal, deuterium: cost.deuterium },
-        },
-      });
-      const updatedPlanet = await tx.planet.findUniqueOrThrow({ where: { id: planetId } });
-      return { updatedPlanet, queueEntry };
-    });
+        const queueEntry = await tx.buildQueue.create({
+          data: {
+            planetId,
+            buildingId,
+            level: currentLevel + 1,
+            startTime: now,
+            endTime,
+            paidCost: {
+              metal: cost.metal,
+              crystal: cost.crystal,
+              deuterium: cost.deuterium,
+            },
+          },
+        });
+        const updatedPlanet = await tx.planet.findUniqueOrThrow({
+          where: { id: planetId },
+        });
+        return { updatedPlanet, queueEntry };
+      },
+    );
 
     // Emettre un evenement WebSocket
-    this.gameEvents.emitToPlanet(planetId, 'building:started', {
+    this.gameEvents.emitToPlanet(planetId, "building:started", {
       queueId: queueEntry.id,
       buildingId,
       buildingName: building.name,
@@ -297,13 +341,14 @@ export class BuildingsService {
 
     const queue = await this.database.buildQueue.findMany({
       where: { planetId, completed: false },
-      orderBy: { endTime: 'asc' },
+      orderBy: { endTime: "asc" },
     });
 
     return queue.map((item) => ({
       id: item.id,
       buildingId: item.buildingId,
-      buildingName: BUILDINGS[item.buildingId]?.name || `Building ${item.buildingId}`,
+      buildingName:
+        BUILDINGS[item.buildingId]?.name || `Building ${item.buildingId}`,
       targetLevel: item.level,
       startTime: item.startTime,
       endTime: item.endTime,
@@ -324,15 +369,15 @@ export class BuildingsService {
     });
 
     if (!queueEntry) {
-      throw new NotFoundException('Construction introuvable');
+      throw new NotFoundException("Construction introuvable");
     }
 
     if (queueEntry.planet.userId !== userId) {
-      throw new ForbiddenException('Acces refuse');
+      throw new ForbiddenException("Acces refuse");
     }
 
     if (queueEntry.completed) {
-      throw new BadRequestException('Construction deja terminee');
+      throw new BadRequestException("Construction deja terminee");
     }
 
     const building = BUILDINGS[queueEntry.buildingId];
@@ -348,7 +393,7 @@ export class BuildingsService {
         where: { id: queueId, completed: false },
       });
       if (claimed.count !== 1) {
-        throw new BadRequestException('Construction deja terminee');
+        throw new BadRequestException("Construction deja terminee");
       }
 
       return tx.planet.update({
@@ -362,7 +407,7 @@ export class BuildingsService {
     });
 
     // Emettre un evenement WebSocket
-    this.gameEvents.emitToPlanet(queueEntry.planetId, 'building:cancelled', {
+    this.gameEvents.emitToPlanet(queueEntry.planetId, "building:cancelled", {
       queueId,
       buildingId: queueEntry.buildingId,
       buildingName: building?.name,
@@ -421,12 +466,26 @@ export class BuildingsService {
       });
       if (claimed.count !== 1) return false;
 
-      const planet = await tx.planet.findUniqueOrThrow({ where: { id: queueEntry.planetId } });
+      const planet = await tx.planet.findUniqueOrThrow({
+        where: { id: queueEntry.planetId },
+      });
       const now = new Date(Math.max(Date.now(), planet.lastUpdate.getTime()));
       // Produire d'abord avec les anciens niveaux : le nouveau rendement n'est
       // jamais appliqué rétroactivement au temps passé avant la finalisation.
-      const settled = updateResources({ resources: planet, levels: planet, lastUpdate: planet.lastUpdate, now, config: resourceConfig });
-      const next = updateResources({ resources: settled.resources, levels: { ...planet, [fieldName]: queueEntry.level }, lastUpdate: now, now, config: resourceConfig });
+      const settled = updateResources({
+        resources: planet,
+        levels: planet,
+        lastUpdate: planet.lastUpdate,
+        now,
+        config: resourceConfig,
+      });
+      const next = updateResources({
+        resources: settled.resources,
+        levels: { ...planet, [fieldName]: queueEntry.level },
+        lastUpdate: now,
+        now,
+        config: resourceConfig,
+      });
       await tx.planet.update({
         where: { id: queueEntry.planetId },
         data: {
@@ -445,7 +504,7 @@ export class BuildingsService {
     if (!finalized) return;
 
     // Emettre un evenement WebSocket
-    this.gameEvents.emitToPlanet(queueEntry.planetId, 'building:completed', {
+    this.gameEvents.emitToPlanet(queueEntry.planetId, "building:completed", {
       buildingId: queueEntry.buildingId,
       buildingName: building?.name,
       newLevel: queueEntry.level,
@@ -476,11 +535,11 @@ export class BuildingsService {
     });
 
     if (!planet) {
-      throw new NotFoundException('Planete introuvable');
+      throw new NotFoundException("Planete introuvable");
     }
 
     if (planet.userId !== userId) {
-      throw new ForbiddenException('Acces refuse');
+      throw new ForbiddenException("Acces refuse");
     }
 
     return planet;
@@ -542,15 +601,21 @@ export class BuildingsService {
     paid: unknown,
     fallback: { metal: number; crystal: number; deuterium: number },
   ) {
-    const value = paid as Partial<Record<'metal' | 'crystal' | 'deuterium', number>> | null;
-    if (value && typeof value === 'object') {
+    const value = paid as Partial<
+      Record<"metal" | "crystal" | "deuterium", number>
+    > | null;
+    if (value && typeof value === "object") {
       return {
         metal: Number(value.metal) || 0,
         crystal: Number(value.crystal) || 0,
         deuterium: Number(value.deuterium) || 0,
       };
     }
-    return { metal: fallback.metal, crystal: fallback.crystal, deuterium: fallback.deuterium };
+    return {
+      metal: fallback.metal,
+      crystal: fallback.crystal,
+      deuterium: fallback.deuterium,
+    };
   }
 
   private applyCostMultiplier(
@@ -565,5 +630,4 @@ export class BuildingsService {
       energy: cost.energy ? Math.floor(cost.energy * factor) : 0,
     };
   }
-
 }

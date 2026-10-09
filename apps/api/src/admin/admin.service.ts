@@ -1,3 +1,4 @@
+import { ProgressionService } from "../progression/progression.service";
 import {
   BadRequestException,
   Injectable,
@@ -53,6 +54,7 @@ const BUILDING_FIELDS = [
 @Injectable()
 export class AdminService {
   constructor(
+    private readonly progression: ProgressionService,
     private readonly database: DatabaseService,
     private readonly serverConfig: ServerConfigService,
     private readonly gameEvents: GameEventsGateway,
@@ -148,7 +150,9 @@ export class AdminService {
     const buildingIds = [
       1, 2, 3, 4, 12, 14, 15, 21, 22, 23, 24, 31, 33, 34, 44, 41, 42, 43,
     ];
+    const progression = await this.progression.get(id);
     return {
+      progression,
       id: user.id,
       username: user.username,
       email: user.email,

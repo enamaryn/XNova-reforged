@@ -1,14 +1,14 @@
-import request from 'supertest';
-import { INestApplication } from '@nestjs/common';
-import { DatabaseService } from '../../src/database/database.service';
+import request from "supertest";
+import { INestApplication } from "@nestjs/common";
+import { DatabaseService } from "../../src/database/database.service";
 import {
   buildTestUser,
   cleanupTestUser,
   createIntegrationApp,
   registerAndLogin,
-} from './helpers';
+} from "./helpers";
 
-describe('API integration - Chantier Spatial (Shipyard)', () => {
+describe("API integration - Chantier Spatial (Shipyard)", () => {
   let app: INestApplication;
   let database: DatabaseService;
 
@@ -24,7 +24,7 @@ describe('API integration - Chantier Spatial (Shipyard)', () => {
     }
   });
 
-  it('liste le chantier spatial et construit des vaisseaux', async () => {
+  it("liste le chantier spatial et construit des vaisseaux", async () => {
     const testUser = buildTestUser();
     const { accessToken } = await registerAndLogin(app, testUser);
     expect(accessToken).toBeTruthy();
@@ -33,8 +33,8 @@ describe('API integration - Chantier Spatial (Shipyard)', () => {
 
     // Récupérer la planète du joueur
     const meResponse = await request(server)
-      .get('/auth/me')
-      .set('Authorization', `Bearer ${accessToken}`)
+      .get("/auth/me")
+      .set("Authorization", `Bearer ${accessToken}`)
       .expect(200);
 
     const planetId = meResponse.body?.planets?.[0]?.id;
@@ -59,17 +59,17 @@ describe('API integration - Chantier Spatial (Shipyard)', () => {
 
     // GET /shipyard - Liste des vaisseaux constructibles
     const shipyardResponse = await request(server)
-      .get('/shipyard')
+      .get("/shipyard")
       .query({ planetId })
-      .set('Authorization', `Bearer ${accessToken}`)
+      .set("Authorization", `Bearer ${accessToken}`)
       .expect(200);
 
     expect(shipyardResponse.body).toBeDefined();
 
     // POST /shipyard/build - Construire un petit transporteur (ID 202)
     const buildResponse = await request(server)
-      .post('/shipyard/build')
-      .set('Authorization', `Bearer ${accessToken}`)
+      .post("/shipyard/build")
+      .set("Authorization", `Bearer ${accessToken}`)
       .send({ planetId, shipId: 202, amount: 1 });
 
     // Scénario nominal : succès exact exigé, puis toutes les étapes (file, annulation, file vide)
@@ -80,42 +80,56 @@ describe('API integration - Chantier Spatial (Shipyard)', () => {
 
       // GET /shipyard/queue - Voir la file d'attente
       const queueResponse = await request(server)
-        .get('/shipyard/queue')
+        .get("/shipyard/queue")
         .query({ planetId })
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set("Authorization", `Bearer ${accessToken}`)
         .expect(200);
 
       expect(Array.isArray(queueResponse.body)).toBe(true);
       expect(queueResponse.body.length).toBeGreaterThan(0);
 
-      // DELETE /shipyard/queue/:queueId - Annuler la construction
+      // A started lot cannot be cancelled. A second lot waits and refunds 90 %.
       await request(server)
         .delete(`/shipyard/queue/${queueId}`)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set("Authorization", `Bearer ${accessToken}`)
+        .expect(400);
+      await database.shipQueue.update({
+        where: { id: queueId },
+        data: { endTime: new Date(Date.now() + 600000) },
+      });
+      const waiting = await request(server)
+        .post("/shipyard/build")
+        .set("Authorization", `Bearer ${accessToken}`)
+        .send({ planetId, shipId: 202, amount: 1 })
+        .expect(201);
+      const removed = await request(server)
+        .delete(`/shipyard/queue/${waiting.body.queueId}`)
+        .set("Authorization", `Bearer ${accessToken}`)
         .expect(200);
-
-      // Vérifier que la queue est vide
-      const postCancelQueue = await request(server)
-        .get('/shipyard/queue')
-        .query({ planetId })
-        .set('Authorization', `Bearer ${accessToken}`)
-        .expect(200);
-
-      expect(postCancelQueue.body.length).toBe(0);
+      expect(removed.body.refund).toEqual({
+        metal: 1800,
+        crystal: 1800,
+        deuterium: 0,
+      });
+      expect(
+        await database.shipQueue.count({
+          where: { planetId, completed: false },
+        }),
+      ).toBe(1);
     }
 
     await cleanupTestUser(database, testUser.username);
   });
 
-  it('refuse construction sans chantier spatial', async () => {
+  it("refuse construction sans chantier spatial", async () => {
     const testUser = buildTestUser();
     const { accessToken } = await registerAndLogin(app, testUser);
 
     const server = app.getHttpServer();
 
     const meResponse = await request(server)
-      .get('/auth/me')
-      .set('Authorization', `Bearer ${accessToken}`)
+      .get("/auth/me")
+      .set("Authorization", `Bearer ${accessToken}`)
       .expect(200);
 
     const planetId = meResponse.body?.planets?.[0]?.id;
@@ -128,8 +142,8 @@ describe('API integration - Chantier Spatial (Shipyard)', () => {
 
     // Tenter de construire (devrait échouer)
     const buildResponse = await request(server)
-      .post('/shipyard/build')
-      .set('Authorization', `Bearer ${accessToken}`)
+      .post("/shipyard/build")
+      .set("Authorization", `Bearer ${accessToken}`)
       .send({ planetId, shipId: 202, amount: 1 });
 
     expect(buildResponse.status).toBe(400);
@@ -139,15 +153,15 @@ describe('API integration - Chantier Spatial (Shipyard)', () => {
     await cleanupTestUser(database, testUser.username);
   });
 
-  it('refuse construction sans ressources suffisantes', async () => {
+  it("refuse construction sans ressources suffisantes", async () => {
     const testUser = buildTestUser();
     const { accessToken } = await registerAndLogin(app, testUser);
 
     const server = app.getHttpServer();
 
     const meResponse = await request(server)
-      .get('/auth/me')
-      .set('Authorization', `Bearer ${accessToken}`)
+      .get("/auth/me")
+      .set("Authorization", `Bearer ${accessToken}`)
       .expect(200);
 
     const planetId = meResponse.body?.planets?.[0]?.id;
@@ -171,12 +185,14 @@ describe('API integration - Chantier Spatial (Shipyard)', () => {
 
     // Tenter de construire (devrait échouer)
     const buildResponse = await request(server)
-      .post('/shipyard/build')
-      .set('Authorization', `Bearer ${accessToken}`)
+      .post("/shipyard/build")
+      .set("Authorization", `Bearer ${accessToken}`)
       .send({ planetId, shipId: 202, amount: 1 });
 
     expect(buildResponse.status).toBe(400);
-    expect(String(buildResponse.body.message)).toMatch(/Ressources insuffisantes/);
+    expect(String(buildResponse.body.message)).toMatch(
+      /Ressources insuffisantes/,
+    );
     expect(await database.shipQueue.count({ where: { planetId } })).toBe(0);
 
     await cleanupTestUser(database, testUser.username);

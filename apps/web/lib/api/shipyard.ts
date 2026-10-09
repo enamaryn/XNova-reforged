@@ -1,4 +1,4 @@
-import { apiClient } from './client';
+import { apiClient } from "./client";
 
 export interface ShipCost {
   metal: number;
@@ -37,7 +37,10 @@ export interface ShipyardQueueItem {
   startTime: string;
   endTime: string;
   remainingSeconds: number;
-  kind?: 'ship' | 'defense';
+  status?: "waiting" | "active";
+  canCancel?: boolean;
+  refund?: ShipCost;
+  kind?: "ship" | "defense";
 }
 
 export interface StartShipBuildPayload {
@@ -77,7 +80,7 @@ export const shipyardApi = {
     apiClient.get<ShipyardResponse>(`/shipyard?planetId=${planetId}`),
 
   startBuild: (payload: StartShipBuildPayload) =>
-    apiClient.post<StartShipBuildResponse>('/shipyard/build', payload),
+    apiClient.post<StartShipBuildResponse>("/shipyard/build", payload),
 
   getQueue: (planetId: string) =>
     apiClient.get<ShipyardQueueItem[]>(`/shipyard/queue?planetId=${planetId}`),
@@ -111,6 +114,9 @@ export const defenseApi = {
   getDefenses: (planetId: string) =>
     apiClient.get<DefenseResponse>(`/defense?planetId=${planetId}`),
 
-  startBuild: (payload: { planetId: string; defenseId: number; amount: number }) =>
-    apiClient.post<StartShipBuildResponse>('/defense/build', payload),
+  startBuild: (payload: {
+    planetId: string;
+    defenseId: number;
+    amount: number;
+  }) => apiClient.post<StartShipBuildResponse>("/defense/build", payload),
 };

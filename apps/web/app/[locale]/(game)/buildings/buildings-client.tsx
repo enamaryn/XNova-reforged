@@ -195,7 +195,11 @@ export default function BuildingsClient() {
           </p>
         </div>
         <div className="rounded-full border border-slate-800/80 bg-slate-900/40 px-4 py-2 text-xs text-slate-400">
-          {queue.length} en cours
+          {queue.length}
+          {buildingsData?.buildings[0]?.buildingCapacity
+            ? ` / ${buildingsData.buildings[0].buildingCapacity}`
+            : ""}{" "}
+          en cours
         </div>
       </div>
 
