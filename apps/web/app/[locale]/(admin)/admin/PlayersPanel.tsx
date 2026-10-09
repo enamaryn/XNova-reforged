@@ -1,15 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  banUser,
-  unbanUser,
-  getAdminPlayers,
-  getAdminPlayer,
-  updatePlayerEmail,
-  type AdminPlayerDetail,
-} from "@/lib/api/admin";
+import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { getAdminPlayers } from "@/lib/api/admin";
 
 const inputClass =
   "w-full rounded-xl border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-white";
@@ -21,26 +16,10 @@ export function PlayersPanel() {
   const [query, setQuery] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const [selected, setSelected] = useState<string | null>(null);
-  const client = useQueryClient();
+  const locale = usePathname().split("/")[1];
   const list = useQuery({
     queryKey: ["admin", "players", search, page],
     queryFn: () => getAdminPlayers(search, page),
-  });
-  const detail = useQuery({
-    queryKey: ["admin", "player", selected],
-    queryFn: () => getAdminPlayer(selected!),
-    enabled: !!selected,
-  });
-  const moderation = useMutation({
-    mutationFn: ({
-      username,
-      banned,
-    }: {
-      username: string;
-      banned: boolean;
-    }) => (banned ? unbanUser({ username }) : banUser({ username })),
-    onSuccess: () => client.invalidateQueries({ queryKey: ["admin"] }),
   });
   return (
     <div className="space-y-6">
@@ -52,7 +31,6 @@ export function PlayersPanel() {
             event.preventDefault();
             setSearch(query.trim());
             setPage(1);
-            setSelected(null);
           }}
         >
           <label className="flex-1 text-sm text-slate-400">
@@ -69,10 +47,6 @@ export function PlayersPanel() {
             Rechercher
           </button>
         </form>
-        <p className="mb-3 text-xs text-slate-400">
-          Les boutons Bannir appliquent un bannissement permanent. Pour une
-          durée limitée, utilisez la modération dans Vue générale.
-        </p>
         {list.isLoading && <p role="status">Chargement des joueurs…</p>}
         {list.error && (
           <p role="alert" className="text-red-300">
@@ -80,11 +54,6 @@ export function PlayersPanel() {
             <button className={buttonClass} onClick={() => list.refetch()}>
               Réessayer
             </button>
-          </p>
-        )}
-        {moderation.error && (
-          <p role="alert" className="text-red-300">
-            {moderation.error.message}
           </p>
         )}
         {list.data && (
@@ -136,26 +105,13 @@ export function PlayersPanel() {
                       </td>
                       <td className="px-2">
                         <div className="flex gap-2">
-                          <button
+                          <Link
                             className={buttonClass}
                             aria-label={`Voir la fiche de ${player.username}`}
-                            onClick={() => setSelected(player.id)}
+                            href={`/${locale}/admin/players/${player.id}`}
                           >
-                            Fiche
-                          </button>
-                          <button
-                            className={`${buttonClass} ${player.banned ? "text-emerald-300" : "text-red-300"}`}
-                            disabled={moderation.isPending}
-                            aria-label={`${player.banned ? "Débannir" : "Bannir"} ${player.username}`}
-                            onClick={() =>
-                              moderation.mutate({
-                                username: player.username,
-                                banned: player.banned,
-                              })
-                            }
-                          >
-                            {player.banned ? "Débannir" : "Bannir"}
-                          </button>
+                            Fiche joueur
+                          </Link>
                         </div>
                       </td>
                     </tr>
@@ -192,154 +148,6 @@ export function PlayersPanel() {
           </>
         )}
       </section>
-      {selected && detail.isLoading && (
-        <p role="status">Chargement de la fiche…</p>
-      )}
-      {detail.error && (
-        <p role="alert" className="text-red-300">
-          {detail.error.message}
-        </p>
-      )}
-      {selected && detail.data && (
-        <PlayerDetails
-          key={`${detail.data.id}:${detail.data.email}`}
-          player={detail.data}
-        />
-      )}
     </div>
-  );
-}
-
-function PlayerDetails({ player }: { player: AdminPlayerDetail }) {
-  const [email, setEmail] = useState(player.email);
-  const client = useQueryClient();
-  const mutation = useMutation({
-    mutationFn: updatePlayerEmail,
-    onSuccess: () => client.invalidateQueries({ queryKey: ["admin"] }),
-  });
-  return (
-    <section
-      aria-label={`Fiche de ${player.username}`}
-      className="space-y-6 rounded-3xl border border-slate-800 bg-slate-950/60 p-6"
-    >
-      <div>
-        <h2 className="text-xl font-semibold">{player.username}</h2>
-        <p className="text-sm text-slate-400">
-          {count(player.points)} points · Rang {player.rank || "—"} · Dernière
-          activité : {new Date(player.lastActive).toLocaleString("fr-FR")}
-        </p>
-        {player.banned && (
-          <p className="mt-2 text-sm text-red-300">
-            Banni{" "}
-            {player.bannedUntil
-              ? `jusqu’au ${new Date(player.bannedUntil).toLocaleString("fr-FR")}`
-              : "définitivement"}
-            {player.banReason ? ` : ${player.banReason}` : ""}
-          </p>
-        )}
-      </div>
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          mutation.mutate({ id: player.id, email });
-        }}
-        className="space-y-2"
-      >
-        <label className="block text-sm text-slate-300">
-          Adresse email
-          <input
-            className={`mt-1 ${inputClass}`}
-            type="email"
-            required
-            maxLength={255}
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />
-        </label>
-        <p className="text-xs text-slate-400">
-          Le changement déconnecte le joueur et envoie un nouveau lien. La
-          connexion reste bloquée jusqu’à confirmation de la nouvelle adresse.
-        </p>
-        <button
-          className={buttonClass}
-          disabled={
-            mutation.isPending ||
-            email.trim().toLowerCase() === player.email.toLowerCase()
-          }
-        >
-          Changer l’email et envoyer la vérification
-        </button>
-        <p
-          role="status"
-          className={`text-sm ${player.emailVerifiedAt ? "text-emerald-300" : "text-amber-300"}`}
-        >
-          {player.emailVerifiedAt ? "Email confirmé" : "Email à confirmer"}
-        </p>
-        {mutation.error && (
-          <p role="alert" className="text-red-300">
-            {mutation.error.message}
-          </p>
-        )}
-      </form>
-      <div>
-        <h3 className="mb-3 font-semibold">Technologies</h3>
-        <dl className="grid gap-2 sm:grid-cols-2">
-          {player.technologies.map((tech) => (
-            <div
-              key={tech.id}
-              className="flex justify-between gap-3 rounded-xl bg-slate-900/60 p-3 text-sm"
-            >
-              <dt>{tech.name}</dt>
-              <dd className="font-mono text-blue-300">Niv. {tech.level}</dd>
-            </div>
-          ))}
-        </dl>
-      </div>
-      {player.planets.map((planet) => (
-        <div
-          className="space-y-3 border-t border-slate-800 pt-4"
-          key={planet.id}
-        >
-          <h3 className="font-semibold">
-            {planet.name} [{planet.coordinates}]
-          </h3>
-          <dl className="grid gap-2 sm:grid-cols-3">
-            {Object.entries(planet.resources).map(([resource, amount]) => (
-              <div className="rounded-xl bg-slate-900/60 p-3" key={resource}>
-                <dt className="text-xs text-slate-400">
-                  {
-                    {
-                      metal: "Métal",
-                      crystal: "Cristal",
-                      deuterium: "Deutérium",
-                    }[resource]
-                  }
-                </dt>
-                <dd className="font-mono">{count(amount)}</dd>
-              </div>
-            ))}
-          </dl>
-          <p className="text-xs text-slate-400">
-            Énergie : {count(planet.energy.produced)} produite /{" "}
-            {count(planet.energy.used)} consommée · Cases : {planet.fields.used}
-            /{planet.fields.max} · Ressources au{" "}
-            {new Date(planet.lastUpdate).toLocaleString("fr-FR")}
-          </p>
-          <dl className="grid gap-2 sm:grid-cols-2">
-            {planet.buildings.map((building) => (
-              <div
-                key={building.id}
-                className="flex justify-between gap-3 text-sm"
-              >
-                <dt className="text-slate-300">{building.name}</dt>
-                <dd className="font-mono text-blue-300">
-                  Niv. {building.level}
-                </dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      ))}
-    </section>
   );
 }

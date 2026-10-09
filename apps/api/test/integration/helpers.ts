@@ -40,10 +40,9 @@ export function buildTestUser() {
 async function markSetupCompletedForTests() {
   const client = new PrismaClient();
   try {
-    await client.gameConfig.upsert({
-      where: { key: 'setup.completedAt' },
-      create: { key: 'setup.completedAt', value: new Date().toISOString() },
-      update: {},
+    await client.gameConfig.createMany({
+      data: [{ key: 'setup.completedAt', value: new Date().toISOString() }],
+      skipDuplicates: true,
     });
   } finally {
     await client.$disconnect();

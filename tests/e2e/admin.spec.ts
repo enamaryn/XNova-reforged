@@ -23,6 +23,9 @@ test('acces panneau admin', async ({ page }) => {
 
   await page.goto('/admin');
 
+  await expect(page.getByRole('tab', { name: 'Joueurs', exact: true })).toHaveAttribute('aria-selected', 'true');
+  await page.getByRole('tab', { name: 'Général', exact: true }).click();
+
   // Vérifier que la page admin se charge correctement
   await expect(page.getByRole('heading', { name: /Vue g.n.rale/ })).toBeVisible();
   await expect(page.getByText(/Configuration/)).toBeVisible();
@@ -36,6 +39,8 @@ test('modification configuration serveur', async ({ page }) => {
   await promoteToAdmin(credentials.username);
 
   await page.goto('/admin');
+
+  await page.getByRole('tab', { name: 'Général', exact: true }).click();
 
   // Vérifier que les champs de configuration sont présents
   await expect(page.getByText(/Vitesse du jeu|Game Speed/)).toBeVisible();
@@ -69,21 +74,21 @@ test('liste, recherche, fiche et bannissement/débannissement des joueurs', asyn
   await registerUser(page, adminCredentials);
   await promoteToAdmin(adminCredentials.username);
   await page.goto('/admin');
-  await expect(page.getByRole('spinbutton', { name: 'Jours', exact: true })).toBeVisible();
-  await expect(page.getByRole('spinbutton', { name: 'Heures', exact: true })).toBeVisible();
-  await expect(page.getByRole('spinbutton', { name: 'Minutes', exact: true })).toBeVisible();
-  await expect(page.getByText(/Tout à zéro = bannissement permanent/)).toBeVisible();
-  await page.getByRole('tab', { name: 'Joueurs', exact: true }).click();
   await page.getByLabel('Rechercher par pseudo').fill(playerCredentials.username.toUpperCase());
   await page.getByRole('button', { name: 'Rechercher', exact: true }).click();
-  await page.getByRole('button', { name: `Voir la fiche de ${playerCredentials.username}` }).click();
+  await page.getByRole('link', { name: `Voir la fiche de ${playerCredentials.username}` }).click();
   const detail = page.getByRole('region', { name: `Fiche de ${playerCredentials.username}` });
   await expect(detail.getByRole('heading', { name: 'Technologies', exact: true })).toBeVisible();
   await expect(detail.getByText('Mine de Cristal', { exact: true }).locator('..')).toContainText('Niv. 4');
   await expect(detail.getByLabel('Adresse email', { exact: true })).toHaveValue(playerCredentials.email);
   await expect(detail.getByText(/connexion reste bloquée jusqu’à confirmation/)).toBeVisible();
-  await page.getByRole('button', { name: `Bannir ${playerCredentials.username}`, exact: true }).click();
-  await expect(page.getByRole('button', { name: `Débannir ${playerCredentials.username}`, exact: true })).toBeVisible();
-  await page.getByRole('button', { name: `Débannir ${playerCredentials.username}`, exact: true }).click();
-  await expect(page.getByRole('button', { name: `Bannir ${playerCredentials.username}`, exact: true })).toBeVisible();
+  await page.reload();
+  await expect(page.getByRole('region', { name: `Fiche de ${playerCredentials.username}` })).toBeVisible();
+  for (const action of ['Bannir', 'Débannir']) {
+    await page.getByRole('button', { name: action, exact: true }).click();
+    await page.getByLabel('Motif', { exact: true }).fill('Test de modération');
+    await page.getByLabel(`Retapez le pseudo ${playerCredentials.username} pour confirmer`).fill(playerCredentials.username);
+    await page.getByRole('button', { name: `Confirmer ${action.toLowerCase()}`, exact: true }).click();
+    await expect(page.getByRole('button', { name: action === 'Bannir' ? 'Débannir' : 'Bannir', exact: true })).toBeVisible();
+  }
 });

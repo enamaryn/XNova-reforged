@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useMemo, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getAdminConfig,
   getAdminOverview,
@@ -14,50 +14,51 @@ import {
   unbanUser,
   boostDevelopment,
   type BoostDevelopmentResult,
-} from '@/lib/api/admin';
-import { useI18n } from '@/lib/i18n';
-import { useAuthStore } from '@/lib/stores/auth-store';
-import { isSuperAdmin } from '@/lib/roles';
-import { SmtpSettingsPanel } from './SmtpSettingsPanel';
-import { PlayersPanel } from './PlayersPanel';
+} from "@/lib/api/admin";
+import { useI18n } from "@/lib/i18n";
+import { useAuthStore } from "@/lib/stores/auth-store";
+import { isSuperAdmin } from "@/lib/roles";
+import { SmtpSettingsPanel } from "./SmtpSettingsPanel";
+import { PlayersPanel } from "./PlayersPanel";
 
-export default function AdminPage() {
+function GeneralPanel() {
   const { t } = useI18n();
   const { user } = useAuthStore();
   const isSuperAdminUser = isSuperAdmin(user?.role);
   const queryClient = useQueryClient();
-  const [tab, setTab] = useState<'general' | 'smtp' | 'players'>('general');
   const [form, setForm] = useState<AdminConfig | null>(null);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
-  const [roleForm, setRoleForm] = useState({ username: '', role: 'MODERATOR' });
+  const [roleForm, setRoleForm] = useState({ username: "", role: "MODERATOR" });
   const [banForm, setBanForm] = useState({
-    username: '',
-    reason: '',
+    username: "",
+    reason: "",
     days: 0,
     hours: 0,
     minutes: 0,
   });
-  const [unbanForm, setUnbanForm] = useState({ username: '', reason: '' });
-  const [boostForm, setBoostForm] = useState({ username: '' });
-  const [boostResult, setBoostResult] = useState<BoostDevelopmentResult | null>(null);
+  const [unbanForm, setUnbanForm] = useState({ username: "", reason: "" });
+  const [boostForm, setBoostForm] = useState({ username: "" });
+  const [boostResult, setBoostResult] = useState<BoostDevelopmentResult | null>(
+    null,
+  );
 
   const configQuery = useQuery({
-    queryKey: ['admin', 'config'],
+    queryKey: ["admin", "config"],
     queryFn: getAdminConfig,
   });
 
   const overviewQuery = useQuery({
-    queryKey: ['admin', 'overview'],
+    queryKey: ["admin", "overview"],
     queryFn: getAdminOverview,
   });
 
   const auditQuery = useQuery({
-    queryKey: ['admin', 'audit'],
+    queryKey: ["admin", "audit"],
     queryFn: () => getAuditLogs(25),
   });
 
   const banLogsQuery = useQuery({
-    queryKey: ['admin', 'ban-logs'],
+    queryKey: ["admin", "ban-logs"],
     queryFn: () => getBanLogs(25),
   });
 
@@ -72,14 +73,14 @@ export default function AdminPage() {
     onSuccess: (data) => {
       setForm(data);
       setSavedAt(new Date());
-      queryClient.invalidateQueries({ queryKey: ['admin', 'config'] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "config"] });
     },
   });
 
   const roleMutation = useMutation({
     mutationFn: updateUserRole,
     onSuccess: () => {
-      setRoleForm({ username: '', role: 'MODERATOR' });
+      setRoleForm({ username: "", role: "MODERATOR" });
       auditQuery.refetch();
     },
   });
@@ -87,7 +88,7 @@ export default function AdminPage() {
   const banMutation = useMutation({
     mutationFn: banUser,
     onSuccess: () => {
-      setBanForm({ username: '', reason: '', days: 0, hours: 0, minutes: 0 });
+      setBanForm({ username: "", reason: "", days: 0, hours: 0, minutes: 0 });
       banLogsQuery.refetch();
       auditQuery.refetch();
     },
@@ -96,7 +97,7 @@ export default function AdminPage() {
   const unbanMutation = useMutation({
     mutationFn: unbanUser,
     onSuccess: () => {
-      setUnbanForm({ username: '', reason: '' });
+      setUnbanForm({ username: "", reason: "" });
       banLogsQuery.refetch();
       auditQuery.refetch();
     },
@@ -105,7 +106,7 @@ export default function AdminPage() {
   const boostMutation = useMutation({
     mutationFn: boostDevelopment,
     onSuccess: (data) => {
-      setBoostForm({ username: '' });
+      setBoostForm({ username: "" });
       setBoostResult(data);
       auditQuery.refetch();
     },
@@ -126,10 +127,10 @@ export default function AdminPage() {
   const overviewCards = useMemo(() => {
     if (!overviewQuery.data) return [];
     return [
-      { label: t('admin.players'), value: overviewQuery.data.players },
-      { label: t('admin.online'), value: overviewQuery.data.onlinePlayers },
-      { label: t('admin.planets'), value: overviewQuery.data.planets },
-      { label: t('admin.alliances'), value: overviewQuery.data.alliances },
+      { label: t("admin.players"), value: overviewQuery.data.players },
+      { label: t("admin.online"), value: overviewQuery.data.onlinePlayers },
+      { label: t("admin.planets"), value: overviewQuery.data.planets },
+      { label: t("admin.alliances"), value: overviewQuery.data.alliances },
     ];
   }, [overviewQuery.data, t]);
 
@@ -138,7 +139,7 @@ export default function AdminPage() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="animate-spin text-4xl mb-4">🛠️</div>
-          <p className="text-slate-400">{t('admin.loading')}</p>
+          <p className="text-slate-400">{t("admin.loading")}</p>
         </div>
       </div>
     );
@@ -147,7 +148,7 @@ export default function AdminPage() {
   if (configQuery.isError || overviewQuery.isError || !form) {
     return (
       <div className="rounded-3xl border border-red-500/30 bg-red-500/10 p-6 text-sm text-red-200">
-        {t('common.error')}
+        {t("common.error")}
         <button
           onClick={() => {
             configQuery.refetch();
@@ -155,7 +156,7 @@ export default function AdminPage() {
           }}
           className="ml-4 rounded-full border border-red-500/60 px-4 py-2 text-xs uppercase tracking-[0.2em] text-red-200 hover:bg-red-500/10"
         >
-          {t('common.retry')}
+          {t("common.retry")}
         </button>
       </div>
     );
@@ -163,45 +164,13 @@ export default function AdminPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex gap-2 border-b border-slate-800/80" role="tablist">
-        <button
-          role="tab"
-          aria-selected={tab === 'general'}
-          onClick={() => setTab('general')}
-          className={`px-4 py-2 text-xs uppercase tracking-[0.2em] ${
-            tab === 'general' ? 'border-b-2 border-blue-400 text-white' : 'text-slate-500 hover:text-slate-300'
-          }`}
-        >
-          {t('admin.tabGeneral')}
-        </button>
-        {isSuperAdminUser && (
-          <button
-            role="tab"
-            aria-selected={tab === 'smtp'}
-            onClick={() => setTab('smtp')}
-            className={`px-4 py-2 text-xs uppercase tracking-[0.2em] ${
-              tab === 'smtp' ? 'border-b-2 border-blue-400 text-white' : 'text-slate-500 hover:text-slate-300'
-            }`}
-          >
-            {t('admin.tabSmtp')}
-          </button>
-        )}
-        <button role="tab" aria-selected={tab === 'players'} onClick={() => setTab('players')}
-          className={`px-4 py-2 text-xs uppercase tracking-[0.2em] ${tab === 'players' ? 'border-b-2 border-blue-400 text-white' : 'text-slate-500 hover:text-slate-300'}`}>
-          Joueurs
-        </button>
-      </div>
-
-      {tab === 'smtp' && isSuperAdminUser && <SmtpSettingsPanel />}
-      {tab === 'players' && <PlayersPanel />}
-
-      {tab === 'general' && (
-        <>
       <div className="rounded-3xl border border-slate-800/80 bg-slate-950/60 p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-sm font-semibold text-white">{t('admin.overview')}</h2>
-            <p className="text-xs text-slate-500">{t('admin.overviewHint')}</p>
+            <h2 className="text-sm font-semibold text-white">
+              {t("admin.overview")}
+            </h2>
+            <p className="text-xs text-slate-500">{t("admin.overviewHint")}</p>
           </div>
           {overviewQuery.data?.serverTime && (
             <span className="text-xs text-slate-500">
@@ -229,143 +198,159 @@ export default function AdminPage() {
       <div className="rounded-3xl border border-slate-800/80 bg-slate-950/60 p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-sm font-semibold text-white">{t('admin.config')}</h2>
-            <p className="text-xs text-slate-500">{t('admin.configHint')}</p>
+            <h2 className="text-sm font-semibold text-white">
+              {t("admin.config")}
+            </h2>
+            <p className="text-xs text-slate-500">{t("admin.configHint")}</p>
           </div>
           {savedAt && (
             <span className="text-xs text-emerald-400">
-              {t('admin.savedAt')} {savedAt.toLocaleTimeString()}
+              {t("admin.savedAt")} {savedAt.toLocaleTimeString()}
             </span>
           )}
         </div>
 
         <div className="mt-4 grid gap-4 lg:grid-cols-2">
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
-            {t('admin.gameSpeed')}
+            {t("admin.gameSpeed")}
             <input
               type="number"
               step="0.1"
               value={form.gameSpeed}
-              onChange={(event) => handleChange('gameSpeed')(event.target.value)}
+              onChange={(event) =>
+                handleChange("gameSpeed")(event.target.value)
+              }
               className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
-            {t('admin.fleetSpeed')}
+            {t("admin.fleetSpeed")}
             <input
               type="number"
               step="0.1"
               value={form.fleetSpeed}
-              onChange={(event) => handleChange('fleetSpeed')(event.target.value)}
+              onChange={(event) =>
+                handleChange("fleetSpeed")(event.target.value)
+              }
               className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
-            {t('admin.productionSpeed')}
+            {t("admin.productionSpeed")}
             <input
               type="number"
               step="0.1"
               value={form.resourceMultiplier}
               onChange={(event) =>
-                handleChange('resourceMultiplier')(event.target.value)
+                handleChange("resourceMultiplier")(event.target.value)
               }
               className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
-            {t('admin.buildingCostMultiplier')}
+            {t("admin.buildingCostMultiplier")}
             <input
               type="number"
               step="0.1"
               value={form.buildingCostMultiplier}
               onChange={(event) =>
-                handleChange('buildingCostMultiplier')(event.target.value)
+                handleChange("buildingCostMultiplier")(event.target.value)
               }
               className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
-            {t('admin.researchCostMultiplier')}
+            {t("admin.researchCostMultiplier")}
             <input
               type="number"
               step="0.1"
               value={form.researchCostMultiplier}
               onChange={(event) =>
-                handleChange('researchCostMultiplier')(event.target.value)
+                handleChange("researchCostMultiplier")(event.target.value)
               }
               className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
-            {t('admin.shipCostMultiplier')}
+            {t("admin.shipCostMultiplier")}
             <input
               type="number"
               step="0.1"
               value={form.shipCostMultiplier}
               onChange={(event) =>
-                handleChange('shipCostMultiplier')(event.target.value)
+                handleChange("shipCostMultiplier")(event.target.value)
               }
               className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
-            {t('admin.planetSize')}
+            {t("admin.planetSize")}
             <input
               type="number"
               step="1"
               value={form.planetSize}
-              onChange={(event) => handleChange('planetSize')(event.target.value)}
+              onChange={(event) =>
+                handleChange("planetSize")(event.target.value)
+              }
               className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
-            {t('admin.maxBuildingLevel')}
+            {t("admin.maxBuildingLevel")}
             <input
               type="number"
               step="1"
               value={form.maxBuildingLevel}
-              onChange={(event) => handleChange('maxBuildingLevel')(event.target.value)}
+              onChange={(event) =>
+                handleChange("maxBuildingLevel")(event.target.value)
+              }
               className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
-            {t('admin.maxTechnologyLevel')}
+            {t("admin.maxTechnologyLevel")}
             <input
               type="number"
               step="1"
               value={form.maxTechnologyLevel}
-              onChange={(event) => handleChange('maxTechnologyLevel')(event.target.value)}
+              onChange={(event) =>
+                handleChange("maxTechnologyLevel")(event.target.value)
+              }
               className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
-            {t('admin.baseMetal')}
+            {t("admin.baseMetal")}
             <input
               type="number"
               step="1"
               value={form.baseMetal}
-              onChange={(event) => handleChange('baseMetal')(event.target.value)}
+              onChange={(event) =>
+                handleChange("baseMetal")(event.target.value)
+              }
               className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
-            {t('admin.baseCrystal')}
+            {t("admin.baseCrystal")}
             <input
               type="number"
               step="1"
               value={form.baseCrystal}
-              onChange={(event) => handleChange('baseCrystal')(event.target.value)}
+              onChange={(event) =>
+                handleChange("baseCrystal")(event.target.value)
+              }
               className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
-            {t('admin.baseDeuterium')}
+            {t("admin.baseDeuterium")}
             <input
               type="number"
               step="1"
               value={form.baseDeuterium}
               onChange={(event) =>
-                handleChange('baseDeuterium')(event.target.value)
+                handleChange("baseDeuterium")(event.target.value)
               }
               className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
             />
@@ -378,22 +363,27 @@ export default function AdminPage() {
             disabled={updateMutation.isPending}
             className="rounded-full border border-emerald-500/60 px-5 py-2 text-xs uppercase tracking-[0.2em] text-emerald-200 hover:bg-emerald-500/10 disabled:opacity-60"
           >
-            {updateMutation.isPending ? t('admin.saving') : t('admin.save')}
+            {updateMutation.isPending ? t("admin.saving") : t("admin.save")}
           </button>
         </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
         <div className="rounded-3xl border border-slate-800/80 bg-slate-950/60 p-6">
-          <h2 className="text-sm font-semibold text-white">{t('admin.roleTitle')}</h2>
-          <p className="text-xs text-slate-500">{t('admin.roleHint')}</p>
+          <h2 className="text-sm font-semibold text-white">
+            {t("admin.roleTitle")}
+          </h2>
+          <p className="text-xs text-slate-500">{t("admin.roleHint")}</p>
           <div className="mt-4 space-y-3">
             <input
               type="text"
-              placeholder={t('admin.usernamePlaceholder')}
+              placeholder={t("admin.usernamePlaceholder")}
               value={roleForm.username}
               onChange={(event) =>
-                setRoleForm((prev) => ({ ...prev, username: event.target.value }))
+                setRoleForm((prev) => ({
+                  ...prev,
+                  username: event.target.value,
+                }))
               }
               className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
             />
@@ -404,92 +394,121 @@ export default function AdminPage() {
               }
               className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
             >
-              <option value="PLAYER">{t('admin.rolePlayer')}</option>
-              <option value="MODERATOR">{t('admin.roleModerator')}</option>
-              <option value="ADMIN">{t('admin.roleAdmin')}</option>
-              <option value="SUPER_ADMIN">{t('admin.roleSuperAdmin')}</option>
+              <option value="PLAYER">{t("admin.rolePlayer")}</option>
+              <option value="MODERATOR">{t("admin.roleModerator")}</option>
+              <option value="ADMIN">{t("admin.roleAdmin")}</option>
+              <option value="SUPER_ADMIN">{t("admin.roleSuperAdmin")}</option>
             </select>
             <button
               onClick={() =>
                 roleForm.username &&
                 roleMutation.mutate({
                   username: roleForm.username,
-                  role: roleForm.role as 'PLAYER' | 'MODERATOR' | 'ADMIN' | 'SUPER_ADMIN',
+                  role: roleForm.role as
+                    | "PLAYER"
+                    | "MODERATOR"
+                    | "ADMIN"
+                    | "SUPER_ADMIN",
                 })
               }
               disabled={roleMutation.isPending}
               className="w-full rounded-full border border-blue-500/60 px-4 py-2 text-xs uppercase tracking-[0.2em] text-blue-200 hover:bg-blue-500/10 disabled:opacity-60"
             >
-              {roleMutation.isPending ? t('admin.roleUpdating') : t('admin.roleUpdate')}
+              {roleMutation.isPending
+                ? t("admin.roleUpdating")
+                : t("admin.roleUpdate")}
             </button>
           </div>
         </div>
 
         <div className="rounded-3xl border border-slate-800/80 bg-slate-950/60 p-6">
-          <h2 className="text-sm font-semibold text-white">{t('admin.moderationTitle')}</h2>
-          <p className="text-xs text-slate-500">{t('admin.moderationHint')}</p>
+          <h2 className="text-sm font-semibold text-white">
+            {t("admin.moderationTitle")}
+          </h2>
+          <p className="text-xs text-slate-500">{t("admin.moderationHint")}</p>
           <div className="mt-4 space-y-4">
             <div className="space-y-3">
               <input
                 type="text"
-                placeholder={t('admin.usernamePlaceholder')}
+                placeholder={t("admin.usernamePlaceholder")}
                 value={banForm.username}
                 onChange={(event) =>
-                  setBanForm((prev) => ({ ...prev, username: event.target.value }))
+                  setBanForm((prev) => ({
+                    ...prev,
+                    username: event.target.value,
+                  }))
                 }
                 className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
               />
               <input
                 type="text"
-                placeholder={t('admin.reasonPlaceholder')}
+                placeholder={t("admin.reasonPlaceholder")}
                 value={banForm.reason}
                 onChange={(event) =>
-                  setBanForm((prev) => ({ ...prev, reason: event.target.value }))
+                  setBanForm((prev) => ({
+                    ...prev,
+                    reason: event.target.value,
+                  }))
                 }
                 className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
               />
               <div className="grid grid-cols-3 gap-2">
-                <label className="text-xs text-slate-400">{t('admin.days')}
-                <input
-                  type="number"
-                  min={0}
-                  max={365}
-                  value={banForm.days}
-                  onChange={(event) =>
-                    setBanForm((prev) => ({ ...prev, days: Number(event.target.value) }))
-                  }
-                  placeholder={t('admin.days')}
-                  className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
-                />
+                <label className="text-xs text-slate-400">
+                  {t("admin.days")}
+                  <input
+                    type="number"
+                    min={0}
+                    max={365}
+                    value={banForm.days}
+                    onChange={(event) =>
+                      setBanForm((prev) => ({
+                        ...prev,
+                        days: Number(event.target.value),
+                      }))
+                    }
+                    placeholder={t("admin.days")}
+                    className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                  />
                 </label>
-                <label className="text-xs text-slate-400">{t('admin.hours')}
-                <input
-                  type="number"
-                  min={0}
-                  max={240}
-                  value={banForm.hours}
-                  onChange={(event) =>
-                    setBanForm((prev) => ({ ...prev, hours: Number(event.target.value) }))
-                  }
-                  placeholder={t('admin.hours')}
-                  className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
-                />
+                <label className="text-xs text-slate-400">
+                  {t("admin.hours")}
+                  <input
+                    type="number"
+                    min={0}
+                    max={240}
+                    value={banForm.hours}
+                    onChange={(event) =>
+                      setBanForm((prev) => ({
+                        ...prev,
+                        hours: Number(event.target.value),
+                      }))
+                    }
+                    placeholder={t("admin.hours")}
+                    className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                  />
                 </label>
-                <label className="text-xs text-slate-400">{t('admin.minutes')}
-                <input
-                  type="number"
-                  min={0}
-                  max={600}
-                  value={banForm.minutes}
-                  onChange={(event) =>
-                    setBanForm((prev) => ({ ...prev, minutes: Number(event.target.value) }))
-                  }
-                  placeholder={t('admin.minutes')}
-                  className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
-                />
+                <label className="text-xs text-slate-400">
+                  {t("admin.minutes")}
+                  <input
+                    type="number"
+                    min={0}
+                    max={600}
+                    value={banForm.minutes}
+                    onChange={(event) =>
+                      setBanForm((prev) => ({
+                        ...prev,
+                        minutes: Number(event.target.value),
+                      }))
+                    }
+                    placeholder={t("admin.minutes")}
+                    className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                  />
                 </label>
               </div>
-              <p className="text-xs text-slate-400">Durée du bannissement. Jours, heures et minutes s’additionnent. Tout à zéro = bannissement permanent.</p>
+              <p className="text-xs text-slate-400">
+                Durée du bannissement. Jours, heures et minutes s’additionnent.
+                Tout à zéro = bannissement permanent.
+              </p>
               <button
                 onClick={() =>
                   banForm.username &&
@@ -504,26 +523,34 @@ export default function AdminPage() {
                 disabled={banMutation.isPending}
                 className="w-full rounded-full border border-red-500/60 px-4 py-2 text-xs uppercase tracking-[0.2em] text-red-200 hover:bg-red-500/10 disabled:opacity-60"
               >
-                {banMutation.isPending ? t('admin.banProcessing') : t('admin.banAction')}
+                {banMutation.isPending
+                  ? t("admin.banProcessing")
+                  : t("admin.banAction")}
               </button>
             </div>
 
             <div className="border-t border-slate-800/70 pt-4 space-y-3">
               <input
                 type="text"
-                placeholder={t('admin.usernamePlaceholder')}
+                placeholder={t("admin.usernamePlaceholder")}
                 value={unbanForm.username}
                 onChange={(event) =>
-                  setUnbanForm((prev) => ({ ...prev, username: event.target.value }))
+                  setUnbanForm((prev) => ({
+                    ...prev,
+                    username: event.target.value,
+                  }))
                 }
                 className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
               />
               <input
                 type="text"
-                placeholder={t('admin.reasonPlaceholder')}
+                placeholder={t("admin.reasonPlaceholder")}
                 value={unbanForm.reason}
                 onChange={(event) =>
-                  setUnbanForm((prev) => ({ ...prev, reason: event.target.value }))
+                  setUnbanForm((prev) => ({
+                    ...prev,
+                    reason: event.target.value,
+                  }))
                 }
                 className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
               />
@@ -538,7 +565,9 @@ export default function AdminPage() {
                 disabled={unbanMutation.isPending}
                 className="w-full rounded-full border border-emerald-500/60 px-4 py-2 text-xs uppercase tracking-[0.2em] text-emerald-200 hover:bg-emerald-500/10 disabled:opacity-60"
               >
-                {unbanMutation.isPending ? t('admin.unbanProcessing') : t('admin.unbanAction')}
+                {unbanMutation.isPending
+                  ? t("admin.unbanProcessing")
+                  : t("admin.unbanAction")}
               </button>
             </div>
           </div>
@@ -547,18 +576,23 @@ export default function AdminPage() {
 
       {isSuperAdminUser && (
         <div className="rounded-3xl border border-slate-800/80 bg-slate-950/60 p-6">
-          <h2 className="text-sm font-semibold text-white">{t('admin.boostTitle')}</h2>
-          <p className="text-xs text-slate-500">{t('admin.boostHint')}</p>
+          <h2 className="text-sm font-semibold text-white">
+            {t("admin.boostTitle")}
+          </h2>
+          <p className="text-xs text-slate-500">{t("admin.boostHint")}</p>
           <div className="mt-4 grid gap-3 md:grid-cols-[1fr_auto] md:items-end">
             <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
-              {t('admin.usernameLabel')}
+              {t("admin.usernameLabel")}
               <input
                 type="text"
-                placeholder={t('admin.usernamePlaceholder')}
+                placeholder={t("admin.usernamePlaceholder")}
                 value={boostForm.username}
                 onChange={(event) => {
                   setBoostResult(null);
-                  setBoostForm((prev) => ({ ...prev, username: event.target.value }));
+                  setBoostForm((prev) => ({
+                    ...prev,
+                    username: event.target.value,
+                  }));
                 }}
                 className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
               />
@@ -571,19 +605,22 @@ export default function AdminPage() {
               disabled={boostMutation.isPending}
               className="rounded-full border border-amber-500/60 px-5 py-2 text-xs uppercase tracking-[0.2em] text-amber-200 hover:bg-amber-500/10 disabled:opacity-60"
             >
-              {boostMutation.isPending ? t('admin.boostProcessing') : t('admin.boostAction')}
+              {boostMutation.isPending
+                ? t("admin.boostProcessing")
+                : t("admin.boostAction")}
             </button>
           </div>
           {boostResult && (
             <div className="mt-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-xs text-emerald-200">
               <div className="text-[11px] uppercase tracking-[0.2em] text-emerald-200">
-                {t('admin.boostSuccess')}
+                {t("admin.boostSuccess")}
               </div>
               <div className="mt-2 text-sm text-emerald-100">
-                {boostResult.username} • {boostResult.planetsUpdated} {t('admin.boostPlanets')} •{' '}
-                {boostResult.technologiesUpdated} {t('admin.boostTechs')} •{' '}
-                {t('admin.boostBuildingLevel')} {boostResult.buildingLevel} •{' '}
-                {t('admin.boostTechnologyLevel')} {boostResult.technologyLevel}
+                {boostResult.username} • {boostResult.planetsUpdated}{" "}
+                {t("admin.boostPlanets")} • {boostResult.technologiesUpdated}{" "}
+                {t("admin.boostTechs")} • {t("admin.boostBuildingLevel")}{" "}
+                {boostResult.buildingLevel} • {t("admin.boostTechnologyLevel")}{" "}
+                {boostResult.technologyLevel}
               </div>
             </div>
           )}
@@ -592,11 +629,13 @@ export default function AdminPage() {
 
       <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
         <div className="rounded-3xl border border-slate-800/80 bg-slate-950/60 p-6">
-          <h2 className="text-sm font-semibold text-white">{t('admin.auditTitle')}</h2>
-          <p className="text-xs text-slate-500">{t('admin.auditHint')}</p>
+          <h2 className="text-sm font-semibold text-white">
+            {t("admin.auditTitle")}
+          </h2>
+          <p className="text-xs text-slate-500">{t("admin.auditHint")}</p>
           <div className="mt-4 space-y-2 text-xs text-slate-400">
             {(auditQuery.data ?? []).length === 0 ? (
-              <div>{t('admin.auditEmpty')}</div>
+              <div>{t("admin.auditEmpty")}</div>
             ) : (
               auditQuery.data?.map((entry) => (
                 <div
@@ -608,7 +647,7 @@ export default function AdminPage() {
                     <span>{new Date(entry.createdAt).toLocaleString()}</span>
                   </div>
                   <div className="mt-1 text-[11px] text-slate-500">
-                    {t('admin.by')} {entry.user.username}
+                    {t("admin.by")} {entry.user.username}
                   </div>
                 </div>
               ))
@@ -617,11 +656,13 @@ export default function AdminPage() {
         </div>
 
         <div className="rounded-3xl border border-slate-800/80 bg-slate-950/60 p-6">
-          <h2 className="text-sm font-semibold text-white">{t('admin.banTitle')}</h2>
-          <p className="text-xs text-slate-500">{t('admin.banHint')}</p>
+          <h2 className="text-sm font-semibold text-white">
+            {t("admin.banTitle")}
+          </h2>
+          <p className="text-xs text-slate-500">{t("admin.banHint")}</p>
           <div className="mt-4 space-y-2 text-xs text-slate-400">
             {(banLogsQuery.data ?? []).length === 0 ? (
-              <div>{t('admin.banEmpty')}</div>
+              <div>{t("admin.banEmpty")}</div>
             ) : (
               banLogsQuery.data?.map((entry) => (
                 <div
@@ -635,8 +676,9 @@ export default function AdminPage() {
                     <span>{new Date(entry.createdAt).toLocaleString()}</span>
                   </div>
                   <div className="mt-1 text-[11px] text-slate-500">
-                    {t('admin.by')} {entry.actor.username}
-                    {entry.expiresAt && ` • ${t('admin.expiresAt')} ${new Date(entry.expiresAt).toLocaleString()}`}
+                    {t("admin.by")} {entry.actor.username}
+                    {entry.expiresAt &&
+                      ` • ${t("admin.expiresAt")} ${new Date(entry.expiresAt).toLocaleString()}`}
                   </div>
                 </div>
               ))
@@ -644,8 +686,45 @@ export default function AdminPage() {
           </div>
         </div>
       </div>
-        </>
-      )}
+    </div>
+  );
+}
+
+export default function AdminPage() {
+  const { user } = useAuthStore();
+  const { t } = useI18n();
+  const [tab, setTab] = useState<"players" | "general" | "smtp">("players");
+  return (
+    <div className="space-y-6">
+      <div
+        role="tablist"
+        className="flex flex-wrap gap-2 border-b border-slate-800"
+      >
+        {(
+          [
+            "players",
+            "general",
+            ...(isSuperAdmin(user?.role) ? ["smtp"] : []),
+          ] as const
+        ).map((value) => (
+          <button
+            key={value}
+            role="tab"
+            aria-selected={tab === value}
+            className={`px-4 py-3 text-sm ${tab === value ? "border-b-2 border-blue-400 text-white" : "text-slate-400"}`}
+            onClick={() => setTab(value as typeof tab)}
+          >
+            {value === "players"
+              ? "Joueurs"
+              : value === "smtp"
+                ? t("admin.tabSmtp")
+                : t("admin.tabGeneral")}
+          </button>
+        ))}
+      </div>
+      {tab === "players" && <PlayersPanel />}
+      {tab === "general" && <GeneralPanel />}
+      {tab === "smtp" && isSuperAdmin(user?.role) && <SmtpSettingsPanel />}
     </div>
   );
 }

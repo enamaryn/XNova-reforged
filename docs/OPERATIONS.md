@@ -204,3 +204,14 @@ Un `server` nginx `api.xnova.exemple.fr` (certificat TLS propre) avec le même b
 - Après tout changement de `NEXT_PUBLIC_API_URL` : `npm run build` puis redémarrage du web.
 - Vérification : depuis le navigateur (F12, onglet Réseau), la requête de connexion doit partir vers `https://<site>/api/auth/login` (option A) et le WebSocket vers `wss://<site>/api/socket.io/`.
 - En cas d'échec de connexion sans message : le navigateur n'a pas pu joindre l'API (l'interface affiche désormais « Impossible de joindre le serveur »).
+
+
+## Fiche joueur et gestion administrative
+
+Le panneau admin ouvre par défaut la liste des joueurs. « Fiche joueur » ouvre une page dédiée, accessible aussi par son URL `/fr/admin/players/<id>`. La fiche expose les ressources actualisées de chaque planète, niveaux des bâtiments et technologies, vaisseaux à quai, défenses, constructions et recherches en cours, flottes actives et entrantes. Les identifiants de session, jetons et mots de passe ne sont jamais exposés.
+
+Bannir (permanent ou durée en jours) et débannir sont disponibles dans la fiche. Réinitialiser et supprimer sont réservés aux administrateurs et super administrateurs, uniquement sur des comptes de rang inférieur et jamais sur leur propre compte. Chaque action demande une confirmation ; les actions destructives exigent le pseudo exact et un motif, vérifiés également par l’API. Elles sont journalisées.
+
+La réinitialisation conserve les accès, le rôle, les éventuels bannissements, l’alliance et les messages. Elle conserve la première planète et ses coordonnées, remet bâtiments/recherches/unités à zéro, efface les colonies et files, remet les stocks à 500 métal/500 cristal/0 deutérium et les points à zéro. Les sessions sont révoquées. La suppression retire définitivement le compte et ses données associées ; les actions administratives antérieures du compte sont archivées dans le journal de suppression.
+
+Une flotte active appartenant au joueur ou visant ses planètes bloque ces deux actions. Les missions doivent terminer ou être rappelées. Un fondateur d’alliance ne peut être supprimé avant transfert de la fondation ou dissolution de l’alliance. Les opérations sont transactionnelles et empêchent les écritures concurrentes pendant leur exécution.
