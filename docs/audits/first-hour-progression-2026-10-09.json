@@ -1,0 +1,2752 @@
+{
+  "simulatedSeconds": 3600,
+  "tickSeconds": 10,
+  "settings": {
+    "gameSpeed": 1,
+    "resourceMultiplier": 1,
+    "costMultipliers": 1
+  },
+  "scenarios": [
+    {
+      "name": "sans action",
+      "pollingSeconds": 10,
+      "initial": {
+        "metal": 500,
+        "crystal": 500,
+        "deuterium": 0
+      },
+      "produced": {
+        "metal": 20.000000000000064,
+        "crystal": 10.000000000000032,
+        "deuterium": 0
+      },
+      "spent": {
+        "metal": 0,
+        "crystal": 0,
+        "deuterium": 0
+      },
+      "actual": {
+        "metal": 519.9999999999956,
+        "crystal": 509.9999999999977,
+        "deuterium": 0
+      },
+      "expected": {
+        "metal": 519.9999999999955,
+        "crystal": 509.9999999999977,
+        "deuterium": 0
+      },
+      "error": {
+        "metal": 1.1368683772161603e-13,
+        "crystal": 0,
+        "deuterium": 0
+      },
+      "levels": {
+        "metalMine": 0,
+        "crystalMine": 0,
+        "deuteriumMine": 0,
+        "solarPlant": 0,
+        "roboticsFactory": 0,
+        "researchLab": 0
+      },
+      "actions": [],
+      "checkpoints": [
+        {
+          "second": 0,
+          "resources": {
+            "metal": 500,
+            "crystal": 500,
+            "deuterium": 0
+          },
+          "productionPerHour": {
+            "metal": 20,
+            "crystal": 10,
+            "deuterium": 0
+          },
+          "energy": {
+            "used": 0,
+            "available": 0,
+            "productionLevel": 0
+          }
+        },
+        {
+          "second": 900,
+          "resources": {
+            "metal": 504,
+            "crystal": 502,
+            "deuterium": 0
+          },
+          "productionPerHour": {
+            "metal": 20,
+            "crystal": 10,
+            "deuterium": 0
+          },
+          "energy": {
+            "used": 0,
+            "available": 0,
+            "productionLevel": 0
+          }
+        },
+        {
+          "second": 1800,
+          "resources": {
+            "metal": 509,
+            "crystal": 504,
+            "deuterium": 0
+          },
+          "productionPerHour": {
+            "metal": 20,
+            "crystal": 10,
+            "deuterium": 0
+          },
+          "energy": {
+            "used": 0,
+            "available": 0,
+            "productionLevel": 0
+          }
+        },
+        {
+          "second": 2700,
+          "resources": {
+            "metal": 514,
+            "crystal": 507,
+            "deuterium": 0
+          },
+          "productionPerHour": {
+            "metal": 20,
+            "crystal": 10,
+            "deuterium": 0
+          },
+          "energy": {
+            "used": 0,
+            "available": 0,
+            "productionLevel": 0
+          }
+        },
+        {
+          "second": 3600,
+          "resources": {
+            "metal": 519,
+            "crystal": 509,
+            "deuterium": 0
+          },
+          "productionPerHour": {
+            "metal": 20,
+            "crystal": 10,
+            "deuterium": 0
+          },
+          "energy": {
+            "used": 0,
+            "available": 0,
+            "productionLevel": 0
+          }
+        }
+      ],
+      "researchRefusal": "Prerequis manquants: Laboratoire de Recherche 0/1",
+      "next": null,
+      "technologies": [
+        {
+          "id": 106,
+          "name": "Technologie Espionnage",
+          "canResearch": false,
+          "cost": {
+            "metal": 220,
+            "crystal": 1100,
+            "deuterium": 220
+          }
+        },
+        {
+          "id": 108,
+          "name": "Technologie Ordinateur",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 400,
+            "deuterium": 600
+          }
+        },
+        {
+          "id": 109,
+          "name": "Technologie Militaire",
+          "canResearch": false,
+          "cost": {
+            "metal": 800,
+            "crystal": 200,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 110,
+          "name": "Technologie Défense",
+          "canResearch": false,
+          "cost": {
+            "metal": 200,
+            "crystal": 600,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 111,
+          "name": "Technologie Bouclier",
+          "canResearch": false,
+          "cost": {
+            "metal": 200,
+            "crystal": 600,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 113,
+          "name": "Technologie Énergie",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 800,
+            "deuterium": 400
+          }
+        },
+        {
+          "id": 114,
+          "name": "Technologie Hyperespace",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 4000,
+            "deuterium": 2000
+          }
+        },
+        {
+          "id": 115,
+          "name": "Réacteur à Combustion",
+          "canResearch": false,
+          "cost": {
+            "metal": 460,
+            "crystal": 0,
+            "deuterium": 690
+          }
+        },
+        {
+          "id": 117,
+          "name": "Réacteur à Impulsion",
+          "canResearch": false,
+          "cost": {
+            "metal": 2000,
+            "crystal": 4000,
+            "deuterium": 600
+          }
+        },
+        {
+          "id": 118,
+          "name": "Propulsion Hyperespace",
+          "canResearch": false,
+          "cost": {
+            "metal": 10000,
+            "crystal": 20000,
+            "deuterium": 6000
+          }
+        },
+        {
+          "id": 120,
+          "name": "Technologie Laser",
+          "canResearch": false,
+          "cost": {
+            "metal": 200,
+            "crystal": 100,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 121,
+          "name": "Technologie Ions",
+          "canResearch": false,
+          "cost": {
+            "metal": 1000,
+            "crystal": 300,
+            "deuterium": 100
+          }
+        },
+        {
+          "id": 122,
+          "name": "Technologie Plasma",
+          "canResearch": false,
+          "cost": {
+            "metal": 2000,
+            "crystal": 4000,
+            "deuterium": 1000
+          }
+        },
+        {
+          "id": 123,
+          "name": "Réseau de Recherche Intergalactique",
+          "canResearch": false,
+          "cost": {
+            "metal": 240000,
+            "crystal": 400000,
+            "deuterium": 160000
+          }
+        },
+        {
+          "id": 124,
+          "name": "Technologie Expédition",
+          "canResearch": false,
+          "cost": {
+            "metal": 4000,
+            "crystal": 8000,
+            "deuterium": 4000
+          }
+        },
+        {
+          "id": 199,
+          "name": "Technologie Graviton",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 0,
+            "deuterium": 0,
+            "energy": 300000
+          }
+        }
+      ]
+    },
+    {
+      "name": "mines et énergie, lecture toutes les 10 secondes",
+      "pollingSeconds": 10,
+      "initial": {
+        "metal": 500,
+        "crystal": 500,
+        "deuterium": 0
+      },
+      "produced": {
+        "metal": 44.06250000000028,
+        "crystal": 25.85833333333331,
+        "deuterium": 7.562500000000037
+      },
+      "spent": {
+        "metal": 520,
+        "crystal": 189,
+        "deuterium": 0
+      },
+      "actual": {
+        "metal": 24.06250000000047,
+        "crystal": 336.8583333333364,
+        "deuterium": 7.562500000000037
+      },
+      "expected": {
+        "metal": 24.06250000000042,
+        "crystal": 336.8583333333363,
+        "deuterium": 7.562500000000037
+      },
+      "error": {
+        "metal": 4.973799150320701e-14,
+        "crystal": 1.1368683772161603e-13,
+        "deuterium": 0
+      },
+      "levels": {
+        "metalMine": 1,
+        "crystalMine": 1,
+        "deuteriumMine": 1,
+        "solarPlant": 2,
+        "roboticsFactory": 0,
+        "researchLab": 0
+      },
+      "actions": [
+        {
+          "second": 0,
+          "event": "lancé",
+          "building": "Centrale Électrique Solaire",
+          "level": 1,
+          "duration": 42,
+          "cost": {
+            "metal": 75,
+            "crystal": 30,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 50,
+          "event": "terminé",
+          "building": "Centrale Électrique Solaire",
+          "level": 1
+        },
+        {
+          "second": 50,
+          "event": "lancé",
+          "building": "Mine de Métal",
+          "level": 1,
+          "duration": 30,
+          "cost": {
+            "metal": 60,
+            "crystal": 15,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 80,
+          "event": "terminé",
+          "building": "Mine de Métal",
+          "level": 1
+        },
+        {
+          "second": 80,
+          "event": "lancé",
+          "building": "Mine de Cristal",
+          "level": 1,
+          "duration": 28,
+          "cost": {
+            "metal": 48,
+            "crystal": 24,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 110,
+          "event": "terminé",
+          "building": "Mine de Cristal",
+          "level": 1
+        },
+        {
+          "second": 110,
+          "event": "lancé",
+          "building": "Synthétiseur de Deutérium",
+          "level": 1,
+          "duration": 120,
+          "cost": {
+            "metal": 225,
+            "crystal": 75,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 230,
+          "event": "terminé",
+          "building": "Synthétiseur de Deutérium",
+          "level": 1
+        },
+        {
+          "second": 1950,
+          "event": "lancé",
+          "building": "Centrale Électrique Solaire",
+          "level": 2,
+          "duration": 62,
+          "cost": {
+            "metal": 112,
+            "crystal": 45,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 2020,
+          "event": "terminé",
+          "building": "Centrale Électrique Solaire",
+          "level": 2
+        }
+      ],
+      "checkpoints": [
+        {
+          "second": 0,
+          "resources": {
+            "metal": 425,
+            "crystal": 470,
+            "deuterium": 0
+          },
+          "productionPerHour": {
+            "metal": 20,
+            "crystal": 10,
+            "deuterium": 0
+          },
+          "energy": {
+            "used": 0,
+            "available": 0,
+            "productionLevel": 0
+          }
+        },
+        {
+          "second": 900,
+          "resources": {
+            "metal": 101,
+            "crystal": 361,
+            "deuterium": 1
+          },
+          "productionPerHour": {
+            "metal": 36.5,
+            "crystal": 21,
+            "deuterium": 5.5
+          },
+          "energy": {
+            "used": 44,
+            "available": 22,
+            "productionLevel": 50
+          }
+        },
+        {
+          "second": 1800,
+          "resources": {
+            "metal": 110,
+            "crystal": 366,
+            "deuterium": 2
+          },
+          "productionPerHour": {
+            "metal": 36.5,
+            "crystal": 21,
+            "deuterium": 5.5
+          },
+          "energy": {
+            "used": 44,
+            "available": 22,
+            "productionLevel": 50
+          }
+        },
+        {
+          "second": 2700,
+          "resources": {
+            "metal": 10,
+            "crystal": 328,
+            "deuterium": 4
+          },
+          "productionPerHour": {
+            "metal": 53,
+            "crystal": 32,
+            "deuterium": 11
+          },
+          "energy": {
+            "used": 44,
+            "available": 48,
+            "productionLevel": 100
+          }
+        },
+        {
+          "second": 3600,
+          "resources": {
+            "metal": 24,
+            "crystal": 336,
+            "deuterium": 7
+          },
+          "productionPerHour": {
+            "metal": 53,
+            "crystal": 32,
+            "deuterium": 11
+          },
+          "energy": {
+            "used": 44,
+            "available": 48,
+            "productionLevel": 100
+          }
+        }
+      ],
+      "researchRefusal": "Prerequis manquants: Laboratoire de Recherche 0/1",
+      "next": {
+        "name": "Mine de Métal",
+        "cost": {
+          "metal": 90,
+          "crystal": 22,
+          "deuterium": 0,
+          "energy": 0
+        },
+        "missing": {
+          "metal": 65.93749999999953,
+          "crystal": 0,
+          "deuterium": 0
+        }
+      },
+      "technologies": [
+        {
+          "id": 106,
+          "name": "Technologie Espionnage",
+          "canResearch": false,
+          "cost": {
+            "metal": 220,
+            "crystal": 1100,
+            "deuterium": 220
+          }
+        },
+        {
+          "id": 108,
+          "name": "Technologie Ordinateur",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 400,
+            "deuterium": 600
+          }
+        },
+        {
+          "id": 109,
+          "name": "Technologie Militaire",
+          "canResearch": false,
+          "cost": {
+            "metal": 800,
+            "crystal": 200,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 110,
+          "name": "Technologie Défense",
+          "canResearch": false,
+          "cost": {
+            "metal": 200,
+            "crystal": 600,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 111,
+          "name": "Technologie Bouclier",
+          "canResearch": false,
+          "cost": {
+            "metal": 200,
+            "crystal": 600,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 113,
+          "name": "Technologie Énergie",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 800,
+            "deuterium": 400
+          }
+        },
+        {
+          "id": 114,
+          "name": "Technologie Hyperespace",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 4000,
+            "deuterium": 2000
+          }
+        },
+        {
+          "id": 115,
+          "name": "Réacteur à Combustion",
+          "canResearch": false,
+          "cost": {
+            "metal": 460,
+            "crystal": 0,
+            "deuterium": 690
+          }
+        },
+        {
+          "id": 117,
+          "name": "Réacteur à Impulsion",
+          "canResearch": false,
+          "cost": {
+            "metal": 2000,
+            "crystal": 4000,
+            "deuterium": 600
+          }
+        },
+        {
+          "id": 118,
+          "name": "Propulsion Hyperespace",
+          "canResearch": false,
+          "cost": {
+            "metal": 10000,
+            "crystal": 20000,
+            "deuterium": 6000
+          }
+        },
+        {
+          "id": 120,
+          "name": "Technologie Laser",
+          "canResearch": false,
+          "cost": {
+            "metal": 200,
+            "crystal": 100,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 121,
+          "name": "Technologie Ions",
+          "canResearch": false,
+          "cost": {
+            "metal": 1000,
+            "crystal": 300,
+            "deuterium": 100
+          }
+        },
+        {
+          "id": 122,
+          "name": "Technologie Plasma",
+          "canResearch": false,
+          "cost": {
+            "metal": 2000,
+            "crystal": 4000,
+            "deuterium": 1000
+          }
+        },
+        {
+          "id": 123,
+          "name": "Réseau de Recherche Intergalactique",
+          "canResearch": false,
+          "cost": {
+            "metal": 240000,
+            "crystal": 400000,
+            "deuterium": 160000
+          }
+        },
+        {
+          "id": 124,
+          "name": "Technologie Expédition",
+          "canResearch": false,
+          "cost": {
+            "metal": 4000,
+            "crystal": 8000,
+            "deuterium": 4000
+          }
+        },
+        {
+          "id": 199,
+          "name": "Technologie Graviton",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 0,
+            "deuterium": 0,
+            "energy": 300000
+          }
+        }
+      ]
+    },
+    {
+      "name": "mines et énergie, lecture à chaque minute",
+      "pollingSeconds": 60,
+      "initial": {
+        "metal": 500,
+        "crystal": 500,
+        "deuterium": 0
+      },
+      "produced": {
+        "metal": 43.925000000000274,
+        "crystal": 25.766666666666644,
+        "deuterium": 7.516666666666705
+      },
+      "spent": {
+        "metal": 520,
+        "crystal": 189,
+        "deuterium": 0
+      },
+      "actual": {
+        "metal": 23.9250000000001,
+        "crystal": 336.7666666666678,
+        "deuterium": 7.51666666666667
+      },
+      "expected": {
+        "metal": 23.925000000000423,
+        "crystal": 336.7666666666696,
+        "deuterium": 7.516666666666705
+      },
+      "error": {
+        "metal": -3.232969447708456e-13,
+        "crystal": -1.8189894035458565e-12,
+        "deuterium": -3.4638958368304884e-14
+      },
+      "levels": {
+        "metalMine": 1,
+        "crystalMine": 1,
+        "deuteriumMine": 1,
+        "solarPlant": 2,
+        "roboticsFactory": 0,
+        "researchLab": 0
+      },
+      "actions": [
+        {
+          "second": 0,
+          "event": "lancé",
+          "building": "Centrale Électrique Solaire",
+          "level": 1,
+          "duration": 42,
+          "cost": {
+            "metal": 75,
+            "crystal": 30,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 50,
+          "event": "terminé",
+          "building": "Centrale Électrique Solaire",
+          "level": 1
+        },
+        {
+          "second": 50,
+          "event": "lancé",
+          "building": "Mine de Métal",
+          "level": 1,
+          "duration": 30,
+          "cost": {
+            "metal": 60,
+            "crystal": 15,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 80,
+          "event": "terminé",
+          "building": "Mine de Métal",
+          "level": 1
+        },
+        {
+          "second": 80,
+          "event": "lancé",
+          "building": "Mine de Cristal",
+          "level": 1,
+          "duration": 28,
+          "cost": {
+            "metal": 48,
+            "crystal": 24,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 110,
+          "event": "terminé",
+          "building": "Mine de Cristal",
+          "level": 1
+        },
+        {
+          "second": 110,
+          "event": "lancé",
+          "building": "Synthétiseur de Deutérium",
+          "level": 1,
+          "duration": 120,
+          "cost": {
+            "metal": 225,
+            "crystal": 75,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 230,
+          "event": "terminé",
+          "building": "Synthétiseur de Deutérium",
+          "level": 1
+        },
+        {
+          "second": 1980,
+          "event": "lancé",
+          "building": "Centrale Électrique Solaire",
+          "level": 2,
+          "duration": 62,
+          "cost": {
+            "metal": 112,
+            "crystal": 45,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 2050,
+          "event": "terminé",
+          "building": "Centrale Électrique Solaire",
+          "level": 2
+        }
+      ],
+      "checkpoints": [
+        {
+          "second": 0,
+          "resources": {
+            "metal": 425,
+            "crystal": 470,
+            "deuterium": 0
+          },
+          "productionPerHour": {
+            "metal": 20,
+            "crystal": 10,
+            "deuterium": 0
+          },
+          "energy": {
+            "used": 0,
+            "available": 0,
+            "productionLevel": 0
+          }
+        },
+        {
+          "second": 900,
+          "resources": {
+            "metal": 101,
+            "crystal": 361,
+            "deuterium": 1
+          },
+          "productionPerHour": {
+            "metal": 36.5,
+            "crystal": 21,
+            "deuterium": 5.5
+          },
+          "energy": {
+            "used": 44,
+            "available": 22,
+            "productionLevel": 50
+          }
+        },
+        {
+          "second": 1800,
+          "resources": {
+            "metal": 110,
+            "crystal": 366,
+            "deuterium": 2
+          },
+          "productionPerHour": {
+            "metal": 36.5,
+            "crystal": 21,
+            "deuterium": 5.5
+          },
+          "energy": {
+            "used": 44,
+            "available": 22,
+            "productionLevel": 50
+          }
+        },
+        {
+          "second": 2700,
+          "resources": {
+            "metal": 10,
+            "crystal": 328,
+            "deuterium": 4
+          },
+          "productionPerHour": {
+            "metal": 53,
+            "crystal": 32,
+            "deuterium": 11
+          },
+          "energy": {
+            "used": 44,
+            "available": 48,
+            "productionLevel": 100
+          }
+        },
+        {
+          "second": 3600,
+          "resources": {
+            "metal": 23,
+            "crystal": 336,
+            "deuterium": 7
+          },
+          "productionPerHour": {
+            "metal": 53,
+            "crystal": 32,
+            "deuterium": 11
+          },
+          "energy": {
+            "used": 44,
+            "available": 48,
+            "productionLevel": 100
+          }
+        }
+      ],
+      "researchRefusal": "Prerequis manquants: Laboratoire de Recherche 0/1",
+      "next": {
+        "name": "Mine de Métal",
+        "cost": {
+          "metal": 90,
+          "crystal": 22,
+          "deuterium": 0,
+          "energy": 0
+        },
+        "missing": {
+          "metal": 66.0749999999999,
+          "crystal": 0,
+          "deuterium": 0
+        }
+      },
+      "technologies": [
+        {
+          "id": 106,
+          "name": "Technologie Espionnage",
+          "canResearch": false,
+          "cost": {
+            "metal": 220,
+            "crystal": 1100,
+            "deuterium": 220
+          }
+        },
+        {
+          "id": 108,
+          "name": "Technologie Ordinateur",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 400,
+            "deuterium": 600
+          }
+        },
+        {
+          "id": 109,
+          "name": "Technologie Militaire",
+          "canResearch": false,
+          "cost": {
+            "metal": 800,
+            "crystal": 200,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 110,
+          "name": "Technologie Défense",
+          "canResearch": false,
+          "cost": {
+            "metal": 200,
+            "crystal": 600,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 111,
+          "name": "Technologie Bouclier",
+          "canResearch": false,
+          "cost": {
+            "metal": 200,
+            "crystal": 600,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 113,
+          "name": "Technologie Énergie",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 800,
+            "deuterium": 400
+          }
+        },
+        {
+          "id": 114,
+          "name": "Technologie Hyperespace",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 4000,
+            "deuterium": 2000
+          }
+        },
+        {
+          "id": 115,
+          "name": "Réacteur à Combustion",
+          "canResearch": false,
+          "cost": {
+            "metal": 460,
+            "crystal": 0,
+            "deuterium": 690
+          }
+        },
+        {
+          "id": 117,
+          "name": "Réacteur à Impulsion",
+          "canResearch": false,
+          "cost": {
+            "metal": 2000,
+            "crystal": 4000,
+            "deuterium": 600
+          }
+        },
+        {
+          "id": 118,
+          "name": "Propulsion Hyperespace",
+          "canResearch": false,
+          "cost": {
+            "metal": 10000,
+            "crystal": 20000,
+            "deuterium": 6000
+          }
+        },
+        {
+          "id": 120,
+          "name": "Technologie Laser",
+          "canResearch": false,
+          "cost": {
+            "metal": 200,
+            "crystal": 100,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 121,
+          "name": "Technologie Ions",
+          "canResearch": false,
+          "cost": {
+            "metal": 1000,
+            "crystal": 300,
+            "deuterium": 100
+          }
+        },
+        {
+          "id": 122,
+          "name": "Technologie Plasma",
+          "canResearch": false,
+          "cost": {
+            "metal": 2000,
+            "crystal": 4000,
+            "deuterium": 1000
+          }
+        },
+        {
+          "id": 123,
+          "name": "Réseau de Recherche Intergalactique",
+          "canResearch": false,
+          "cost": {
+            "metal": 240000,
+            "crystal": 400000,
+            "deuterium": 160000
+          }
+        },
+        {
+          "id": 124,
+          "name": "Technologie Expédition",
+          "canResearch": false,
+          "cost": {
+            "metal": 4000,
+            "crystal": 8000,
+            "deuterium": 4000
+          }
+        },
+        {
+          "id": 199,
+          "name": "Technologie Graviton",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 0,
+            "deuterium": 0,
+            "energy": 300000
+          }
+        }
+      ]
+    },
+    {
+      "name": "objectif laboratoire après mise en place des mines",
+      "pollingSeconds": 10,
+      "initial": {
+        "metal": 500,
+        "crystal": 500,
+        "deuterium": 0
+      },
+      "produced": {
+        "metal": 44.06250000000028,
+        "crystal": 25.85833333333331,
+        "deuterium": 7.562500000000037
+      },
+      "spent": {
+        "metal": 520,
+        "crystal": 189,
+        "deuterium": 0
+      },
+      "actual": {
+        "metal": 24.06250000000047,
+        "crystal": 336.8583333333364,
+        "deuterium": 7.562500000000037
+      },
+      "expected": {
+        "metal": 24.06250000000042,
+        "crystal": 336.8583333333363,
+        "deuterium": 7.562500000000037
+      },
+      "error": {
+        "metal": 4.973799150320701e-14,
+        "crystal": 1.1368683772161603e-13,
+        "deuterium": 0
+      },
+      "levels": {
+        "metalMine": 1,
+        "crystalMine": 1,
+        "deuteriumMine": 1,
+        "solarPlant": 2,
+        "roboticsFactory": 0,
+        "researchLab": 0
+      },
+      "actions": [
+        {
+          "second": 0,
+          "event": "lancé",
+          "building": "Centrale Électrique Solaire",
+          "level": 1,
+          "duration": 42,
+          "cost": {
+            "metal": 75,
+            "crystal": 30,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 50,
+          "event": "terminé",
+          "building": "Centrale Électrique Solaire",
+          "level": 1
+        },
+        {
+          "second": 50,
+          "event": "lancé",
+          "building": "Mine de Métal",
+          "level": 1,
+          "duration": 30,
+          "cost": {
+            "metal": 60,
+            "crystal": 15,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 80,
+          "event": "terminé",
+          "building": "Mine de Métal",
+          "level": 1
+        },
+        {
+          "second": 80,
+          "event": "lancé",
+          "building": "Mine de Cristal",
+          "level": 1,
+          "duration": 28,
+          "cost": {
+            "metal": 48,
+            "crystal": 24,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 110,
+          "event": "terminé",
+          "building": "Mine de Cristal",
+          "level": 1
+        },
+        {
+          "second": 110,
+          "event": "lancé",
+          "building": "Synthétiseur de Deutérium",
+          "level": 1,
+          "duration": 120,
+          "cost": {
+            "metal": 225,
+            "crystal": 75,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 230,
+          "event": "terminé",
+          "building": "Synthétiseur de Deutérium",
+          "level": 1
+        },
+        {
+          "second": 1950,
+          "event": "lancé",
+          "building": "Centrale Électrique Solaire",
+          "level": 2,
+          "duration": 62,
+          "cost": {
+            "metal": 112,
+            "crystal": 45,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 2020,
+          "event": "terminé",
+          "building": "Centrale Électrique Solaire",
+          "level": 2
+        }
+      ],
+      "checkpoints": [
+        {
+          "second": 0,
+          "resources": {
+            "metal": 425,
+            "crystal": 470,
+            "deuterium": 0
+          },
+          "productionPerHour": {
+            "metal": 20,
+            "crystal": 10,
+            "deuterium": 0
+          },
+          "energy": {
+            "used": 0,
+            "available": 0,
+            "productionLevel": 0
+          }
+        },
+        {
+          "second": 900,
+          "resources": {
+            "metal": 101,
+            "crystal": 361,
+            "deuterium": 1
+          },
+          "productionPerHour": {
+            "metal": 36.5,
+            "crystal": 21,
+            "deuterium": 5.5
+          },
+          "energy": {
+            "used": 44,
+            "available": 22,
+            "productionLevel": 50
+          }
+        },
+        {
+          "second": 1800,
+          "resources": {
+            "metal": 110,
+            "crystal": 366,
+            "deuterium": 2
+          },
+          "productionPerHour": {
+            "metal": 36.5,
+            "crystal": 21,
+            "deuterium": 5.5
+          },
+          "energy": {
+            "used": 44,
+            "available": 22,
+            "productionLevel": 50
+          }
+        },
+        {
+          "second": 2700,
+          "resources": {
+            "metal": 10,
+            "crystal": 328,
+            "deuterium": 4
+          },
+          "productionPerHour": {
+            "metal": 53,
+            "crystal": 32,
+            "deuterium": 11
+          },
+          "energy": {
+            "used": 44,
+            "available": 48,
+            "productionLevel": 100
+          }
+        },
+        {
+          "second": 3600,
+          "resources": {
+            "metal": 24,
+            "crystal": 336,
+            "deuterium": 7
+          },
+          "productionPerHour": {
+            "metal": 53,
+            "crystal": 32,
+            "deuterium": 11
+          },
+          "energy": {
+            "used": 44,
+            "available": 48,
+            "productionLevel": 100
+          }
+        }
+      ],
+      "researchRefusal": "Prerequis manquants: Laboratoire de Recherche 0/1",
+      "next": {
+        "name": "Laboratoire de Recherche",
+        "cost": {
+          "metal": 200,
+          "crystal": 400,
+          "deuterium": 200,
+          "energy": 0
+        },
+        "missing": {
+          "metal": 175.93749999999955,
+          "crystal": 63.14166666666358,
+          "deuterium": 192.43749999999997
+        }
+      },
+      "technologies": [
+        {
+          "id": 106,
+          "name": "Technologie Espionnage",
+          "canResearch": false,
+          "cost": {
+            "metal": 220,
+            "crystal": 1100,
+            "deuterium": 220
+          }
+        },
+        {
+          "id": 108,
+          "name": "Technologie Ordinateur",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 400,
+            "deuterium": 600
+          }
+        },
+        {
+          "id": 109,
+          "name": "Technologie Militaire",
+          "canResearch": false,
+          "cost": {
+            "metal": 800,
+            "crystal": 200,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 110,
+          "name": "Technologie Défense",
+          "canResearch": false,
+          "cost": {
+            "metal": 200,
+            "crystal": 600,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 111,
+          "name": "Technologie Bouclier",
+          "canResearch": false,
+          "cost": {
+            "metal": 200,
+            "crystal": 600,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 113,
+          "name": "Technologie Énergie",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 800,
+            "deuterium": 400
+          }
+        },
+        {
+          "id": 114,
+          "name": "Technologie Hyperespace",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 4000,
+            "deuterium": 2000
+          }
+        },
+        {
+          "id": 115,
+          "name": "Réacteur à Combustion",
+          "canResearch": false,
+          "cost": {
+            "metal": 460,
+            "crystal": 0,
+            "deuterium": 690
+          }
+        },
+        {
+          "id": 117,
+          "name": "Réacteur à Impulsion",
+          "canResearch": false,
+          "cost": {
+            "metal": 2000,
+            "crystal": 4000,
+            "deuterium": 600
+          }
+        },
+        {
+          "id": 118,
+          "name": "Propulsion Hyperespace",
+          "canResearch": false,
+          "cost": {
+            "metal": 10000,
+            "crystal": 20000,
+            "deuterium": 6000
+          }
+        },
+        {
+          "id": 120,
+          "name": "Technologie Laser",
+          "canResearch": false,
+          "cost": {
+            "metal": 200,
+            "crystal": 100,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 121,
+          "name": "Technologie Ions",
+          "canResearch": false,
+          "cost": {
+            "metal": 1000,
+            "crystal": 300,
+            "deuterium": 100
+          }
+        },
+        {
+          "id": 122,
+          "name": "Technologie Plasma",
+          "canResearch": false,
+          "cost": {
+            "metal": 2000,
+            "crystal": 4000,
+            "deuterium": 1000
+          }
+        },
+        {
+          "id": 123,
+          "name": "Réseau de Recherche Intergalactique",
+          "canResearch": false,
+          "cost": {
+            "metal": 240000,
+            "crystal": 400000,
+            "deuterium": 160000
+          }
+        },
+        {
+          "id": 124,
+          "name": "Technologie Expédition",
+          "canResearch": false,
+          "cost": {
+            "metal": 4000,
+            "crystal": 8000,
+            "deuterium": 4000
+          }
+        },
+        {
+          "id": 199,
+          "name": "Technologie Graviton",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 0,
+            "deuterium": 0,
+            "energy": 300000
+          }
+        }
+      ]
+    },
+    {
+      "name": "métal seul sans énergie",
+      "pollingSeconds": 10,
+      "initial": {
+        "metal": 500,
+        "crystal": 500,
+        "deuterium": 0
+      },
+      "produced": {
+        "metal": 20.000000000000064,
+        "crystal": 10.000000000000032,
+        "deuterium": 0
+      },
+      "spent": {
+        "metal": 285,
+        "crystal": 70,
+        "deuterium": 0
+      },
+      "actual": {
+        "metal": 234.9999999999952,
+        "crystal": 439.9999999999977,
+        "deuterium": 0
+      },
+      "expected": {
+        "metal": 234.99999999999545,
+        "crystal": 439.9999999999977,
+        "deuterium": 0
+      },
+      "error": {
+        "metal": -2.5579538487363607e-13,
+        "crystal": 0,
+        "deuterium": 0
+      },
+      "levels": {
+        "metalMine": 3,
+        "crystalMine": 0,
+        "deuteriumMine": 0,
+        "solarPlant": 0,
+        "roboticsFactory": 0,
+        "researchLab": 0
+      },
+      "actions": [
+        {
+          "second": 0,
+          "event": "lancé",
+          "building": "Mine de Métal",
+          "level": 1,
+          "duration": 30,
+          "cost": {
+            "metal": 60,
+            "crystal": 15,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 30,
+          "event": "terminé",
+          "building": "Mine de Métal",
+          "level": 1
+        },
+        {
+          "second": 30,
+          "event": "lancé",
+          "building": "Mine de Métal",
+          "level": 2,
+          "duration": 44,
+          "cost": {
+            "metal": 90,
+            "crystal": 22,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 80,
+          "event": "terminé",
+          "building": "Mine de Métal",
+          "level": 2
+        },
+        {
+          "second": 80,
+          "event": "lancé",
+          "building": "Mine de Métal",
+          "level": 3,
+          "duration": 67,
+          "cost": {
+            "metal": 135,
+            "crystal": 33,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 150,
+          "event": "terminé",
+          "building": "Mine de Métal",
+          "level": 3
+        }
+      ],
+      "checkpoints": [
+        {
+          "second": 0,
+          "resources": {
+            "metal": 440,
+            "crystal": 485,
+            "deuterium": 0
+          },
+          "productionPerHour": {
+            "metal": 20,
+            "crystal": 10,
+            "deuterium": 0
+          },
+          "energy": {
+            "used": 0,
+            "available": 0,
+            "productionLevel": 0
+          }
+        },
+        {
+          "second": 900,
+          "resources": {
+            "metal": 219,
+            "crystal": 432,
+            "deuterium": 0
+          },
+          "productionPerHour": {
+            "metal": 20,
+            "crystal": 10,
+            "deuterium": 0
+          },
+          "energy": {
+            "used": 39,
+            "available": 0,
+            "productionLevel": 0
+          }
+        },
+        {
+          "second": 1800,
+          "resources": {
+            "metal": 224,
+            "crystal": 434,
+            "deuterium": 0
+          },
+          "productionPerHour": {
+            "metal": 20,
+            "crystal": 10,
+            "deuterium": 0
+          },
+          "energy": {
+            "used": 39,
+            "available": 0,
+            "productionLevel": 0
+          }
+        },
+        {
+          "second": 2700,
+          "resources": {
+            "metal": 229,
+            "crystal": 437,
+            "deuterium": 0
+          },
+          "productionPerHour": {
+            "metal": 20,
+            "crystal": 10,
+            "deuterium": 0
+          },
+          "energy": {
+            "used": 39,
+            "available": 0,
+            "productionLevel": 0
+          }
+        },
+        {
+          "second": 3600,
+          "resources": {
+            "metal": 234,
+            "crystal": 439,
+            "deuterium": 0
+          },
+          "productionPerHour": {
+            "metal": 20,
+            "crystal": 10,
+            "deuterium": 0
+          },
+          "energy": {
+            "used": 39,
+            "available": 0,
+            "productionLevel": 0
+          }
+        }
+      ],
+      "researchRefusal": "Prerequis manquants: Laboratoire de Recherche 0/1",
+      "next": null,
+      "technologies": [
+        {
+          "id": 106,
+          "name": "Technologie Espionnage",
+          "canResearch": false,
+          "cost": {
+            "metal": 220,
+            "crystal": 1100,
+            "deuterium": 220
+          }
+        },
+        {
+          "id": 108,
+          "name": "Technologie Ordinateur",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 400,
+            "deuterium": 600
+          }
+        },
+        {
+          "id": 109,
+          "name": "Technologie Militaire",
+          "canResearch": false,
+          "cost": {
+            "metal": 800,
+            "crystal": 200,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 110,
+          "name": "Technologie Défense",
+          "canResearch": false,
+          "cost": {
+            "metal": 200,
+            "crystal": 600,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 111,
+          "name": "Technologie Bouclier",
+          "canResearch": false,
+          "cost": {
+            "metal": 200,
+            "crystal": 600,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 113,
+          "name": "Technologie Énergie",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 800,
+            "deuterium": 400
+          }
+        },
+        {
+          "id": 114,
+          "name": "Technologie Hyperespace",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 4000,
+            "deuterium": 2000
+          }
+        },
+        {
+          "id": 115,
+          "name": "Réacteur à Combustion",
+          "canResearch": false,
+          "cost": {
+            "metal": 460,
+            "crystal": 0,
+            "deuterium": 690
+          }
+        },
+        {
+          "id": 117,
+          "name": "Réacteur à Impulsion",
+          "canResearch": false,
+          "cost": {
+            "metal": 2000,
+            "crystal": 4000,
+            "deuterium": 600
+          }
+        },
+        {
+          "id": 118,
+          "name": "Propulsion Hyperespace",
+          "canResearch": false,
+          "cost": {
+            "metal": 10000,
+            "crystal": 20000,
+            "deuterium": 6000
+          }
+        },
+        {
+          "id": 120,
+          "name": "Technologie Laser",
+          "canResearch": false,
+          "cost": {
+            "metal": 200,
+            "crystal": 100,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 121,
+          "name": "Technologie Ions",
+          "canResearch": false,
+          "cost": {
+            "metal": 1000,
+            "crystal": 300,
+            "deuterium": 100
+          }
+        },
+        {
+          "id": 122,
+          "name": "Technologie Plasma",
+          "canResearch": false,
+          "cost": {
+            "metal": 2000,
+            "crystal": 4000,
+            "deuterium": 1000
+          }
+        },
+        {
+          "id": 123,
+          "name": "Réseau de Recherche Intergalactique",
+          "canResearch": false,
+          "cost": {
+            "metal": 240000,
+            "crystal": 400000,
+            "deuterium": 160000
+          }
+        },
+        {
+          "id": 124,
+          "name": "Technologie Expédition",
+          "canResearch": false,
+          "cost": {
+            "metal": 4000,
+            "crystal": 8000,
+            "deuterium": 4000
+          }
+        },
+        {
+          "id": 199,
+          "name": "Technologie Graviton",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 0,
+            "deuterium": 0,
+            "energy": 300000
+          }
+        }
+      ]
+    },
+    {
+      "name": "priorité métal, deutérium différé",
+      "pollingSeconds": 10,
+      "initial": {
+        "metal": 500,
+        "crystal": 500,
+        "deuterium": 0
+      },
+      "produced": {
+        "metal": 111.47897000000026,
+        "crystal": 28.79777777777793,
+        "deuterium": 0
+      },
+      "spent": {
+        "metal": 596,
+        "crystal": 207,
+        "deuterium": 0
+      },
+      "actual": {
+        "metal": 15.47897000000056,
+        "crystal": 321.7977777777799,
+        "deuterium": 0
+      },
+      "expected": {
+        "metal": 15.478970000000727,
+        "crystal": 321.7977777777797,
+        "deuterium": 0
+      },
+      "error": {
+        "metal": -1.6697754290362354e-13,
+        "crystal": 2.2737367544323206e-13,
+        "deuterium": 0
+      },
+      "levels": {
+        "metalMine": 3,
+        "crystalMine": 2,
+        "deuteriumMine": 0,
+        "solarPlant": 2,
+        "roboticsFactory": 0,
+        "researchLab": 0
+      },
+      "actions": [
+        {
+          "second": 0,
+          "event": "lancé",
+          "building": "Centrale Électrique Solaire",
+          "level": 1,
+          "duration": 42,
+          "cost": {
+            "metal": 75,
+            "crystal": 30,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 50,
+          "event": "terminé",
+          "building": "Centrale Électrique Solaire",
+          "level": 1
+        },
+        {
+          "second": 50,
+          "event": "lancé",
+          "building": "Mine de Métal",
+          "level": 1,
+          "duration": 30,
+          "cost": {
+            "metal": 60,
+            "crystal": 15,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 80,
+          "event": "terminé",
+          "building": "Mine de Métal",
+          "level": 1
+        },
+        {
+          "second": 80,
+          "event": "lancé",
+          "building": "Mine de Métal",
+          "level": 2,
+          "duration": 44,
+          "cost": {
+            "metal": 90,
+            "crystal": 22,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 130,
+          "event": "terminé",
+          "building": "Mine de Métal",
+          "level": 2
+        },
+        {
+          "second": 130,
+          "event": "lancé",
+          "building": "Mine de Métal",
+          "level": 3,
+          "duration": 67,
+          "cost": {
+            "metal": 135,
+            "crystal": 33,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 200,
+          "event": "terminé",
+          "building": "Mine de Métal",
+          "level": 3
+        },
+        {
+          "second": 200,
+          "event": "lancé",
+          "building": "Mine de Cristal",
+          "level": 1,
+          "duration": 28,
+          "cost": {
+            "metal": 48,
+            "crystal": 24,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 230,
+          "event": "terminé",
+          "building": "Mine de Cristal",
+          "level": 1
+        },
+        {
+          "second": 1050,
+          "event": "lancé",
+          "building": "Centrale Électrique Solaire",
+          "level": 2,
+          "duration": 62,
+          "cost": {
+            "metal": 112,
+            "crystal": 45,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 1120,
+          "event": "terminé",
+          "building": "Centrale Électrique Solaire",
+          "level": 2
+        },
+        {
+          "second": 3110,
+          "event": "lancé",
+          "building": "Mine de Cristal",
+          "level": 2,
+          "duration": 45,
+          "cost": {
+            "metal": 76,
+            "crystal": 38,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 3160,
+          "event": "terminé",
+          "building": "Mine de Cristal",
+          "level": 2
+        }
+      ],
+      "checkpoints": [
+        {
+          "second": 0,
+          "resources": {
+            "metal": 425,
+            "crystal": 470,
+            "deuterium": 0
+          },
+          "productionPerHour": {
+            "metal": 20,
+            "crystal": 10,
+            "deuterium": 0
+          },
+          "energy": {
+            "used": 0,
+            "available": 0,
+            "productionLevel": 0
+          }
+        },
+        {
+          "second": 900,
+          "resources": {
+            "metal": 109,
+            "crystal": 380,
+            "deuterium": 0
+          },
+          "productionPerHour": {
+            "metal": 72.70760000000001,
+            "crystal": 19.68,
+            "deuterium": 0
+          },
+          "energy": {
+            "used": 50,
+            "available": 22,
+            "productionLevel": 44
+          }
+        },
+        {
+          "second": 1800,
+          "resources": {
+            "metal": 27,
+            "crystal": 342,
+            "deuterium": 0
+          },
+          "productionPerHour": {
+            "metal": 134.9984,
+            "crystal": 31.12,
+            "deuterium": 0
+          },
+          "energy": {
+            "used": 50,
+            "available": 48,
+            "productionLevel": 96
+          }
+        },
+        {
+          "second": 2700,
+          "resources": {
+            "metal": 60,
+            "crystal": 350,
+            "deuterium": 0
+          },
+          "productionPerHour": {
+            "metal": 134.9984,
+            "crystal": 31.12,
+            "deuterium": 0
+          },
+          "energy": {
+            "used": 50,
+            "available": 48,
+            "productionLevel": 96
+          }
+        },
+        {
+          "second": 3600,
+          "resources": {
+            "metal": 15,
+            "crystal": 321,
+            "deuterium": 0
+          },
+          "productionPerHour": {
+            "metal": 109.8425,
+            "crystal": 46.3,
+            "deuterium": 0
+          },
+          "energy": {
+            "used": 64,
+            "available": 48,
+            "productionLevel": 75
+          }
+        }
+      ],
+      "researchRefusal": "Prerequis manquants: Laboratoire de Recherche 0/1",
+      "next": {
+        "name": "Centrale Électrique Solaire",
+        "cost": {
+          "metal": 168,
+          "crystal": 67,
+          "deuterium": 0,
+          "energy": 0
+        },
+        "missing": {
+          "metal": 152.52102999999943,
+          "crystal": 0,
+          "deuterium": 0
+        }
+      },
+      "technologies": [
+        {
+          "id": 106,
+          "name": "Technologie Espionnage",
+          "canResearch": false,
+          "cost": {
+            "metal": 220,
+            "crystal": 1100,
+            "deuterium": 220
+          }
+        },
+        {
+          "id": 108,
+          "name": "Technologie Ordinateur",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 400,
+            "deuterium": 600
+          }
+        },
+        {
+          "id": 109,
+          "name": "Technologie Militaire",
+          "canResearch": false,
+          "cost": {
+            "metal": 800,
+            "crystal": 200,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 110,
+          "name": "Technologie Défense",
+          "canResearch": false,
+          "cost": {
+            "metal": 200,
+            "crystal": 600,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 111,
+          "name": "Technologie Bouclier",
+          "canResearch": false,
+          "cost": {
+            "metal": 200,
+            "crystal": 600,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 113,
+          "name": "Technologie Énergie",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 800,
+            "deuterium": 400
+          }
+        },
+        {
+          "id": 114,
+          "name": "Technologie Hyperespace",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 4000,
+            "deuterium": 2000
+          }
+        },
+        {
+          "id": 115,
+          "name": "Réacteur à Combustion",
+          "canResearch": false,
+          "cost": {
+            "metal": 460,
+            "crystal": 0,
+            "deuterium": 690
+          }
+        },
+        {
+          "id": 117,
+          "name": "Réacteur à Impulsion",
+          "canResearch": false,
+          "cost": {
+            "metal": 2000,
+            "crystal": 4000,
+            "deuterium": 600
+          }
+        },
+        {
+          "id": 118,
+          "name": "Propulsion Hyperespace",
+          "canResearch": false,
+          "cost": {
+            "metal": 10000,
+            "crystal": 20000,
+            "deuterium": 6000
+          }
+        },
+        {
+          "id": 120,
+          "name": "Technologie Laser",
+          "canResearch": false,
+          "cost": {
+            "metal": 200,
+            "crystal": 100,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 121,
+          "name": "Technologie Ions",
+          "canResearch": false,
+          "cost": {
+            "metal": 1000,
+            "crystal": 300,
+            "deuterium": 100
+          }
+        },
+        {
+          "id": 122,
+          "name": "Technologie Plasma",
+          "canResearch": false,
+          "cost": {
+            "metal": 2000,
+            "crystal": 4000,
+            "deuterium": 1000
+          }
+        },
+        {
+          "id": 123,
+          "name": "Réseau de Recherche Intergalactique",
+          "canResearch": false,
+          "cost": {
+            "metal": 240000,
+            "crystal": 400000,
+            "deuterium": 160000
+          }
+        },
+        {
+          "id": 124,
+          "name": "Technologie Expédition",
+          "canResearch": false,
+          "cost": {
+            "metal": 4000,
+            "crystal": 8000,
+            "deuterium": 4000
+          }
+        },
+        {
+          "id": 199,
+          "name": "Technologie Graviton",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 0,
+            "deuterium": 0,
+            "energy": 300000
+          }
+        }
+      ]
+    },
+    {
+      "name": "priorité deutérium et énergie",
+      "pollingSeconds": 10,
+      "initial": {
+        "metal": 500,
+        "crystal": 500,
+        "deuterium": 0
+      },
+      "produced": {
+        "metal": 50.525000000000425,
+        "crystal": 22.466666666666594,
+        "deuterium": 10.480555555555544
+      },
+      "spent": {
+        "metal": 520,
+        "crystal": 189,
+        "deuterium": 0
+      },
+      "actual": {
+        "metal": 30.52500000000014,
+        "crystal": 333.4666666666685,
+        "deuterium": 10.48055555555555
+      },
+      "expected": {
+        "metal": 30.52500000000017,
+        "crystal": 333.4666666666685,
+        "deuterium": 10.480555555555544
+      },
+      "error": {
+        "metal": -2.842170943040401e-14,
+        "crystal": 0,
+        "deuterium": 7.105427357601002e-15
+      },
+      "levels": {
+        "metalMine": 1,
+        "crystalMine": 1,
+        "deuteriumMine": 1,
+        "solarPlant": 2,
+        "roboticsFactory": 0,
+        "researchLab": 0
+      },
+      "actions": [
+        {
+          "second": 0,
+          "event": "lancé",
+          "building": "Centrale Électrique Solaire",
+          "level": 1,
+          "duration": 42,
+          "cost": {
+            "metal": 75,
+            "crystal": 30,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 50,
+          "event": "terminé",
+          "building": "Centrale Électrique Solaire",
+          "level": 1
+        },
+        {
+          "second": 50,
+          "event": "lancé",
+          "building": "Synthétiseur de Deutérium",
+          "level": 1,
+          "duration": 120,
+          "cost": {
+            "metal": 225,
+            "crystal": 75,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 170,
+          "event": "terminé",
+          "building": "Synthétiseur de Deutérium",
+          "level": 1
+        },
+        {
+          "second": 170,
+          "event": "lancé",
+          "building": "Centrale Électrique Solaire",
+          "level": 2,
+          "duration": 62,
+          "cost": {
+            "metal": 112,
+            "crystal": 45,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 240,
+          "event": "terminé",
+          "building": "Centrale Électrique Solaire",
+          "level": 2
+        },
+        {
+          "second": 240,
+          "event": "lancé",
+          "building": "Mine de Métal",
+          "level": 1,
+          "duration": 30,
+          "cost": {
+            "metal": 60,
+            "crystal": 15,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 270,
+          "event": "terminé",
+          "building": "Mine de Métal",
+          "level": 1
+        },
+        {
+          "second": 1530,
+          "event": "lancé",
+          "building": "Mine de Cristal",
+          "level": 1,
+          "duration": 28,
+          "cost": {
+            "metal": 48,
+            "crystal": 24,
+            "deuterium": 0,
+            "energy": 0
+          }
+        },
+        {
+          "second": 1560,
+          "event": "terminé",
+          "building": "Mine de Cristal",
+          "level": 1
+        }
+      ],
+      "checkpoints": [
+        {
+          "second": 0,
+          "resources": {
+            "metal": 425,
+            "crystal": 470,
+            "deuterium": 0
+          },
+          "productionPerHour": {
+            "metal": 20,
+            "crystal": 10,
+            "deuterium": 0
+          },
+          "energy": {
+            "used": 0,
+            "available": 0,
+            "productionLevel": 0
+          }
+        },
+        {
+          "second": 900,
+          "resources": {
+            "metal": 38,
+            "crystal": 337,
+            "deuterium": 2
+          },
+          "productionPerHour": {
+            "metal": 53,
+            "crystal": 10,
+            "deuterium": 11
+          },
+          "energy": {
+            "used": 33,
+            "available": 48,
+            "productionLevel": 100
+          }
+        },
+        {
+          "second": 1800,
+          "resources": {
+            "metal": 4,
+            "crystal": 317,
+            "deuterium": 4
+          },
+          "productionPerHour": {
+            "metal": 53,
+            "crystal": 32,
+            "deuterium": 11
+          },
+          "energy": {
+            "used": 44,
+            "available": 48,
+            "productionLevel": 100
+          }
+        },
+        {
+          "second": 2700,
+          "resources": {
+            "metal": 17,
+            "crystal": 325,
+            "deuterium": 7
+          },
+          "productionPerHour": {
+            "metal": 53,
+            "crystal": 32,
+            "deuterium": 11
+          },
+          "energy": {
+            "used": 44,
+            "available": 48,
+            "productionLevel": 100
+          }
+        },
+        {
+          "second": 3600,
+          "resources": {
+            "metal": 30,
+            "crystal": 333,
+            "deuterium": 10
+          },
+          "productionPerHour": {
+            "metal": 53,
+            "crystal": 32,
+            "deuterium": 11
+          },
+          "energy": {
+            "used": 44,
+            "available": 48,
+            "productionLevel": 100
+          }
+        }
+      ],
+      "researchRefusal": "Prerequis manquants: Laboratoire de Recherche 0/1",
+      "next": {
+        "name": "Synthétiseur de Deutérium",
+        "cost": {
+          "metal": 337,
+          "crystal": 112,
+          "deuterium": 0,
+          "energy": 0
+        },
+        "missing": {
+          "metal": 306.47499999999985,
+          "crystal": 0,
+          "deuterium": 0
+        }
+      },
+      "technologies": [
+        {
+          "id": 106,
+          "name": "Technologie Espionnage",
+          "canResearch": false,
+          "cost": {
+            "metal": 220,
+            "crystal": 1100,
+            "deuterium": 220
+          }
+        },
+        {
+          "id": 108,
+          "name": "Technologie Ordinateur",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 400,
+            "deuterium": 600
+          }
+        },
+        {
+          "id": 109,
+          "name": "Technologie Militaire",
+          "canResearch": false,
+          "cost": {
+            "metal": 800,
+            "crystal": 200,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 110,
+          "name": "Technologie Défense",
+          "canResearch": false,
+          "cost": {
+            "metal": 200,
+            "crystal": 600,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 111,
+          "name": "Technologie Bouclier",
+          "canResearch": false,
+          "cost": {
+            "metal": 200,
+            "crystal": 600,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 113,
+          "name": "Technologie Énergie",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 800,
+            "deuterium": 400
+          }
+        },
+        {
+          "id": 114,
+          "name": "Technologie Hyperespace",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 4000,
+            "deuterium": 2000
+          }
+        },
+        {
+          "id": 115,
+          "name": "Réacteur à Combustion",
+          "canResearch": false,
+          "cost": {
+            "metal": 460,
+            "crystal": 0,
+            "deuterium": 690
+          }
+        },
+        {
+          "id": 117,
+          "name": "Réacteur à Impulsion",
+          "canResearch": false,
+          "cost": {
+            "metal": 2000,
+            "crystal": 4000,
+            "deuterium": 600
+          }
+        },
+        {
+          "id": 118,
+          "name": "Propulsion Hyperespace",
+          "canResearch": false,
+          "cost": {
+            "metal": 10000,
+            "crystal": 20000,
+            "deuterium": 6000
+          }
+        },
+        {
+          "id": 120,
+          "name": "Technologie Laser",
+          "canResearch": false,
+          "cost": {
+            "metal": 200,
+            "crystal": 100,
+            "deuterium": 0
+          }
+        },
+        {
+          "id": 121,
+          "name": "Technologie Ions",
+          "canResearch": false,
+          "cost": {
+            "metal": 1000,
+            "crystal": 300,
+            "deuterium": 100
+          }
+        },
+        {
+          "id": 122,
+          "name": "Technologie Plasma",
+          "canResearch": false,
+          "cost": {
+            "metal": 2000,
+            "crystal": 4000,
+            "deuterium": 1000
+          }
+        },
+        {
+          "id": 123,
+          "name": "Réseau de Recherche Intergalactique",
+          "canResearch": false,
+          "cost": {
+            "metal": 240000,
+            "crystal": 400000,
+            "deuterium": 160000
+          }
+        },
+        {
+          "id": 124,
+          "name": "Technologie Expédition",
+          "canResearch": false,
+          "cost": {
+            "metal": 4000,
+            "crystal": 8000,
+            "deuterium": 4000
+          }
+        },
+        {
+          "id": 199,
+          "name": "Technologie Graviton",
+          "canResearch": false,
+          "cost": {
+            "metal": 0,
+            "crystal": 0,
+            "deuterium": 0,
+            "energy": 300000
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -16,6 +16,7 @@ import { DatabaseService } from '../database/database.service';
 import { debitResources, lockPlanet } from '../common/atomic';
 import { GameEventsGateway } from '../game-events/game-events.gateway';
 import { getBuildingUpgradeEffects } from './building-upgrade-effects';
+import { updateResources } from '@xnova/game-engine';
 
 // Mapping des buildingId vers les champs de la table Planet
 const BUILDING_FIELD_MAP: Record<number, string> = {
@@ -409,7 +410,10 @@ export class BuildingsService {
       updateData.fieldsUsed = { increment: 1 };
     }
 
+    const resourceConfig = await this.serverConfig.getResourceConfig();
     const finalized = await this.database.$transaction(async (tx) => {
+      // Même ordre de verrouillage que lancement/annulation : planète avant file.
+      await lockPlanet(tx, queueEntry.planetId);
       // Prise en charge atomique : ignore une entree deja annulee ou terminee
       const claimed = await tx.buildQueue.updateMany({
         where: { id: queueEntry.id, completed: false },
@@ -417,9 +421,24 @@ export class BuildingsService {
       });
       if (claimed.count !== 1) return false;
 
+      const planet = await tx.planet.findUniqueOrThrow({ where: { id: queueEntry.planetId } });
+      const now = new Date(Math.max(Date.now(), planet.lastUpdate.getTime()));
+      // Produire d'abord avec les anciens niveaux : le nouveau rendement n'est
+      // jamais appliqué rétroactivement au temps passé avant la finalisation.
+      const settled = updateResources({ resources: planet, levels: planet, lastUpdate: planet.lastUpdate, now, config: resourceConfig });
+      const next = updateResources({ resources: settled.resources, levels: { ...planet, [fieldName]: queueEntry.level }, lastUpdate: now, now, config: resourceConfig });
       await tx.planet.update({
         where: { id: queueEntry.planetId },
-        data: updateData,
+        data: {
+          ...updateData,
+          ...settled.resources,
+          metalProduction: next.productionPerHour.metal,
+          crystalProduction: next.productionPerHour.crystal,
+          deuteriumProduction: next.productionPerHour.deuterium,
+          energyUsed: next.energy.used,
+          energyAvailable: next.energy.available,
+          lastUpdate: now,
+        },
       });
       return true;
     });
