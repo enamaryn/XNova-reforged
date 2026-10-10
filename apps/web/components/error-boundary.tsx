@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import * as React from "react";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,22 @@ interface ErrorBoundaryProps {
 interface ErrorBoundaryState {
   hasError: boolean;
   error: Error | null;
+}
+
+function ErrorFallback({ message, onRetry }: { message?: string; onRetry: () => void }) {
+  const { t } = useI18n();
+  return (
+    <div className="flex min-h-[400px] flex-col items-center justify-center gap-4 p-8 text-center">
+      <AlertCircle className="h-12 w-12 text-red-500" />
+      <div>
+        <h2 className="text-xl font-semibold">{t("common.errorTitle")}</h2>
+        <p className="mt-2 text-sm text-slate-600">{message || t("common.errorUnknown")}</p>
+      </div>
+      <Button onClick={onRetry} variant="outline">
+        {t("common.retry")}
+      </Button>
+    </div>
+  );
 }
 
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
@@ -35,21 +52,10 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
       }
 
       return (
-        <div className="flex min-h-[400px] flex-col items-center justify-center gap-4 p-8 text-center">
-          <AlertCircle className="h-12 w-12 text-red-500" />
-          <div>
-            <h2 className="text-xl font-semibold">Une erreur est survenue</h2>
-            <p className="mt-2 text-sm text-slate-600">
-              {this.state.error?.message || "Erreur inconnue"}
-            </p>
-          </div>
-          <Button
-            onClick={() => this.setState({ hasError: false, error: null })}
-            variant="outline"
-          >
-            Reessayer
-          </Button>
-        </div>
+        <ErrorFallback
+          message={this.state.error?.message}
+          onRetry={() => this.setState({ hasError: false, error: null })}
+        />
       );
     }
 

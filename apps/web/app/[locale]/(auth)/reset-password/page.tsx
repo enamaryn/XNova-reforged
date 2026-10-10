@@ -1,14 +1,21 @@
 import { Suspense } from "react";
+import { getTranslations } from "next-intl/server";
 import { AuthHeader } from "@/components/auth/AuthHeader";
 import { ResetPasswordForm } from "@/components/auth/ResetPasswordForm";
 
-export default function ResetPasswordPage() {
+export default async function ResetPasswordPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "recovery" });
   return (
     <div className="space-y-5 sm:space-y-6">
       <AuthHeader
-        eyebrow="Récupération"
-        title="Nouveau mot de passe."
-        subtitle="Choisissez un mot de passe d'au moins 8 caractères avec une minuscule, une majuscule et un chiffre."
+        eyebrow={t("eyebrow")}
+        title={t("resetTitle")}
+        subtitle={t("resetSubtitle")}
       />
       <Suspense fallback={null}>
         <ResetPasswordForm />

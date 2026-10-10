@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -10,10 +11,11 @@ type State = { kind: "loading" } | { kind: "ok"; message: string } | { kind: "er
 
 /** Consomme le jeton du lien (une seule fois, même si l'effet est rejoué par React). */
 export function VerifyEmail() {
+  const t = useTranslations("recovery");
   const token = useSearchParams().get("token");
   const started = useRef(false);
   const [state, setState] = useState<State>(
-    token ? { kind: "loading" } : { kind: "error", message: "Lien incomplet." },
+    token ? { kind: "loading" } : { kind: "error", message: t("verifyIncomplete") },
   );
 
   useEffect(() => {
@@ -24,10 +26,10 @@ export function VerifyEmail() {
       .catch((error) =>
         setState({
           kind: "error",
-          message: error instanceof ApiError ? error.message : "Une erreur est survenue.",
+          message: error instanceof ApiError ? error.message : t("genericError"),
         }),
       );
-  }, [token]);
+  }, [token, t]);
 
   if (state.kind === "loading") {
     return <p className="text-sm text-slate-500">Vérification en cours...</p>;
@@ -47,7 +49,7 @@ export function VerifyEmail() {
         {state.message}
       </p>
       <Link href="/overview" className="text-sm font-semibold text-slate-900">
-        Continuer
+        {t("continue")}
       </Link>
     </div>
   );

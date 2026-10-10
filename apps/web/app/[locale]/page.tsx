@@ -1,39 +1,47 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { ArrowRight, Orbit, Rocket, Shield, Sparkles } from "lucide-react";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { BuildVersion } from "@/components/BuildVersion";
 
-export const metadata = {
-  title: "XNova Reforged — Une galaxie à conquérir",
-  description:
-    "Développez votre empire, protégez vos planètes et déployez votre flotte dans un univers stratégique persistant.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "home" });
+  return { title: t("metaTitle"), description: t("metaDescription") };
+}
 
 const features = [
   {
-    title: "Planètes",
-    description: "Colonisez, développez et optimisez vos mondes.",
+    key: "planets",
     icon: Orbit,
     imagePosition: "45% 54%",
     href: "/overview",
   },
   {
-    title: "Défense spatiale",
-    description: "Protégez votre système avec stations et batteries orbitales.",
+    key: "defense",
     icon: Shield,
     imagePosition: "82% 40%",
     href: "/defense",
   },
   {
-    title: "Flottes",
-    description: "Assemblez vos vaisseaux et imposez votre stratégie.",
+    key: "fleets",
     icon: Rocket,
     imagePosition: "34% 75%",
     href: "/fleet",
   },
 ];
 
-export default function HomePage() {
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "home" });
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#020812] text-slate-50">
       <div
@@ -46,33 +54,33 @@ export default function HomePage() {
         <header className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border border-sky-400/20 bg-[#041224]/80 px-4 shadow-[0_18px_60px_rgba(0,0,0,0.28)] backdrop-blur-xl sm:px-7">
           <Link
             href="/"
-            aria-label="Accueil XNova Reforged"
+            aria-label={t("homeAria")}
             className="shrink-0 text-xl font-bold tracking-[-0.04em] text-white sm:text-2xl lg:text-3xl"
           >
             XNova <span className="text-sky-400">Reforged</span>
           </Link>
           <div className="flex min-w-0 items-center gap-2 sm:gap-5">
             <nav
-              aria-label="Navigation publique"
+              aria-label={t("navAria")}
               className="hidden items-center gap-6 text-sm text-slate-200 lg:flex"
             >
               <Link href="/overview" className="transition hover:text-sky-300">
-                Vue
+                {t("navOverview")}
               </Link>
               <Link href="/buildings" className="transition hover:text-sky-300">
-                Bâtiments
+                {t("navBuildings")}
               </Link>
               <Link href="/research" className="transition hover:text-sky-300">
-                Recherche
+                {t("navResearch")}
               </Link>
             </nav>
             <Link
               href="/login"
-              aria-label="Accès commandant"
+              aria-label={t("accessAria")}
               className="flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-xl border border-sky-300/40 bg-gradient-to-b from-sky-400 to-blue-600 px-3 text-xs font-semibold text-white shadow-[0_0_24px_rgba(14,165,233,0.32)] transition hover:brightness-110 sm:px-6 sm:text-sm"
             >
               <Rocket className="h-4 w-4" aria-hidden="true" />{" "}
-              <span className="hidden sm:inline">Accès</span>
+              <span className="hidden sm:inline">{t("access")}</span>
             </Link>
             <LanguageSwitcher />
           </div>
@@ -91,28 +99,27 @@ export default function HomePage() {
           <div className="flex w-full items-end px-6 pb-10 pt-32 sm:px-10 sm:pb-14 lg:items-center lg:px-14 lg:pb-0 lg:pt-0">
             <div className="max-w-2xl">
               <p className="text-xs font-semibold uppercase tracking-[0.55em] text-sky-400 sm:text-sm">
-                Commandement
+                {t("kicker")}
               </p>
               <h1
                 id="home-title"
                 className="mt-5 text-4xl font-bold leading-[0.95] tracking-[-0.045em] text-white drop-shadow-2xl sm:text-6xl lg:text-7xl"
               >
-                Une galaxie entière
+                {t("titleLine1")}
                 <span className="mt-2 block bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
-                  à conquérir.
+                  {t("titleLine2")}
                 </span>
               </h1>
               <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-200 drop-shadow sm:text-lg">
-                Développez votre empire, érigez vos défenses orbitales et
-                déployez votre flotte dans un univers stratégique persistant.
+                {t("lead")}
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Link
                   href="/login"
                   className="flex min-h-14 items-center justify-center gap-3 rounded-xl border border-sky-300/50 bg-gradient-to-b from-sky-400 to-blue-600 px-7 text-xs font-semibold uppercase tracking-[0.18em] text-white shadow-[0_0_30px_rgba(14,165,233,0.35)] transition hover:-translate-y-0.5 hover:brightness-110 sm:text-sm"
                 >
-                  <Rocket className="h-5 w-5" aria-hidden="true" /> Accès
-                  commandant{" "}
+                  <Rocket className="h-5 w-5" aria-hidden="true" />{" "}
+                  {t("ctaCommander")}{" "}
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
                 <a
@@ -120,7 +127,7 @@ export default function HomePage() {
                   className="flex min-h-14 items-center justify-center gap-3 rounded-xl border border-sky-200/40 bg-[#061326]/70 px-7 text-xs font-semibold uppercase tracking-[0.18em] text-slate-100 backdrop-blur transition hover:border-sky-300 hover:bg-sky-900/30 sm:text-sm"
                 >
                   <Orbit className="h-5 w-5 text-blue-300" aria-hidden="true" />{" "}
-                  Voir l’univers{" "}
+                  {t("ctaUniverse")}{" "}
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </a>
               </div>
@@ -130,14 +137,14 @@ export default function HomePage() {
 
         <section
           id="univers"
-          aria-label="Découvrez l'univers"
+          aria-label={t("universeAria")}
           className="grid scroll-mt-6 gap-4 py-5 md:grid-cols-3"
         >
           {features.map((feature) => {
             const Icon = feature.icon;
             return (
               <Link
-                key={feature.title}
+                key={feature.key}
                 href={feature.href}
                 className="group relative isolate min-h-52 overflow-hidden rounded-2xl border border-sky-400/50 bg-[#03101f] shadow-[0_18px_50px_rgba(0,0,0,0.3)] transition hover:-translate-y-1 hover:border-sky-300"
               >
@@ -155,10 +162,10 @@ export default function HomePage() {
                   </span>
                   <span className="min-w-0 flex-1">
                     <strong className="block text-xl font-semibold text-white">
-                      {feature.title}
+                      {t(`${feature.key}Title`)}
                     </strong>
                     <span className="mt-1 block text-sm leading-snug text-slate-300">
-                      {feature.description}
+                      {t(`${feature.key}Text`)}
                     </span>
                   </span>
                   <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-sky-400/40 bg-[#061326]/80 text-blue-300 transition group-hover:bg-blue-600 group-hover:text-white">

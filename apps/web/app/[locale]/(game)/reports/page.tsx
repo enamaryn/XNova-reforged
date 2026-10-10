@@ -8,20 +8,15 @@ import { useAuthStore } from '@/lib/stores/auth-store';
 import { reportsApi } from '@/lib/api/reports';
 import { getSpyReports } from '@/lib/api/fleet';
 import { designTokens } from '@/lib/design-tokens';
+import { useI18n } from '@/lib/i18n';
 
-function formatResult(result: string) {
-  switch (result) {
-    case 'attacker_win':
-      return 'Victoire attaquant';
-    case 'defender_win':
-      return 'Victoire défenseur';
-    default:
-      return 'Match nul';
-  }
+function resultKey(result: string) {
+  return result === 'attacker_win' || result === 'defender_win' ? result : 'draw';
 }
 
 /** Rapports d'espionnage : un par mission d'espionnage arrivée à destination. */
 function SpyReportsSection() {
+  const { t, locale } = useI18n();
   const { data, isLoading } = useQuery({
     queryKey: ['spy-reports'],
     queryFn: () => getSpyReports(),
@@ -32,14 +27,14 @@ function SpyReportsSection() {
   return (
     <section className="space-y-3" data-testid="spy-reports">
       <div>
-        <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">Espionnage</p>
-        <h2 className="mt-1 text-lg font-semibold text-white">Rapports d&apos;espionnage</h2>
+        <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">{t('reports.spyKicker')}</p>
+        <h2 className="mt-1 text-lg font-semibold text-white">{t('reports.spyTitle')}</h2>
       </div>
       {isLoading ? (
-        <p className="text-sm text-slate-400">Chargement...</p>
+        <p className="text-sm text-slate-400">{t('common.loading')}</p>
       ) : reports.length === 0 ? (
         <div className="rounded-2xl border border-slate-800/80 bg-slate-900/40 p-4 text-sm text-slate-400">
-          Aucun rapport d&apos;espionnage. Envoyez des sondes depuis la page Flotte.
+          {t('reports.spyEmpty')}
         </div>
       ) : (
         <div className="grid gap-3 lg:grid-cols-2">
@@ -53,10 +48,10 @@ function SpyReportsSection() {
                 <span className="text-slate-100">
                   {report.planetName} [{report.galaxy}:{report.system}:{report.position}]
                 </span>
-                <span className="text-xs text-slate-500">{new Date(report.createdAt).toLocaleString()}</span>
+                <span className="text-xs text-slate-500">{new Date(report.createdAt).toLocaleString(locale)}</span>
               </div>
               <div className="mt-2 text-xs text-slate-400">
-                {report.probes} sonde(s) · niveau d&apos;information {report.infoLevel + 1}/4
+                {t('reports.spyLine', { probes: report.probes, level: report.infoLevel + 1 })}
               </div>
             </Link>
           ))}
@@ -67,6 +62,7 @@ function SpyReportsSection() {
 }
 
 export default function ReportsPage() {
+  const { t, locale } = useI18n();
   const shouldReduceMotion = useReducedMotion();
   const fadeInProps: MotionProps = shouldReduceMotion ? {} : designTokens.animations.fadeIn;
   const listVariants = {
@@ -91,7 +87,7 @@ export default function ReportsPage() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="animate-spin text-4xl mb-4">⚔️</div>
-          <p className="text-slate-400">Chargement des rapports...</p>
+          <p className="text-slate-400">{t('reports.loading')}</p>
         </div>
       </div>
     );
@@ -102,12 +98,12 @@ export default function ReportsPage() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="text-4xl mb-4">❌</div>
-          <p className="text-red-400 mb-4">Erreur lors du chargement</p>
+          <p className="text-red-400 mb-4">{t('common.loadError')}</p>
           <button
             onClick={() => refetch()}
             className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors"
           >
-            Réessayer
+            {t('common.retry')}
           </button>
         </div>
       </div>
@@ -143,19 +139,19 @@ export default function ReportsPage() {
   return (
     <motion.div {...fadeInProps} className="space-y-6">
       <div>
-        <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">Combat</p>
-        <h1 className="mt-2 text-2xl font-semibold text-white">Rapports</h1>
+        <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">{t('reports.kicker')}</p>
+        <h1 className="mt-2 text-2xl font-semibold text-white">{t('reports.title')}</h1>
         <p className="text-sm text-slate-400">
-          Historique des affrontements et résultats récents.
+          {t('reports.subtitle')}
         </p>
       </div>
 
       <div className="flex flex-wrap gap-2">
         {[
-          { id: 'all', label: 'Tous' },
-          { id: 'wins', label: 'Gagnés' },
-          { id: 'losses', label: 'Perdus' },
-          { id: 'draws', label: 'Nuls' },
+          { id: 'all', label: t('reports.filterAll') },
+          { id: 'wins', label: t('reports.filterWins') },
+          { id: 'losses', label: t('reports.filterLosses') },
+          { id: 'draws', label: t('reports.filterDraws') },
         ].map((item) => (
           <button
             key={item.id}
@@ -174,9 +170,9 @@ export default function ReportsPage() {
       {filteredReports.length === 0 ? (
         <div className="rounded-2xl border border-slate-800/80 bg-slate-900/40 p-6 text-center">
           <div className="text-3xl mb-2">🛰️</div>
-          <p className="text-slate-300">Aucun rapport disponible</p>
+          <p className="text-slate-300">{t('reports.empty')}</p>
           <p className="text-xs text-slate-500 mt-1">
-            Lancez une attaque pour générer votre premier rapport.
+            {t('reports.emptyHint')}
           </p>
         </div>
       ) : (
@@ -197,17 +193,17 @@ export default function ReportsPage() {
               >
                 <div className="flex items-center justify-between">
                   <span className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                    {formatResult(report.result)}
+                    {t(`report.result.${resultKey(report.result)}`)}
                   </span>
                   <span className="text-xs text-slate-500">
-                    {new Date(report.createdAt).toLocaleString()}
+                    {new Date(report.createdAt).toLocaleString(locale)}
                   </span>
                 </div>
                 <div className="mt-3 text-xs text-slate-400">
-                  Attaquant: {report.attackerId}
+                  {t('reports.attackerLine', { id: report.attackerId })}
                 </div>
                 <div className="text-xs text-slate-400">
-                  Défenseur: {report.defenderId}
+                  {t('reports.defenderLine', { id: report.defenderId })}
                 </div>
               </Link>
             </motion.div>

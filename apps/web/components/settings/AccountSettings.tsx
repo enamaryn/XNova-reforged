@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ApiError } from "@/lib/api/client";
@@ -26,11 +27,12 @@ function NoticeBox({ notice, testId }: { notice: Notice; testId: string }) {
   );
 }
 
-const messageOf = (error: unknown) =>
-  error instanceof ApiError ? error.message : "Une erreur est survenue.";
+const messageOf = (error: unknown, fallback: string) =>
+  error instanceof ApiError ? error.message : fallback;
 
 /** Compte : adresse email (statut, changement), mot de passe. */
 export function AccountSettings() {
+  const { t } = useI18n();
   const queryClient = useQueryClient();
   const me = useQuery({ queryKey: ["auth-me"], queryFn: getMe });
 
@@ -44,9 +46,9 @@ export function AccountSettings() {
     mutationFn: () => changePassword(pwd.current, pwd.next),
     onSuccess: () => {
       setPwd({ current: "", next: "", confirm: "" });
-      setPwdNotice({ kind: "ok", text: "Mot de passe modifié. Vos autres appareils ont été déconnectés." });
+      setPwdNotice({ kind: "ok", text: t("account.passwordChanged") });
     },
-    onError: (error) => setPwdNotice({ kind: "error", text: messageOf(error) }),
+    onError: (error) => setPwdNotice({ kind: "error", text: messageOf(error, t("account.genericError")) }),
   });
 
   const mailMutation = useMutation({
@@ -55,7 +57,7 @@ export function AccountSettings() {
       setMail({ current: "", email: "" });
       setMailNotice({ kind: "ok", text: result.message });
     },
-    onError: (error) => setMailNotice({ kind: "error", text: messageOf(error) }),
+    onError: (error) => setMailNotice({ kind: "error", text: messageOf(error, t("account.genericError")) }),
   });
 
   const resendMutation = useMutation({
@@ -64,7 +66,7 @@ export function AccountSettings() {
       setVerifyNotice({ kind: "ok", text: result.message });
       queryClient.invalidateQueries({ queryKey: ["auth-me"] });
     },
-    onError: (error) => setVerifyNotice({ kind: "error", text: messageOf(error) }),
+    onError: (error) => setVerifyNotice({ kind: "error", text: messageOf(error, t("account.genericError")) }),
   });
 
   const verified = !!me.data?.emailVerifiedAt;
@@ -72,7 +74,7 @@ export function AccountSettings() {
   return (
     <div className="space-y-6" data-testid="account-settings">
       <div>
-        <h3 className="text-xs uppercase tracking-[0.2em] text-slate-500">Adresse email</h3>
+        <h3 className="text-xs uppercase tracking-[0.2em] text-slate-500">{t("account.emailTitle")}</h3>
         <p className="mt-2 text-sm text-slate-200" data-testid="account-email">
           {me.data?.email ?? "…"}{" "}
           {me.data ? (
@@ -84,7 +86,7 @@ export function AccountSettings() {
                   : "border-amber-500/50 text-amber-300"
               }`}
             >
-              {verified ? "Confirmée" : "Non confirmée"}
+              {verified ? t("account.confirmed") : t("account.notConfirmed")}
             </span>
           ) : null}
         </p>
@@ -99,7 +101,7 @@ export function AccountSettings() {
                 resendMutation.mutate();
               }}
             >
-              Renvoyer l&apos;email de confirmation
+              {t("account.resend")}
             </button>
             <NoticeBox notice={verifyNotice} testId="verify-notice" />
           </div>
@@ -114,20 +116,20 @@ export function AccountSettings() {
           mailMutation.mutate();
         }}
       >
-        <h3 className="text-xs uppercase tracking-[0.2em] text-slate-500">Changer d&apos;adresse email</h3>
+        <h3 className="text-xs uppercase tracking-[0.2em] text-slate-500">{t("account.changeEmailTitle")}</h3>
         <label className="block space-y-1">
-          <span className={labelClass}>Nouvelle adresse</span>
+          <span className={labelClass}>{t("account.newAddress")}</span>
           <input
             className={inputClass}
             type="email"
             required
             value={mail.email}
             onChange={(event) => setMail((prev) => ({ ...prev, email: event.target.value }))}
-            aria-label="Nouvelle adresse email"
+            aria-label={t("account.newAddressAria")}
           />
         </label>
         <label className="block space-y-1">
-          <span className={labelClass}>Mot de passe actuel</span>
+          <span className={labelClass}>{t("account.currentPassword")}</span>
           <input
             className={inputClass}
             type="password"
@@ -135,11 +137,11 @@ export function AccountSettings() {
             autoComplete="current-password"
             value={mail.current}
             onChange={(event) => setMail((prev) => ({ ...prev, current: event.target.value }))}
-            aria-label="Mot de passe actuel (changement d'adresse)"
+            aria-label={t("account.currentPasswordMailAria")}
           />
         </label>
         <button type="submit" className={buttonClass} disabled={mailMutation.isPending}>
-          Envoyer la confirmation
+          {t("account.sendConfirmation")}
         </button>
         <NoticeBox notice={mailNotice} testId="email-notice" />
       </form>
@@ -150,15 +152,15 @@ export function AccountSettings() {
           event.preventDefault();
           setPwdNotice(null);
           if (pwd.next !== pwd.confirm) {
-            setPwdNotice({ kind: "error", text: "Les deux mots de passe ne correspondent pas." });
+            setPwdNotice({ kind: "error", text: t("account.mismatch") });
             return;
           }
           pwdMutation.mutate();
         }}
       >
-        <h3 className="text-xs uppercase tracking-[0.2em] text-slate-500">Changer de mot de passe</h3>
+        <h3 className="text-xs uppercase tracking-[0.2em] text-slate-500">{t("account.changePasswordTitle")}</h3>
         <label className="block space-y-1">
-          <span className={labelClass}>Mot de passe actuel</span>
+          <span className={labelClass}>{t("account.currentPassword")}</span>
           <input
             className={inputClass}
             type="password"
@@ -166,11 +168,11 @@ export function AccountSettings() {
             autoComplete="current-password"
             value={pwd.current}
             onChange={(event) => setPwd((prev) => ({ ...prev, current: event.target.value }))}
-            aria-label="Mot de passe actuel"
+            aria-label={t("account.currentPassword")}
           />
         </label>
         <label className="block space-y-1">
-          <span className={labelClass}>Nouveau mot de passe</span>
+          <span className={labelClass}>{t("account.newPassword")}</span>
           <input
             className={inputClass}
             type="password"
@@ -178,11 +180,11 @@ export function AccountSettings() {
             autoComplete="new-password"
             value={pwd.next}
             onChange={(event) => setPwd((prev) => ({ ...prev, next: event.target.value }))}
-            aria-label="Nouveau mot de passe"
+            aria-label={t("account.newPassword")}
           />
         </label>
         <label className="block space-y-1">
-          <span className={labelClass}>Confirmation</span>
+          <span className={labelClass}>{t("account.confirmation")}</span>
           <input
             className={inputClass}
             type="password"
@@ -190,11 +192,11 @@ export function AccountSettings() {
             autoComplete="new-password"
             value={pwd.confirm}
             onChange={(event) => setPwd((prev) => ({ ...prev, confirm: event.target.value }))}
-            aria-label="Confirmation du nouveau mot de passe"
+            aria-label={t("account.confirmationAria")}
           />
         </label>
         <button type="submit" className={buttonClass} disabled={pwdMutation.isPending}>
-          Changer le mot de passe
+          {t("account.changePassword")}
         </button>
         <NoticeBox notice={pwdNotice} testId="password-notice" />
       </form>

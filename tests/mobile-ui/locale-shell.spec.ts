@@ -14,7 +14,7 @@ const dictionary = (locale: string) =>
     ),
   );
 
-async function fixture(page: Page, locale: string) {
+async function fixture(page: Page, locale: string, path = "overview") {
   const user = {
     id: "header-player",
     username: "Commandant",
@@ -94,6 +94,8 @@ async function fixture(page: Page, locale: string) {
         },
       });
     }
+    if (url.pathname === "/reports" || url.pathname === "/spy-reports")
+      return route.fulfill({ json: [] });
     if (url.pathname.endsWith("/resources"))
       return route.fulfill({
         json: {
@@ -109,7 +111,7 @@ async function fixture(page: Page, locale: string) {
       json: { message: "Donnée non définie dans la simulation" },
     });
   });
-  await page.goto(`/${locale}/overview`);
+  await page.goto(`/${locale}/${path}`);
 }
 
 for (const locale of ["fr", "en", "es", "de", "it"]) {
@@ -156,6 +158,51 @@ for (const locale of ["fr", "en", "es", "de", "it"]) {
     ).toBeVisible();
     await expect(
       menu.getByRole("menuitem", { name: t.nav.logout }),
+    ).toBeVisible();
+  });
+}
+
+for (const locale of ["fr", "en", "es", "de", "it"]) {
+  test(`rapports en ${locale} : titres, filtres et états vides traduits`, async ({
+    page,
+  }) => {
+    const t = dictionary(locale);
+    await fixture(page, locale, "reports");
+    await expect(
+      page.getByRole("heading", { name: t.reports.title, exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByText(t.reports.empty, { exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: t.reports.filterWins, exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByText(t.reports.spyEmpty, { exact: true }),
+    ).toBeVisible();
+  });
+
+  test(`page publique et récupération de mot de passe en ${locale}`, async ({
+    page,
+  }) => {
+    const messages = JSON.parse(
+      readFileSync(
+        join(process.cwd(), "apps/web/i18n/messages", `${locale}.json`),
+        "utf8",
+      ),
+    );
+    await page.goto(`/${locale}`);
+    await expect(page.getByText(messages.home.titleLine1)).toBeVisible();
+    await expect(
+      page.getByRole("region", { name: messages.home.universeAria }),
+    ).toBeVisible();
+
+    await page.goto(`/${locale}/forgot-password`);
+    await expect(
+      page.getByRole("heading", { name: messages.recovery.forgotTitle }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: messages.recovery.sendLink }),
     ).toBeVisible();
   });
 }
