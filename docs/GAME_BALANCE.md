@@ -2,6 +2,8 @@
 
 > Document d'analyse et d'ajustements d'équilibrage du jeu
 > Date : 20 janvier 2026
+>
+> **Document historique.** Ses vitesses (×2,5, `GAME_SPEED = 2500`), ses presets et ses objectifs de rythme sont périmés. Les valeurs en vigueur (profil ×50, formules, stockage, revenu de base) sont dans [BALANCE.md](BALANCE.md) et [PROGRESSION.md](PROGRESSION.md).
 
 ---
 

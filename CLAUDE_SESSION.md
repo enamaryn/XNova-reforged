@@ -5,6 +5,17 @@
 
 ---
 
+## Session — clôture de SCOPE-02
+
+**Date :** 10 octobre 2026. **Décision :** profil de vitesse ×50.
+
+- [x] `SPEED_PROFILES` (`packages/game-config/src/speed-profiles.ts`) : classic ×1, minimum ×20, référence ×50 ; bouton « Appliquer le profil de référence ×50 » dans l'administration (Général) et l'assistant d'installation ; `.env.example` aligné (il portait des valeurs périmées : vitesses 2000/2200 et multiplicateurs 1,1 à 1,25 qui n'étaient pas ceux mesurés) ; le test de simulation lit la même constante.
+- [x] `docs/BALANCE.md` réécrit (valeurs par défaut du code et du profil, vitesses, stockage, formules) ; `GAME_BALANCE.md` marqué historique.
+- [x] Guides joueur réécrits d'après le code (l'ancien parlait de matière noire, de vitesses ×2500, de 5 galaxies…) en fr, en, es, de, it.
+- [x] Tests : unitaire des profils, E2E du bouton d'administration ; E2E 35, unitaires 83, lint 0 avertissement.
+- **Action du propriétaire :** appliquer le profil sur le serveur (Administration → Général → bouton → Sauvegarder).
+- **Prochaine étape :** OPS-03 (200 joueurs simultanés à ×50).
+
 ## Session — migration i18n lot 2
 
 **Date :** 10 octobre 2026. **Objectif :** terminer la traduction des écrans joueur (SCOPE-02).

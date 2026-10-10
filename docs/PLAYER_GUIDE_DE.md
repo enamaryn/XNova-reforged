@@ -1,195 +1,84 @@
-# Spielerhandbuch - XNova Reforged
+# Spielerhandbuch — XNova Reforged
 
-## Willkommen
+> Version `v0.2.0` (private Alpha). Dieses Handbuch beschreibt, was das Spiel heute tatsächlich tut. Sprachen: [Français](GUIDE_JOUEUR.md) · [English](PLAYER_GUIDE_EN.md) · [Español](PLAYER_GUIDE_ES.md) · [Deutsch](PLAYER_GUIDE_DE.md) · [Italiano](PLAYER_GUIDE_IT.md).
 
-XNova Reforged ist ein Weltraum-Strategiespiel. Baue ein Imperium,
-steigere deine Okonomie, erforsche Technologien und fuehre Flotten.
+## 1. Erste Schritte
 
-## Spielziele
+1. **Erstelle dein Konto.** Deine E-Mail-Adresse muss bestätigt werden: Klicke auf den per E-Mail erhaltenen Link (24 Stunden gültig, auf der Anmeldeseite erneut anforderbar).
+2. Du erhältst einen **Startplaneten** („Heimatplanet“) mit 500 Metall, 500 Kristall und ohne Gebäude.
+3. Folge der **Einstiegshilfe** in der Übersicht: 11 Ziele, berechnet aus deiner tatsächlichen Lage, jeweils mit einem Link zur nächsten Aktion. Nach Abschluss kannst du sie ausblenden.
+4. Wähle deine **Sprache** (Französisch, Englisch, Spanisch, Deutsch, Italienisch) über die Auswahl in der Kopfzeile oder in den *Optionen*. Sie folgt der Seitenadresse (`/fr/…`, `/de/…`).
 
-1. Okonomie ausbauen (Minen und Lager).
-2. Technologien erforschen und Optionen freischalten.
-3. Flotten bauen fuer Erkundung, Angriff und Kolonisierung.
-4. Allianzen beitreten und kooperieren.
-5. Top im Ranking erreichen.
+## 2. Das Tempo des Servers
 
-## Ressourcen
+Kosten und Formeln entsprechen dem Originalspiel; die **Servergeschwindigkeit** beschleunigt Dauern und Produktion (Einstellung des Administrators). Das Referenzprofil ist **×50**:
 
-### Ressourcentypen
+| Meilenstein eines vernünftigen Spielers | Dauer bei ×50 |
+|---|---:|
+| Forschungslabor fertig | ≈ 22 Min. |
+| Erste Forschung gestartet | ≈ 1 Std. |
+| Raumwerft fertig | ≈ 1 Std. 05 |
+| Erstes Schiff | ≈ 1 Std. 50 |
 
-- **Metall**
-  - Nutzung: Gebaeude, Schiffe, Verteidigung.
-  - Produktion: Metallmine.
-  - Lager: Metalllager.
+Diese Zeiten wurden auf dem Server mit einem Spieler gemessen, der nur ausgibt, was er produziert. Auf einem ×1-Server ist alles etwa 50-mal langsamer: Plane lange Wartezeiten ein.
 
-- **Kristall**
-  - Nutzung: fortgeschrittene Technik und Schiffe.
-  - Produktion: Kristallmine.
-  - Lager: Kristalllager.
+## 3. Rohstoffe und Energie
 
-- **Deuterium**
-  - Nutzung: Treibstoff und fortgeschrittene Technik.
-  - Produktion: Deuterium Synthesizer.
-  - Lager: Deuterium Tank.
+- **Metall**: Gebäude, Schiffe, Verteidigung. **Kristall**: Labor, Forschungen, Schiffe. **Deuterium**: Treibstoff der Flotten, Labor und die meisten Forschungen (du hast zu Beginn keines: Der Deuteriumsynthetisierer ist deine Priorität).
+- **Energie**: Minen verbrauchen die Energie der Solarkraftwerke. Übersteigt der Verbrauch die Produktion, werden **alle** Minen proportional langsamer. Halte die Produktion bei 100 %.
+- Jeder Planet hat ein kleines Grundeinkommen, unabhängig von den Minen.
+- Das **Lager** ist begrenzt (Basiskapazität von einer Million pro Rohstoff, wächst mit den Lagergebäuden); darüber hinaus geht die Produktion verloren.
 
-- **Energie**
-  - Produktion: Solarkraftwerk, Fusionsreaktor, Satelliten.
-  - Nutzung: versorgt die Minen.
+## 4. Bauen, forschen, produzieren
 
-- **Dunkle Materie**
-  - Nutzung: Premium Vorteile (nicht im MVP).
+- **Gebäude**: Die Kosten werden beim Start abgezogen und steigen mit jeder Stufe. Die Zahl gleichzeitiger Bauten pro Planet ist begrenzt: 1 zu Beginn, 2 mit der Forschung *Bauverwaltung*, 3 zusätzlich mit einem Kommandanten der Stufe 50.
+- **Forschung**: nur eine gleichzeitig pro Spieler, beim Start bezahlt. Sie verlangt eine Laborstufe und manchmal weitere Technologien (fehlende Voraussetzungen werden angezeigt). Beginne mit *Energie*.
+- **Raumwerft und Verteidigung**: Bestellungen werden sofort bezahlt und in Serien gebaut. Eine **wartende** Bestellung kann zurückgezogen werden: 90 % der bezahlten Rohstoffe werden erstattet. Eine bereits gestartete Serie wird normal beendet. *Parallelproduktion* fügt Produktionslinien hinzu.
+- Die Voraussetzungen (Werftstufe, Technologien) stehen auf jeder Karte.
 
-### Energie Management
+## 5. Flotten und Missionen
 
-Wenn Energie negativ ist, sinkt die Produktion.
+Seite *Flotte*: Wähle Schiffe, Koordinaten `[Galaxie:System:Position]`, eine Mission und die Geschwindigkeit. Der Treibstoff (Deuterium) wird beim Start abgezogen.
 
-Beispiel:
-- Energie Produktion: 500
-- Energie Verbrauch: 700
-- Balance: -200
-- Effektive Produktion: 500 / 700 = 71%
+| Mission | Wirkung |
+|---|---|
+| **Transport** | liefert die Ladung auf dem Zielplaneten ab, dann kehrt die Flotte zurück |
+| **Stationierung** | bringt Schiffe und Ladung auf **deinen** Zielplaneten, ohne Rückkehr |
+| **Angriff** | Kampf; Beute möglich |
+| **Spionage** | Bericht über das Ziel (mehr Sonden oder bessere *Spionagetechnik* = mehr Details) |
+| **Kolonisierung** | gründet mit einem Kolonieschiff eine Kolonie auf einer freien Position (maximal 21 Planeten) |
 
-Loesung: Energieproduktion erhoehen.
+Eine Flotte im Flug kann unter *Bewegungen* **zurückgerufen** werden. Die Ergebnisse erscheinen in den *Berichten*.
 
-## Gebaeude
+## 6. Kampf
 
-### Ressourcen Gebaeude
+- Höchstens 6 Runden; manche Schiffe haben **Schnellfeuer** gegen andere Typen.
+- 30 % der Kosten zerstörter Schiffe werden zu **Trümmern**.
+- Jede zerstörte **Verteidigungsanlage** wird nach dem Kampf mit 70 % Wahrscheinlichkeit repariert.
+- **Beute**: bis zu 50 % der Rohstoffe des Ziels, **begrenzt auf den freien Platz in den überlebenden Schiffen** des Siegers; der Rest wird nicht mitgenommen.
+- Tipps: Spioniere vor dem Angriff, prüfe die Ladekapazität, lass deine Rohstoffe nicht anhäufen.
 
-- **Metallmine** (Start Prioritaet)
-- **Kristallmine**
-- **Deuterium Synthesizer**
-- **Solarkraftwerk**
-- **Fusionsreaktor** (spaeter)
+## 7. Galaxie
 
-### Lager Gebaeude
+- 9 Galaxien × 499 Systeme × 15 Positionen. Die Seite *Galaxie* öffnet sich im System deines aktiven Planeten; dein Planet ist hervorgehoben.
+- Besetzte Position: spionieren, angreifen, transportieren. Freie Position: kolonisieren.
 
-- **Metall / Kristall Lager**
-- **Deuterium Tank**
+## 8. Kommandant, Macht, Rangliste
 
-### Entwicklungs Gebaeude
+- Deine **Kommandantenstufe** (1 bis 100) hängt nur von Gebäuden und Forschungen ab; deine **Macht** umfasst zusätzlich Schiffe, Verteidigung und Kolonien. Lagerbestände zählen nicht.
+- Die **Rangliste** beruht auf der Macht; dein Rang steht in der Kopfzeile und in der Übersicht.
 
-- **Roboterfabrik**: reduziert Bauzeit.
-- **Raumwerft**: schaltet Schiffe frei.
-- **Forschungslabor**: schaltet Forschung frei.
-- **Nanitenfabrik**: starke Zeitreduktion.
+## 9. Soziales
 
-## Technologien
+- **Nachrichten** zwischen Spielern (über den Benutzernamen).
+- **Allianzen**: Gründe eine (Kürzel mit 2 bis 8 Zeichen) oder tritt per Einladung bei; der Gründer kann nicht austreten, ohne sie aufzulösen.
 
-### Wichtige Technologien
+## 10. Konto und Sicherheit
 
-- **Energie**: verbessert Reaktoren und ist Voraussetzung.
-- **Computer**: mehr Flottenslots.
-- **Spionage**: bessere Berichte.
-- **Verbrennung / Impuls / Hyperraum**: Schiffspeed.
+- Passwort: mindestens 8 Zeichen mit einem Kleinbuchstaben, einem Großbuchstaben und einer Ziffer. Du kannst es und deine E-Mail-Adresse (Bestätigung per Link) in den *Optionen* ändern.
+- „Passwort vergessen“ sendet einen Link, der eine Stunde gültig ist. Ändern oder Zurücksetzen des Passworts meldet deine anderen Geräte ab.
+- Zu viele fehlgeschlagene Anmeldeversuche sperren den Zugang vorübergehend.
 
-### Kampf Technologien
+## 11. Bekannte Grenzen der Alpha
 
-- **Waffen**: Angriffsbonus.
-- **Schilde**: Schildbonus.
-- **Panzerung**: Rumpfbonus.
-
-## Schiffe
-
-### Transport
-
-- **Kleiner Transporter**: schnell, wenig Kapazitaet.
-- **Grosser Transporter**: langsam, viel Kapazitaet.
-- **Recycler**: sammelt Truemmer.
-
-### Kampf
-
-- **Leichter Jaeger**: early game.
-- **Schwerer Jaeger**: mid game.
-- **Kreuzer**: stark gegen Jaeger.
-- **Schlachtschiff**: rohe Staerke.
-- **Bomber**: gegen Verteidigung.
-
-### Spezial
-
-- **Spionagesonde**: Spionage.
-- **Kolonieschiff**: neue Kolonie.
-- **Solarsatellit**: billige Energie, zerbrechlich.
-
-## Kampf
-
-- Max 6 Runden.
-- Rapid fire: manche Schiffe schiessen mehrfach.
-- Explosion: 70% wenn Rumpf < 30%.
-- Truemmer: 30% der Kosten werden Truemmer.
-
-Vereinfachte Formel:
-```
-Schaden = Waffenstarke * (1 - Schild / 100)
-```
-
-Beute:
-- Bis zu 50% der Ressourcen.
-- Begrenzt durch Laderaum.
-
-Tipps:
-- Immer spionieren vor Angriff.
-- Laderaum pruefen.
-- Schiffe mit rapid fire nutzen.
-
-## Galaxie
-
-- 5 Galaxien x 499 Systeme x 15 Positionen.
-- Koordinaten: [G:S:P]
-
-Positionstypen:
-- Belegter Planet: Interaktion moeglich.
-- Inaktiver Planet: leichtes Ziel.
-- Freier Slot: kann kolonisiert werden.
-
-Kolonisierung:
-1. Kolonieschiff bauen.
-2. Astrophysik Technologie haben.
-3. Kolonisierungsmission auf freien Slot.
-
-## Allianzen
-
-- Erstellen oder per Einladung beitreten.
-- Tag 3-8 Zeichen.
-- Vorteile: Koordination, Schutz, Ranking.
-
-## Statistiken
-
-Punktetypen:
-- Okonomie
-- Forschung
-- Militaer
-- Militaer zerstoert
-- Militaer verloren
-
-Rankings werden regelmaessig aktualisiert.
-
-## Strategien
-
-### Fruehes Spiel (Tag 1-3)
-- Metall und Kristallminen hoch.
-- Solarproduktion stabil halten.
-- Fruehe Forschung starten.
-
-### Mittleres Spiel (Woche 1-2)
-- Minen Level 15-20.
-- Antriebe verbessern.
-- Ausgewogene Flotte.
-
-### Spaetes Spiel (Woche 3+)
-- Technologien Level 20+.
-- Schwere Flotten und Kriege.
-- Optimierte Kolonien.
-
-## Pro Tipps
-
-1. Lagergroesse fuer Offline Zeit.
-2. Fleet save vor Logout.
-3. Spionage mit einer Sonde.
-4. Truemmer recyceln.
-5. Lange Forschung vor dem Abmelden.
-
-## Hilfe
-
-- Wiki: https://xnova.wiki (fake)
-- Discord: https://discord.gg/xnova (fake)
-- Forum: https://forum.xnova.com (fake)
+Keine Offiziere, kein Markt, keine Ereignisse; Namen und Beschreibungen des Spiels und einige Fehlermeldungen bleiben unabhängig von der gewählten Sprache auf Französisch; E-Mails werden auf Französisch gesendet.
