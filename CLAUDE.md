@@ -1,8 +1,8 @@
 # CLAUDE.md
 
-## État courant — 4 octobre 2026
+## État courant — 10 octobre 2026
 
-Le projet est une alpha privée en stabilisation, sans validation de sortie publique. Commencer par [ROADMAP_MVP.md](ROADMAP_MVP.md) et [docs/DOUBLE_AUDIT_2026-10.md](docs/DOUBLE_AUDIT_2026-10.md). Les déclarations historiques de complétion ne clôturent pas les constats. Distinguer exécutions rapportées par Claude, revue/reproduction Codex et journaux LXC du propriétaire. Aucun résultat de correction npm reçu. Redis fournit actuellement des caches ; rotation des refresh tokens et révocation des sessions serveur restent à implémenter.
+Le projet est une alpha privée (`v0.2.0-alpha.1`), sans validation de sortie publique ; langues fr/en/es/de/it, rythme du premier cycle par profil serveur ×50 (voir `docs/PROGRESSION.md`). Commencer par [ROADMAP_MVP.md](ROADMAP_MVP.md) et [docs/DOUBLE_AUDIT_2026-10.md](docs/DOUBLE_AUDIT_2026-10.md). Les déclarations historiques de complétion ne clôturent pas les constats. Distinguer exécutions rapportées par Claude, revue/reproduction Codex et journaux LXC du propriétaire. 
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
@@ -198,9 +198,9 @@ When implementing game logic, always refer to these formulas to maintain compati
    - Event-driven architecture for fleet arrivals, combat results
 
 4. **Authentication Flow**
-   - JWT access et refresh ; rotation/révocation non implémentées (SEC-03)
+   - JWT access et refresh ; sessions serveur avec rotation du refresh token et révocation (SEC-03, clos)
    - Hachage des mots de passe avec Argon2
-   - Caches Redis ; stockage des sessions serveur à implémenter
+   - Sessions stockées en base (table `Session`) ; Redis sert de cache
 
 ## Important Development Notes
 

@@ -8,6 +8,7 @@ import { usePlanetStore } from "@/lib/stores/planet-store";
 import { useSocket } from "@/lib/providers/socket-provider";
 import { BuildQueue } from "@/components/game/BuildQueue";
 import { BuildingCard } from "@/components/game/BuildingCard";
+import { ContextHelp } from "@/components/game/ContextHelp";
 
 export default function BuildingsClient() {
   const { user } = useAuthStore();
@@ -201,6 +202,9 @@ export default function BuildingsClient() {
             : ""}{" "}
           en cours
         </div>
+      </div>
+      <div className="hidden sm:block">
+        <ContextHelp topic="buildings" />
       </div>
 
       {/* File de construction */}

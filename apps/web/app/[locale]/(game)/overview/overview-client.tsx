@@ -3,6 +3,8 @@
 import { getProgression } from "@/lib/api/progression";
 import { getStatistics } from "@/lib/api/statistics";
 import { CommanderSummary } from "@/components/game/CommanderSummary";
+import { OnboardingGuide } from "@/components/game/OnboardingGuide";
+import { ContextHelp } from "@/components/game/ContextHelp";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -137,6 +139,7 @@ export default function OverviewClient() {
   return (
     <motion.div {...fadeInProps} initial={false} className="space-y-8">
       <CommanderSummary />
+      <OnboardingGuide />
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">
@@ -405,6 +408,9 @@ export default function OverviewClient() {
               available={resources.energy.available}
               productionLevel={resources.energy.productionLevel}
             />
+            <div className="mt-3">
+              <ContextHelp topic="energy" />
+            </div>
           </motion.div>
         </motion.div>
       ) : null}

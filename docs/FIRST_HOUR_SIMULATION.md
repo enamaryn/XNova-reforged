@@ -58,9 +58,9 @@ Les sept simulations corrigées concordent avec le bilan à moins de 0,000001 re
 
 ## Points à suivre
 
-- Choisir le rythme souhaité pour un nouveau joueur : première heure limitée aux mines, ou accès au laboratoire dans cette heure. La mesure ne tranche pas ce choix.
-- L’API tronque les stocks `Float`. À un instant exactement entier, `519,9999999999956` peut être affiché comme 519 au lieu de 520. Le solde interne et ses fractions sont conservés ; ce détail d’affichage reste à traiter.
-- Compléter ultérieurement le parcours recherche → chantier → flotte → rapport avec des comptes qui atteignent naturellement ces étapes. Les tests de charge restent à exécuter séparément.
+- ~~Choisir le rythme souhaité pour un nouveau joueur.~~ **Décidé le 10 octobre 2026** : profil serveur ×50 (×20 minimum) sans changer les coûts ; voir [PROGRESSION.md](PROGRESSION.md#rythme-du-premier-cycle-scope-02).
+- ~~L’API tronque les stocks `Float` : `519,9999999999956` s’affichait 519 au lieu de 520.~~ **Corrigé le 10 octobre 2026** : le bruit flottant (< 10⁻⁶) est ramené à l’entier voisin à l’écriture et à l’affichage (`snapResource`), les vraies fractions restent conservées ; tests dans `resources-engine.spec.ts`.
+- ~~Compléter le parcours recherche → chantier → flotte → rapport avec des comptes qui atteignent naturellement ces étapes.~~ **Fait à ×50** par `first-cycle-progression.integration.spec.ts` ([résultats](audits/first-cycle-progression-2026-10-10.json)). À ×1 ces étapes restent hors de la première heure et même des premières journées. Les tests de charge restent à exécuter séparément (OPS-03).
 
 ## Rejouer
 

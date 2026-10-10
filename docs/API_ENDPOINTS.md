@@ -110,3 +110,9 @@ Ce document recense les principaux endpoints exposés par `apps/api`, avec la m�
 | GET | `/statistics` | Classements personnels + top joueurs/alliances. |
 
 ⚠️ Toutes les routes ci-dessus (hors `/auth/*` et `/galaxy/*`) sont sécurisées par JWT. Utiliser le token `Authorization: Bearer <accessToken>` renvoyé par `/auth/login`.
+
+
+## Progression
+
+- `GET /progression` — niveau du commandant, développement et puissance du joueur.
+- `GET /progression/onboarding` — guide des premiers pas : 11 objectifs ordonnés (`solar_plant`, `metal_mine`, `crystal_mine`, `deuterium_mine`, `energy_balance`, `research_lab`, `first_research`, `shipyard`, `first_ship`, `first_mission`, `mission_report`) avec `status` (`done`, `current`, `upcoming`), la page cible (`route`), `completed`, `total`, `currentStepId`, `finished`. Authentifié, lecture seule, propre au joueur courant.

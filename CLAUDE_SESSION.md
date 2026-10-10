@@ -5,6 +5,27 @@
 
 ---
 
+## Session — premier cycle joueur complet : équilibrage et onboarding (SCOPE-02)
+
+**Date :** 10 octobre 2026. **Objectif :** synchroniser la roadmap avec l'état réel (`v0.2.0-alpha.1`, PR #36 fusionnée, SMTP validé, décisions prises) puis réaliser le lot « premier cycle joueur complet ». **Décisions du propriétaire :** 5 langues (fr, en, es, de, it) ; rythme par **profil serveur ×50 (×20 minimum)**, sans modifier formules ni coûts.
+
+- [x] Branche de travail avancée sur `origin/main` (elle n'avait aucun commit propre, 100 commits de retard).
+- [x] Simulateur hors dépôt (formules du moteur) : à ×1, laboratoire ≈ 18 h et premier chasseur après plusieurs jours ; à ×50 : labo 22 min, recherche 66, hangar 71, chasseur 138. Option « rééquilibrer le ×1 » écartée (changerait l'échelle du jeu).
+- [x] `snapResource` : 519,9999999999956 → 520 à la production et à l'affichage ; 2 tests.
+- [x] i18n unifiée : langue = URL ; `lib/i18n/locale.ts`, `lib/i18n/index.tsx` (interpolation `{param}`, repli en → fr), dictionnaires `apps/web/i18n/game/{fr,en,es,de,it}.json`, 18 clés ajoutées en es/de/it, sélecteur de langue dans les paramètres, `scripts/i18n/test/i18n-parity.test.mjs` + étape CI.
+- [x] Guide des premiers pas : `packages/game-config/src/onboarding.ts`, `GET /progression/onboarding`, `OnboardingGuide`, `ContextHelp` (5 rubriques) ; 5 tests unitaires, 4 d'intégration.
+- [x] `first-cycle-progression.integration.spec.ts` (3 h simulées, aucune ressource ajoutée) : labo 22,1 / recherche 57,0 / hangar 64,1 / vaisseau 112,1 / mission 112,1 / rapport 112,3 min, objectifs 11/11 — [JSON](docs/audits/first-cycle-progression-2026-10-10.json).
+- [x] `tests/e2e/first-cycle.spec.ts` : parcours navigateur complet jusqu'au rapport de combat.
+- [x] Documentation : ROADMAP_MVP.md, docs/PROGRESSION.md, FIRST_HOUR_SIMULATION.md, DOUBLE_AUDIT_2026-10.md, I18N_GUIDE.md, API_ENDPOINTS.md, README.md, CLAUDE.md.
+
+**Vérifié localement :** build 5/5 ; unitaires 81/81 ; parité 17/17 ; E2E Chromium 34 réussis (1 ignoré) ; rendu mobile 39/39 (Chromium ; WebKit indisponible ici) ; intégration 280/280 (première passe : 5 échecs dus à `EMAIL_VERIFICATION_REQUIRED=false` exporté par erreur, réglés en rejouant avec la config de la CI). **Non vérifié :** CI GitHub, WebKit, serveur du propriétaire ; les colonnes ×1 et ×20 sont des estimations.
+
+**Environnement :** le dossier scratchpad voyait ses permissions réinitialisées et tuait PostgreSQL ; cluster de test déplacé dans `/var/tmp/pgdata`.
+
+**Dette restante :** textes français en dur (~20 composants), guide joueur à relire en 5 langues, emails en français seulement, `energy_balance` dépend de l'énergie rafraîchie sur la planète.
+
+**Prochaines étapes :** revue de PR et CI ; choix du profil de vitesse du serveur de test ; migration des textes en dur vers `useI18n` ; puis OPS-03 (100 joueurs, p50/p95/p99, WebSocket, Lighthouse, restauration réelle).
+
 ## Session — refonte de la page publique du serveur
 
 **Date :** 9 octobre 2026. **Objectif :** intégrer le nouveau visuel fourni pour la page principale publique, sans modifier les parcours d’authentification ni les écrans du jeu.

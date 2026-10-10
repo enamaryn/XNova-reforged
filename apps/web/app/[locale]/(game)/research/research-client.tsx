@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback, useMemo } from 'react';
+import { ContextHelp } from '@/components/game/ContextHelp';
 import Link from 'next/link';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { motion, useReducedMotion, type MotionProps } from 'framer-motion';
@@ -162,6 +163,8 @@ export default function ResearchClient() {
           Déverrouillez des avantages stratégiques pour vos flottes et infrastructures.
         </p>
       </div>
+
+      <ContextHelp topic="research" />
 
       <div className="rounded-3xl border border-slate-800/80 bg-slate-950/60 p-6">
         <div className="flex flex-wrap items-center justify-between gap-4">

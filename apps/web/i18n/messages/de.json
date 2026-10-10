@@ -37,7 +37,10 @@
       "error": {
         "invalidCredentials": "Ungültige E-Mail oder Passwort",
         "generic": "Bei der Anmeldung ist ein Fehler aufgetreten"
-      }
+      },
+      "success": "Anmeldung erfolgreich",
+      "errorTitle": "Anmeldung nicht möglich",
+      "closeError": "Erneut versuchen"
     },
     "register": {
       "title": "Tritt dem Universum bei.",
@@ -328,6 +331,29 @@
     "serverError": "Serverfehler",
     "unknownError": "Ein unbekannter Fehler ist aufgetreten",
     "tryAgain": "Erneut versuchen",
-    "goHome": "Zur Startseite"
+    "goHome": "Zur Startseite",
+    "generic": "Ein Fehler ist aufgetreten",
+    "network": "Netzwerkfehler. Bitte prüfe deine Verbindung.",
+    "retry": "Erneut versuchen"
+  },
+  "loading": {
+    "default": "Wird geladen...",
+    "resources": "Rohstoffe werden geladen...",
+    "buildings": "Gebäude werden geladen...",
+    "research": "Forschung wird geladen...",
+    "fleet": "Flotte wird geladen...",
+    "galaxy": "Galaxie wird geladen..."
+  },
+  "toast": {
+    "success": {
+      "saved": "Erfolgreich gespeichert",
+      "updated": "Erfolgreich aktualisiert",
+      "deleted": "Erfolgreich gelöscht"
+    },
+    "error": {
+      "save": "Fehler beim Speichern",
+      "update": "Fehler beim Aktualisieren",
+      "delete": "Fehler beim Löschen"
+    }
   }
 }

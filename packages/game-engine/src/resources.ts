@@ -227,14 +227,27 @@ function clampResource(value: number, max: number) {
   if (value < 0) return 0;
   if (value > max) return Math.floor(max);
   // Les fractions produites sont conservées (ECO-01) : l'arrondi se fait à l'affichage.
-  return value;
+  // Seul le bruit flottant (< 1e-6) est ramené à l'entier, pour que 519,9999999999956 vaille 520.
+  return snapResource(value);
+}
+
+/** Écart maximal (en unités de ressource) considéré comme du bruit de calcul flottant. */
+export const RESOURCE_NOISE_TOLERANCE = 1e-6;
+
+/**
+ * Ramène à l'entier voisin un stock qui n'en diffère que par du bruit flottant
+ * (ex. 519,9999999999956 → 520), sans toucher aux vraies fractions produites.
+ */
+export function snapResource(value: number): number {
+  const nearest = Math.round(value);
+  return Math.abs(value - nearest) < RESOURCE_NOISE_TOLERANCE ? nearest : value;
 }
 
 /** Valeur entière affichable/dépensable d'un stock fractionnaire. */
 export function floorResources(resources: ResourceState): ResourceState {
   return {
-    metal: Math.floor(resources.metal),
-    crystal: Math.floor(resources.crystal),
-    deuterium: Math.floor(resources.deuterium),
+    metal: Math.floor(snapResource(resources.metal)),
+    crystal: Math.floor(snapResource(resources.crystal)),
+    deuterium: Math.floor(snapResource(resources.deuterium)),
   };
 }
