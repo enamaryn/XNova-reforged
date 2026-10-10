@@ -51,6 +51,25 @@ test('modification configuration serveur', async ({ page }) => {
   await expect(saveButton).toBeVisible();
 });
 
+test('profil de vitesse de référence : le bouton remplit le formulaire sans sauvegarder', async ({ page }) => {
+  const credentials = buildCredentials('e2e_adminprof');
+
+  await registerUser(page, credentials);
+  await promoteToAdmin(credentials.username);
+
+  await page.goto('/admin');
+  await page.getByRole('tab', { name: 'Général', exact: true }).click();
+
+  const speed = page.locator('label', { hasText: /Vitesse du jeu/ }).locator('input');
+  await expect(speed).toBeVisible();
+  await page.getByTestId('apply-speed-profile').click();
+
+  // Le profil ×50 est appliqué au formulaire ; rien n'est enregistré (les autres parcours gardent leur réglage)
+  await expect(speed).toHaveValue('50');
+  await expect(page.locator('label', { hasText: /Vitesse des flottes/ }).locator('input')).toHaveValue('50');
+  await expect(page.locator('label', { hasText: /Multiplicateur batiments/ }).locator('input')).toHaveValue('1');
+});
+
 test('acces refuse pour joueur normal', async ({ page }) => {
   const credentials = buildCredentials('e2e_player');
 

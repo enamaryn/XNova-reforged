@@ -243,7 +243,9 @@
     "banHint": "Derniers bannissements et debannissements.",
     "banEmpty": "Aucune sanction recente.",
     "by": "Par",
-    "expiresAt": "Expire le"
+    "expiresAt": "Expire le",
+    "applyProfile": "Appliquer le profil de référence ×50",
+    "applyProfileHint": "Remplit les vitesses, multiplicateurs et revenus de base ; vérifiez puis sauvegardez."
   },
   "common": {
     "language": "Langue",

@@ -240,9 +240,9 @@ Pour une installation détaillée : `GETTING_STARTED.md`
 - `ROADMAP_COMPLET.md` - Roadmap long terme
 - `GAME_FORMULAS.md` - Formules de jeu (référence)
 - `STRATEGIE_UPGRADE.md` - Stratégie de refonte
-- `docs/PLAYER_GUIDE.md` - Guide joueur condensé (économie, combat, social, admin)
+- `docs/GUIDE_JOUEUR.md` - Guide du joueur, en cinq langues : [fr](docs/GUIDE_JOUEUR.md), [en](docs/PLAYER_GUIDE_EN.md), [es](docs/PLAYER_GUIDE_ES.md), [de](docs/PLAYER_GUIDE_DE.md), [it](docs/PLAYER_GUIDE_IT.md)
 - `docs/API_ENDPOINTS.md` - Référence des endpoints API (auth, planètes, bâtiments, etc.)
-- `docs/BALANCE.md` - Paramètres / multiplicateurs utilisés pour l’équilibrage
+- `docs/BALANCE.md` - Réglages du serveur, profil de vitesse ×50, formules et valeurs par défaut
 - `docs/INTEGRATION_TESTS.md` - Mise en place des tests d'intégration NestJS
 - `SKILL.md` - **Guide complet des tests** (unitaires, intégration, E2E)
 

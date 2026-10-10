@@ -243,7 +243,9 @@
     "banHint": "Ultimi ban e riammissioni.",
     "banEmpty": "Nessuna sanzione recente.",
     "by": "Da",
-    "expiresAt": "Scade il"
+    "expiresAt": "Scade il",
+    "applyProfile": "Applica il profilo di riferimento ×50",
+    "applyProfileHint": "Compila velocità, moltiplicatori e reddito di base; controlla e salva."
   },
   "common": {
     "language": "Lingua",

@@ -1,195 +1,84 @@
-# Guide du Joueur - XNova Reforged
+# Guide du joueur — XNova Reforged
 
-## Bienvenue
+> Version `v0.2.0` (alpha privée). Ce guide décrit ce que le jeu fait réellement aujourd'hui. Langues disponibles : [Français](GUIDE_JOUEUR.md) · [English](PLAYER_GUIDE_EN.md) · [Español](PLAYER_GUIDE_ES.md) · [Deutsch](PLAYER_GUIDE_DE.md) · [Italiano](PLAYER_GUIDE_IT.md).
 
-XNova Reforged est un jeu de strategie spatial ou vous developpez un empire interstellaire.
-Le but est de faire grandir votre economie, votre technologie et votre flotte.
+## 1. Démarrer
 
-## Objectifs du jeu
+1. **Créez votre compte.** L'adresse email doit être confirmée : cliquez sur le lien reçu par email (valable 24 h, renvoi possible depuis la page de connexion).
+2. Vous recevez une **planète de départ** (« Planète Mère ») avec 500 métal, 500 cristal et aucun bâtiment.
+3. Suivez le **guide des premiers pas** de la vue d'ensemble : 11 objectifs calculés d'après votre situation réelle, chacun avec un lien vers l'action à faire. Vous pouvez le masquer une fois terminé.
+4. Choisissez votre **langue** (français, anglais, espagnol, allemand, italien) avec le sélecteur de l'en-tête ou dans *Options*. Elle suit l'adresse de la page (`/fr/…`, `/de/…`).
 
-1. Developper votre economie (mines et stockage).
-2. Rechercher des technologies pour debloquer de nouvelles options.
-3. Construire une flotte pour explorer, attaquer et coloniser.
-4. Former des alliances et cooperer.
-5. Atteindre le haut du classement.
+## 2. Le rythme du serveur
 
-## Ressources
+Les coûts et les formules sont ceux du jeu d'origine ; **la vitesse du serveur** accélère les durées et la production (réglage de l'administrateur). Le profil de référence est **×50** :
 
-### Types de ressources
+| Jalon d'un joueur raisonnable | Durée à ×50 |
+|---|---:|
+| Laboratoire de recherche terminé | ≈ 22 min |
+| Première recherche lancée | ≈ 1 h |
+| Hangar terminé | ≈ 1 h 05 |
+| Premier vaisseau | ≈ 1 h 50 |
 
-- **Metal**
-  - Utilisation: batiments, vaisseaux, defenses.
-  - Production: Mine de metal.
-  - Stockage: Hangar de metal.
+Ces durées sont mesurées sur le serveur avec un joueur qui ne dépense que ce qu'il produit. Sur un serveur à vitesse ×1, tout est environ 50 fois plus lent : planifiez de longues attentes.
 
-- **Cristal**
-  - Utilisation: technologies avancees, vaisseaux.
-  - Production: Mine de cristal.
-  - Stockage: Hangar de cristal.
+## 3. Ressources et énergie
 
-- **Deuterium**
-  - Utilisation: carburant des flottes, technologies avancees.
-  - Production: Syntheseur de deuterium.
-  - Stockage: Reservoir de deuterium.
+- **Métal** : bâtiments, vaisseaux, défenses. **Cristal** : laboratoire, recherches, vaisseaux. **Deutérium** : carburant des flottes, laboratoire et la plupart des recherches (vous n'en avez pas au départ : le synthétiseur de deutérium est votre priorité).
+- **Énergie** : les mines consomment l'énergie des centrales solaires. Si la consommation dépasse la production, **toutes** les mines ralentissent proportionnellement. Gardez la production à 100 %.
+- Chaque planète dispose d'un petit revenu de base, indépendant des mines.
+- Le **stockage** est limité (capacité de base d'un million par ressource, qui croît avec les hangars) ; au-delà, la production est perdue.
 
-- **Energie**
-  - Production: Centrale solaire, reacteur de fusion, satellites.
-  - Utilisation: alimentation des mines.
+## 4. Construire, rechercher, produire
 
-- **Matiere noire**
-  - Utilisation: avantages premium (non implemente dans le MVP).
+- **Bâtiments** : le coût est débité au lancement et croît à chaque niveau. Le nombre de constructions simultanées par planète est limité : 1 au départ, 2 avec la recherche *Gestion des chantiers*, 3 avec en plus un commandant de niveau 50.
+- **Recherche** : une seule à la fois par joueur, payée au lancement. Elle demande un niveau de laboratoire et parfois d'autres technologies (les prérequis manquants sont affichés). Commencez par *Énergie*.
+- **Chantier spatial et défense** : les commandes sont payées tout de suite et construites par lots. Une commande **en attente** peut être retirée : 90 % des ressources payées sont remboursées. Un lot déjà démarré termine normalement. *Production parallèle* ajoute des lignes de production.
+- Les prérequis (niveau de hangar, technologies) sont indiqués sur chaque carte.
 
-### Gestion de l energie
+## 5. Flottes et missions
 
-Si votre energie est negative, la production baisse.
+Page *Flotte* : choisissez des vaisseaux, des coordonnées `[galaxie:système:position]`, une mission et la vitesse. Le carburant (deutérium) est débité au départ.
 
-Exemple:
-- Production energie: 500
-- Consommation energie: 700
-- Bilan: -200
-- Production effective: 500 / 700 = 71%
+| Mission | Effet |
+|---|---|
+| **Transport** | livre la cargaison sur la planète visée, puis la flotte rentre |
+| **Déploiement** | installe vaisseaux et cargaison sur **votre** planète de destination, sans retour |
+| **Attaque** | combat ; butin possible |
+| **Espionnage** | rapport sur la cible (plus de sondes ou une meilleure technologie *Espionnage* = plus de détails) |
+| **Colonisation** | fonde une colonie sur une position libre avec un vaisseau de colonisation (21 planètes maximum) |
 
-Solution: augmenter la production d energie (centrale solaire ou reacteur).
+Une flotte en vol peut être **rappelée** depuis *Mouvements*. Les résultats arrivent dans *Rapports*.
 
-## Batiments
+## 6. Combat
 
-### Batiments de ressources
+- 6 rounds au maximum ; certains vaisseaux ont un **tir rapide** contre d'autres types.
+- 30 % du coût des vaisseaux détruits devient des **débris**.
+- Chaque **défense** détruite est réparée avec 70 % de chances après le combat.
+- **Butin** : jusqu'à 50 % des ressources de la cible, **limité à la place restante dans les vaisseaux survivants** du vainqueur ; le reste n'est pas emporté.
+- Conseils : espionnez avant d'attaquer, vérifiez la capacité de cargo, ne laissez pas vos ressources s'accumuler.
 
-- **Mine de metal** (priorite debut de partie)
-- **Mine de cristal**
-- **Syntheseur de deuterium**
-- **Centrale solaire**
-- **Reacteur de fusion** (energie avancee)
+## 7. Galaxie
 
-### Batiments de stockage
+- 9 galaxies × 499 systèmes × 15 positions. La page *Galaxie* s'ouvre sur le système de votre planète active ; votre planète est surlignée.
+- Position occupée : espionner, attaquer, transporter. Position libre : coloniser.
 
-- **Hangar de metal / cristal**
-- **Reservoir de deuterium**
+## 8. Commandant, puissance, classement
 
-### Batiments de developpement
+- Votre **niveau de commandant** (1 à 100) dépend uniquement de vos bâtiments et recherches ; votre **puissance** inclut aussi vaisseaux, défenses et colonies. Les stocks ne comptent pas.
+- Le **classement** est établi sur la puissance ; votre rang apparaît dans l'en-tête et la vue d'ensemble.
 
-- **Usine de robots**: reduit le temps de construction.
-- **Hangar spatial**: debloque la construction de vaisseaux.
-- **Laboratoire**: debloque la recherche.
-- **Usine de nanites**: reduction massive des temps (late game).
+## 9. Social
 
-## Technologies
+- **Messages** entre joueurs (par nom d'utilisateur).
+- **Alliances** : créez-en une (tag de 2 à 8 caractères) ou rejoignez-en une par invitation ; le fondateur ne peut pas quitter sans dissoudre.
 
-### Technologies essentielles
+## 10. Compte et sécurité
 
-- **Energie**: booste le reacteur, prerequis de nombreuses techs.
-- **Informatique**: augmente les slots de flotte.
-- **Espionnage**: rapports de meilleure qualite.
-- **Combustion / Impulsion / Hyperespace**: vitesse des vaisseaux.
+- Mot de passe : 8 caractères minimum avec une minuscule, une majuscule et un chiffre. Vous pouvez le changer, ainsi que votre adresse email (confirmation par lien), dans *Options*.
+- « Mot de passe oublié » envoie un lien valable une heure. Changer ou réinitialiser le mot de passe déconnecte vos autres appareils.
+- Trop de tentatives de connexion échouées bloquent temporairement l'accès.
 
-### Technologies de combat
+## 11. Limites connues de l'alpha
 
-- **Militaire**: bonus attaque.
-- **Bouclier**: bonus bouclier.
-- **Blindage**: bonus coque.
-
-## Vaisseaux
-
-### Transport
-
-- **Petit transporteur**: rapide, faible capacite.
-- **Grand transporteur**: lent, grosse capacite.
-- **Recycleur**: collecte des debris.
-
-### Combat
-
-- **Chasseur leger**: base early game.
-- **Chasseur lourd**: polyvalent mid game.
-- **Croiseur**: fort contre chasseurs.
-- **Vaisseau de bataille**: puissance brute.
-- **Bombardier**: anti defenses.
-
-### Speciaux
-
-- **Sonde**: espionnage.
-- **Colonisateur**: fonde une nouvelle colonie.
-- **Satellite solaire**: energie facile, mais fragile.
-
-## Combat
-
-- 6 tours max.
-- Rapid fire: certains vaisseaux tirent plusieurs fois.
-- Explosion: 70% de chance si coque < 30%.
-- Debris: 30% des couts detruits deviennent des debris.
-
-Formule simplifiee:
-```
-Degats = Puissance Arme * (1 - Bouclier / 100)
-```
-
-Pillage:
-- Maximum 50% des ressources ennemies.
-- Limite par la capacite de cargo.
-
-Conseils:
-- Toujours espionner avant d attaquer.
-- Verifier la capacite cargo.
-- Favoriser les vaisseaux avec rapid fire.
-
-## Galaxie
-
-- 5 galaxies x 499 systemes x 15 positions.
-- Coordonnees: [G:S:P]
-
-Types de positions:
-- Planete occupee: interaction possible.
-- Planete inactive: cible facile.
-- Position vide: colonisation possible.
-
-Colonisation:
-1. Construire un colonisateur.
-2. Avoir la techno Astrophysique.
-3. Lancer la mission sur une position vide.
-
-## Alliances
-
-- Creer ou rejoindre via invitation.
-- Tag 3-8 caracteres.
-- Avantages: coordination, protection, classement.
-
-## Statistiques
-
-Types de points:
-- Economie
-- Recherche
-- Militaire
-- Militaire detruit
-- Militaire perdu
-
-Classement mis a jour regulierement.
-
-## Strategies
-
-### Debut de jeu (J1-J3)
-- Monter Mine metal et cristal.
-- Centrale solaire stable.
-- Lancer les premieres recherches.
-
-### Mid game (S1-S2)
-- Mines niveau 15-20.
-- Developper propulsion.
-- Construire flotte polyvalente.
-
-### Late game (S3+)
-- Technologies niveau 20+.
-- Flotte lourde et guerres.
-- Colonies optimisees.
-
-## Astuces pro
-
-1. Stockage adapte a la nuit.
-2. Fleet save avant sommeil.
-3. Espionner avec une sonde unique.
-4. Recyclage des debris.
-5. Lancer recherches longues avant de se deconnecter.
-
-## Aide
-
-- Wiki: https://xnova.wiki (fictif)
-- Discord: https://discord.gg/xnova (fictif)
-- Forum: https://forum.xnova.com (fictif)
+Pas d'officiers, de marché ni d'événements ; les noms et descriptions du jeu et certains messages d'erreur restent en français quelle que soit la langue choisie ; les emails sont envoyés en français.
