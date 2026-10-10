@@ -88,7 +88,13 @@
     "loading": "Loading system...",
     "activity": "Activity",
     "activeNow": "Online",
-    "moon": "Moon"
+    "moon": "Moon",
+    "exploration": "Exploration",
+    "system": "System",
+    "spy": "Spy",
+    "attack": "Attack",
+    "transport": "Transport",
+    "colonize": "Colonize"
   },
   "messages": {
     "kicker": "Communication",

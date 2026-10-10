@@ -20,7 +20,7 @@ export const buildInfo: BuildInfo = JSON.parse(
 );
 
 export const buildVersionLabel = [
-  `v${buildInfo.version} ${buildInfo.stage}`,
+  buildInfo.stage ? `v${buildInfo.version} ${buildInfo.stage}` : `v${buildInfo.version}`,
   buildInfo.pullRequest ? `PR #${buildInfo.pullRequest}` : null,
   buildInfo.commit
     ? `${buildInfo.commit.slice(0, 7)}${buildInfo.modified ? "+local" : ""}`
