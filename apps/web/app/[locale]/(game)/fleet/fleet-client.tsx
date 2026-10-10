@@ -11,13 +11,11 @@ import {
   calculateFuelConsumption,
 } from '@xnova/game-engine';
 import { useSearchParams } from 'next/navigation';
-import { motion, useReducedMotion, type MotionProps } from 'framer-motion';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { usePlanetStore } from '@/lib/stores/planet-store';
 import { getActiveFleets, getAvailableShips, sendFleet } from '@/lib/api/fleet';
 import { researchApi } from '@/lib/api/research';
 import { useI18n } from '@/lib/i18n';
-import { designTokens } from '@/lib/design-tokens';
 
 function formatCountdown(dateValue: string | Date | null | undefined, nowMs: number) {
   if (!dateValue) return '--';
@@ -50,16 +48,6 @@ const MISSION_IDS: Record<string, number> = {
 };
 
 export default function FleetClient() {
-  const shouldReduceMotion = useReducedMotion();
-  const fadeInProps: MotionProps = shouldReduceMotion ? {} : designTokens.animations.fadeIn;
-  const listVariants = {
-    hidden: { opacity: 0 },
-    show: { opacity: 1, transition: { staggerChildren: 0.05 } },
-  };
-  const itemVariants = {
-    hidden: { opacity: 0, y: 14 },
-    show: { opacity: 1, y: 0 },
-  };
 
   const [mission, setMission] = useState('transport');
   const [colonyName, setColonyName] = useState('Nouvelle colonie');

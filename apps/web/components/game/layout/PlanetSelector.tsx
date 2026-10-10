@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { usePlanetStore } from '@/lib/stores/planet-store';
 
@@ -9,7 +9,7 @@ export function PlanetSelector() {
   const { selectedPlanetId, setSelectedPlanetId } = usePlanetStore();
   const [isOpen, setIsOpen] = useState(false);
 
-  const planets = user?.planets || [];
+  const planets = useMemo(() => user?.planets ?? [], [user?.planets]);
   const currentPlanet = planets.find(p => p.id === selectedPlanetId) || planets[0];
 
   // Sélectionner la première planète si aucune n'est sélectionnée

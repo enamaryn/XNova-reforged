@@ -88,7 +88,7 @@ describe('API integration - Statistiques', () => {
             p.id === userId || p.userId === userId,
         ));
 
-    // Au minimum, la réponse devrait être structurée correctement
+    expect(hasPlayerStats).toBe(true);
     expect(statsResponse.body).toBeDefined();
     expect(typeof statsResponse.body).toBe('object');
 

@@ -63,9 +63,9 @@ Chantiers identifiés, non bloquants pour la sécurité de production (les paque
 
 | ID | Chantier | Raison | Alertes concernées | Échéance |
 |---|---|---|---|---|
-| DETTE-01 | Migration Jest 29 → 30 (`ts-jest` et configurations associées) | chaîne `jest-*`, `@jest/*`, `babel-jest` | 20+ hautes de développement (`braces`, `micromatch`) | avant la bêta publique |
+| DETTE-01 | ~~Migration Jest 29 → 30~~ **Faite le 10 oct. 2026** (`jest` 30.5, `ts-jest` 29.4, `@types/jest` 30) | chaîne `jest-*`, `@jest/*`, `babel-jest` | hautes de développement : 34 → 7 ; unitaires 81/81, intégration 280/280 | clos |
 | DETTE-02 | Migration Tailwind CSS 3 → 4 | `tailwindcss`, `chokidar`, `fast-glob` | hautes de développement | avant la bêta publique |
-| DETTE-03 | Migration `eslint-config-next` 15 → 16 (avec Next 16 si pertinent, ce qui retirerait aussi l'override `postcss`) | `eslint-config-next`, `fast-glob` | hautes de développement | avant la bêta publique |
+| DETTE-03 | Migration `eslint-config-next` 15 → 16 (exige ESLint ≥ 9 ; avec Next 16 si pertinent, ce qui retirerait aussi l'override `postcss`) | `eslint-config-next`, `fast-glob` | **ne retire pas** l'alerte `braces` : la v16 dépend toujours de `fast-glob 3.3.1` ; à suivre jusqu'à un correctif amont | avant la bêta publique, bénéfice sécurité nul tant que `braces` n'est pas corrigé |
 | DETTE-04 | Revue des 3 modérées de production (`ajv`, `js-yaml`, `@nestjs/swagger`) à la prochaine mise à jour majeure de NestJS | non exposées à un joueur, pas de correctif sans montée majeure | 3 modérées | à chaque montée de NestJS, au plus tard avant la bêta publique |
 
 Principe : ne pas appliquer ces migrations à l'aveugle (règle du registre) ; mesurer avant/après et conserver les rapports d'audit bruts.

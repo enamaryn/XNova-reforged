@@ -9,7 +9,7 @@ import {
 import { GAME_CONSTANTS } from '@xnova/game-config';
 import { Prisma, UserRole } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
 import { createHash, randomUUID } from 'crypto';
 import { isBanned } from './ban.util';
@@ -381,14 +381,16 @@ export class AuthService {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, {
         secret: this.configService.get<string>('JWT_SECRET'),
-        expiresIn: this.configService.get<string>('JWT_EXPIRES_IN') || '7d',
-      } as any),
+        expiresIn: (this.configService.get<string>('JWT_EXPIRES_IN') ||
+          '7d') as JwtSignOptions['expiresIn'],
+      }),
       this.jwtService.signAsync(
         { ...payload, jti: randomUUID() },
         {
           secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
-          expiresIn: this.configService.get<string>('JWT_REFRESH_EXPIRES_IN') || '30d',
-        } as any,
+          expiresIn: (this.configService.get<string>('JWT_REFRESH_EXPIRES_IN') ||
+            '30d') as JwtSignOptions['expiresIn'],
+        },
       ),
     ]);
 

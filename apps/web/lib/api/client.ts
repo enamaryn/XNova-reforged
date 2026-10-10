@@ -33,7 +33,7 @@ async function parseError(response: Response) {
   let payload: ApiErrorPayload | undefined;
   try {
     payload = (await response.json()) as ApiErrorPayload;
-  } catch (error) {
+  } catch {
     payload = undefined;
   }
   const message = resolveErrorMessage(payload);

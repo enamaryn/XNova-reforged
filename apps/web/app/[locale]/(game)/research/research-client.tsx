@@ -4,25 +4,13 @@ import { useEffect, useState, useCallback, useMemo } from 'react';
 import { ContextHelp } from '@/components/game/ContextHelp';
 import Link from 'next/link';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { motion, useReducedMotion, type MotionProps } from 'framer-motion';
 import { researchApi } from '@/lib/api/research';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { usePlanetStore } from '@/lib/stores/planet-store';
 import { useSocket } from '@/lib/providers/socket-provider';
 import { useI18n } from '@/lib/i18n';
-import { designTokens } from '@/lib/design-tokens';
 
 export default function ResearchClient() {
-  const shouldReduceMotion = useReducedMotion();
-  const fadeInProps: MotionProps = shouldReduceMotion ? {} : designTokens.animations.fadeIn;
-  const listVariants = {
-    hidden: { opacity: 0 },
-    show: { opacity: 1, transition: { staggerChildren: 0.05 } },
-  };
-  const itemVariants = {
-    hidden: { opacity: 0, y: 14 },
-    show: { opacity: 1, y: 0 },
-  };
 
   const { user } = useAuthStore();
   const { selectedPlanetId, setSelectedPlanetId } = usePlanetStore();

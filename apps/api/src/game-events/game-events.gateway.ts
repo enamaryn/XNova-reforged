@@ -1,4 +1,4 @@
-import { Logger, UseGuards } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -50,7 +50,7 @@ export class GameEventsGateway
     private readonly database: DatabaseService,
   ) {}
 
-  afterInit(server: Server) {
+  afterInit() {
     this.logger.log('WebSocket Gateway initialized');
   }
 
@@ -192,7 +192,7 @@ export class GameEventsGateway
   /**
    * Émet une mise à jour de ressources pour une planète spécifique
    */
-  emitResourcesUpdate(planetId: string, data: any) {
+  emitResourcesUpdate(planetId: string, data: Record<string, unknown>) {
     const room = `planet:${planetId}`;
     this.server.to(room).emit('resources:updated', {
       planetId,
@@ -205,7 +205,7 @@ export class GameEventsGateway
   /**
    * Émet un événement de construction terminée
    */
-  emitBuildingCompleted(planetId: string, data: any) {
+  emitBuildingCompleted(planetId: string, data: Record<string, unknown>) {
     const room = `planet:${planetId}`;
     this.server.to(room).emit('building:completed', {
       planetId,
@@ -218,7 +218,7 @@ export class GameEventsGateway
   /**
    * Émet un événement de recherche terminée
    */
-  emitResearchCompleted(userId: string, data: any) {
+  emitResearchCompleted(userId: string, data: Record<string, unknown>) {
     const socketId = this.userSockets.get(userId);
     if (socketId) {
       this.server.to(socketId).emit('research:completed', {
@@ -232,7 +232,7 @@ export class GameEventsGateway
   /**
    * Émet un événement de flotte arrivée
    */
-  emitFleetArrived(userId: string, data: any) {
+  emitFleetArrived(userId: string, data: Record<string, unknown>) {
     const socketId = this.userSockets.get(userId);
     if (socketId) {
       this.server.to(socketId).emit('fleet:arrived', {
@@ -246,7 +246,7 @@ export class GameEventsGateway
   /**
    * Émet un événement générique à un utilisateur
    */
-  emitToUser(userId: string, event: string, data: any) {
+  emitToUser(userId: string, event: string, data: Record<string, unknown>) {
     const socketId = this.userSockets.get(userId);
     if (socketId) {
       this.server.to(socketId).emit(event, {
@@ -260,7 +260,7 @@ export class GameEventsGateway
   /**
    * Broadcast un événement à tous les clients connectés
    */
-  broadcast(event: string, data: any) {
+  broadcast(event: string, data: Record<string, unknown>) {
     this.server.emit(event, {
       timestamp: new Date().toISOString(),
       ...data,
@@ -271,7 +271,7 @@ export class GameEventsGateway
   /**
    * Émet un événement générique à une planète (room)
    */
-  emitToPlanet(planetId: string, event: string, data: any) {
+  emitToPlanet(planetId: string, event: string, data: Record<string, unknown>) {
     const room = `planet:${planetId}`;
     this.server.to(room).emit(event, {
       planetId,

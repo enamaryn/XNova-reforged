@@ -4,13 +4,11 @@ import { CommanderSummary } from "@/components/game/CommanderSummary";
 import { ContextHelp } from "@/components/game/ContextHelp";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { motion, useReducedMotion, type MotionProps } from "framer-motion";
 import { shipyardApi } from "@/lib/api/shipyard";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { usePlanetStore } from "@/lib/stores/planet-store";
 import { ShipyardQueue } from "@/components/game/ShipyardQueue";
 import { useI18n } from "@/lib/i18n";
-import { designTokens } from "@/lib/design-tokens";
 
 function formatNumber(value: number) {
   return new Intl.NumberFormat().format(Math.floor(value));
@@ -31,21 +29,6 @@ function formatDuration(seconds: number) {
 }
 
 export default function ShipyardPage() {
-  const shouldReduceMotion = useReducedMotion();
-  const fadeInProps: MotionProps = shouldReduceMotion
-    ? {}
-    : designTokens.animations.fadeIn;
-  const slideUpProps: MotionProps = shouldReduceMotion
-    ? {}
-    : designTokens.animations.slideUp;
-  const listVariants = {
-    hidden: { opacity: 0 },
-    show: { opacity: 1, transition: { staggerChildren: 0.05 } },
-  };
-  const itemVariants = {
-    hidden: { opacity: 0, y: 14 },
-    show: { opacity: 1, y: 0 },
-  };
 
   const { t } = useI18n();
   const { user } = useAuthStore();

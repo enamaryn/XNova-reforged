@@ -2,10 +2,8 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { motion, useReducedMotion, type MotionProps } from 'framer-motion';
 import { getActiveFleets, recallFleet } from '@/lib/api/fleet';
 import { useI18n } from '@/lib/i18n';
-import { designTokens } from '@/lib/design-tokens';
 
 function formatCountdown(dateValue: string | Date | null | undefined, nowMs: number) {
   if (!dateValue) return '--';
@@ -19,16 +17,6 @@ function formatCountdown(dateValue: string | Date | null | undefined, nowMs: num
 
 export default function MovementPage() {
   const { t } = useI18n();
-  const shouldReduceMotion = useReducedMotion();
-  const fadeInProps: MotionProps = shouldReduceMotion ? {} : designTokens.animations.fadeIn;
-  const listVariants = {
-    hidden: { opacity: 0 },
-    show: { opacity: 1, transition: { staggerChildren: 0.04 } },
-  };
-  const itemVariants = {
-    hidden: { opacity: 0, y: 10 },
-    show: { opacity: 1, y: 0 },
-  };
   const queryClient = useQueryClient();
   const [nowMs, setNowMs] = useState(Date.now());
   const [recallingId, setRecallingId] = useState<string | null>(null);

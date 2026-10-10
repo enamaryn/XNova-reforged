@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtSignOptions } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GameEventsGateway } from './game-events.gateway';
 
@@ -12,9 +12,10 @@ import { GameEventsGateway } from './game-events.gateway';
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
         signOptions: {
-          expiresIn: configService.get<string>('JWT_EXPIRES_IN') || '7d',
+          expiresIn: (configService.get<string>('JWT_EXPIRES_IN') ||
+            '7d') as JwtSignOptions['expiresIn'],
         },
-      } as any),
+      }),
     }),
   ],
   providers: [GameEventsGateway],

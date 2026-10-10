@@ -5,6 +5,17 @@
 
 ---
 
+## Session — revue de PR, vulnérabilités, avertissements et migration i18n (suite)
+
+**Date :** 10 octobre 2026. **Objectif :** revue de la PR #37 et de sa CI, migration des textes en dur vers `useI18n`, puis traitement des alertes `npm audit` et des avertissements signalés par le propriétaire.
+
+- [x] PR #37 fusionnée, aucun commentaire de revue, CI 5/5 verte (E2E et mobile WebKit inclus). Branche repartie de `main` (`daf584d`).
+- [x] Migration i18n lot 1 (écrans de jeu principaux, ~190 clés × 5 langues). Reste le lot 2 (voir ROADMAP_MVP.md).
+- [x] Journal de mise à jour du serveur du propriétaire : aucune erreur, « Mise à jour réussie » ; le `curl: (7)` est le premier sondage de `waitForWeb` avant le démarrage du web (60 tentatives).
+- [x] Audit npm : production 0 haute/critique ; complet 49 → 36 (critique `handlebars` corrigée, Jest 30 : hautes 34 → 7). Les 7 hautes restantes viennent de `braces ≤ 3.0.3`, sans version corrigée sur npm ; Tailwind 4 retirerait la chaîne `tailwindcss`, mais `eslint-config-next` 16 la conserve. Détail : docs/NPM_AUDIT_2026-10.md.
+- [x] Avertissements ESLint 105 → 0 (code mort, `any` de `src/`, règle `no-explicit-any` désactivée pour les mocks de tests). Un test de statistiques n'assertait rien (`hasPlayerStats` calculé mais inutilisé) : il vérifie maintenant ce qu'il calculait.
+- **Vérifié localement :** build 5/5 ; unitaires 81/81 ; intégration 280/280 sous Jest 30 ; parité 17/17 ; E2E 34 + 1 ignoré ; rendu mobile 39/39 (Chromium).
+
 ## Session — premier cycle joueur complet : équilibrage et onboarding (SCOPE-02)
 
 **Date :** 10 octobre 2026. **Objectif :** synchroniser la roadmap avec l'état réel (`v0.2.0-alpha.1`, PR #36 fusionnée, SMTP validé, décisions prises) puis réaliser le lot « premier cycle joueur complet ». **Décisions du propriétaire :** 5 langues (fr, en, es, de, it) ; rythme par **profil serveur ×50 (×20 minimum)**, sans modifier formules ni coûts.

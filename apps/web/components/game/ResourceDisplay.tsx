@@ -63,7 +63,7 @@ export const ResourceDisplay = memo(function ResourceDisplay({
 }: ResourceDisplayProps) {
   const { t } = useI18n();
   const [currentAmount, setCurrentAmount] = useState(amount);
-  const [lastUpdate, setLastUpdate] = useState(Date.now());
+  const [, setLastUpdate] = useState(Date.now());
 
   // Mettre à jour le montant actuel quand les props changent (WebSocket update)
   useEffect(() => {
