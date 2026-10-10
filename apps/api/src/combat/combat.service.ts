@@ -49,8 +49,8 @@ export class CombatService {
     id: string;
     userId: string;
     mission: number;
-    ships: any;
-    cargo: any;
+    ships: unknown;
+    cargo: unknown;
     startTime: Date;
     arrivalTime: Date;
     returnTime: Date | null;
@@ -372,9 +372,9 @@ export class CombatService {
     return repaired;
   }
 
-  private normalizeShipMap(raw: any): Record<number, number> {
+  private normalizeShipMap(raw: unknown): Record<number, number> {
     if (!raw || typeof raw !== 'object') return {};
-    return Object.entries(raw).reduce((acc, [shipIdRaw, countRaw]) => {
+    return Object.entries(raw as Record<string, unknown>).reduce((acc, [shipIdRaw, countRaw]) => {
       const shipId = Number(shipIdRaw);
       const count = Math.max(0, Math.floor(Number(countRaw)));
       if (count > 0) {

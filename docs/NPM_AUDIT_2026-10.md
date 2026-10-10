@@ -75,3 +75,22 @@ Le seuil CI « hautes et critiques » a fait son travail : deux nouvelles alerte
 - `source-map-js` 1.2.1 (haute, déni de service sur des source maps) : outillage de compilation ; corrigée par 1.2.2.
 
 Action : `npm update proxy-addr source-map-js` (lockfile seul, correctifs de patch). Production : 3 modérées, 0 haute, 0 critique. Validation locale : `npm ci --dry-run`, lint, builds, unitaires 42/42, intégration 211/211, E2E 24/24.
+
+## Mise à jour du 10 octobre 2026 — critique corrigée, Jest 30, avertissements ESLint à zéro
+
+Contexte : `scripts/update.sh` exécute `npm ci --include=dev` sur le serveur (la compilation en a besoin) ; l'audit complet affichait donc **49 alertes (14 modérées, 34 hautes, 1 critique)**. **Production (`npm audit --omit=dev`) : 0 haute, 0 critique** (3 modérées : `@nestjs/swagger → js-yaml`).
+
+| Étape | Complet (dev + prod) | Détail |
+|---|---|---|
+| Départ | 49 : 1 critique, 34 hautes, 14 modérées | |
+| `npm audit fix` (sans `--force`) | 48 : **0 critique**, 34 hautes | `handlebars` (critique, outillage de test) corrigé : 4 lignes du lockfile |
+| Jest 29 → 30 (`jest`, `@types/jest`, `ts-jest` ≥ 29.4) — **DETTE-01 close** | 36 : 0 critique, **7 hautes**, 29 modérées | unitaires 81/81, intégration 280/280 sous Jest 30 |
+
+**Les 7 hautes restantes viennent d'une seule alerte, `braces ≤ 3.0.3`** (déni de service par motifs imbriqués, GHSA-vfj7-8cjw-p6xm) : **aucune version corrigée n'existe sur npm** (3.0.3 est la dernière). Deux chaînes d'outillage de développement la transportent :
+
+- `tailwindcss` 3 → `micromatch` / `chokidar` / `braces` : disparaît avec **Tailwind 4** (DETTE-02, migration visuelle à valider séparément).
+- `eslint-config-next` → `@next/eslint-plugin-next` → `fast-glob 3.3.1` → `micromatch` → `braces` : **la version 16 conserve cette dépendance** (et exige ESLint ≥ 9) ; migrer ne supprime donc pas l'alerte. À suivre jusqu'à un correctif amont de `braces` ou de `fast-glob`.
+
+Exploitabilité : ces paquets ne tournent qu'à la compilation et aux tests, sur des motifs de glob écrits par l'équipe ; ils ne sont pas dans le serveur en exécution. Les modérées ajoutées par Jest 30 (`ts-jest` → `js-yaml`, `@istanbuljs/*`) sont du même type. L'assistant `npm audit fix --force` proposerait des rétrogradations (ts-jest 27, eslint-config-next 14, Jest 25) : **à ne pas appliquer**.
+
+Avertissements ESLint : **0** (étaient 105). Code mort retiré (animations jamais utilisées dans cinq pages, polices Google inutilisées, variables d'erreur inutilisées), `any` typés dans `src/` (JWT, gateway WebSocket, combat), `any` des mocks de tests autorisés par une règle dédiée, `PlanetSelector` mémoïsé, interfaces vides des composants UI remplacées par des alias de types.

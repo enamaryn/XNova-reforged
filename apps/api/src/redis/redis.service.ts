@@ -47,7 +47,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     if (!this.client || !this.client.isOpen) return null;
     try {
       return await this.client.get(key);
-    } catch (error) {
+    } catch {
       this.logger.warn(`Redis GET impossible: ${key}`);
       return null;
     }
@@ -61,7 +61,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       } else {
         await this.client.set(key, value);
       }
-    } catch (error) {
+    } catch {
       this.logger.warn(`Redis SET impossible: ${key}`);
     }
   }
@@ -70,7 +70,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     if (!this.client || !this.client.isOpen) return;
     try {
       await this.client.del(key);
-    } catch (error) {
+    } catch {
       this.logger.warn(`Redis DEL impossible: ${key}`);
     }
   }
@@ -80,7 +80,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     if (!raw) return null;
     try {
       return JSON.parse(raw) as T;
-    } catch (error) {
+    } catch {
       this.logger.warn(`Redis JSON invalide: ${key}`);
       return null;
     }

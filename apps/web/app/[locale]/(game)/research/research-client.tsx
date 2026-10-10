@@ -4,25 +4,13 @@ import { useEffect, useState, useCallback, useMemo } from 'react';
 import { ContextHelp } from '@/components/game/ContextHelp';
 import Link from 'next/link';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { motion, useReducedMotion, type MotionProps } from 'framer-motion';
 import { researchApi } from '@/lib/api/research';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { usePlanetStore } from '@/lib/stores/planet-store';
 import { useSocket } from '@/lib/providers/socket-provider';
 import { useI18n } from '@/lib/i18n';
-import { designTokens } from '@/lib/design-tokens';
 
 export default function ResearchClient() {
-  const shouldReduceMotion = useReducedMotion();
-  const fadeInProps: MotionProps = shouldReduceMotion ? {} : designTokens.animations.fadeIn;
-  const listVariants = {
-    hidden: { opacity: 0 },
-    show: { opacity: 1, transition: { staggerChildren: 0.05 } },
-  };
-  const itemVariants = {
-    hidden: { opacity: 0, y: 14 },
-    show: { opacity: 1, y: 0 },
-  };
 
   const { user } = useAuthStore();
   const { selectedPlanetId, setSelectedPlanetId } = usePlanetStore();
@@ -120,7 +108,7 @@ export default function ResearchClient() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="text-4xl mb-4">🧠</div>
-          <p className="text-slate-400">Chargement des planètes...</p>
+          <p className="text-slate-400">{t('overview.loadingPlanets')}</p>
         </div>
       </div>
     );
@@ -131,7 +119,7 @@ export default function ResearchClient() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="animate-spin text-4xl mb-4">🔬</div>
-          <p className="text-slate-400">Chargement des technologies...</p>
+          <p className="text-slate-400">{t('research.loadingTechs')}</p>
         </div>
       </div>
     );
@@ -142,12 +130,12 @@ export default function ResearchClient() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="text-4xl mb-4">❌</div>
-          <p className="text-red-400 mb-4">Erreur lors du chargement</p>
+          <p className="text-red-400 mb-4">{t('common.loadError')}</p>
           <button
             onClick={() => refetchTech()}
             className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors"
           >
-            Réessayer
+            {t('common.retry')}
           </button>
         </div>
       </div>
@@ -157,10 +145,10 @@ export default function ResearchClient() {
   return (
     <div className="space-y-6">
       <div>
-        <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">Laboratoire</p>
-        <h1 className="mt-2 text-2xl font-semibold text-white">Technologies</h1>
+        <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">{t('research.kicker')}</p>
+        <h1 className="mt-2 text-2xl font-semibold text-white">{t('research.title')}</h1>
         <p className="text-sm text-slate-400">
-          Déverrouillez des avantages stratégiques pour vos flottes et infrastructures.
+          {t('research.subtitle')}
         </p>
       </div>
 
@@ -170,14 +158,14 @@ export default function ResearchClient() {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">
-              Arbre technologique
+              {t('research.tree')}
             </p>
             <h2 className="mt-2 text-lg font-semibold text-white">
-              Chemins de recherche
+              {t('research.paths')}
             </h2>
           </div>
           <div className="text-xs text-slate-500">
-            Survolez une technologie pour voir les prérequis.
+            {t('research.hoverHint')}
           </div>
         </div>
 
@@ -198,14 +186,14 @@ export default function ResearchClient() {
                     const isMaxLevel = tech.isMaxLevel;
                     const glow = available && !inQueue;
                     const stateLabel = inQueue
-                      ? 'En cours'
+                      ? t('research.state.inQueue')
                       : isMaxLevel
-                        ? 'Niveau max'
+                        ? t('research.state.max')
                         : missing
-                        ? 'Verrouillée'
+                        ? t('research.state.locked')
                         : available
-                          ? 'Disponible'
-                          : 'Indisponible';
+                          ? t('research.state.available')
+                          : t('research.state.unavailable');
 
                     return (
                       <div
@@ -223,7 +211,7 @@ export default function ResearchClient() {
                         >
                           <div className="flex items-center justify-between">
                             <span className="font-semibold">{tech.name}</span>
-                            <span className="text-xs text-slate-400">Niv. {tech.currentLevel}</span>
+                            <span className="text-xs text-slate-400">{t('research.shortLevel', { level: tech.currentLevel })}</span>
                           </div>
                           <div className="mt-2 text-xs text-slate-500">
                             {stateLabel}
@@ -236,10 +224,10 @@ export default function ResearchClient() {
                           <div className="font-semibold text-slate-200">{tech.name}</div>
                           <div className="mt-2 text-slate-500">{tech.description}</div>
                           <div className="mt-3 text-[10px] uppercase tracking-[0.2em] text-slate-500">
-                            Prérequis
+                            {t('research.requirements')}
                           </div>
                           {tech.missingRequirements.length === 0 ? (
-                            <div className="mt-1 text-emerald-300">OK</div>
+                            <div className="mt-1 text-emerald-300">{t('research.ok')}</div>
                           ) : (
                             <ul className="mt-1 list-disc list-inside text-slate-400">
                               {tech.missingRequirements.map((req) => (
@@ -262,19 +250,19 @@ export default function ResearchClient() {
         <div className="rounded-2xl border border-blue-500/30 bg-slate-900/60 p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-slate-300">Recherche en cours</p>
+              <p className="text-sm text-slate-300">{t('research.running')}</p>
               <p className="text-xs text-slate-500">
-                {queue[0].techName} niv. {queue[0].targetLevel}
+                {t('research.techLevelLine', { name: queue[0].techName, level: queue[0].targetLevel })}
               </p>
               <p className="mt-1 text-xs text-slate-500">
-                Temps restant: {queue[0].remainingSeconds}s
+                {t('research.remaining', { seconds: queue[0].remainingSeconds })}
               </p>
             </div>
             <button
               onClick={() => cancelMutation.mutate(queue[0].id)}
               className="text-xs uppercase tracking-[0.2em] text-red-300 hover:text-red-200"
             >
-              Annuler
+              {t('common.cancel')}
             </button>
           </div>
         </div>
@@ -300,13 +288,13 @@ export default function ResearchClient() {
             </div>
 
             <div className="mt-4 flex items-center justify-between text-xs text-slate-500">
-              <span>Niveau {tech.currentLevel}</span>
+              <span>{t('research.levelLine', { level: tech.currentLevel })}</span>
               <span>{Math.max(1, Math.floor(tech.buildTime))}s</span>
             </div>
 
             {tech.missingRequirements.length > 0 && (
               <div className="mt-3 rounded-xl bg-red-500/10 p-2 text-xs text-red-300">
-                <div className="font-semibold mb-1">Prérequis manquants:</div>
+                <div className="font-semibold mb-1">{t('research.missingTitle')}</div>
                 <ul className="list-disc list-inside">
                   {tech.missingRequirements.map((req) => (
                     <li key={req}>{req}</li>
@@ -317,7 +305,7 @@ export default function ResearchClient() {
 
             {tech.isMaxLevel && (
               <div className="mt-3 rounded-xl bg-slate-800/70 p-2 text-xs text-slate-300">
-                Niveau max atteint
+                {t('research.maxReached')}
               </div>
             )}
 
@@ -332,18 +320,18 @@ export default function ResearchClient() {
                 }`}
               >
                 {tech.inQueue
-                  ? 'En cours'
+                  ? t('research.state.inQueue')
                   : tech.isMaxLevel
-                    ? '⛔ Niveau max atteint'
+                    ? t('research.btnMax')
                     : tech.queueBlocked
-                      ? 'File occupée'
-                      : 'Lancer la recherche'}
+                      ? t('research.queueBusy')
+                      : t('research.launch')}
               </button>
               <Link
                 href={`/research/${tech.id}`}
                 className="rounded-xl border border-slate-700 px-3 py-2 text-xs text-slate-300 transition hover:border-slate-500 hover:text-white"
               >
-                Détails
+                {t('common.details')}
               </Link>
             </div>
           </div>

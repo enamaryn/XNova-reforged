@@ -3,24 +3,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import { motion, useReducedMotion, type MotionProps } from 'framer-motion';
 import { getGalaxySystem, type GalaxyPosition } from '@/lib/api/galaxy';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { usePlanetStore } from '@/lib/stores/planet-store';
 import { useI18n } from '@/lib/i18n';
-import { designTokens } from '@/lib/design-tokens';
 
 export default function GalaxyClient() {
-  const shouldReduceMotion = useReducedMotion();
-  const fadeInProps: MotionProps = shouldReduceMotion ? {} : designTokens.animations.fadeIn;
-  const listVariants = {
-    hidden: { opacity: 0 },
-    show: { opacity: 1, transition: { staggerChildren: 0.04 } },
-  };
-  const itemVariants = {
-    hidden: { opacity: 0, y: 12 },
-    show: { opacity: 1, y: 0 },
-  };
 
   const [galaxy, setGalaxy] = useState(1);
   const [system, setSystem] = useState(1);
@@ -51,7 +39,7 @@ export default function GalaxyClient() {
   }, [user, selectedPlanetId, setSelectedPlanetId]);
 
 
-  const { data, isLoading, error, refetch } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['galaxy', galaxy, system],
     queryFn: () => getGalaxySystem(galaxy, system),
   });

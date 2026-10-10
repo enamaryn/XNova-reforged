@@ -4,6 +4,7 @@ import { memo, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { usePlanetStore } from "@/lib/stores/planet-store";
+import { useI18n } from "@/lib/i18n";
 import { apiClient } from "@/lib/api/client";
 
 interface Resources {
@@ -32,6 +33,7 @@ function formatNumber(num: number): string {
 }
 
 export function ResourceBar({ compact = false }: ResourceBarProps) {
+  const { t } = useI18n();
   const { user } = useAuthStore();
   const { selectedPlanetId } = usePlanetStore();
   const planetId = selectedPlanetId || user?.planets?.[0]?.id;
@@ -114,28 +116,28 @@ export function ResourceBar({ compact = false }: ResourceBarProps) {
   return (
     <div className="flex items-center gap-1">
       <MemoizedResourceItem
-        label="Métal"
+        label={t("resources.metal")}
         icon="⚙️"
         value={metal}
         color="text-amber-400"
       />
       <div className="w-px h-6 bg-slate-800" />
       <MemoizedResourceItem
-        label="Cristal"
+        label={t("resources.crystal")}
         icon="💎"
         value={crystal}
         color="text-sky-300"
       />
       <div className="w-px h-6 bg-slate-800" />
       <MemoizedResourceItem
-        label="Deutérium"
+        label={t("resources.deuterium")}
         icon="🧪"
         value={deuterium}
         color="text-blue-300"
       />
       <div className="w-px h-6 bg-slate-800" />
       <MemoizedResourceItem
-        label="Énergie"
+        label={t("resources.energy")}
         icon="⚡"
         value={energyBalance}
         color={energyBalance >= 0 ? "text-green-400" : "text-red-400"}

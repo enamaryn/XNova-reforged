@@ -4,12 +4,11 @@ import { CommanderSummary } from "@/components/game/CommanderSummary";
 import { ContextHelp } from "@/components/game/ContextHelp";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { motion, useReducedMotion, type MotionProps } from "framer-motion";
 import { shipyardApi } from "@/lib/api/shipyard";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { usePlanetStore } from "@/lib/stores/planet-store";
 import { ShipyardQueue } from "@/components/game/ShipyardQueue";
-import { designTokens } from "@/lib/design-tokens";
+import { useI18n } from "@/lib/i18n";
 
 function formatNumber(value: number) {
   return new Intl.NumberFormat().format(Math.floor(value));
@@ -30,22 +29,8 @@ function formatDuration(seconds: number) {
 }
 
 export default function ShipyardPage() {
-  const shouldReduceMotion = useReducedMotion();
-  const fadeInProps: MotionProps = shouldReduceMotion
-    ? {}
-    : designTokens.animations.fadeIn;
-  const slideUpProps: MotionProps = shouldReduceMotion
-    ? {}
-    : designTokens.animations.slideUp;
-  const listVariants = {
-    hidden: { opacity: 0 },
-    show: { opacity: 1, transition: { staggerChildren: 0.05 } },
-  };
-  const itemVariants = {
-    hidden: { opacity: 0, y: 14 },
-    show: { opacity: 1, y: 0 },
-  };
 
+  const { t } = useI18n();
   const { user } = useAuthStore();
   const { selectedPlanetId, setSelectedPlanetId } = usePlanetStore();
   const [amounts, setAmounts] = useState<Record<number, number>>({});
@@ -120,7 +105,7 @@ export default function ShipyardPage() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="text-4xl mb-4">🪐</div>
-          <p className="text-slate-400">Chargement des planètes...</p>
+          <p className="text-slate-400">{t("overview.loadingPlanets")}</p>
         </div>
       </div>
     );
@@ -131,7 +116,7 @@ export default function ShipyardPage() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="animate-spin text-4xl mb-4">🚀</div>
-          <p className="text-slate-400">Chargement du chantier spatial...</p>
+          <p className="text-slate-400">{t("shipyard.loading")}</p>
         </div>
       </div>
     );
@@ -142,12 +127,12 @@ export default function ShipyardPage() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="text-4xl mb-4">❌</div>
-          <p className="text-red-400 mb-4">Erreur lors du chargement</p>
+          <p className="text-red-400 mb-4">{t("common.loadError")}</p>
           <button
             onClick={() => refetchShipyard()}
             className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors"
           >
-            Réessayer
+            {t("common.retry")}
           </button>
         </div>
       </div>
@@ -160,17 +145,17 @@ export default function ShipyardPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">
-            Infrastructure
+            {t("shipyard.kicker")}
           </p>
           <h1 className="mt-2 text-2xl font-semibold text-white">
-            Chantier spatial
+            {t("shipyard.title")}
           </h1>
           <p className="text-sm text-slate-400">
-            Construisez et déployez vos vaisseaux pour dominer la galaxie
+            {t("shipyard.subtitle")}
           </p>
         </div>
         <div className="rounded-full border border-slate-800/80 bg-slate-900/40 px-4 py-2 text-xs text-slate-400">
-          {queue.length} commande(s)
+          {t("unit.ordersCount", { count: queue.length })}
         </div>
       </div>
 
@@ -217,44 +202,44 @@ export default function ShipyardPage() {
                 </div>
                 {ship.inQueue && (
                   <span className="rounded-full border border-blue-400/60 bg-blue-500/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-blue-200">
-                    En file
+                    {t("unit.inQueue")}
                   </span>
                 )}
               </div>
 
               <div className="mt-4 grid gap-2 text-xs text-slate-400">
                 <div className="flex items-center justify-between">
-                  <span>Stock actuel</span>
+                  <span>{t("unit.stock")}</span>
                   <span className="text-slate-200">
                     {formatNumber(ship.currentAmount)}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>Coût métal</span>
+                  <span>{t("unit.costMetal")}</span>
                   <span className="text-slate-200">
                     {formatNumber(totalCost.metal)}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>Coût cristal</span>
+                  <span>{t("unit.costCrystal")}</span>
                   <span className="text-slate-200">
                     {formatNumber(totalCost.crystal)}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>Coût deutérium</span>
+                  <span>{t("unit.costDeuterium")}</span>
                   <span className="text-slate-200">
                     {formatNumber(totalCost.deuterium)}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>Temps estimé</span>
+                  <span>{t("unit.estimatedTime")}</span>
                   <span className="text-slate-200">
                     {formatDuration(totalTime)}
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-[11px] text-slate-500">
-                  <span>Durée unitaire</span>
+                  <span>{t("unit.unitDuration")}</span>
                   <span>{formatDuration(ship.buildTime)}</span>
                 </div>
               </div>
@@ -294,7 +279,7 @@ export default function ShipyardPage() {
                         : "border border-blue-500/60 bg-blue-500/10 text-blue-200 hover:bg-blue-500/20"
                   }`}
                 >
-                  {buildMutation.isPending ? "Construction..." : "Commander"}
+                  {buildMutation.isPending ? t("unit.building") : t("unit.order")}
                 </button>
               </div>
             </div>

@@ -1,9 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useI18n } from "@/lib/i18n";
 import type { ShipyardQueueItem } from "@/lib/api/shipyard";
 
-function duration(seconds: number) {
-  if (seconds <= 0) return "Finalisation…";
+function duration(seconds: number, finalizing: string) {
+  if (seconds <= 0) return finalizing;
   if (seconds < 60) return `${seconds}s`;
   if (seconds < 3600) return `${Math.floor(seconds / 60)}m ${seconds % 60}s`;
   return `${Math.floor(seconds / 3600)}h ${Math.floor((seconds % 3600) / 60)}m`;
@@ -15,6 +16,7 @@ function QueueItem({
   item: ShipyardQueueItem;
   onCancel: (id: string) => Promise<void>;
 }) {
+  const { t, locale } = useI18n();
   const [now, setNow] = useState(Date.now());
   const [confirming, setConfirming] = useState(false);
   const [canceling, setCanceling] = useState(false);
@@ -48,12 +50,13 @@ function QueueItem({
           {item.shipName} ×{item.amount}
         </strong>
         <span className={waiting ? "text-amber-300" : "text-blue-300"}>
-          {waiting ? "En attente" : "En production"}
+          {waiting ? t("queue.waiting") : t("queue.producing")}
         </span>
         <span className="font-mono text-xs">
-          {waiting ? "Début dans " : ""}
+          {waiting ? t("queue.startsIn") : ""}
           {duration(
             Math.max(0, Math.ceil(((waiting ? start : end) - now) / 1000)),
+            t("queue.finalizing"),
           )}
         </span>
         {waiting && (
@@ -62,7 +65,7 @@ function QueueItem({
             onClick={() => setConfirming(!confirming)}
             disabled={canceling}
           >
-            Retirer
+            {t("queue.withdraw")}
           </button>
         )}
       </div>
@@ -75,18 +78,20 @@ function QueueItem({
         </div>
       )}
       <p className="mt-1 text-[11px] text-slate-500">
-        Fin estimée : {new Date(item.endTime).toLocaleString("fr-FR")}
+        {t("queue.estimatedEnd", { date: new Date(item.endTime).toLocaleString(locale) })}
       </p>
       {confirming && waiting && (
         <div className="mt-2 space-y-2 text-xs">
           <p>
-            Remboursement : 90 % des ressources payées. Les 10 % restants sont
-            perdus.
+            {t("queue.refundNotice")}
           </p>
           {item.refund && (
             <p>
-              Métal : {item.refund.metal} · Cristal : {item.refund.crystal} ·
-              Deutérium : {item.refund.deuterium}
+              {t("queue.refundAmounts", {
+                metal: item.refund.metal,
+                crystal: item.refund.crystal,
+                deuterium: item.refund.deuterium,
+              })}
             </p>
           )}
           <button
@@ -94,10 +99,10 @@ function QueueItem({
             disabled={canceling}
             className="rounded border border-red-500/40 px-2 py-1 text-red-300"
           >
-            {canceling ? "Retrait…" : "Confirmer le retrait"}
+            {canceling ? t("queue.withdrawing") : t("queue.confirmWithdraw")}
           </button>
           <button onClick={() => setConfirming(false)} className="ml-3">
-            Conserver
+            {t("queue.keep")}
           </button>
         </div>
       )}
@@ -116,6 +121,7 @@ export function ShipyardQueue({
   queue: ShipyardQueueItem[];
   onCancel: (id: string) => Promise<void>;
 }) {
+  const { t } = useI18n();
   const [now, setNow] = useState(Date.now());
   useEffect(() => {
     const timer = setInterval(() => setNow(Date.now()), 1000);
@@ -125,21 +131,19 @@ export function ShipyardQueue({
     (q) => new Date(q.startTime).getTime() <= now,
   ).length;
   return (
-    <section aria-label="File du chantier" className="space-y-2">
+    <section aria-label={t("queue.ariaLabel")} className="space-y-2">
       <h3 className="font-semibold">
-        File du chantier · {active} en production · {queue.length - active} en
-        attente
+        {t("queue.title", { active, waiting: queue.length - active })}
       </h3>
       <p className="text-xs text-slate-400">
-        Ressources débitées à la commande. Retrait en attente : remboursement à
-        90 %. Les lots démarrés terminent normalement.
+        {t("queue.note")}
       </p>
       {queue.length ? (
         queue.map((item) => (
           <QueueItem key={item.id} item={item} onCancel={onCancel} />
         ))
       ) : (
-        <p className="text-sm text-slate-400">Aucune construction en cours</p>
+        <p className="text-sm text-slate-400">{t("buildings.queueEmpty")}</p>
       )}
     </section>
   );

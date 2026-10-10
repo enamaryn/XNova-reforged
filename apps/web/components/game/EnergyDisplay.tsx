@@ -2,6 +2,7 @@
 
 import { memo } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
+import { useI18n } from '@/lib/i18n';
 
 interface EnergyDisplayProps {
   used: number;
@@ -21,6 +22,7 @@ export const EnergyDisplay = memo(function EnergyDisplay({
   available,
   productionLevel,
 }: EnergyDisplayProps) {
+  const { t } = useI18n();
   const shouldReduceMotion = useReducedMotion();
   const surplus = available - used;
   const isDeficit = surplus < 0;
@@ -40,11 +42,11 @@ export const EnergyDisplay = memo(function EnergyDisplay({
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-2xl">⚡</span>
-          <h3 className="text-lg font-semibold text-white">Énergie</h3>
+          <h3 className="text-lg font-semibold text-white">{t('resources.energy')}</h3>
         </div>
         {isDeficit && (
           <div className="rounded-full bg-red-500/20 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-red-300">
-            DÉFICIT
+            {t('energy.deficitBadge')}
           </div>
         )}
       </div>
@@ -52,13 +54,13 @@ export const EnergyDisplay = memo(function EnergyDisplay({
       {/* Stats énergie */}
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <div className="text-xs uppercase tracking-[0.18em] text-slate-500">Disponible</div>
+          <div className="text-xs uppercase tracking-[0.18em] text-slate-500">{t('energy.available')}</div>
           <div className="font-mono text-xl font-bold text-emerald-400">
             {formatNumber(available)}
           </div>
         </div>
         <div>
-          <div className="text-xs uppercase tracking-[0.18em] text-slate-500">Consommée</div>
+          <div className="text-xs uppercase tracking-[0.18em] text-slate-500">{t('energy.consumed')}</div>
           <div className="font-mono text-xl font-bold text-amber-400">
             {formatNumber(used)}
           </div>
@@ -69,7 +71,7 @@ export const EnergyDisplay = memo(function EnergyDisplay({
       <div className="mt-3 border-t border-slate-800 pt-3">
         <div className="flex items-center justify-between">
           <div className="text-sm text-slate-400">
-            {isDeficit ? 'Déficit' : 'Surplus'}
+            {isDeficit ? t('energy.deficit') : t('energy.surplus')}
           </div>
           <div className={`font-mono text-lg font-bold ${isDeficit ? 'text-red-400' : 'text-emerald-400'}`}>
             {surplus >= 0 ? '+' : ''}{formatNumber(surplus)}
@@ -80,14 +82,14 @@ export const EnergyDisplay = memo(function EnergyDisplay({
       {/* Niveau de production */}
       <div className="mt-3 border-t border-slate-800 pt-3">
         <div className="flex items-center justify-between">
-          <div className="text-sm text-slate-400">Production mines</div>
+          <div className="text-sm text-slate-400">{t('energy.minesProduction')}</div>
           <div className={`font-mono text-base font-semibold ${productionLevel < 100 ? 'text-amber-400' : 'text-emerald-400'}`}>
             {productionLevel.toFixed(0)}%
           </div>
         </div>
         {productionLevel < 100 && (
           <div className="mt-2 text-xs text-red-300">
-            ⚠ Manque d'énergie : production réduite
+            {t('energy.shortage')}
           </div>
         )}
       </div>

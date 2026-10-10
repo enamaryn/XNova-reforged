@@ -3,6 +3,7 @@
 import { getProgression } from "@/lib/api/progression";
 import { getStatistics } from "@/lib/api/statistics";
 import { CommanderSummary } from "@/components/game/CommanderSummary";
+import { useI18n } from "@/lib/i18n";
 import { OnboardingGuide } from "@/components/game/OnboardingGuide";
 import { ContextHelp } from "@/components/game/ContextHelp";
 import { useEffect, useState } from "react";
@@ -28,6 +29,7 @@ interface Planet {
 }
 
 export default function OverviewClient() {
+  const { t, locale } = useI18n();
   const shouldReduceMotion = useReducedMotion();
   const fadeInProps: MotionProps = shouldReduceMotion
     ? {}
@@ -123,7 +125,7 @@ export default function OverviewClient() {
   if (planetsLoading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <div className="text-gray-400">Chargement des planètes...</div>
+        <div className="text-gray-400">{t("overview.loadingPlanets")}</div>
       </div>
     );
   }
@@ -131,7 +133,7 @@ export default function OverviewClient() {
   if (!planets || planets.length === 0) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <div className="text-gray-400">Aucune planète trouvée</div>
+        <div className="text-gray-400">{t("overview.noPlanet")}</div>
       </div>
     );
   }
@@ -143,10 +145,10 @@ export default function OverviewClient() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">
-            Commandement
+            {t("overview.kicker")}
           </p>
           <h1 className="mt-2 text-3xl font-semibold text-white">
-            Vue d'ensemble
+            {t("overview.title")}
           </h1>
         </div>
 
@@ -154,46 +156,49 @@ export default function OverviewClient() {
           <span
             className={`h-2 w-2 rounded-full ${isRealtimeConnected ? "bg-emerald-400" : "bg-red-500"}`}
           />
-          {isRealtimeConnected ? "Temps réel actif" : "Temps réel inactif"}
+          {isRealtimeConnected ? t("overview.realtimeOn") : t("overview.realtimeOff")}
         </div>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
         <div className="relative rounded-3xl border border-slate-800/80 bg-slate-950/60 p-5">
           <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">
-            Commandant
+            {t("overview.commander")}
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-4">
             <button
               onClick={() => setShowCommanderPanel((prev) => !prev)}
               className="relative h-16 w-16 rounded-full border border-blue-500/40 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 text-2xl text-white shadow-[0_0_16px_rgba(59,130,246,0.3)]"
-              aria-label="Ouvrir les statistiques du commandant"
+              aria-label={t("overview.openCommander")}
             >
               {user?.username?.charAt(0).toUpperCase() || "C"}
             </button>
             <div>
               <h2 className="text-xl font-semibold text-white">
-                {user?.username || "Commandant"}
+                {user?.username || t("overview.commander")}
               </h2>
               <p className="text-xs text-slate-400">
-                Niveau {progression?.commanderLevel ?? "—"}/100 · Puissance :{" "}
-                {progression
-                  ? new Intl.NumberFormat("fr-FR").format(progression.power)
-                  : "—"}
+                {t("overview.levelPower", {
+                  level: progression?.commanderLevel ?? "—",
+                  power: progression
+                    ? new Intl.NumberFormat(locale).format(progression.power)
+                    : "—",
+                })}
               </p>
               <Link
                 href="/statistics"
                 className="text-xs text-blue-300 hover:underline"
               >
-                Rang au classement :{" "}
-                {statistics?.personal.rank
-                  ? `#${statistics.personal.rank}`
-                  : "—"}
+                {t("overview.rank", {
+                  rank: statistics?.personal.rank
+                    ? `#${statistics.personal.rank}`
+                    : "—",
+                })}
               </Link>
             </div>
             <div className="w-full sm:ml-auto sm:min-w-[160px] sm:max-w-[220px]">
               <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.2em] text-slate-500">
-                <span>Progression</span>
+                <span>{t("overview.progress")}</span>
                 <span>{commanderProgress.toFixed(0)}%</span>
               </div>
               <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-slate-800">
@@ -214,30 +219,30 @@ export default function OverviewClient() {
               <div className="absolute left-6 top-full z-50 mt-3 w-full max-w-sm rounded-2xl border border-slate-800 bg-slate-950/95 p-4 shadow-xl">
                 <div className="flex items-center justify-between">
                   <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                    Statistiques compte
+                    {t("overview.accountStats")}
                   </p>
                   <button
                     onClick={() => setShowCommanderPanel(false)}
                     className="text-xs text-slate-500 hover:text-white"
                   >
-                    Fermer
+                    {t("common.close")}
                   </button>
                 </div>
                 <div className="mt-3 space-y-2 text-sm text-slate-300">
                   <div className="flex items-center justify-between rounded-xl bg-slate-900/60 px-3 py-2">
-                    <span>Planètes</span>
+                    <span>{t("overview.planets")}</span>
                     <span className="font-mono">
                       {user?.planets?.length ?? 0}
                     </span>
                   </div>
                   <div className="flex items-center justify-between rounded-xl bg-slate-900/60 px-3 py-2">
-                    <span>Niveau du commandant</span>
+                    <span>{t("overview.commanderLevel")}</span>
                     <span className="font-mono">
                       {progression?.commanderLevel ?? "—"}/100
                     </span>
                   </div>
                   <div className="flex items-center justify-between rounded-xl bg-slate-900/60 px-3 py-2">
-                    <span>Puissance</span>
+                    <span>{t("overview.power")}</span>
                     <span className="font-mono">
                       {progression?.power ?? "—"}
                     </span>
@@ -246,13 +251,14 @@ export default function OverviewClient() {
                     href="/statistics"
                     className="block rounded-xl bg-slate-900/60 px-3 py-2 text-blue-300 hover:underline"
                   >
-                    Rang au classement :{" "}
-                    {statistics?.personal.rank
-                      ? `#${statistics.personal.rank}`
-                      : "—"}
+                    {t("overview.rank", {
+                      rank: statistics?.personal.rank
+                        ? `#${statistics.personal.rank}`
+                        : "—",
+                    })}
                   </Link>
                   <div className="flex items-center justify-between rounded-xl bg-slate-900/60 px-3 py-2">
-                    <span>Email</span>
+                    <span>{t("common.email")}</span>
                     <span className="font-mono text-xs">
                       {user?.email || "-"}
                     </span>
@@ -265,7 +271,7 @@ export default function OverviewClient() {
 
         <div className="rounded-3xl border border-slate-800/80 bg-slate-950/60 p-5">
           <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">
-            Planète
+            {t("overview.planet")}
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-3">
             {isRenaming ? (
@@ -277,7 +283,7 @@ export default function OverviewClient() {
             ) : (
               <div>
                 <h3 className="text-xl font-semibold text-white">
-                  {planetNameDraft || selectedPlanet?.name || "Planète"}
+                  {planetNameDraft || selectedPlanet?.name || t("overview.planet")}
                 </h3>
                 <p className="text-xs text-slate-400">{coordinates}</p>
               </div>
@@ -294,8 +300,8 @@ export default function OverviewClient() {
                       className="w-full rounded-full border border-blue-500/50 px-3 py-1 text-xs uppercase tracking-[0.2em] text-blue-200 hover:border-blue-400 disabled:border-slate-800 disabled:text-slate-500 sm:w-auto"
                     >
                       {renameMutation.isPending
-                        ? "Sauvegarde..."
-                        : "Enregistrer"}
+                        ? t("overview.saving")
+                        : t("overview.save")}
                     </button>
                   </div>
                   <button
@@ -305,7 +311,7 @@ export default function OverviewClient() {
                     }}
                     className="w-full text-xs text-slate-400 hover:text-white sm:w-auto"
                   >
-                    Annuler
+                    {t("common.cancel")}
                   </button>
                 </>
               ) : (
@@ -313,7 +319,7 @@ export default function OverviewClient() {
                   onClick={() => setIsRenaming(true)}
                   className="w-full rounded-full border border-slate-800 px-3 py-1 text-xs uppercase tracking-[0.2em] text-slate-300 hover:border-slate-600 hover:text-white sm:w-auto"
                 >
-                  Renommer
+                  {t("overview.rename")}
                 </button>
               )}
             </div>
@@ -352,11 +358,11 @@ export default function OverviewClient() {
       {/* Ressources */}
       {resourcesLoading ? (
         <div className="flex h-64 items-center justify-center rounded-3xl border border-slate-800/80 bg-slate-900/40">
-          <div className="text-slate-400">Chargement des ressources...</div>
+          <div className="text-slate-400">{t("overview.loadingResources")}</div>
         </div>
       ) : error ? (
         <div className="rounded-2xl border border-red-500/40 bg-red-500/10 p-4 text-red-300">
-          Erreur lors du chargement des ressources
+          {t("overview.resourcesError")}
         </div>
       ) : resources ? (
         <motion.div
@@ -368,7 +374,7 @@ export default function OverviewClient() {
           {/* Métal */}
           <motion.div variants={shouldReduceMotion ? undefined : itemVariants}>
             <ResourceDisplay
-              name="Métal"
+              name={t("resources.metal")}
               icon="⛏️"
               amount={resources.resources.metal}
               production={resources.production.metal}
@@ -380,7 +386,7 @@ export default function OverviewClient() {
           {/* Cristal */}
           <motion.div variants={shouldReduceMotion ? undefined : itemVariants}>
             <ResourceDisplay
-              name="Cristal"
+              name={t("resources.crystal")}
               icon="💎"
               amount={resources.resources.crystal}
               production={resources.production.crystal}
@@ -392,7 +398,7 @@ export default function OverviewClient() {
           {/* Deutérium */}
           <motion.div variants={shouldReduceMotion ? undefined : itemVariants}>
             <ResourceDisplay
-              name="Deutérium"
+              name={t("resources.deuterium")}
               icon="🛢️"
               amount={resources.resources.deuterium}
               production={resources.production.deuterium}
@@ -425,26 +431,26 @@ export default function OverviewClient() {
         {[
           {
             href: "/buildings",
-            title: "Bâtiments",
-            desc: "Évoluer l’infrastructure",
+            title: t("nav.buildings"),
+            desc: t("overview.quickBuildings"),
             icon: "🏗️",
           },
           {
             href: "/research",
-            title: "Technologies",
-            desc: "Débloquer de nouveaux atouts",
+            title: t("overview.technologies"),
+            desc: t("overview.quickResearch"),
             icon: "🔬",
           },
           {
             href: "/fleet",
-            title: "Flotte",
-            desc: "Préparer les mouvements",
+            title: t("nav.fleet"),
+            desc: t("overview.quickFleet"),
             icon: "🛸",
           },
           {
             href: "/galaxy",
-            title: "Galaxie",
-            desc: "Explorer les systèmes",
+            title: t("nav.galaxy"),
+            desc: t("overview.quickGalaxy"),
             icon: "🌌",
           },
         ].map((item) => (

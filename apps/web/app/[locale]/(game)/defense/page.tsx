@@ -4,6 +4,7 @@ import { CommanderSummary } from "@/components/game/CommanderSummary";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { defenseApi, shipyardApi } from "@/lib/api/shipyard";
+import { useI18n } from "@/lib/i18n";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { usePlanetStore } from "@/lib/stores/planet-store";
 import { ShipyardQueue } from "@/components/game/ShipyardQueue";
@@ -20,6 +21,7 @@ function formatDuration(seconds: number) {
 }
 
 export default function DefensePage() {
+  const { t } = useI18n();
   const { user } = useAuthStore();
   const { selectedPlanetId, setSelectedPlanetId } = usePlanetStore();
   const [amounts, setAmounts] = useState<Record<number, number>>({});
@@ -74,7 +76,7 @@ export default function DefensePage() {
   if (!planetId || isLoading) {
     return (
       <p className="p-8 text-center text-slate-400">
-        Chargement des défenses...
+        {t("defense.loading")}
       </p>
     );
   }
@@ -82,12 +84,12 @@ export default function DefensePage() {
   if (error) {
     return (
       <div className="p-8 text-center">
-        <p className="mb-4 text-red-400">Erreur lors du chargement</p>
+        <p className="mb-4 text-red-400">{t("common.loadError")}</p>
         <button
           onClick={() => refetch()}
           className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-500"
         >
-          Réessayer
+          {t("common.retry")}
         </button>
       </div>
     );
@@ -99,16 +101,15 @@ export default function DefensePage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">
-            Infrastructure
+            {t("shipyard.kicker")}
           </p>
-          <h1 className="mt-2 text-2xl font-semibold text-white">Défense</h1>
+          <h1 className="mt-2 text-2xl font-semibold text-white">{t("defense.title")}</h1>
           <p className="text-sm text-slate-400">
-            Les défenses combattent aux côtés de la flotte stationnée ; après un
-            combat, chaque défense détruite est réparée avec 70 % de chances.
+            {t("defense.subtitle")}
           </p>
         </div>
         <div className="rounded-full border border-slate-800/80 bg-slate-900/40 px-4 py-2 text-xs text-slate-400">
-          {queue.length} en cours
+          {t("unit.ongoing", { count: queue.length })}
         </div>
       </div>
 
@@ -156,14 +157,14 @@ export default function DefensePage() {
                 </div>
                 {defense.inQueue > 0 && (
                   <span className="rounded-full border border-blue-400/60 bg-blue-500/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-blue-200">
-                    En file ({defense.inQueue})
+                    {t("unit.inQueueCount", { count: defense.inQueue })}
                   </span>
                 )}
               </div>
 
               <div className="mt-4 grid gap-2 text-xs text-slate-400">
                 <div className="flex justify-between">
-                  <span>Stock actuel</span>
+                  <span>{t("unit.stock")}</span>
                   <span
                     className="text-slate-200"
                     data-testid={`defense-amount-${defense.id}`}
@@ -172,7 +173,7 @@ export default function DefensePage() {
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Attaque / Bouclier / Structure</span>
+                  <span>{t("defense.stats")}</span>
                   <span className="text-slate-200">
                     {formatNumber(defense.stats.weapon)} /{" "}
                     {formatNumber(defense.stats.shield)} /{" "}
@@ -180,25 +181,25 @@ export default function DefensePage() {
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Coût métal</span>
+                  <span>{t("unit.costMetal")}</span>
                   <span className="text-slate-200">
                     {formatNumber(total.metal)}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Coût cristal</span>
+                  <span>{t("unit.costCrystal")}</span>
                   <span className="text-slate-200">
                     {formatNumber(total.crystal)}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Coût deutérium</span>
+                  <span>{t("unit.costDeuterium")}</span>
                   <span className="text-slate-200">
                     {formatNumber(total.deuterium)}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Temps estimé</span>
+                  <span>{t("unit.estimatedTime")}</span>
                   <span className="text-slate-200">
                     {formatDuration(defense.buildTime * amount)}
                   </span>
@@ -219,7 +220,7 @@ export default function DefensePage() {
                   min={1}
                   disabled={defense.singleUnit}
                   value={amount}
-                  aria-label={`Quantité ${defense.name}`}
+                  aria-label={t("unit.quantity", { name: defense.name })}
                   onChange={(event) => {
                     const value = Math.max(
                       1,
@@ -240,7 +241,7 @@ export default function DefensePage() {
                       : "border border-blue-500/60 bg-blue-500/10 text-blue-200 hover:bg-blue-500/20"
                   }`}
                 >
-                  {buildMutation.isPending ? "Construction..." : "Construire"}
+                  {buildMutation.isPending ? t("unit.building") : t("unit.build")}
                 </button>
               </div>
             </div>

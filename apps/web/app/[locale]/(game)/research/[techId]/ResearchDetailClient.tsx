@@ -50,13 +50,13 @@ export function ResearchDetailClient({ techId }: { techId: string }) {
     return (
       <div className="space-y-4">
         <div className="rounded-2xl border border-slate-800/80 bg-slate-900/40 p-6 text-slate-300">
-          Technologie introuvable.
+          {t('research.notFound')}
         </div>
         <Link
           href="/research"
           className="text-sm text-blue-300 hover:text-blue-200"
         >
-          Retour aux technologies
+          {t('research.backToList')}
         </Link>
       </div>
     );
@@ -69,7 +69,7 @@ export function ResearchDetailClient({ techId }: { techId: string }) {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">
-            Technologie
+            {t('research.one')}
           </p>
           <h1 className="mt-2 text-2xl font-semibold text-white">{tech.name}</h1>
           <p className="text-sm text-slate-400">{tech.description}</p>
@@ -78,33 +78,33 @@ export function ResearchDetailClient({ techId }: { techId: string }) {
           href="/research"
           className="rounded-full border border-slate-800 px-4 py-2 text-xs uppercase tracking-[0.2em] text-slate-300 hover:border-slate-600 hover:text-white"
         >
-          Retour
+          {t('common.back')}
         </Link>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
         <div className="rounded-3xl border border-slate-800/80 bg-slate-950/60 p-6">
           <h2 className="text-xs uppercase tracking-[0.3em] text-slate-500">
-            Détails
+            {t('common.details')}
           </h2>
           <div className="mt-4 grid gap-3 text-sm text-slate-400">
             <div className="flex items-center justify-between rounded-xl bg-slate-900/60 px-4 py-3">
-              <span>Catégorie</span>
+              <span>{t('common.category')}</span>
               <span className="font-mono text-slate-200">{t(`techCategory.${tech.category}`)}</span>
             </div>
             <div className="flex items-center justify-between rounded-xl bg-slate-900/60 px-4 py-3">
-              <span>Facteur</span>
+              <span>{t('research.factor')}</span>
               <span className="font-mono text-slate-200">{tech.factor.toFixed(1)}</span>
             </div>
           </div>
 
           {tech.requirements && (
             <div className="mt-6 rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 text-sm text-slate-400">
-              <p className="mb-2 font-semibold text-slate-200">Prérequis</p>
+              <p className="mb-2 font-semibold text-slate-200">{t('research.requirements')}</p>
               <ul className="list-disc list-inside">
                 {Object.entries(tech.requirements).map(([key, value]) => (
                   <li key={key}>
-                    ID {key} niveau {value}
+                    {t('research.idLevel', { id: key, level: value })}
                   </li>
                 ))}
               </ul>
@@ -114,24 +114,24 @@ export function ResearchDetailClient({ techId }: { techId: string }) {
 
         <div className="rounded-3xl border border-slate-800/80 bg-slate-950/60 p-6">
           <h2 className="text-xs uppercase tracking-[0.3em] text-slate-500">
-            Coût niveau 1
+            {t('research.costLevel1')}
           </h2>
           <div className="mt-4 grid gap-3 text-sm text-slate-300">
             <div className="flex items-center justify-between rounded-xl bg-slate-900/60 px-4 py-3">
-              <span>Métal</span>
+              <span>{t('resources.metal')}</span>
               <span className="font-mono text-amber-300">{baseCost.metal}</span>
             </div>
             <div className="flex items-center justify-between rounded-xl bg-slate-900/60 px-4 py-3">
-              <span>Cristal</span>
+              <span>{t('resources.crystal')}</span>
               <span className="font-mono text-sky-300">{baseCost.crystal}</span>
             </div>
             <div className="flex items-center justify-between rounded-xl bg-slate-900/60 px-4 py-3">
-              <span>Deutérium</span>
+              <span>{t('resources.deuterium')}</span>
               <span className="font-mono text-blue-300">{baseCost.deuterium}</span>
             </div>
             {baseCost.energy !== undefined && (
               <div className="flex items-center justify-between rounded-xl bg-slate-900/60 px-4 py-3">
-                <span>Énergie</span>
+                <span>{t('resources.energy')}</span>
                 <span className="font-mono text-amber-200">{baseCost.energy}</span>
               </div>
             )}
@@ -140,12 +140,12 @@ export function ResearchDetailClient({ techId }: { techId: string }) {
           {info && (
             <div className="mt-6 space-y-2 text-sm text-slate-400">
               <div className="flex items-center justify-between">
-                <span>Niveau actuel</span>
+                <span>{t('common.currentLevel')}</span>
                 <span className="font-mono text-slate-200">{info.currentLevel}</span>
               </div>
               {info.energyRequired ? (
                 <div className="flex items-center justify-between">
-                  <span>Énergie produite / requise</span>
+                  <span>{t('research.energyProducedRequired')}</span>
                   <span
                     className={`font-mono ${info.hasEnoughEnergy ? 'text-emerald-300' : 'text-rose-300'}`}
                   >
@@ -173,21 +173,21 @@ export function ResearchDetailClient({ techId }: { techId: string }) {
             }`}
           >
             {startMutation.isPending
-              ? 'Lancement...'
+              ? t('research.starting')
               : info?.isMaxLevel
-                ? 'Niveau maximum atteint'
+                ? t('research.maxFull')
                 : info?.inQueue
-                  ? 'Recherche en cours'
-                  : 'Lancer la recherche'}
+                  ? t('research.running')
+                  : t('research.launch')}
           </button>
           {startMutation.isSuccess && (
-            <p className="mt-3 text-sm text-emerald-300">Recherche lancée.</p>
+            <p className="mt-3 text-sm text-emerald-300">{t('research.started')}</p>
           )}
           {startMutation.isError && (
             <p className="mt-3 text-sm text-rose-300">
               {startMutation.error instanceof Error
                 ? startMutation.error.message
-                : 'Impossible de lancer la recherche.'}
+                : t('research.cannotStart')}
             </p>
           )}
         </div>

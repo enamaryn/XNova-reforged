@@ -36,6 +36,10 @@ module.exports = {
     {
       files: ['**/test/**/*.ts', '**/*.spec.ts'],
       env: { jest: true },
+      rules: {
+        // Les tests simulent des services et lisent des membres privés : le typage strict n'y apporte rien
+        '@typescript-eslint/no-explicit-any': 'off',
+      },
     },
   ],
 };

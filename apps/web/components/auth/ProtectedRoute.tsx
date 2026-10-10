@@ -75,7 +75,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
         if (!hasPlanet && me.planets?.length) {
           setSelectedPlanetId(me.planets[0].id);
         }
-      } catch (error) {
+      } catch {
         if (!active) return;
         setStatus("unauthenticated");
       }

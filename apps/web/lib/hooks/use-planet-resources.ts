@@ -67,7 +67,7 @@ export function usePlanetResources(planetId: string | null) {
     socket.emit('subscribe:planet', { planetId });
 
     // Écouter les mises à jour de ressources
-    const handleResourcesUpdate = (data: any) => {
+    const handleResourcesUpdate = (data: PlanetResources) => {
       if (data.planetId === planetId) {
         console.log('[usePlanetResources] Received resources update:', data);
         setRealtimeData({

@@ -117,7 +117,7 @@ describe('API integration - Messagerie', () => {
     const intruder = buildTestUser();
 
     const { accessToken: senderToken } = await registerAndLogin(app, sender);
-    const { accessToken: receiverToken } = await registerAndLogin(app, receiver);
+    await registerAndLogin(app, receiver);
     const { accessToken: intruderToken } = await registerAndLogin(app, intruder);
 
     const server = app.getHttpServer();
