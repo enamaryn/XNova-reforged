@@ -522,5 +522,28 @@
     "consumed": "Consumed",
     "minesProduction": "Mine production",
     "shortage": "⚠ Energy shortage: production reduced"
+  },
+  "commander": {
+    "groupAria": "Commander level and power",
+    "levelTitle": "The commander level depends on buildings and research.",
+    "powerTitle": "Current power: buildings, research, ships, defenses and colonies.",
+    "level": "Level",
+    "power": "Power",
+    "retryAria": "Retry loading level and power",
+    "summaryAria": "Development and power",
+    "levelStrong": "Commander: level {level}/100",
+    "powerStrong": "Power: {power}",
+    "progressAria": "Commander progress",
+    "development": "Development: {value}",
+    "maxLevel": " · Maximum level",
+    "toNext": " / {value} for the next level",
+    "perPlanet": "Per planet: {buildings} simultaneous building(s) · {lines} production line(s).",
+    "slotsNote": "The Construction Management and Parallel Production researches unlock 2 slots; with commander level 50, up to 3 slots.",
+    "breakdownTitle": "Power breakdown",
+    "breakdown": "Buildings: {buildings} · Research: {research} · Ships: {ships} · Defenses: {defenses} · Colonies: {colonies}",
+    "breakdownNote": "The commander depends only on buildings and research. Stockpiles and unproduced orders do not count.",
+    "retryLoad": "Retry loading the commander",
+    "loading": "Loading development…",
+    "compactSummary": "Commander: level {level}/100 · {buildings} build slots · {lines} lines"
   }
 }

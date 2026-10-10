@@ -522,5 +522,28 @@
     "consumed": "Verbraucht",
     "minesProduction": "Minenproduktion",
     "shortage": "⚠ Energiemangel: Produktion reduziert"
+  },
+  "commander": {
+    "groupAria": "Kommandantenstufe und Macht",
+    "levelTitle": "Die Kommandantenstufe hängt von Gebäuden und Forschungen ab.",
+    "powerTitle": "Aktuelle Macht: Gebäude, Forschungen, Schiffe, Verteidigung und Kolonien.",
+    "level": "Stufe",
+    "power": "Macht",
+    "retryAria": "Laden von Stufe und Macht erneut versuchen",
+    "summaryAria": "Entwicklung und Macht",
+    "levelStrong": "Kommandant: Stufe {level}/100",
+    "powerStrong": "Macht: {power}",
+    "progressAria": "Fortschritt des Kommandanten",
+    "development": "Entwicklung: {value}",
+    "maxLevel": " · Maximale Stufe",
+    "toNext": " / {value} für die nächste Stufe",
+    "perPlanet": "Pro Planet: {buildings} gleichzeitige(s) Gebäude · {lines} Produktionslinie(n).",
+    "slotsNote": "Die Forschungen Bauverwaltung und Parallelproduktion schalten 2 Plätze frei; mit Kommandantenstufe 50 maximal 3 Plätze.",
+    "breakdownTitle": "Zusammensetzung der Macht",
+    "breakdown": "Gebäude: {buildings} · Forschungen: {research} · Schiffe: {ships} · Verteidigung: {defenses} · Kolonien: {colonies}",
+    "breakdownNote": "Der Kommandant hängt nur von Gebäuden und Forschungen ab. Lagerbestände und nicht produzierte Bestellungen zählen nicht.",
+    "retryLoad": "Laden des Kommandanten erneut versuchen",
+    "loading": "Entwicklung wird geladen…",
+    "compactSummary": "Kommandant: Stufe {level}/100 · {buildings} Bauplätze · {lines} Linien"
   }
 }

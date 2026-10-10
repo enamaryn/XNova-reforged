@@ -522,5 +522,28 @@
     "consumed": "Consommée",
     "minesProduction": "Production mines",
     "shortage": "⚠ Manque d'énergie : production réduite"
+  },
+  "commander": {
+    "groupAria": "Niveau et puissance du commandant",
+    "levelTitle": "Le niveau du commandant dépend des bâtiments et des recherches.",
+    "powerTitle": "Puissance actuelle : bâtiments, recherches, vaisseaux, défenses et colonies.",
+    "level": "Niveau",
+    "power": "Puissance",
+    "retryAria": "Réessayer le chargement du niveau et de la puissance",
+    "summaryAria": "Développement et puissance",
+    "levelStrong": "Commandant : niveau {level}/100",
+    "powerStrong": "Puissance : {power}",
+    "progressAria": "Progression du commandant",
+    "development": "Développement : {value}",
+    "maxLevel": " · Niveau maximum",
+    "toNext": " / {value} pour le niveau suivant",
+    "perPlanet": "Par planète : {buildings} bâtiment(s) simultané(s) · {lines} ligne(s) de production.",
+    "slotsNote": "Les recherches Gestion des chantiers et Production parallèle débloquent 2 places ; avec le commandant niveau 50, 3 places maximum.",
+    "breakdownTitle": "Composition de la puissance",
+    "breakdown": "Bâtiments : {buildings} · Recherches : {research} · Vaisseaux : {ships} · Défenses : {defenses} · Colonies : {colonies}",
+    "breakdownNote": "Le commandant dépend uniquement des bâtiments et des recherches. Les stocks et commandes non produites ne comptent pas.",
+    "retryLoad": "Réessayer le chargement du commandant",
+    "loading": "Chargement du développement…",
+    "compactSummary": "Commandant : niveau {level}/100 · {buildings} chantiers · {lines} lignes"
   }
 }

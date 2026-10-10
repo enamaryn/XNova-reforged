@@ -522,5 +522,28 @@
     "consumed": "Consumida",
     "minesProduction": "Producción de minas",
     "shortage": "⚠ Falta de energía: producción reducida"
+  },
+  "commander": {
+    "groupAria": "Nivel y poder del comandante",
+    "levelTitle": "El nivel del comandante depende de los edificios y las investigaciones.",
+    "powerTitle": "Poder actual: edificios, investigaciones, naves, defensas y colonias.",
+    "level": "Nivel",
+    "power": "Poder",
+    "retryAria": "Reintentar la carga del nivel y del poder",
+    "summaryAria": "Desarrollo y poder",
+    "levelStrong": "Comandante: nivel {level}/100",
+    "powerStrong": "Poder: {power}",
+    "progressAria": "Progreso del comandante",
+    "development": "Desarrollo: {value}",
+    "maxLevel": " · Nivel máximo",
+    "toNext": " / {value} para el siguiente nivel",
+    "perPlanet": "Por planeta: {buildings} edificio(s) simultáneo(s) · {lines} línea(s) de producción.",
+    "slotsNote": "Las investigaciones Gestión de obras y Producción paralela desbloquean 2 plazas; con el comandante nivel 50, hasta 3 plazas.",
+    "breakdownTitle": "Composición del poder",
+    "breakdown": "Edificios: {buildings} · Investigaciones: {research} · Naves: {ships} · Defensas: {defenses} · Colonias: {colonies}",
+    "breakdownNote": "El comandante depende únicamente de los edificios y las investigaciones. Las existencias y los pedidos no producidos no cuentan.",
+    "retryLoad": "Reintentar la carga del comandante",
+    "loading": "Cargando el desarrollo…",
+    "compactSummary": "Comandante: nivel {level}/100 · {buildings} obras · {lines} líneas"
   }
 }

@@ -522,5 +522,28 @@
     "consumed": "Consumata",
     "minesProduction": "Produzione miniere",
     "shortage": "⚠ Energia insufficiente: produzione ridotta"
+  },
+  "commander": {
+    "groupAria": "Livello e potenza del comandante",
+    "levelTitle": "Il livello del comandante dipende da edifici e ricerche.",
+    "powerTitle": "Potenza attuale: edifici, ricerche, navi, difese e colonie.",
+    "level": "Livello",
+    "power": "Potenza",
+    "retryAria": "Riprova il caricamento di livello e potenza",
+    "summaryAria": "Sviluppo e potenza",
+    "levelStrong": "Comandante: livello {level}/100",
+    "powerStrong": "Potenza: {power}",
+    "progressAria": "Progressione del comandante",
+    "development": "Sviluppo: {value}",
+    "maxLevel": " · Livello massimo",
+    "toNext": " / {value} per il livello successivo",
+    "perPlanet": "Per pianeta: {buildings} edificio/i simultaneo/i · {lines} linea/e di produzione.",
+    "slotsNote": "Le ricerche Gestione dei cantieri e Produzione parallela sbloccano 2 posti; con il comandante di livello 50, al massimo 3 posti.",
+    "breakdownTitle": "Composizione della potenza",
+    "breakdown": "Edifici: {buildings} · Ricerche: {research} · Navi: {ships} · Difese: {defenses} · Colonie: {colonies}",
+    "breakdownNote": "Il comandante dipende solo da edifici e ricerche. Le scorte e gli ordini non prodotti non contano.",
+    "retryLoad": "Riprova il caricamento del comandante",
+    "loading": "Caricamento dello sviluppo…",
+    "compactSummary": "Comandante: livello {level}/100 · {buildings} cantieri · {lines} linee"
   }
 }
