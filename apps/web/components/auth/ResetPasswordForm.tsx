@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -12,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export function ResetPasswordForm() {
+  const t = useTranslations("recovery");
   const token = useSearchParams().get("token") ?? "";
   const [password, setPassword] = useState("");
   const [confirmation, setConfirmation] = useState("");
@@ -25,15 +27,15 @@ export function ResetPasswordForm() {
       useAuthStore.getState().reset();
       setDone(true);
     },
-    onError: (err) => setError(err instanceof ApiError ? err.message : "Une erreur est survenue."),
+    onError: (err) => setError(err instanceof ApiError ? err.message : t("genericError")),
   });
 
   if (!token) {
     return (
       <p className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
-        Lien incomplet. Redemandez un email de réinitialisation.{" "}
+        {t("linkIncomplete")}{" "}
         <Link href="/forgot-password" className="font-semibold underline">
-          Mot de passe oublié
+          {t("forgotLink")}
         </Link>
       </p>
     );
@@ -47,10 +49,10 @@ export function ResetPasswordForm() {
           data-testid="reset-done"
           className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800"
         >
-          Mot de passe modifié. Vous pouvez vous connecter avec le nouveau.
+          {t("resetDone")}
         </p>
         <Link href="/login" className="text-sm font-semibold text-slate-900">
-          Aller à la connexion
+          {t("goLogin")}
         </Link>
       </div>
     );
@@ -63,7 +65,7 @@ export function ResetPasswordForm() {
         event.preventDefault();
         setError(null);
         if (password !== confirmation) {
-          setError("Les deux mots de passe ne correspondent pas.");
+          setError(t("mismatch"));
           return;
         }
         mutation.mutate();
@@ -72,7 +74,7 @@ export function ResetPasswordForm() {
     >
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="password">Nouveau mot de passe</Label>
+          <Label htmlFor="password">{t("newPassword")}</Label>
           <Input
             id="password"
             type="password"
@@ -83,7 +85,7 @@ export function ResetPasswordForm() {
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="confirmation">Confirmation</Label>
+          <Label htmlFor="confirmation">{t("confirmation")}</Label>
           <Input
             id="confirmation"
             type="password"
@@ -100,7 +102,7 @@ export function ResetPasswordForm() {
         ) : null}
       </div>
       <Button type="submit" className="w-full" disabled={mutation.isPending}>
-        Changer le mot de passe
+        {t("changePassword")}
       </Button>
     </form>
   );

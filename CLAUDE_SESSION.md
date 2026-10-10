@@ -5,6 +5,15 @@
 
 ---
 
+## Session — migration i18n lot 2
+
+**Date :** 10 octobre 2026. **Objectif :** terminer la traduction des écrans joueur (SCOPE-02).
+
+- [x] Rapports de combat et d'espionnage, page publique (métadonnées), paramètres du compte, récupération de mot de passe, vérification d'email, écran d'erreur des pages migrés ; ~110 clés par langue.
+- [x] `locale-shell.spec.ts` étendu (rapports, page publique, récupération × 5 langues × 3 écrans) : rendu mobile 84/84 ; E2E 34 + 1 ignoré ; lint 0 avertissement.
+- **Reste en français :** installation et administration (opérateurs), `global-error`, noms du jeu et messages d'API servis par le serveur, emails.
+- **Prochaine étape :** choix du profil de vitesse du serveur, puis OPS-03 (charge, 100 joueurs, p50/p95/p99, WebSocket, Lighthouse, restauration réelle).
+
 ## Session — revue de PR, vulnérabilités, avertissements et migration i18n (suite)
 
 **Date :** 10 octobre 2026. **Objectif :** revue de la PR #37 et de sa CI, migration des textes en dur vers `useI18n`, puis traitement des alertes `npm audit` et des avertissements signalés par le propriétaire.

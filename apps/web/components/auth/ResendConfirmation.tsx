@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { ApiError } from "@/lib/api/client";
@@ -10,6 +11,7 @@ import { Label } from "@/components/ui/label";
 
 /** Renvoi du lien de confirmation d'un compte pas encore activé (aucune session n'existe). */
 export function ResendConfirmation({ initialEmail = "" }: { initialEmail?: string }) {
+  const t = useTranslations("recovery");
   const [email, setEmail] = useState(initialEmail);
   const [notice, setNotice] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
 
@@ -17,7 +19,7 @@ export function ResendConfirmation({ initialEmail = "" }: { initialEmail?: strin
     mutationFn: () => resendConfirmation(email.trim()),
     onSuccess: (result) => setNotice({ kind: "ok", text: result.message }),
     onError: (error) =>
-      setNotice({ kind: "error", text: error instanceof ApiError ? error.message : "Une erreur est survenue." }),
+      setNotice({ kind: "error", text: error instanceof ApiError ? error.message : t("genericError") }),
   });
 
   return (
@@ -39,7 +41,7 @@ export function ResendConfirmation({ initialEmail = "" }: { initialEmail?: strin
         onChange={(event) => setEmail(event.target.value)}
       />
       <Button type="submit" className="w-full" disabled={mutation.isPending}>
-        Renvoyer l&apos;email de confirmation
+        {t("resendConfirmation")}
       </Button>
       {notice ? (
         <p
