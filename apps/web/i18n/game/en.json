@@ -16,7 +16,13 @@
     "admin": "Admin",
     "label": "Main navigation",
     "languageMenu": "Language switcher",
-    "userMenu": "User menu"
+    "userMenu": "User menu",
+    "menu": "Menu",
+    "access": "Access",
+    "player": "Player",
+    "settings": "Settings",
+    "administration": "Administration",
+    "logout": "Log out"
   },
   "sidebar": {
     "principal": "Main",
@@ -545,5 +551,17 @@
     "retryLoad": "Retry loading the commander",
     "loading": "Loading development…",
     "compactSummary": "Commander: level {level}/100 · {buildings} build slots · {lines} lines"
+  },
+  "planet": {
+    "homeworld": "Home Planet",
+    "newColony": "New colony",
+    "none": "No planet",
+    "yours": "Your planets ({count})"
+  },
+  "planetScene": {
+    "active": "Active planet",
+    "toBuildings": "Go to buildings",
+    "toResearch": "Go to technologies",
+    "hint": "Click the planet to quickly reach buildings and strategic management."
   }
 }

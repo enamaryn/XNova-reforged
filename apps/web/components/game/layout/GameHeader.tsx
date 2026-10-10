@@ -46,7 +46,7 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
           <button
             onClick={onMenuToggle}
             className="lg:hidden rounded-full border border-slate-800 p-2 text-slate-300 transition-colors hover:text-white"
-            aria-label="Menu"
+            aria-label={t("nav.menu")}
           >
             <svg
               className="w-6 h-6"
@@ -175,7 +175,7 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
                 </span>
               </div>
               <span className="hidden sm:block">
-                {user?.username || "Joueur"}
+                {user?.username || t("nav.player")}
               </span>
               <svg
                 className="w-4 h-4"
@@ -214,10 +214,11 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
                         role="menuitem"
                         className="text-xs text-blue-300 hover:underline"
                       >
-                        Rang au classement :{" "}
-                        {statistics?.personal.rank
-                          ? `#${statistics.personal.rank}`
-                          : "—"}
+                        {t("overview.rank", {
+                          rank: statistics?.personal.rank
+                            ? `#${statistics.personal.rank}`
+                            : "—",
+                        })}
                       </Link>
                     </div>
                     <Link
@@ -226,7 +227,7 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
                       onClick={() => setShowUserMenu(false)}
                       role="menuitem"
                     >
-                      Paramètres
+                      {t("nav.settings")}
                     </Link>
                     {hasAdminAccess(user?.role) && (
                       <Link
@@ -236,7 +237,7 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
                         onClick={() => setShowUserMenu(false)}
                         role="menuitem"
                       >
-                        Administration
+                        {t("nav.administration")}
                       </Link>
                     )}
                     <Link
@@ -245,14 +246,14 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
                       onClick={() => setShowUserMenu(false)}
                       role="menuitem"
                     >
-                      Messages
+                      {t("nav.messages")}
                     </Link>
                     <button
                       onClick={handleLogout}
                       className="w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-slate-700 transition-colors"
                       role="menuitem"
                     >
-                      Déconnexion
+                      {t("nav.logout")}
                     </button>
                   </div>
                 </div>

@@ -16,7 +16,13 @@
     "admin": "Admin",
     "label": "Navegación principal",
     "languageMenu": "Selector de idioma",
-    "userMenu": "Menú de usuario"
+    "userMenu": "Menú de usuario",
+    "menu": "Menú",
+    "access": "Acceso",
+    "player": "Jugador",
+    "settings": "Ajustes",
+    "administration": "Administración",
+    "logout": "Cerrar sesión"
   },
   "sidebar": {
     "principal": "Principal",
@@ -545,5 +551,17 @@
     "retryLoad": "Reintentar la carga del comandante",
     "loading": "Cargando el desarrollo…",
     "compactSummary": "Comandante: nivel {level}/100 · {buildings} obras · {lines} líneas"
+  },
+  "planet": {
+    "homeworld": "Planeta madre",
+    "newColony": "Nueva colonia",
+    "none": "Ningún planeta",
+    "yours": "Tus planetas ({count})"
+  },
+  "planetScene": {
+    "active": "Planeta activo",
+    "toBuildings": "Ir a los edificios",
+    "toResearch": "Ir a las tecnologías",
+    "hint": "Haz clic en el planeta para acceder rápidamente a los edificios y a la gestión estratégica."
   }
 }
