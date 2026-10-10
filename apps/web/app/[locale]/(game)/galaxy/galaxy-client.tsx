@@ -10,11 +10,23 @@ import { useI18n } from '@/lib/i18n';
 
 export default function GalaxyClient() {
 
-  const [galaxy, setGalaxy] = useState(1);
-  const [system, setSystem] = useState(1);
   const { user } = useAuthStore();
   const { selectedPlanetId, setSelectedPlanetId } = usePlanetStore();
   const { t } = useI18n();
+
+  // La vue s'ouvre sur le système de la planète active ; elle ne change qu'après une navigation manuelle
+  const ownPlanet =
+    user?.planets?.find((planet) => planet.id === selectedPlanetId) ?? user?.planets?.[0];
+  const [manualView, setManualView] = useState<{ galaxy: number; system: number } | null>(null);
+  const galaxy = manualView?.galaxy ?? ownPlanet?.galaxy ?? 1;
+  const system = manualView?.system ?? ownPlanet?.system ?? 1;
+  const setGalaxy = (value: number) => setManualView({ galaxy: value, system });
+  const setSystem = (value: number) => setManualView({ galaxy, system: value });
+
+  // Changer de planète active recentre la vue sur sa position
+  useEffect(() => {
+    setManualView(null);
+  }, [selectedPlanetId]);
 
   const formatActivity = (minutes: number | null | undefined) => {
     if (minutes == null) {
@@ -57,7 +69,7 @@ export default function GalaxyClient() {
   return (
     <div className="space-y-6">
       <div>
-        <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">Exploration</p>
+        <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">{t('galaxy.exploration')}</p>
         <h1 className="mt-2 text-2xl font-semibold text-white">{t('galaxy.title')}</h1>
         <p className="text-sm text-slate-400">
           {t('galaxy.subtitle')}
@@ -67,7 +79,7 @@ export default function GalaxyClient() {
       <div className="rounded-3xl border border-slate-800/80 bg-slate-950/60 p-6">
         <div className="flex flex-wrap items-center gap-4">
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
-            Galaxie
+            {t('nav.galaxy')}
             <input
               type="number"
               min={1}
@@ -77,7 +89,7 @@ export default function GalaxyClient() {
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
-            Système
+            {t('galaxy.system')}
             <input
               type="number"
               min={1}
@@ -105,7 +117,12 @@ export default function GalaxyClient() {
             return (
               <div
                 key={slot.position}
-                className="flex flex-col gap-3 rounded-2xl border border-slate-800/60 bg-slate-900/60 px-4 py-3 text-sm md:flex-row md:items-center md:justify-between"
+                data-own={slot.isOwn ? 'true' : undefined}
+                className={`flex flex-col gap-3 rounded-2xl border px-4 py-3 text-sm md:flex-row md:items-center md:justify-between ${
+                  slot.isOwn
+                    ? 'border-blue-500/50 bg-blue-500/10'
+                    : 'border-slate-800/60 bg-slate-900/60'
+                }`}
               >
                 <div className="flex flex-col gap-1 md:flex-row md:items-center md:gap-4">
                   <span className="text-xs uppercase tracking-[0.2em] text-slate-500">
@@ -133,19 +150,19 @@ export default function GalaxyClient() {
                             href={`/fleet?mission=spy&galaxy=${galaxy}&system=${system}&position=${slot.position}`}
                             className="w-full rounded-full border border-slate-700 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-slate-300 hover:border-slate-500 sm:w-auto"
                           >
-                            Espionner
+                            {t('galaxy.spy')}
                           </Link>
                           <Link
                             href={`/fleet?mission=attack&galaxy=${galaxy}&system=${system}&position=${slot.position}`}
                             className="w-full rounded-full border border-slate-700 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-slate-300 hover:border-slate-500 sm:w-auto"
                           >
-                            Attaquer
+                            {t('galaxy.attack')}
                           </Link>
                           <Link
                             href={`/fleet?mission=transport&galaxy=${galaxy}&system=${system}&position=${slot.position}`}
                             className="w-full rounded-full border border-slate-700 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-slate-300 hover:border-slate-500 sm:w-auto"
                           >
-                            Transporter
+                            {t('galaxy.transport')}
                           </Link>
                         </>
                       )}
@@ -155,7 +172,7 @@ export default function GalaxyClient() {
                       href={`/fleet?mission=colonize&galaxy=${galaxy}&system=${system}&position=${slot.position}`}
                       className="w-full rounded-full border border-emerald-500/60 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-emerald-200 hover:bg-emerald-500/10 sm:w-auto"
                     >
-                      Coloniser
+                      {t('galaxy.colonize')}
                     </Link>
                   )}
                 </div>

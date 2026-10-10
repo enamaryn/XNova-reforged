@@ -1,10 +1,13 @@
 'use client';
 
+import { useI18n } from '@/lib/i18n';
+import { planetDisplayName } from '@/lib/i18n/planet-name';
 import { useState, useEffect, useMemo } from 'react';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { usePlanetStore } from '@/lib/stores/planet-store';
 
 export function PlanetSelector() {
+  const { t } = useI18n();
   const { user } = useAuthStore();
   const { selectedPlanetId, setSelectedPlanetId } = usePlanetStore();
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +25,7 @@ export function PlanetSelector() {
   if (planets.length === 0) {
     return (
       <div className="text-sm text-slate-400">
-        Aucune planète
+        {t('planet.none')}
       </div>
     );
   }
@@ -35,13 +38,13 @@ export function PlanetSelector() {
       >
         <span className="text-lg">🌍</span>
         <div className="text-left hidden sm:block">
-          <div className="font-medium text-white">{currentPlanet?.name || 'Planète'}</div>
+          <div className="font-medium text-white">{planetDisplayName(currentPlanet?.name, t)}</div>
           <div className="text-[10px] text-slate-500">
             [{currentPlanet?.galaxy}:{currentPlanet?.system}:{currentPlanet?.position}]
           </div>
         </div>
         <div className="sm:hidden truncate text-white font-medium">
-          {currentPlanet?.name?.substring(0, 8) || 'Planète'}
+          {planetDisplayName(currentPlanet?.name, t).substring(0, 8)}
         </div>
         {planets.length > 1 && (
           <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -58,7 +61,7 @@ export function PlanetSelector() {
           />
           <div className="absolute right-0 top-full mt-2 w-56 rounded-2xl border border-slate-800 bg-slate-950/95 py-1 shadow-xl z-20">
             <div className="px-3 py-2 text-[10px] uppercase tracking-[0.2em] text-slate-500 border-b border-slate-800">
-              Vos planètes ({planets.length})
+              {t('planet.yours', { count: planets.length })}
             </div>
             {planets.map((planet) => (
               <button
@@ -75,7 +78,7 @@ export function PlanetSelector() {
               >
                 <span className="text-xl">🌍</span>
                 <div>
-                  <div className="font-medium">{planet.name}</div>
+                  <div className="font-medium">{planetDisplayName(planet.name, t)}</div>
                   <div className="text-xs text-slate-500">
                     [{planet.galaxy}:{planet.system}:{planet.position}]
                   </div>

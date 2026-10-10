@@ -1,5 +1,6 @@
 'use client';
 
+import { useI18n } from '@/lib/i18n';
 import { useState } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
@@ -31,6 +32,7 @@ interface GameLayoutProps {
  * @param children - Pages du jeu (overview, buildings, etc.).
  */
 export function GameLayout({ children }: GameLayoutProps) {
+  const { t } = useI18n();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -84,23 +86,23 @@ export function GameLayout({ children }: GameLayoutProps) {
         <div className="mx-auto flex max-w-md items-center justify-between px-4 pt-2 pb-[calc(0.5rem_+_env(safe-area-inset-bottom))] text-[10px] uppercase tracking-[0.18em] text-slate-400">
           <Link href="/overview" className="flex flex-col items-center gap-1 text-slate-300">
             <span className="text-lg">🏠</span>
-            Vue
+            {t("nav.overview")}
           </Link>
           <Link href="/buildings" className="flex flex-col items-center gap-1 text-slate-300">
             <span className="text-lg">🏗️</span>
-            Bâtiments
+            {t("nav.buildings")}
           </Link>
           <Link href="/research" className="flex flex-col items-center gap-1 text-slate-300">
             <span className="text-lg">🔬</span>
-            Recherche
+            {t("nav.research")}
           </Link>
           <Link href="/fleet" className="flex flex-col items-center gap-1 text-slate-300">
             <span className="text-lg">🛸</span>
-            Flotte
+            {t("nav.fleet")}
           </Link>
           <Link href="/galaxy" className="flex flex-col items-center gap-1 text-slate-300">
             <span className="text-lg">🌌</span>
-            Galaxie
+            {t("nav.galaxy")}
           </Link>
         </div>
       </div>

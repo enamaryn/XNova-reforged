@@ -1,12 +1,16 @@
+"use client";
+
 import Link from "next/link";
+import { useI18n } from "@/lib/i18n";
 
 const links = [
-  { href: "/overview", label: "Overview" },
-  { href: "/buildings", label: "Buildings" },
-  { href: "/research", label: "Research" },
+  { href: "/overview", label: "nav.overview" },
+  { href: "/buildings", label: "nav.buildings" },
+  { href: "/research", label: "nav.research" },
 ];
 
 export function PrimaryNav() {
+  const { t } = useI18n();
   return (
     <nav className="flex items-center gap-3 text-sm font-medium sm:gap-6">
       <div className="hidden items-center gap-6 sm:flex">
@@ -16,7 +20,7 @@ export function PrimaryNav() {
             href={link.href}
             className="text-slate-600 transition hover:text-slate-900"
           >
-            {link.label}
+            {t(link.label)}
           </Link>
         ))}
       </div>
@@ -24,7 +28,7 @@ export function PrimaryNav() {
         href="/login"
         className="rounded-full bg-[hsl(var(--primary))] px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[hsl(var(--primary-foreground))] sm:text-xs"
       >
-        Acces
+        {t("nav.access")}
       </Link>
     </nav>
   );

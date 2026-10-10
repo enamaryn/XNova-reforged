@@ -16,7 +16,13 @@
     "admin": "Admin",
     "label": "Hauptnavigation",
     "languageMenu": "Sprachauswahl",
-    "userMenu": "Benutzermenü"
+    "userMenu": "Benutzermenü",
+    "menu": "Menü",
+    "access": "Zugang",
+    "player": "Spieler",
+    "settings": "Einstellungen",
+    "administration": "Administration",
+    "logout": "Abmelden"
   },
   "sidebar": {
     "principal": "Hauptmenü",
@@ -82,7 +88,13 @@
     "loading": "System wird geladen...",
     "activity": "Aktivität",
     "activeNow": "Aktiv",
-    "moon": "Mond"
+    "moon": "Mond",
+    "exploration": "Erkundung",
+    "system": "System",
+    "spy": "Spionieren",
+    "attack": "Angreifen",
+    "transport": "Transportieren",
+    "colonize": "Kolonisieren"
   },
   "messages": {
     "kicker": "Kommunikation",
@@ -545,5 +557,17 @@
     "retryLoad": "Laden des Kommandanten erneut versuchen",
     "loading": "Entwicklung wird geladen…",
     "compactSummary": "Kommandant: Stufe {level}/100 · {buildings} Bauplätze · {lines} Linien"
+  },
+  "planet": {
+    "homeworld": "Heimatplanet",
+    "newColony": "Neue Kolonie",
+    "none": "Kein Planet",
+    "yours": "Deine Planeten ({count})"
+  },
+  "planetScene": {
+    "active": "Aktiver Planet",
+    "toBuildings": "Zu den Gebäuden",
+    "toResearch": "Zu den Technologien",
+    "hint": "Klicke auf den Planeten, um schnell zu den Gebäuden und zur strategischen Verwaltung zu gelangen."
   }
 }

@@ -119,7 +119,7 @@ export function GameSidebar({ isOpen, onClose }: GameSidebarProps) {
                           <div className="ml-auto flex items-center gap-2">
                             {showAdminBadge && (
                               <span className="rounded-full border border-amber-400/40 bg-amber-500/10 px-2 py-0.5 text-[10px] uppercase tracking-[0.2em] text-amber-200">
-                                Admin
+                                {t("nav.admin")}
                               </span>
                             )}
                             {isActive && (

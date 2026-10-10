@@ -14,6 +14,8 @@
 - [x] Journal de mise à jour du serveur du propriétaire : aucune erreur, « Mise à jour réussie » ; le `curl: (7)` est le premier sondage de `waitForWeb` avant le démarrage du web (60 tentatives).
 - [x] Audit npm : production 0 haute/critique ; complet 49 → 36 (critique `handlebars` corrigée, Jest 30 : hautes 34 → 7). Les 7 hautes restantes viennent de `braces ≤ 3.0.3`, sans version corrigée sur npm ; Tailwind 4 retirerait la chaîne `tailwindcss`, mais `eslint-config-next` 16 la conserve. Détail : docs/NPM_AUDIT_2026-10.md.
 - [x] Avertissements ESLint 105 → 0 (code mort, `any` de `src/`, règle `no-explicit-any` désactivée pour les mocks de tests). Un test de statistiques n'assertait rien (`hasPlayerStats` calculé mais inutilisé) : il vérifie maintenant ce qu'il calculait.
+- [x] Retour du propriétaire (captures en allemand et italien) : barre du bas, sélecteur de planète, menu utilisateur, carte « Planète active » et navigation publique n'étaient pas traduits ; « Planète » venait du nom stocké en base (« Planète Mère »), désormais traduit à l'affichage. Version `0.1.0 Alpha` → `0.2.0 Alpha 1`. Test `locale-shell.spec.ts` (5 langues × 3 écrans).
+- [x] Version affichée `v0.2.0 · PR · commit` (release du propriétaire) ; galaxie centrée sur la planète active, planète du joueur mise en évidence ; E2E galaxie réécrit.
 - **Vérifié localement :** build 5/5 ; unitaires 81/81 ; intégration 280/280 sous Jest 30 ; parité 17/17 ; E2E 34 + 1 ignoré ; rendu mobile 39/39 (Chromium).
 
 ## Session — premier cycle joueur complet : équilibrage et onboarding (SCOPE-02)

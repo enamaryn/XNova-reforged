@@ -23,7 +23,7 @@ export function resolveBuildInfo({
       const saved = JSON.parse(readFileSync(output, "utf8"));
       if (
         !saved.version ||
-        !saved.stage ||
+        typeof saved.stage !== "string" ||
         (saved.commit !== null && !/^[a-f0-9]{40}$/.test(saved.commit))
       )
         return unknown;

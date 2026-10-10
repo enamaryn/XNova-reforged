@@ -4,6 +4,7 @@ import { getProgression } from "@/lib/api/progression";
 import { getStatistics } from "@/lib/api/statistics";
 import { CommanderSummary } from "@/components/game/CommanderSummary";
 import { useI18n } from "@/lib/i18n";
+import { planetDisplayName } from "@/lib/i18n/planet-name";
 import { OnboardingGuide } from "@/components/game/OnboardingGuide";
 import { ContextHelp } from "@/components/game/ContextHelp";
 import { useEffect, useState } from "react";
@@ -118,9 +119,9 @@ export default function OverviewClient() {
 
   useEffect(() => {
     if (!isRenaming && selectedPlanet) {
-      setPlanetNameDraft(selectedPlanet.name);
+      setPlanetNameDraft(planetDisplayName(selectedPlanet.name, t));
     }
-  }, [isRenaming, selectedPlanet]);
+  }, [isRenaming, selectedPlanet, t]);
 
   if (planetsLoading) {
     return (
@@ -283,7 +284,7 @@ export default function OverviewClient() {
             ) : (
               <div>
                 <h3 className="text-xl font-semibold text-white">
-                  {planetNameDraft || selectedPlanet?.name || t("overview.planet")}
+                  {planetNameDraft || planetDisplayName(selectedPlanet?.name, t)}
                 </h3>
                 <p className="text-xs text-slate-400">{coordinates}</p>
               </div>
@@ -306,7 +307,7 @@ export default function OverviewClient() {
                   </div>
                   <button
                     onClick={() => {
-                      setPlanetNameDraft(selectedPlanet?.name || "");
+                      setPlanetNameDraft(planetDisplayName(selectedPlanet?.name, t));
                       setIsRenaming(false);
                     }}
                     className="w-full text-xs text-slate-400 hover:text-white sm:w-auto"
@@ -340,7 +341,7 @@ export default function OverviewClient() {
                   : "border-slate-800 text-slate-400 hover:border-slate-600 hover:text-white"
               }`}
             >
-              {planet.name}
+              {planetDisplayName(planet.name, t)}
             </button>
           ))}
         </div>
@@ -349,7 +350,7 @@ export default function OverviewClient() {
       {selectedPlanet && (
         <motion.div {...slideUpProps} initial={false}>
           <PlanetScene
-            planetName={selectedPlanet.name}
+            planetName={planetDisplayName(selectedPlanet.name, t)}
             coordinates={coordinates}
           />
         </motion.div>

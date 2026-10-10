@@ -85,3 +85,19 @@ test("missing or corrupt saved metadata never substitutes the runtime checkout",
   );
   assert.equal(resolveBuildInfo({ ...f, productionServer: true }).commit, null);
 });
+
+test("une version sans étape (release stable) est acceptée, au build comme au démarrage", (t) => {
+  const f = fixture(t);
+  writeFileSync(
+    join(f.root, "apps/web/version.json"),
+    '{"version":"0.2.0","stage":""}',
+  );
+  const built = resolveBuildInfo({ ...f, productionBuild: true });
+  assert.equal(built.version, "0.2.0");
+  assert.equal(built.stage, "");
+  const served = resolveBuildInfo({ ...f, productionServer: true });
+  assert.equal(served.version, "0.2.0");
+  assert.equal(served.stage, "");
+  assert.equal(served.commit, built.commit);
+  assert.equal(served.pullRequest, 29);
+});

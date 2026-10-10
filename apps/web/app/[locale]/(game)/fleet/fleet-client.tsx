@@ -49,8 +49,9 @@ const MISSION_IDS: Record<string, number> = {
 
 export default function FleetClient() {
 
+  const { t } = useI18n();
   const [mission, setMission] = useState('transport');
-  const [colonyName, setColonyName] = useState('Nouvelle colonie');
+  const [colonyName, setColonyName] = useState(() => t('planet.newColony'));
   const [speedPercent, setSpeedPercent] = useState(100);
   const [shipSelection, setShipSelection] = useState<Record<number, number>>({});
   const [cargo, setCargo] = useState({ metal: 0, crystal: 0, deuterium: 0 });
@@ -60,7 +61,6 @@ export default function FleetClient() {
   const searchParams = useSearchParams();
   const { user } = useAuthStore();
   const { selectedPlanetId } = usePlanetStore();
-  const { t } = useI18n();
   const planetId = selectedPlanetId || user?.planets?.[0]?.id;
 
   useEffect(() => {

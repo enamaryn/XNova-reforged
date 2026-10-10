@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { memo } from 'react';
+import { useI18n } from '@/lib/i18n';
 
 interface PlanetSceneProps {
   planetName: string;
@@ -12,8 +13,9 @@ export const PlanetScene = memo(function PlanetScene({
   planetName,
   coordinates,
   actionHref = '/buildings',
-  actionLabel = 'Accéder aux bâtiments',
+  actionLabel,
 }: PlanetSceneProps) {
+  const { t } = useI18n();
   return (
     <div className="relative overflow-hidden rounded-3xl border border-slate-800/80 bg-slate-950/60 p-4 shadow-[0_0_40px_rgba(2,132,199,0.12)] sm:p-6">
       <div className="absolute right-8 top-6 h-10 w-10 rounded-full bg-gradient-to-br from-amber-200 via-amber-400 to-orange-500 shadow-[0_0_16px_rgba(251,191,36,0.8)]" />
@@ -22,7 +24,7 @@ export const PlanetScene = memo(function PlanetScene({
       <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">
-            Planète active
+            {t('planetScene.active')}
           </p>
           <h2 className="mt-2 text-3xl font-semibold text-white">{planetName}</h2>
           <p className="mt-1 text-sm text-slate-400">{coordinates}</p>
@@ -33,13 +35,13 @@ export const PlanetScene = memo(function PlanetScene({
             href={actionHref}
             className="rounded-full border border-blue-500/50 bg-blue-500/10 px-4 py-2 text-sm text-blue-200 transition hover:border-blue-400 hover:text-white"
           >
-            {actionLabel}
+            {actionLabel ?? t('planetScene.toBuildings')}
           </Link>
           <Link
             href="/research"
             className="rounded-full border border-slate-700 px-4 py-2 text-sm text-slate-300 transition hover:border-slate-500 hover:text-white"
           >
-            Accéder aux technologies
+            {t('planetScene.toResearch')}
           </Link>
         </div>
       </div>
@@ -54,8 +56,7 @@ export const PlanetScene = memo(function PlanetScene({
           <div className="absolute -inset-6 rounded-full border border-slate-800/40" />
         </Link>
         <div className="max-w-xs text-sm text-slate-400">
-          Cliquez sur la planète pour accéder rapidement aux bâtiments et à la gestion
-          stratégique.
+          {t('planetScene.hint')}
         </div>
       </div>
     </div>
