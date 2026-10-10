@@ -5,6 +5,18 @@
 
 ---
 
+## Session — OPS-03 : validation de charge 200 joueurs à ×50
+
+**Date :** 10 octobre 2026.
+
+- [x] Seuils fixés et commités **avant exécution** : `docs/LOAD_TEST.md`.
+- [x] Harnais `scripts/load/load-test.mjs` (`npm run load`) : inscription, connexion, WebSocket `/game`, boucle de jeu avec temps de réflexion, p50/p95/p99 par route, rapport JSON dans `docs/audits/`.
+- [x] Campagne : 200 joueurs, 49 515 requêtes, 0 erreur, lectures p95 46 ms, écritures p95 35 ms, 200/200 WebSocket, `/health` sans échec ; diffusion cron vers 200 sockets mesurée au repos.
+- [x] Sauvegarde puis restauration sur la base chargée : comptages identiques ; couverture unitaire API 52,8 %.
+- Défaut du harnais corrigé en cours de route : première version connectée à l'espace de noms `/` (200 « connexions » sans authentification) ; corrigé avant les résultats publiés.
+- Constat : le push `resources:updated` n'est pas émis pour un joueur dont les requêtes devancent le cron (sans conséquence fonctionnelle).
+- **Reste ouvert (OPS-03 non clos)** : Lighthouse, uptime en production (propriétaire), refus d'accès interjoueur, chemin de succès des écritures sous charge, mesure sur le serveur du propriétaire.
+
 ## Session — clôture de SCOPE-02
 
 **Date :** 10 octobre 2026. **Décision :** profil de vitesse ×50.
