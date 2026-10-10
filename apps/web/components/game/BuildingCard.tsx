@@ -3,6 +3,7 @@
 import { memo, useState } from "react";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
+import { useI18n } from "@/lib/i18n";
 import type { BuildingInfo } from "@/lib/api/buildings";
 import { BuildingUpgradeEffects } from "./BuildingUpgradeEffects";
 
@@ -51,6 +52,7 @@ export const BuildingCard = memo(function BuildingCard({
   onBuild,
   isBuilding,
 }: BuildingCardProps) {
+  const { t } = useI18n();
   const shouldReduceMotion = useReducedMotion();
   const [loading, setLoading] = useState(false);
 
@@ -66,7 +68,7 @@ export const BuildingCard = memo(function BuildingCard({
 
   const icon = categoryIcons[building.category] || "🏗️";
   const borderColor = categoryColors[building.category] || "border-gray-500/50";
-  const categoryLabel = getCategoryLabel(building.category);
+  const categoryLabel = getCategoryLabel(building.category, t);
 
   return (
     <motion.article
@@ -108,20 +110,20 @@ export const BuildingCard = memo(function BuildingCard({
       <div className="mb-1 flex items-center justify-between gap-2 text-xs sm:mb-3">
         <div className="flex flex-wrap gap-x-3 gap-y-1 font-mono">
           <span
-            aria-label={`Métal : ${building.cost.metal}`}
+            aria-label={t("buildings.costMetalAria", { value: building.cost.metal })}
             className={building.canAfford ? "text-amber-300" : "text-red-400"}
           >
             ⚙️ {formatNumber(building.cost.metal)}
           </span>
           <span
-            aria-label={`Cristal : ${building.cost.crystal}`}
+            aria-label={t("buildings.costCrystalAria", { value: building.cost.crystal })}
             className={building.canAfford ? "text-sky-300" : "text-red-400"}
           >
             💎 {formatNumber(building.cost.crystal)}
           </span>
           {building.cost.deuterium > 0 && (
             <span
-              aria-label={`Deutérium : ${building.cost.deuterium}`}
+              aria-label={t("buildings.costDeuteriumAria", { value: building.cost.deuterium })}
               className={building.canAfford ? "text-blue-300" : "text-red-400"}
             >
               🧪 {formatNumber(building.cost.deuterium)}
@@ -129,7 +131,7 @@ export const BuildingCard = memo(function BuildingCard({
           )}
         </div>
         <span
-          aria-label="Durée de construction"
+          aria-label={t("buildings.durationAria")}
           className="shrink-0 font-mono text-slate-300"
         >
           ⏱ {formatTime(building.buildTime)}
@@ -140,7 +142,7 @@ export const BuildingCard = memo(function BuildingCard({
       {building.missingRequirements.length > 0 && (
         <div className="mb-2 rounded-xl bg-red-500/10 p-2 text-xs text-red-300">
           <div className="hidden font-semibold mb-1 sm:block">
-            Prérequis manquants:
+            {t("buildings.missingTitle")}
           </div>
           <ul className="line-clamp-1 sm:line-clamp-none sm:list-disc sm:list-inside">
             {building.missingRequirements.map((req, i) => (
@@ -152,14 +154,14 @@ export const BuildingCard = memo(function BuildingCard({
 
       {building.isMaxLevel && (
         <div className="mb-3 rounded-xl bg-slate-800/70 p-2 text-xs text-slate-300">
-          Niveau max atteint
+          {t("buildings.maxReached")}
         </div>
       )}
 
       {/* En construction */}
       {building.inQueue && (
         <div className="mb-2 hidden rounded-xl bg-blue-500/10 p-2 text-center text-sm sm:block text-blue-200">
-          🔨 En cours de construction...
+          {t("buildings.underConstruction")}
         </div>
       )}
 
@@ -175,24 +177,24 @@ export const BuildingCard = memo(function BuildingCard({
           }`}
         >
           {loading
-            ? "⏳ Construction..."
+            ? t("buildings.btnBuilding")
             : building.inQueue
-              ? "🔨 En file"
+              ? t("buildings.btnQueued")
               : building.isMaxLevel
-                ? "⛔ Niveau max atteint"
+                ? t("buildings.btnMax")
                 : building.capacityFull
-                  ? `Chantiers occupés (${building.buildingCapacity})`
+                  ? t("buildings.btnCapacity", { count: building.buildingCapacity ?? "" })
                   : !building.canAfford
-                    ? "💰 Ressources insuffisantes"
+                    ? t("buildings.btnFunds")
                     : building.missingRequirements.length > 0
-                      ? "🔒 Prérequis manquants"
-                      : `🔨 Construire niveau ${building.currentLevel + 1}`}
+                      ? t("buildings.btnLocked")
+                      : t("buildings.btnBuild", { level: building.currentLevel + 1 })}
         </button>
         <Link
           href={`/buildings/${building.id}`}
           className="flex min-h-11 shrink-0 items-center justify-center rounded-xl border border-slate-700 px-3 py-2 text-center text-xs text-slate-300 transition hover:border-slate-500 hover:text-white sm:w-auto"
         >
-          Détails
+          {t("common.details")}
         </Link>
       </div>
     </motion.article>
@@ -201,13 +203,10 @@ export const BuildingCard = memo(function BuildingCard({
 
 BuildingCard.displayName = "BuildingCard";
 
-function getCategoryLabel(category: string): string {
-  const labels: Record<string, string> = {
-    resource: "Ressource",
-    facility: "Installation",
-    station: "Station",
-    defense: "Défense",
-    moon: "Lunaire",
-  };
-  return labels[category] || category;
+function getCategoryLabel(
+  category: string,
+  t: (key: string) => string,
+): string {
+  const known = ["resource", "facility", "station", "defense", "moon"];
+  return known.includes(category) ? t(`buildings.category.${category}`) : category;
 }

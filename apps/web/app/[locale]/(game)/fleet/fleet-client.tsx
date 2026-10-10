@@ -291,7 +291,7 @@ export default function FleetClient() {
                 )}
                 {!shipsLoading && !shipsError && ships.length === 0 && (
                   <div className="rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-slate-400">
-                    Aucun vaisseau disponible.
+                    {t('fleet.noShips')}
                   </div>
                 )}
                 {ships.map((ship) => (
@@ -353,7 +353,7 @@ export default function FleetClient() {
               )}
               {mission === 'colonisation' && (
                 <label className="mt-3 block text-xs uppercase tracking-[0.2em] text-slate-500">
-                  Nom de la colonie
+                  {t('fleet.colonyName')}
                   <input
                     value={colonyName}
                     maxLength={30}
@@ -479,7 +479,7 @@ export default function FleetClient() {
                 : 'bg-blue-500/20 text-blue-100 hover:bg-blue-500/30'
             }`}
           >
-            {sendMutation.isPending ? 'Envoi...' : 'Envoyer la flotte'}
+            {sendMutation.isPending ? t('fleet.sending') : t('fleet.send')}
           </button>
 
           {sendMutation.error && (

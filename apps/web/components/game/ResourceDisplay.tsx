@@ -1,6 +1,7 @@
 'use client';
 
 import { memo, useEffect, useState } from 'react';
+import { useI18n } from '@/lib/i18n';
 import { useMotionValueEvent, useReducedMotion, useSpring } from 'framer-motion';
 
 interface ResourceDisplayProps {
@@ -60,6 +61,7 @@ export const ResourceDisplay = memo(function ResourceDisplay({
   storage,
   color = 'blue',
 }: ResourceDisplayProps) {
+  const { t } = useI18n();
   const [currentAmount, setCurrentAmount] = useState(amount);
   const [lastUpdate, setLastUpdate] = useState(Date.now());
 
@@ -121,7 +123,7 @@ export const ResourceDisplay = memo(function ResourceDisplay({
           <h3 className="text-lg font-semibold text-white">{name}</h3>
         </div>
         <div className="text-right">
-          <div className="text-xs uppercase tracking-[0.18em] text-slate-500">Prod/h</div>
+          <div className="text-xs uppercase tracking-[0.18em] text-slate-500">{t('resources.perHour')}</div>
           <div className={`font-mono text-sm font-semibold ${production >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
             {production >= 0 ? '+' : ''}{formatNumber(production)}
           </div>
@@ -139,7 +141,7 @@ export const ResourceDisplay = memo(function ResourceDisplay({
           <AnimatedNumber value={currentAmount} format={formatNumber} />
         </div>
         <div className="text-xs text-slate-500">
-          Max: {formatNumber(storage)}
+          {t('resources.max', { value: formatNumber(storage) })}
         </div>
       </div>
 
@@ -147,7 +149,7 @@ export const ResourceDisplay = memo(function ResourceDisplay({
       <div
         className="h-2 w-full overflow-hidden rounded-full bg-slate-800"
         role="progressbar"
-        aria-label={`${name} : stockage`}
+        aria-label={t('resources.storageAria', { name })}
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={Math.round(storagePercent)}

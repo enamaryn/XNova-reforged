@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useI18n } from "@/lib/i18n";
 import type { BuildQueueItem } from "@/lib/api/buildings";
 
 interface BuildQueueProps {
@@ -30,6 +31,7 @@ function QueueItem({
   item: BuildQueueItem;
   onCancel: (queueId: string) => Promise<void>;
 }) {
+  const { t } = useI18n();
   const [remainingSeconds, setRemainingSeconds] = useState(
     item.remainingSeconds,
   );
@@ -73,7 +75,7 @@ function QueueItem({
 
   return (
     <div
-      aria-label={`${item.buildingName}, niveau ${item.targetLevel}`}
+      aria-label={t("buildings.queueItemAria", { name: item.buildingName, level: item.targetLevel })}
       className="relative overflow-hidden rounded-xl border border-blue-500/30 bg-slate-900/60 px-3 py-1"
     >
       <div className="flex min-h-11 items-center gap-2">
@@ -84,7 +86,7 @@ function QueueItem({
           {item.buildingName}
         </h4>
         <span className="shrink-0 text-xs text-slate-400">
-          Niv. {item.targetLevel}
+          {t("buildings.queueShortLevel", { level: item.targetLevel })}
         </span>
         <span className="shrink-0 font-mono text-xs font-bold text-blue-300">
           {formatTimeRemaining(remainingSeconds)}
@@ -92,15 +94,15 @@ function QueueItem({
         <button
           onClick={handleCancel}
           disabled={canceling}
-          aria-label={`Annuler ${item.buildingName}`}
+          aria-label={t("buildings.cancelAria", { name: item.buildingName })}
           className="min-h-11 shrink-0 px-1 text-xs text-red-300 transition-colors hover:text-red-200 disabled:opacity-50"
         >
-          {canceling ? "…" : "Annuler"}
+          {canceling ? "…" : t("common.cancel")}
         </button>
       </div>
       <div
         role="progressbar"
-        aria-label={`Avancement ${item.buildingName}`}
+        aria-label={t("buildings.progressAria", { name: item.buildingName })}
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={Math.round(progress)}
@@ -116,13 +118,14 @@ function QueueItem({
 }
 
 export function BuildQueue({ queue, onCancel }: BuildQueueProps) {
+  const { t } = useI18n();
   if (queue.length === 0) {
     return (
       <div className="rounded-2xl border border-slate-800/80 bg-slate-900/40 px-3 py-2 text-center sm:p-6">
         <div className="hidden text-3xl mb-2 sm:block">🏗️</div>
-        <p className="text-slate-300">Aucune construction en cours</p>
+        <p className="text-slate-300">{t("buildings.queueEmpty")}</p>
         <p className="hidden text-xs text-slate-500 mt-1 sm:block">
-          Sélectionnez un bâtiment pour commencer la construction
+          {t("buildings.queueEmptyHint")}
         </p>
       </div>
     );
@@ -131,9 +134,9 @@ export function BuildQueue({ queue, onCancel }: BuildQueueProps) {
   return (
     <div className="space-y-1 sm:space-y-2">
       <h3 className="flex flex-wrap items-center gap-2 text-sm font-semibold sm:text-lg text-white">
-        🔨 File de construction
+        🔨 {t("buildings.queueTitle")}
         <span className="rounded-full bg-blue-500/20 px-2 py-0.5 text-xs text-blue-300">
-          {queue.length} en cours
+          {t("unit.ongoing", { count: queue.length })}
         </span>
       </h3>
       {queue.map((item) => (

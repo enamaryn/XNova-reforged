@@ -8,9 +8,11 @@ import { usePlanetStore } from "@/lib/stores/planet-store";
 import { useSocket } from "@/lib/providers/socket-provider";
 import { BuildQueue } from "@/components/game/BuildQueue";
 import { BuildingCard } from "@/components/game/BuildingCard";
+import { useI18n } from "@/lib/i18n";
 import { ContextHelp } from "@/components/game/ContextHelp";
 
 export default function BuildingsClient() {
+  const { t } = useI18n();
   const { user } = useAuthStore();
   const { selectedPlanetId, setSelectedPlanetId } = usePlanetStore();
   const { socket } = useSocket();
@@ -89,9 +91,11 @@ export default function BuildingsClient() {
       newLevel?: number;
     }) => {
       handleUpdate();
-      const name = payload?.buildingName || "Bâtiment";
-      const level = payload?.newLevel ? ` niv. ${payload.newLevel}` : "";
-      pushToast(`Construction terminée : ${name}${level}`);
+      const name = payload?.buildingName || t("buildings.fallbackName");
+      const level = payload?.newLevel
+        ? t("buildings.shortLevel", { level: payload.newLevel })
+        : "";
+      pushToast(t("buildings.completedToast", { name, level }));
     };
 
     socket.on("building:started", handleUpdate);
@@ -104,7 +108,7 @@ export default function BuildingsClient() {
       socket.off("building:completed", handleCompleted);
       socket.off("building:cancelled", handleUpdate);
     };
-  }, [socket, planetId, refetchBuildings, refetchQueue, pushToast]);
+  }, [socket, planetId, refetchBuildings, refetchQueue, pushToast, t]);
 
   const handleBuild = useCallback(
     async (buildingId: number) => {
@@ -157,7 +161,7 @@ export default function BuildingsClient() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="animate-spin text-4xl mb-4">⚙️</div>
-          <p className="text-slate-400">Chargement des bâtiments...</p>
+          <p className="text-slate-400">{t("buildings.loading")}</p>
         </div>
       </div>
     );
@@ -168,12 +172,12 @@ export default function BuildingsClient() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="text-4xl mb-4">❌</div>
-          <p className="text-red-400 mb-4">Erreur lors du chargement</p>
+          <p className="text-red-400 mb-4">{t("common.loadError")}</p>
           <button
             onClick={() => refetchBuildings()}
             className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors"
           >
-            Réessayer
+            {t("common.retry")}
           </button>
         </div>
       </div>
@@ -186,21 +190,23 @@ export default function BuildingsClient() {
       <div className="flex items-center justify-between gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="hidden text-[10px] uppercase tracking-[0.3em] sm:block text-slate-500">
-            Infrastructure
+            {t("common.infrastructure")}
           </p>
           <h1 className="text-xl sm:mt-2 sm:text-2xl font-semibold text-white">
-            Bâtiments
+            {t("nav.buildings")}
           </h1>
           <p className="hidden text-sm text-slate-400 sm:block">
-            Construisez et améliorez les infrastructures de votre planète
+            {t("buildings.subtitle")}
           </p>
         </div>
         <div className="rounded-full border border-slate-800/80 bg-slate-900/40 px-4 py-2 text-xs text-slate-400">
-          {queue.length}
-          {buildingsData?.buildings[0]?.buildingCapacity
-            ? ` / ${buildingsData.buildings[0].buildingCapacity}`
-            : ""}{" "}
-          en cours
+          {t("unit.ongoing", {
+            count: `${queue.length}${
+              buildingsData?.buildings[0]?.buildingCapacity
+                ? ` / ${buildingsData.buildings[0].buildingCapacity}`
+                : ""
+            }`,
+          })}
         </div>
       </div>
       <div className="hidden sm:block">
