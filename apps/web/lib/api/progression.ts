@@ -19,3 +19,20 @@ export interface Progression {
   productionTechnology: number;
 }
 export const getProgression = () => apiClient.get<Progression>("/progression");
+
+export type OnboardingStepStatus = "done" | "current" | "upcoming";
+export interface OnboardingStep {
+  id: string;
+  route: "buildings" | "research" | "shipyard" | "fleet" | "reports" | "overview";
+  targetId?: number;
+  status: OnboardingStepStatus;
+}
+export interface OnboardingProgress {
+  steps: OnboardingStep[];
+  completed: number;
+  total: number;
+  currentStepId: string | null;
+  finished: boolean;
+}
+export const getOnboarding = () =>
+  apiClient.get<OnboardingProgress>("/progression/onboarding");

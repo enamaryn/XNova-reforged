@@ -84,6 +84,9 @@ jobs:
       - name: Tests unitaires
         run: npm test
 
+      - name: Parité des traductions (fr, en, es, de, it)
+        run: npm run test:i18n
+
       # Les tests tournent sur le schéma issu des migrations versionnées, comme en production
       - name: Migrations de la base de test
         run: npx prisma migrate deploy

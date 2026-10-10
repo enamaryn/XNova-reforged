@@ -1,6 +1,7 @@
 "use client";
 
 import { CommanderSummary } from "@/components/game/CommanderSummary";
+import { ContextHelp } from "@/components/game/ContextHelp";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { motion, useReducedMotion, type MotionProps } from "framer-motion";
@@ -172,6 +173,8 @@ export default function ShipyardPage() {
           {queue.length} commande(s)
         </div>
       </div>
+
+      <ContextHelp topic="shipyard" />
 
       <div>
         <ShipyardQueue

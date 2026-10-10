@@ -11,6 +11,7 @@ import { hasAdminAccess } from "@/lib/roles";
 import { CommanderStatus } from "./CommanderStatus";
 import { useQuery } from "@tanstack/react-query";
 import { getStatistics } from "@/lib/api/statistics";
+import { localeFlags, localeNames, locales } from "@/lib/i18n/locale";
 
 interface GameHeaderProps {
   onMenuToggle: () => void;
@@ -110,7 +111,7 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
               aria-controls={langMenuId}
             >
               <span className="text-base">
-                {locale === "fr" ? "🇫🇷" : locale === "en" ? "🇬🇧" : "🇪🇸"}
+                {localeFlags[locale]}
               </span>
               <span className="hidden sm:block uppercase tracking-[0.2em]">
                 {locale}
@@ -129,15 +130,15 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
                     role="menu"
                     aria-label={t("nav.languageMenu")}
                   >
-                    {[
-                      { code: "fr", label: "Français", flag: "🇫🇷" },
-                      { code: "en", label: "English", flag: "🇬🇧" },
-                      { code: "es", label: "Español", flag: "🇪🇸" },
-                    ].map((item) => (
+                    {locales.map((code) => ({
+                      code,
+                      label: localeNames[code],
+                      flag: localeFlags[code],
+                    })).map((item) => (
                       <button
                         key={item.code}
                         onClick={() => {
-                          setLocale(item.code as typeof locale);
+                          setLocale(item.code);
                           setShowLangMenu(false);
                         }}
                         className={`flex w-full items-center gap-2 px-3 py-2 text-sm transition-colors ${

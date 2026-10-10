@@ -1,6 +1,11 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
-import { calculateProgression, BUILDING_FIELDS } from "@xnova/game-config";
+import {
+  calculateProgression,
+  BUILDING_FIELDS,
+  evaluateOnboarding,
+  type OnboardingSnapshot,
+} from "@xnova/game-config";
 import { DatabaseService } from "../database/database.service";
 
 export const progressionInclude = {
@@ -44,5 +49,82 @@ export class ProgressionService {
     });
     if (!user) throw new NotFoundException("Joueur introuvable");
     return progressionOf(user);
+  }
+
+  /**
+   * Objectifs débutants : état réel du joueur (toutes planètes) évalué par `evaluateOnboarding`.
+   * Lecture seule, une seule transaction cohérente.
+   */
+  async getOnboarding(userId: string) {
+    return this.database.$transaction(
+      async (tx) => {
+        const user = await tx.user.findUnique({
+          where: { id: userId },
+          select: {
+            planets: {
+              select: {
+                metalMine: true,
+                crystalMine: true,
+                deuteriumMine: true,
+                solarPlant: true,
+                researchLab: true,
+                shipyard: true,
+                energyUsed: true,
+                energyAvailable: true,
+                ships: { select: { amount: true } },
+              },
+            },
+            technologies: { select: { level: true } },
+            fleets: { select: { status: true, ships: true } },
+          },
+        });
+        if (!user) throw new NotFoundException("Joueur introuvable");
+
+        const [pendingResearch, spyReports, combatReports] = await Promise.all([
+          tx.researchQueue.count({ where: { userId, completed: false } }),
+          tx.spyReport.count({ where: { attackerId: userId } }),
+          tx.combatReport.count({ where: { attackerId: userId } }),
+        ]);
+
+        const max = (pick: (planet: (typeof user.planets)[number]) => number) =>
+          user.planets.reduce((best, planet) => Math.max(best, pick(planet)), 0);
+        const sumShips = (ships: unknown) =>
+          Object.values((ships ?? {}) as Record<string, number>).reduce(
+            (total, amount) => total + (Number(amount) || 0),
+            0,
+          );
+        const inFlight = user.fleets.filter((f) => f.status !== "completed");
+
+        const snapshot: OnboardingSnapshot = {
+          buildings: {
+            metalMine: max((p) => p.metalMine),
+            crystalMine: max((p) => p.crystalMine),
+            deuteriumMine: max((p) => p.deuteriumMine),
+            solarPlant: max((p) => p.solarPlant),
+            researchLab: max((p) => p.researchLab),
+            shipyard: max((p) => p.shipyard),
+          },
+          energyBalanced: user.planets.some(
+            (p) => p.energyUsed > 0 && p.energyAvailable >= p.energyUsed,
+          ),
+          researchStarted:
+            user.technologies.filter((t) => t.level >= 1).length + pendingResearch,
+          ships:
+            user.planets.reduce(
+              (total, planet) =>
+                total + planet.ships.reduce((sum, ship) => sum + ship.amount, 0),
+              0,
+            ) + inFlight.reduce((total, fleet) => total + sumShips(fleet.ships), 0),
+          fleetsSent: user.fleets.length,
+          missionResults:
+            spyReports +
+            combatReports +
+            user.fleets.filter((f) => f.status === "returning" || f.status === "completed")
+              .length,
+        };
+        return evaluateOnboarding(snapshot);
+      },
+      { isolationLevel: "RepeatableRead" },
+    );
   }
 }

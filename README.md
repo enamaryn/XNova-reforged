@@ -7,9 +7,12 @@ Entièrement généré par IA, Claude et Codex.
 
 ## Statut
 
-**Alpha privée en stabilisation ; MVP non validé pour ouverture publique.** Le double audit du 3 octobre 2026 relève des défauts de sécurité, de conservation des ressources et de fiabilité des tests.
+**Alpha privée `v0.2.0-alpha.1` ; MVP non validé pour ouverture publique.** Le socle est en place (comptes avec confirmation d'email, économie, bâtiments, recherche, chantier spatial, défense, flottes, combats, espionnage, colonisation, messagerie, alliances, classement, administration, installation web, sauvegarde/restauration). Restent ouverts : la clôture du lot d'équilibrage et de langues (SCOPE-02) et la validation de charge (OPS-03).
 
-Voir le [registre des corrections](docs/DOUBLE_AUDIT_2026-10.md) et la [roadmap MVP](ROADMAP_MVP.md) pour les priorités et critères de sortie. Le démarrage LXC et le build séquentiel sont confirmés par les journaux utilisateur ; les correctifs npm et métier ne sont pas encore validés.
+- **Langues :** français, anglais, espagnol, allemand, italien (`npm run test:i18n` vérifie la parité des clés).
+- **Rythme de jeu :** formules et coûts d'origine ; le premier cycle (laboratoire, recherche, premier vaisseau, première mission) est calibré pour un serveur à vitesse ×50 (×20 minimum), voir [docs/PROGRESSION.md](docs/PROGRESSION.md). À ×1 le rythme est volontairement lent.
+
+Voir le [registre des corrections](docs/DOUBLE_AUDIT_2026-10.md) et la [roadmap MVP](ROADMAP_MVP.md) pour les priorités et critères de sortie.
 
 ## Stack technique
 
@@ -248,6 +251,9 @@ Pour une installation détaillée : `GETTING_STARTED.md`
 ```bash
 # Tests unitaires API
 npm run test
+
+# Parité des traductions (fr, en, es, de, it)
+npm run test:i18n
 
 # Tests E2E Playwright
 npm run test:e2e

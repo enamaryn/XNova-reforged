@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState, useEffect } from 'react';
+import { ContextHelp } from '@/components/game/ContextHelp';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { SHIPS, getShipSpeed } from '@xnova/game-config';
 import {
@@ -266,6 +267,8 @@ export default function FleetClient() {
           {t('fleet.subtitle')}
         </p>
       </div>
+
+      <ContextHelp topic="fleet" />
 
       <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
         <div className="rounded-3xl border border-slate-800/80 bg-slate-950/60 p-6">

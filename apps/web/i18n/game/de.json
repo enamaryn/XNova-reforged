@@ -1,0 +1,334 @@
+{
+  "nav": {
+    "overview": "Übersicht",
+    "buildings": "Gebäude",
+    "research": "Forschung",
+    "galaxy": "Galaxie",
+    "fleet": "Flotte",
+    "movement": "Bewegungen",
+    "shipyard": "Raumwerft",
+    "defense": "Verteidigung",
+    "alliance": "Allianz",
+    "messages": "Nachrichten",
+    "statistics": "Statistiken",
+    "reports": "Berichte",
+    "options": "Optionen",
+    "admin": "Admin",
+    "label": "Hauptnavigation",
+    "languageMenu": "Sprachauswahl",
+    "userMenu": "Benutzermenü"
+  },
+  "sidebar": {
+    "principal": "Hauptmenü",
+    "construction": "Bau",
+    "fleet": "Flotte & Erkundung",
+    "social": "Soziales",
+    "other": "Sonstiges",
+    "quickAccess": "Schnellzugriff",
+    "planetView": "Planetenansicht"
+  },
+  "fleet": {
+    "title": "Flotte",
+    "subtitle": "Bereite deine Bewegungen und Missionen vor.",
+    "compose": "Flotte zusammenstellen",
+    "availableShips": "Verfügbare Schiffe",
+    "mission": "Mission",
+    "destination": "Ziel",
+    "active": "Laufende Flotten",
+    "none": "Keine Flotte unterwegs.",
+    "last": "Letzte Mission: keine.",
+    "missions": {
+      "transport": "Transport",
+      "attack": "Angriff",
+      "spy": "Spionage",
+      "colonize": "Kolonisierung",
+      "deploy": "Stationierung"
+    },
+    "summary": "Missionsübersicht",
+    "distance": "Entfernung",
+    "duration": "Geschätzte Dauer",
+    "fuel": "Verbrauch",
+    "capacity": "Laderaum",
+    "cargoSelected": "Ladung"
+  },
+  "movement": {
+    "kicker": "Verkehrszentrale",
+    "title": "Bewegungen",
+    "subtitle": "Verfolge deine Flotten und ihre Rückkehr.",
+    "active": "Aktive Flotten",
+    "tracking": "Raumverkehr",
+    "refresh": "Aktualisierung alle 10 s",
+    "empty": "Keine Flotte in Bewegung.",
+    "arrivalIn": "Ankunft in",
+    "backIn": "Rückkehr in",
+    "recall": "Zurückrufen",
+    "recalling": "Rückruf...",
+    "fleetSize": "Schiffe",
+    "status": {
+      "traveling": "Unterwegs",
+      "returning": "Rückflug",
+      "arrived": "Angekommen",
+      "completed": "Abgeschlossen"
+    }
+  },
+  "galaxy": {
+    "title": "Galaxie",
+    "subtitle": "Navigiere durch das Universum und finde verfügbare Systeme.",
+    "freeSlot": "Freie Position",
+    "loading": "System wird geladen...",
+    "activity": "Aktivität",
+    "activeNow": "Aktiv",
+    "moon": "Mond"
+  },
+  "messages": {
+    "kicker": "Kommunikation",
+    "title": "Nachrichten",
+    "subtitle": "Verwalte deine Kommunikation mit anderen Kommandanten.",
+    "loading": "Nachrichten werden geladen...",
+    "inbox": "Posteingang",
+    "items": "Nachrichten",
+    "empty": "Keine Nachricht",
+    "emptyHint": "Sende eine Nachricht, um eine Unterhaltung zu beginnen.",
+    "read": "Gelesen",
+    "unread": "Ungelesen",
+    "from": "Von",
+    "compose": "Neue Nachricht",
+    "toPlaceholder": "Empfänger (Benutzername)",
+    "subjectPlaceholder": "Betreff",
+    "bodyPlaceholder": "Deine Nachricht...",
+    "send": "Senden",
+    "sending": "Wird gesendet...",
+    "detail": "Lesen",
+    "selectHint": "Wähle eine Nachricht aus, um sie zu lesen.",
+    "delete": "Löschen",
+    "deleting": "Wird gelöscht..."
+  },
+  "alliance": {
+    "kicker": "Diplomatie",
+    "title": "Allianz",
+    "subtitle": "Gründe eine Allianz oder tritt einer bei, um gemeinsam voranzukommen.",
+    "loading": "Allianz wird geladen...",
+    "create": "Allianz gründen",
+    "createAction": "Gründen",
+    "creating": "Wird gegründet...",
+    "tagPlaceholder": "Kürzel (z. B. XNOVA)",
+    "namePlaceholder": "Vollständiger Name",
+    "descriptionPlaceholder": "Beschreibung",
+    "join": "Einer Allianz beitreten",
+    "joinHint": "Gib die per Nachricht erhaltene Allianz-ID ein.",
+    "joinPlaceholder": "Allianz-ID",
+    "joinAction": "Beitreten",
+    "joining": "Beitritt...",
+    "createdAt": "Gegründet am",
+    "members": "Mitglieder",
+    "players": "Spieler",
+    "points": "Punkte",
+    "invite": "Spieler einladen",
+    "invitePlaceholder": "Benutzername des Spielers",
+    "inviteAction": "Einladen",
+    "inviting": "Einladung...",
+    "leave": "Allianz verlassen",
+    "leaveHint": "Du verlässt die Allianz sofort.",
+    "leaveBlocked": "Der Gründer kann nicht austreten, ohne die Allianz aufzulösen.",
+    "leaveAction": "Verlassen",
+    "leaving": "Austritt..."
+  },
+  "statistics": {
+    "kicker": "Kommando",
+    "title": "Statistiken",
+    "subtitle": "Ranglisten und persönlicher Fortschritt.",
+    "loading": "Statistiken werden geladen...",
+    "personal": "Deine Werte",
+    "playerRank": "Spielerrang",
+    "points": "Punkte",
+    "planets": "Planeten",
+    "alliance": "Allianz",
+    "none": "Keine",
+    "topPlayers": "Beste Spieler",
+    "topAlliances": "Beste Allianzen",
+    "members": "Mitglieder",
+    "emptyPlayers": "Kein Spieler gelistet",
+    "emptyAlliances": "Keine Allianz gelistet"
+  },
+  "settings": {
+    "kicker": "Einstellungen",
+    "title": "Einstellungen",
+    "subtitle": "Verwalte dein Konto und die Oberfläche.",
+    "account": "Konto",
+    "accountHint": "Identität, Sicherheit und E-Mails.",
+    "interface": "Oberfläche",
+    "interfaceHint": "Sprache, Anzeige und Spielkomfort."
+  },
+  "admin": {
+    "kicker": "Administration",
+    "title": "Admin-Konsole",
+    "subtitle": "Konfiguration und Überwachung des Servers.",
+    "backToGame": "Zurück zum Spiel",
+    "noAccess": "Zugang nur für Administratoren.",
+    "loading": "Einstellungen werden geladen...",
+    "overview": "Gesamtübersicht",
+    "overviewHint": "Schneller Überblick über Server und Bevölkerung.",
+    "players": "Spieler",
+    "online": "Online",
+    "planets": "Planeten",
+    "alliances": "Allianzen",
+    "config": "Serverkonfiguration",
+    "configHint": "Globale Parameter live ändern.",
+    "savedAt": "Gespeichert um",
+    "gameSpeed": "Spielgeschwindigkeit",
+    "fleetSpeed": "Flottengeschwindigkeit",
+    "productionSpeed": "Produktionsgeschwindigkeit",
+    "buildingCostMultiplier": "Gebäude-Multiplikator",
+    "researchCostMultiplier": "Forschungs-Multiplikator",
+    "shipCostMultiplier": "Schiffs-Multiplikator",
+    "planetSize": "Planetengröße",
+    "maxBuildingLevel": "Max. Gebäudestufe",
+    "maxTechnologyLevel": "Max. Technologiestufe",
+    "baseMetal": "Basis Metall",
+    "baseCrystal": "Basis Kristall",
+    "baseDeuterium": "Basis Deuterium",
+    "save": "Speichern",
+    "saving": "Wird gespeichert...",
+    "roleTitle": "Rollenverwaltung",
+    "roleHint": "Einen Spieler befördern oder seine Rechte anpassen.",
+    "boostTitle": "Vollständige Entwicklung",
+    "tabGeneral": "Allgemein",
+    "tabSmtp": "SMTP konfigurieren",
+    "boostHint": "Setzt alle Gebäude und Technologien auf Stufe 100.",
+    "usernameLabel": "Benutzername",
+    "usernamePlaceholder": "Name des Spielers",
+    "rolePlayer": "Spieler",
+    "roleModerator": "Moderator",
+    "roleAdmin": "Administrator",
+    "roleSuperAdmin": "Super-Admin",
+    "roleUpdate": "Aktualisieren",
+    "roleUpdating": "Wird aktualisiert...",
+    "boostAction": "Boost",
+    "boostProcessing": "Boost läuft...",
+    "boostSuccess": "Boost angewendet",
+    "boostPlanets": "Planeten",
+    "boostTechs": "Technologien",
+    "boostBuildingLevel": "Gebäudestufe",
+    "boostTechnologyLevel": "Technologiestufe",
+    "moderationTitle": "Moderation",
+    "moderationHint": "Einen Spieler schnell sperren oder entsperren.",
+    "reasonPlaceholder": "Grund (optional)",
+    "days": "Tage",
+    "hours": "Stunden",
+    "minutes": "Minuten",
+    "banAction": "Sperren",
+    "banProcessing": "Sperrung...",
+    "unbanAction": "Entsperren",
+    "unbanProcessing": "Entsperrung...",
+    "auditTitle": "Admin-Protokoll",
+    "auditHint": "Letzte sensible Aktionen.",
+    "auditEmpty": "Keine aktuelle Aktion.",
+    "banTitle": "Sanktionsverlauf",
+    "banHint": "Letzte Sperrungen und Entsperrungen.",
+    "banEmpty": "Keine aktuelle Sanktion.",
+    "by": "Von",
+    "expiresAt": "Läuft ab am"
+  },
+  "common": {
+    "language": "Sprache",
+    "contact": "Kontakt",
+    "you": "Du",
+    "loading": "Wird geladen...",
+    "retry": "Erneut versuchen",
+    "error": "Fehler beim Laden."
+  },
+  "techCategory": {
+    "basic": "Grundlagen",
+    "drive": "Antriebe",
+    "advanced": "Fortgeschritten",
+    "combat": "Kampf"
+  },
+  "onboarding": {
+    "title": "Erste Schritte",
+    "subtitle": "Empfohlene Schritte für den Start deines Imperiums.",
+    "progress": "{done} / {total} Ziele",
+    "next": "Nächstes Ziel",
+    "go": "Hingehen",
+    "showAll": "Alle Schritte anzeigen",
+    "hideAll": "Schritte ausblenden",
+    "dismiss": "Diese Anleitung ausblenden",
+    "status": {
+      "done": "Erledigt",
+      "current": "Aktuell",
+      "upcoming": "Bevorstehend"
+    },
+    "finishedTitle": "Erster Zyklus abgeschlossen",
+    "finishedBody": "Infrastruktur, Forschung und deine erste Flotte stehen. Baue deine Minen aus, kolonisiere und erkunde die Galaxie.",
+    "steps": {
+      "solar_plant": {
+        "title": "Solarkraftwerk bauen",
+        "hint": "Minen verbrauchen Energie. Ohne sie arbeiten sie nur eingeschränkt."
+      },
+      "metal_mine": {
+        "title": "Metallmine bauen",
+        "hint": "Metall ist die Grundlage jedes Baus."
+      },
+      "crystal_mine": {
+        "title": "Kristallmine bauen",
+        "hint": "Kristall wird für das Labor, Forschungen und Schiffe benötigt."
+      },
+      "deuterium_mine": {
+        "title": "Deuteriumsynthetisierer bauen",
+        "hint": "Deuterium treibt Flotten an und wird vom Labor und den meisten Forschungen verlangt."
+      },
+      "energy_balance": {
+        "title": "Energie ausgleichen",
+        "hint": "Brauchen die Minen mehr Energie, als das Kraftwerk liefert, sinkt ihre Leistung. Baue das Kraftwerk aus, bis die Produktion 100 % erreicht."
+      },
+      "research_lab": {
+        "title": "Forschungslabor bauen",
+        "hint": "Es schaltet Technologien frei und kostet Deuterium: Lass deinen Synthetisierer laufen."
+      },
+      "first_research": {
+        "title": "Erste Forschung starten",
+        "hint": "Energietechnik ist eine gute erste Wahl: Sie öffnet die meisten anderen Technologien."
+      },
+      "shipyard": {
+        "title": "Raumwerft bauen",
+        "hint": "Sie schaltet den Schiffbau frei."
+      },
+      "first_ship": {
+        "title": "Erstes Schiff bauen",
+        "hint": "Prüfe die Voraussetzungen auf jeder Schiffskarte; manche erfordern zuerst eine Forschung."
+      },
+      "first_mission": {
+        "title": "Erste Flotte entsenden",
+        "hint": "Transport, Spionage oder Stationierung: Wähle eine Mission auf der Flottenseite."
+      },
+      "mission_report": {
+        "title": "Missionsergebnis ansehen",
+        "hint": "Berichte fassen den Ausgang von Spionage- und Kampfmissionen zusammen."
+      }
+    }
+  },
+  "help": {
+    "open": "Hilfe",
+    "close": "Hilfe ausblenden",
+    "gotIt": "Verstanden",
+    "energy": {
+      "title": "So funktioniert Energie",
+      "body": "Minen verbrauchen die von Solarkraftwerken erzeugte Energie. Übersteigt der Verbrauch die Produktion, werden alle Minen proportional langsamer. Halte die Produktion bei 100 %."
+    },
+    "buildings": {
+      "title": "Gebäude",
+      "body": "Die Kosten werden beim Start abgezogen und steigen mit jeder Stufe. Die Zahl gleichzeitiger Bauten ist begrenzt. Plane nach deinem knappsten Rohstoff, oft Deuterium."
+    },
+    "research": {
+      "title": "Forschung",
+      "body": "Eine Technologie erfordert eine Laborstufe und manchmal weitere Technologien. Es läuft immer nur eine Forschung; die Kosten werden sofort bezahlt."
+    },
+    "shipyard": {
+      "title": "Raumwerft",
+      "body": "Schiffe benötigen eine Raumwerft und oft eine Forschung. Prüfe die Voraussetzungen auf jeder Karte. Aufträge werden sofort bezahlt und in Serien gebaut."
+    },
+    "fleet": {
+      "title": "Flottenmissionen",
+      "body": "Wähle Schiffe, ein Ziel und eine Mission. Treibstoff (Deuterium) wird beim Start verbraucht. Transport und Stationierung liefern Rohstoffe; Spionage braucht Sonden; Kolonisierung ein Kolonieschiff."
+    }
+  }
+}

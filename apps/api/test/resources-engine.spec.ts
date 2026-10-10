@@ -1,4 +1,4 @@
-import { floorResources, updateResources } from '@xnova/game-engine';
+import { floorResources, snapResource, updateResources } from '@xnova/game-engine';
 
 const levels = {
   metalMine: 0,
@@ -64,5 +64,27 @@ describe('Moteur de ressources — conservation des fractions (ECO-01)', () => {
       crystal: 0,
       deuterium: 7,
     });
+  });
+
+  it('ramène le bruit flottant à l\'entier voisin sans toucher aux vraies fractions', () => {
+    expect(snapResource(519.9999999999956)).toBe(520);
+    expect(snapResource(520.0000000000044)).toBe(520);
+    expect(snapResource(519.5)).toBe(519.5);
+    expect(snapResource(519.99)).toBe(519.99);
+    expect(
+      floorResources({ metal: 519.9999999999956, crystal: 0.9999999, deuterium: 7.4 }),
+    ).toEqual({ metal: 520, crystal: 1, deuterium: 7 });
+  });
+
+  it('un stock juste sous un entier après production est affiché sans perdre une unité', () => {
+    // 500 de départ + 20/h pendant 1 h = 520 exactement, mais accumulé par petits pas flottants
+    let stock = { metal: 500, crystal: 0, deuterium: 0 };
+    let last = new Date('2026-01-01T00:00:00Z');
+    for (let i = 0; i < 360; i++) {
+      const now = new Date(last.getTime() + 10_000);
+      stock = updateResources({ resources: stock, levels, lastUpdate: last, now }).resources;
+      last = now;
+    }
+    expect(floorResources(stock).metal).toBe(520);
   });
 });

@@ -1,0 +1,122 @@
+{
+  "profile": {
+    "gameSpeed": 50,
+    "fleetSpeed": 50,
+    "tickSeconds": 5
+  },
+  "milestonesMinutes": {
+    "lab": 22.1,
+    "researchStarted": 57,
+    "shipyard": 64.1,
+    "firstShip": 112.1,
+    "missionSent": 112.1,
+    "missionReport": 112.3,
+    "planCompleted": 112.3
+  },
+  "targetsMinutes": {
+    "lab": 60,
+    "researchStarted": 90,
+    "shipyard": 120,
+    "firstShip": 180,
+    "missionSent": 180,
+    "missionReport": 200,
+    "planCompleted": 200
+  },
+  "events": [
+    {
+      "second": 0,
+      "event": "bâtiment",
+      "id": 4,
+      "level": 1
+    },
+    {
+      "second": 5,
+      "event": "bâtiment",
+      "id": 3,
+      "level": 1
+    },
+    {
+      "second": 1320,
+      "event": "bâtiment",
+      "id": 31,
+      "level": 1
+    },
+    {
+      "second": 1325,
+      "event": "bâtiment",
+      "id": 2,
+      "level": 1
+    },
+    {
+      "second": 1330,
+      "event": "bâtiment",
+      "id": 4,
+      "level": 2
+    },
+    {
+      "second": 1800,
+      "event": "bâtiment",
+      "id": 3,
+      "level": 2
+    },
+    {
+      "second": 2400,
+      "event": "bâtiment",
+      "id": 4,
+      "level": 3
+    },
+    {
+      "second": 3420,
+      "event": "recherche",
+      "id": 113
+    },
+    {
+      "second": 3840,
+      "event": "bâtiment",
+      "id": 21,
+      "level": 1
+    },
+    {
+      "second": 4080,
+      "event": "bâtiment",
+      "id": 1,
+      "level": 1
+    },
+    {
+      "second": 4200,
+      "event": "bâtiment",
+      "id": 1,
+      "level": 2
+    },
+    {
+      "second": 4440,
+      "event": "bâtiment",
+      "id": 4,
+      "level": 4
+    },
+    {
+      "second": 5280,
+      "event": "recherche",
+      "id": 115
+    },
+    {
+      "second": 6720,
+      "event": "vaisseau commandé"
+    },
+    {
+      "second": 6725,
+      "event": "flotte envoyée",
+      "target": {
+        "galaxy": 1,
+        "system": 26,
+        "position": 10
+      }
+    }
+  ],
+  "minimumStock": 0,
+  "onboarding": {
+    "completed": 11,
+    "total": 11,
+    "pending": []
+  }
+}

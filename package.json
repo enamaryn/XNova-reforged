@@ -44,7 +44,8 @@
     "setup:create-admin": "npm run setup:create-admin -w @xnova/api --",
     "admin:reset-password": "npm run admin:reset-password -w @xnova/api --",
     "test:mobile-ui": "playwright test --config playwright.mobile.config.ts --workers=1",
-    "test:update": "node --test scripts/update/test/*.test.mjs"
+    "test:update": "node --test scripts/update/test/*.test.mjs",
+    "test:i18n": "node --test scripts/i18n/test/*.test.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",

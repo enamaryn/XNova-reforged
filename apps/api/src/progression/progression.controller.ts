@@ -6,6 +6,10 @@ import { ProgressionService } from "./progression.service";
 @Controller("progression")
 export class ProgressionController {
   constructor(private readonly progression: ProgressionService) {}
+  @Get("onboarding")
+  onboarding(@CurrentUser("id") userId: string) {
+    return this.progression.getOnboarding(userId);
+  }
   @Get()
   get(@CurrentUser("id") userId: string) {
     return this.progression.get(userId);

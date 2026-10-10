@@ -39,3 +39,32 @@ Les ressources sont débitées dès la commande. Chaque lot dispose d'une date d
 Une commande en attente peut être retirée avec confirmation : remboursement de 90 % de chaque ressource réellement payée, arrondi à l'entier inférieur. Les 10 % restants sont perdus. Le coût enregistré est utilisé même après changement des tarifs. Pour les très anciennes entrées qui n'ont pas de coût enregistré, le coût de référence est utilisé en repli et affiché avant confirmation. Une commande déjà démarrée ne peut pas être retirée ; le lot est livré en entier à sa fin.
 
 Retrait, remboursement et recalcul de la file sont atomiques sous le même verrou que les nouvelles commandes et la finalisation. Une seconde demande d'annulation ne rembourse jamais une seconde fois. L'interface distingue « En production » et « En attente » et affiche les dates estimées et le remboursement exact.
+
+## Rythme du premier cycle (SCOPE-02)
+
+**Décision du propriétaire (10 octobre 2026) : les objectifs de premier cycle sont tenus par un profil serveur ×50 (×20 minimum), sans modifier les formules, les coûts ni les stocks de départ.** La vitesse du jeu est un réglage serveur existant (page d'administration, `GAME_SPEED`) : elle multiplie la production, y compris le revenu de base, et divise les durées. Les comptes en place ne sont pas touchés.
+
+Pourquoi : aux coûts actuels, un joueur raisonnable à vitesse ×1 atteint le laboratoire vers 18 h, la première recherche vers 42 h et le premier chasseur après plusieurs jours (le deutérium, à 0 au départ, est le frein : laboratoire 200, Technologie Énergie 400, Réacteur à combustion 690, Hangar 100). Atteindre « laboratoire en moins d'une heure et premier vaisseau en moins de deux à trois heures » à ×1 demanderait un revenu de base environ dix fois supérieur, ce qui change l'échelle de tout le jeu ; ce choix a été écarté.
+
+| Jalon (joueur raisonnable, minutes) | ×1 | ×20 | ×50 |
+|---|---:|---:|---:|
+| Laboratoire terminé | ≈ 1 098 | ≈ 55 | **22,1 (API)** |
+| Première recherche lancée | ≈ 2 530 | ≈ 137 | **57,0 (API)** |
+| Hangar terminé | ≈ 2 893 | ≈ 160 | **64,1 (API)** |
+| Premier vaisseau terminé | ≈ 4 948 | ≈ 357 | **112,1 (API)** |
+| Première mission envoyée / rapport reçu | — | — | **112,1 / 112,3 (API)** |
+
+- Colonne ×50 : mesurée par `first-cycle-progression.integration.spec.ts` (API et PostgreSQL réels, horloge simulée, aucun ajout de ressources, résultats dans [first-cycle-progression-2026-10-10.json](audits/first-cycle-progression-2026-10-10.json)). Seuils de la suite : laboratoire ≤ 60, recherche ≤ 90, hangar ≤ 120, vaisseau ≤ 180, mission ≤ 180, rapport ≤ 200 minutes.
+- Colonnes ×1 et ×20 : **estimations** d'un simulateur hors dépôt qui applique les mêmes formules (joueur qui choisit à chaque étape l'achat réduisant le délai de l'objectif). Elles indiquent un ordre de grandeur et n'ont pas été rejouées via l'API.
+- Plan simulé à ×50 : centrale, synthétiseur de deutérium, laboratoire, mine de cristal, centrale, Technologie Énergie, synthétiseur 2, centrale, Hangar, Réacteur à combustion, deux mines de métal, un chasseur léger (Hangar 1 et combustion 1), puis attaque d'une planète abandonnée voisine.
+- À ×1, le rythme classique est conservé : le guide d'objectifs et les aides contextuelles servent alors de repère. Un serveur « débutants » est un réglage d'administration, pas une modification du jeu.
+
+## Guide des premiers pas
+
+La vue d'ensemble affiche un guide de 11 objectifs calculés par le serveur d'après l'état réel du joueur (`GET /progression/onboarding`, logique pure dans `packages/game-config/src/onboarding.ts`) : centrale solaire, mines de métal, de cristal et de deutérium, énergie équilibrée (consommation des mines couverte), laboratoire, première recherche, hangar, premier vaisseau, première flotte envoyée, premier résultat de mission (rapport d'espionnage ou de combat, ou flotte rentrée). Chaque étape pointe vers la page où l'effectuer ; une étape faite hors ordre reste terminée. Le guide peut être masqué une fois fini.
+
+Des aides contextuelles repliables expliquent l'énergie (vue d'ensemble), les bâtiments (écrans larges), la recherche, le chantier spatial et les missions de flotte ; leur état est mémorisé par navigateur.
+
+## Affichage des ressources
+
+Un stock qui ne diffère d'un entier que par du bruit de calcul flottant (moins de 10⁻⁶, par exemple 519,9999999999956) est ramené à cet entier (`snapResource` dans `packages/game-engine/src/resources.ts`) : l'affichage montre 520 et l'achat à 520 est accepté. Les vraies fractions produites sont conservées.

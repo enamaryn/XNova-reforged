@@ -2,7 +2,7 @@
 
 import { useRouter, usePathname } from 'next/navigation';
 import { useLocale } from 'next-intl';
-import { locales, localeNames, type Locale } from '@/i18n/config';
+import { locales, localeNames, pathWithLocale, persistLocaleCookie, type Locale } from '@/lib/i18n/locale';
 import { Globe } from 'lucide-react';
 
 export function LanguageSwitcher() {
@@ -11,21 +11,8 @@ export function LanguageSwitcher() {
   const currentLocale = useLocale();
 
   const handleLocaleChange = (newLocale: Locale) => {
-    // Remove current locale from pathname
-    const segments = pathname.split('/');
-    const localeIndex = segments.findIndex((segment) => locales.includes(segment as Locale));
-
-    if (localeIndex !== -1) {
-      segments[localeIndex] = newLocale;
-    } else {
-      segments.splice(1, 0, newLocale);
-    }
-
-    const newPathname = segments.join('/');
-
-    // Set cookie and navigate
-    document.cookie = `NEXT_LOCALE=${newLocale}; max-age=${60 * 60 * 24 * 365}; path=/`;
-    router.push(newPathname);
+    persistLocaleCookie(newLocale);
+    router.push(pathWithLocale(pathname, newLocale));
     router.refresh();
   };
 

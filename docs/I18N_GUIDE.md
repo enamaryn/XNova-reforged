@@ -7,7 +7,7 @@
 
 ## 📚 Vue d'ensemble
 
-Le projet utilise **next-intl** pour gérer l'internationalisation (i18n) avec Next.js 15 App Router. Le système supporte actuellement **Français (FR)** et **Anglais (EN)** avec possibilité d'ajouter facilement d'autres langues.
+Le projet utilise **next-intl** pour gérer l'internationalisation (i18n) avec Next.js 15 App Router. Le système supporte **cinq langues : français (fr, langue par défaut), anglais (en), espagnol (es), allemand (de) et italien (it)**.
 
 ### Architecture
 
@@ -17,8 +17,9 @@ apps/web/
 │   ├── config.ts          # Configuration des locales
 │   ├── request.ts         # Configuration next-intl
 │   └── messages/
-│       ├── fr.json        # Traductions françaises
-│       └── en.json        # Traductions anglaises
+│       ├── fr.json …      # Pages publiques et authentification (next-intl), 5 langues
+│   └── game/
+│       └── fr.json …      # Interface de jeu (provider `useI18n`), 5 langues
 ├── middleware.ts          # Middleware de détection de langue
 └── app/
     ├── layout.tsx         # Root layout
@@ -377,3 +378,14 @@ Avant chaque commit, vérifiez :
 ---
 
 **📌 Document maintenu par l'équipe de développement XNova Reforged**
+
+
+---
+
+## Mise à jour du 10 octobre 2026 : un seul état de langue
+
+- La langue vient **toujours de l'URL** (`/[locale]/…`). `useI18n()` (interface de jeu) lit la locale de next-intl ; `setLocale()` écrit le cookie `NEXT_LOCALE` et navigue vers le même chemin dans l'autre langue (même logique que `LanguageSwitcher`, partagée dans `lib/i18n/locale.ts`). L'ancien état `localStorage` (`xnova-locale`, fr/en/es seulement) est supprimé.
+- Deux jeux de messages : `apps/web/i18n/messages/*.json` (`useTranslations`, pages publiques et authentification) et `apps/web/i18n/game/*.json` (`useI18n().t('clé')`, interface de jeu). Les deux existent dans les **cinq** langues.
+- `t('clé', { param: valeur })` remplace les marqueurs `{param}`. Repli si une clé manque : langue courante, puis anglais, puis français, puis la clé elle-même.
+- **Ajouter un texte :** créer la clé dans les cinq fichiers du jeu, puis `npm run test:i18n` (mêmes clés, mêmes marqueurs, aucune valeur vide). La CI exécute ce test.
+- **Dette connue :** une vingtaine de composants contiennent encore du français en dur (vue d'ensemble hors guide, chantier, défense, rapports de combat et d'espionnage, fiche bâtiment, assistant d'installation, administration, page publique). Les migrer vers `useI18n` reste à faire ; les emails sont envoyés en français uniquement.

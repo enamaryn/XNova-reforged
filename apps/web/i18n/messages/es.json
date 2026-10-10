@@ -37,7 +37,10 @@
       "error": {
         "invalidCredentials": "Correo o contraseña incorrectos",
         "generic": "Ocurrió un error al iniciar sesión"
-      }
+      },
+      "success": "Inicio de sesión correcto",
+      "errorTitle": "No se pudo iniciar sesión",
+      "closeError": "Intentar de nuevo"
     },
     "register": {
       "title": "Únete al universo.",
@@ -328,6 +331,29 @@
     "serverError": "Error del servidor",
     "unknownError": "Ocurrió un error desconocido",
     "tryAgain": "Intentar de nuevo",
-    "goHome": "Volver al inicio"
+    "goHome": "Volver al inicio",
+    "generic": "Se produjo un error",
+    "network": "Error de red. Comprueba tu conexión.",
+    "retry": "Reintentar"
+  },
+  "loading": {
+    "default": "Cargando...",
+    "resources": "Cargando recursos...",
+    "buildings": "Cargando edificios...",
+    "research": "Cargando investigaciones...",
+    "fleet": "Cargando flota...",
+    "galaxy": "Cargando galaxia..."
+  },
+  "toast": {
+    "success": {
+      "saved": "Guardado correctamente",
+      "updated": "Actualizado correctamente",
+      "deleted": "Eliminado correctamente"
+    },
+    "error": {
+      "save": "Error al guardar",
+      "update": "Error al actualizar",
+      "delete": "Error al eliminar"
+    }
   }
 }

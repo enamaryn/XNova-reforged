@@ -37,7 +37,10 @@
       "error": {
         "invalidCredentials": "Email o password non validi",
         "generic": "Si è verificato un errore durante l'accesso"
-      }
+      },
+      "success": "Accesso riuscito",
+      "errorTitle": "Impossibile accedere",
+      "closeError": "Riprova"
     },
     "register": {
       "title": "Unisciti all'universo.",
@@ -328,6 +331,29 @@
     "serverError": "Errore del server",
     "unknownError": "Si è verificato un errore sconosciuto",
     "tryAgain": "Riprova",
-    "goHome": "Torna alla home"
+    "goHome": "Torna alla home",
+    "generic": "Si è verificato un errore",
+    "network": "Errore di rete. Controlla la connessione.",
+    "retry": "Riprova"
+  },
+  "loading": {
+    "default": "Caricamento...",
+    "resources": "Caricamento delle risorse...",
+    "buildings": "Caricamento degli edifici...",
+    "research": "Caricamento delle ricerche...",
+    "fleet": "Caricamento della flotta...",
+    "galaxy": "Caricamento della galassia..."
+  },
+  "toast": {
+    "success": {
+      "saved": "Salvato con successo",
+      "updated": "Aggiornato con successo",
+      "deleted": "Eliminato con successo"
+    },
+    "error": {
+      "save": "Errore durante il salvataggio",
+      "update": "Errore durante l'aggiornamento",
+      "delete": "Errore durante l'eliminazione"
+    }
   }
 }

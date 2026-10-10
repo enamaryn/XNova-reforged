@@ -1,0 +1,334 @@
+{
+  "nav": {
+    "overview": "Vue",
+    "buildings": "Bâtiments",
+    "research": "Recherche",
+    "galaxy": "Galaxie",
+    "fleet": "Flotte",
+    "movement": "Mouvements",
+    "shipyard": "Chantier spatial",
+    "defense": "Défense",
+    "alliance": "Alliance",
+    "messages": "Messages",
+    "statistics": "Statistiques",
+    "reports": "Rapports",
+    "options": "Options",
+    "admin": "Admin",
+    "label": "Navigation principale",
+    "languageMenu": "Choix de la langue",
+    "userMenu": "Menu utilisateur"
+  },
+  "sidebar": {
+    "principal": "Principal",
+    "construction": "Construction",
+    "fleet": "Flotte & Exploration",
+    "social": "Social",
+    "other": "Autre",
+    "quickAccess": "Accès rapide",
+    "planetView": "Vue planète"
+  },
+  "fleet": {
+    "title": "Flotte",
+    "subtitle": "Préparez vos mouvements et missions.",
+    "compose": "Composer une flotte",
+    "availableShips": "Vaisseaux disponibles",
+    "mission": "Mission",
+    "destination": "Destination",
+    "active": "Flottes en cours",
+    "none": "Aucune flotte en déplacement.",
+    "last": "Dernière mission : aucune.",
+    "missions": {
+      "transport": "Transport",
+      "attack": "Attaque",
+      "spy": "Espionnage",
+      "colonize": "Colonisation",
+      "deploy": "Déploiement"
+    },
+    "summary": "Résumé de mission",
+    "distance": "Distance",
+    "duration": "Durée estimée",
+    "fuel": "Consommation",
+    "capacity": "Capacité cargo",
+    "cargoSelected": "Cargaison"
+  },
+  "movement": {
+    "kicker": "Centre de trafic",
+    "title": "Mouvements",
+    "subtitle": "Suivez vos flottes et leurs retours.",
+    "active": "Flottes actives",
+    "tracking": "Trafic spatial",
+    "refresh": "Mise à jour toutes les 10s",
+    "empty": "Aucune flotte en mouvement.",
+    "arrivalIn": "Arrivée dans",
+    "backIn": "Retour dans",
+    "recall": "Rappeler",
+    "recalling": "Rappel...",
+    "fleetSize": "Vaisseaux",
+    "status": {
+      "traveling": "En route",
+      "returning": "Retour",
+      "arrived": "Arrivé",
+      "completed": "Terminé"
+    }
+  },
+  "galaxy": {
+    "title": "Galaxie",
+    "subtitle": "Naviguez dans l’univers et repérez les systèmes disponibles.",
+    "freeSlot": "Position libre",
+    "loading": "Chargement du système...",
+    "activity": "Activité",
+    "activeNow": "Actif",
+    "moon": "Lune"
+  },
+  "messages": {
+    "kicker": "Communication",
+    "title": "Messages",
+    "subtitle": "Gérez vos communications avec les autres commandants.",
+    "loading": "Chargement des messages...",
+    "inbox": "Boîte de réception",
+    "items": "messages",
+    "empty": "Aucun message",
+    "emptyHint": "Envoyez un message pour démarrer une conversation.",
+    "read": "Lu",
+    "unread": "Non lu",
+    "from": "De",
+    "compose": "Nouveau message",
+    "toPlaceholder": "Destinataire (pseudo)",
+    "subjectPlaceholder": "Sujet",
+    "bodyPlaceholder": "Votre message...",
+    "send": "Envoyer",
+    "sending": "Envoi...",
+    "detail": "Lecture",
+    "selectHint": "Sélectionnez un message pour le lire.",
+    "delete": "Supprimer",
+    "deleting": "Suppression..."
+  },
+  "alliance": {
+    "kicker": "Diplomatie",
+    "title": "Alliance",
+    "subtitle": "Créez ou rejoignez une alliance pour progresser ensemble.",
+    "loading": "Chargement de l'alliance...",
+    "create": "Créer une alliance",
+    "createAction": "Créer",
+    "creating": "Création...",
+    "tagPlaceholder": "Tag (ex: XNOVA)",
+    "namePlaceholder": "Nom complet",
+    "descriptionPlaceholder": "Description",
+    "join": "Rejoindre une alliance",
+    "joinHint": "Entrez l'identifiant d'alliance reçu par message.",
+    "joinPlaceholder": "ID d'alliance",
+    "joinAction": "Rejoindre",
+    "joining": "Rejoindre...",
+    "createdAt": "Créée le",
+    "members": "Membres",
+    "players": "joueurs",
+    "points": "Points",
+    "invite": "Inviter un joueur",
+    "invitePlaceholder": "Pseudo du joueur",
+    "inviteAction": "Inviter",
+    "inviting": "Invitation...",
+    "leave": "Quitter l'alliance",
+    "leaveHint": "Vous quitterez l'alliance immédiatement.",
+    "leaveBlocked": "Le fondateur ne peut pas quitter sans dissoudre.",
+    "leaveAction": "Quitter",
+    "leaving": "Départ..."
+  },
+  "statistics": {
+    "kicker": "Commandement",
+    "title": "Statistiques",
+    "subtitle": "Classements et progression personnelle.",
+    "loading": "Chargement des statistiques...",
+    "personal": "Vos stats",
+    "playerRank": "Classement joueur",
+    "points": "Points",
+    "planets": "Planètes",
+    "alliance": "Alliance",
+    "none": "Aucune",
+    "topPlayers": "Top joueurs",
+    "topAlliances": "Top alliances",
+    "members": "membres",
+    "emptyPlayers": "Aucun joueur classé",
+    "emptyAlliances": "Aucune alliance classée"
+  },
+  "settings": {
+    "kicker": "Préférences",
+    "title": "Paramètres",
+    "subtitle": "Gérez votre compte et l'interface.",
+    "account": "Compte",
+    "accountHint": "Identité, sécurité et emails.",
+    "interface": "Interface",
+    "interfaceHint": "Langue, affichage et confort de jeu."
+  },
+  "admin": {
+    "kicker": "Administration",
+    "title": "Console admin",
+    "subtitle": "Configuration et supervision du serveur.",
+    "backToGame": "Retour au jeu",
+    "noAccess": "Accès réservé aux administrateurs.",
+    "loading": "Chargement des paramètres...",
+    "overview": "Vue générale",
+    "overviewHint": "Etat rapide du serveur et de la population.",
+    "players": "Joueurs",
+    "online": "En ligne",
+    "planets": "Planètes",
+    "alliances": "Alliances",
+    "config": "Configuration serveur",
+    "configHint": "Modifiez les paramètres globaux en direct.",
+    "savedAt": "Sauvegardé à",
+    "gameSpeed": "Vitesse du jeu",
+    "fleetSpeed": "Vitesse des flottes",
+    "productionSpeed": "Vitesse de production",
+    "buildingCostMultiplier": "Multiplicateur batiments",
+    "researchCostMultiplier": "Multiplicateur recherches",
+    "shipCostMultiplier": "Multiplicateur vaisseaux",
+    "planetSize": "Taille planète",
+    "maxBuildingLevel": "Niveau max batiments",
+    "maxTechnologyLevel": "Niveau max technologies",
+    "baseMetal": "Base métal",
+    "baseCrystal": "Base cristal",
+    "baseDeuterium": "Base deutérium",
+    "save": "Sauvegarder",
+    "saving": "Sauvegarde...",
+    "roleTitle": "Gestion des roles",
+    "roleHint": "Promouvoir un joueur ou ajuster ses permissions.",
+    "boostTitle": "Developpement total",
+    "tabGeneral": "Général",
+    "tabSmtp": "Configurer SMTP",
+    "boostHint": "Passe tous les batiments et technologies au niveau 100.",
+    "usernameLabel": "Pseudo",
+    "usernamePlaceholder": "Nom du joueur",
+    "rolePlayer": "Joueur",
+    "roleModerator": "Moderateur",
+    "roleAdmin": "Administrateur",
+    "roleSuperAdmin": "Super admin",
+    "roleUpdate": "Mettre a jour",
+    "roleUpdating": "Mise a jour...",
+    "boostAction": "Booster",
+    "boostProcessing": "Boost en cours...",
+    "boostSuccess": "Boost applique",
+    "boostPlanets": "planetes",
+    "boostTechs": "technologies",
+    "boostBuildingLevel": "niveau batiments",
+    "boostTechnologyLevel": "niveau technologies",
+    "moderationTitle": "Moderation",
+    "moderationHint": "Bannir ou debannir un joueur rapidement.",
+    "reasonPlaceholder": "Raison (optionnel)",
+    "days": "Jours",
+    "hours": "Heures",
+    "minutes": "Minutes",
+    "banAction": "Bannir",
+    "banProcessing": "Bannissement...",
+    "unbanAction": "Debannir",
+    "unbanProcessing": "Debannissement...",
+    "auditTitle": "Journal admin",
+    "auditHint": "Dernieres actions sensibles.",
+    "auditEmpty": "Aucune action recente.",
+    "banTitle": "Historique des sanctions",
+    "banHint": "Derniers bannissements et debannissements.",
+    "banEmpty": "Aucune sanction recente.",
+    "by": "Par",
+    "expiresAt": "Expire le"
+  },
+  "common": {
+    "language": "Langue",
+    "contact": "Contact",
+    "you": "Vous",
+    "loading": "Chargement...",
+    "retry": "Réessayer",
+    "error": "Erreur de chargement."
+  },
+  "techCategory": {
+    "basic": "Fondations",
+    "drive": "Propulsions",
+    "advanced": "Avancé",
+    "combat": "Combat"
+  },
+  "onboarding": {
+    "title": "Premiers pas",
+    "subtitle": "Les étapes recommandées pour lancer votre empire.",
+    "progress": "{done} / {total} objectifs",
+    "next": "Prochain objectif",
+    "go": "Y aller",
+    "showAll": "Voir toutes les étapes",
+    "hideAll": "Masquer les étapes",
+    "dismiss": "Masquer ce guide",
+    "status": {
+      "done": "Terminé",
+      "current": "En cours",
+      "upcoming": "À venir"
+    },
+    "finishedTitle": "Premier cycle terminé",
+    "finishedBody": "Vos infrastructures, votre recherche et votre première flotte sont en place. Développez vos mines, colonisez et explorez la galaxie.",
+    "steps": {
+      "solar_plant": {
+        "title": "Construire une centrale solaire",
+        "hint": "Les mines consomment de l'énergie. Sans elle, elles tournent au ralenti."
+      },
+      "metal_mine": {
+        "title": "Construire une mine de métal",
+        "hint": "Le métal est la base de toutes les constructions."
+      },
+      "crystal_mine": {
+        "title": "Construire une mine de cristal",
+        "hint": "Le cristal sert au laboratoire, aux recherches et aux vaisseaux."
+      },
+      "deuterium_mine": {
+        "title": "Construire un synthétiseur de deutérium",
+        "hint": "Le deutérium alimente les flottes et est exigé par le laboratoire et la plupart des recherches."
+      },
+      "energy_balance": {
+        "title": "Équilibrer l'énergie",
+        "hint": "Quand les mines demandent plus d'énergie que la centrale n'en produit, leur rendement baisse. Améliorez la centrale jusqu'à 100 % de production."
+      },
+      "research_lab": {
+        "title": "Construire le laboratoire de recherche",
+        "hint": "Il débloque les technologies et coûte du deutérium : gardez votre synthétiseur en marche."
+      },
+      "first_research": {
+        "title": "Lancer votre première recherche",
+        "hint": "La technologie Énergie est un bon premier choix : elle ouvre la plupart des autres technologies."
+      },
+      "shipyard": {
+        "title": "Construire le hangar",
+        "hint": "Il débloque la construction de vaisseaux."
+      },
+      "first_ship": {
+        "title": "Construire votre premier vaisseau",
+        "hint": "Consultez les prérequis affichés sur chaque vaisseau : certains demandent une recherche."
+      },
+      "first_mission": {
+        "title": "Envoyer votre première flotte",
+        "hint": "Transport, espionnage ou déploiement : choisissez une mission dans la page Flotte."
+      },
+      "mission_report": {
+        "title": "Consulter le résultat d'une mission",
+        "hint": "Les rapports résument l'issue des missions d'espionnage et de combat."
+      }
+    }
+  },
+  "help": {
+    "open": "Aide",
+    "close": "Masquer l'aide",
+    "gotIt": "Compris",
+    "energy": {
+      "title": "Comment fonctionne l'énergie",
+      "body": "Les mines consomment l'énergie produite par les centrales solaires. Si la consommation dépasse la production, toutes les mines ralentissent proportionnellement. Gardez la production à 100 %."
+    },
+    "buildings": {
+      "title": "Bâtiments",
+      "body": "Les coûts sont débités au lancement et augmentent à chaque niveau. Le nombre de constructions simultanées est limité. Planifiez selon votre ressource la plus rare, souvent le deutérium."
+    },
+    "research": {
+      "title": "Recherche",
+      "body": "Une technologie demande un niveau de laboratoire et parfois d'autres technologies. Une seule recherche à la fois ; le coût est payé dès le lancement."
+    },
+    "shipyard": {
+      "title": "Chantier spatial",
+      "body": "Les vaisseaux demandent un hangar et souvent une recherche. Vérifiez les prérequis sur chaque carte. Les commandes sont payées immédiatement et construites par lots."
+    },
+    "fleet": {
+      "title": "Missions de flotte",
+      "body": "Choisissez des vaisseaux, une cible et une mission. Le carburant (deutérium) est consommé au départ. Transport et déploiement livrent des ressources ; l'espionnage demande des sondes ; la colonisation, un vaisseau de colonisation."
+    }
+  }
+}
