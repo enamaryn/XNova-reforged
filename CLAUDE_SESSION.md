@@ -5,6 +5,15 @@
 
 ---
 
+## Session — clôture de la supervision et mise à jour de la documentation
+
+**Date :** 12 octobre 2026. Le propriétaire a mis à jour son serveur (PR #56 puis #57) : supervision, test d'envoi d'email et carte « Mémoire et charge » **validés**.
+
+- [x] ROADMAP_MVP (validation du lot, état des vérifications), README (statut), CLAUDE.md (état courant), documentation des vérifications.
+- Reste ouvert côté sortie MVP : couverture >70 % (52,8 % indicatif), Lighthouse >90 (accueil mobile 67), uptime >99 % non mesuré, WebKit non exécuté localement. Fonctions volontairement absentes : missiles, lunes, dépôt d'alliance, expéditions, réseau de recherche.
+- Prochaine étape proposée : performance mobile (Lighthouse), puis mesure d'uptime avec la supervision.
+
+
 ## Session — supervision : faux « charge élevée » en LXC
 
 **Date :** 12 octobre 2026. **Retour du propriétaire** : la carte « Mémoire et charge » affichait « Dégradé » (charge 2,22 sur 1 cœur) alors que Proxmox montrait 0,44 % de processeur.
