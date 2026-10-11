@@ -5,6 +5,14 @@
 
 ---
 
+## Session — clôture d'OPS-03
+
+**Date :** 11 octobre 2026. **Décision du propriétaire :** fermer OPS-03.
+
+- [x] OPS-03 clos dans `ROADMAP_MVP.md`, le registre `docs/DOUBLE_AUDIT_2026-10.md` et le README ; PR #42 à #45 ; aucun constat du registre n'est ouvert.
+- **Réserves de clôture (non réalisées)** : uptime en production et charge sur le serveur du propriétaire à ×50 ; machine unique ; attaque, dépôt et colonisation absents du scénario ; Lighthouse à remesurer après déploiement.
+- **Prochaines étapes :** mise à jour du serveur et application du profil ×50 (propriétaire), puis lot suivant du MVP (prérequis bloquants et dette technique du registre).
+
 ## Session — optimisation de l'accueil mobile
 
 **Date :** 11 octobre 2026.

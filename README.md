@@ -7,7 +7,7 @@ Entièrement généré par IA, Claude et Codex.
 
 ## Statut
 
-**Alpha privée `v0.2.0-alpha.1` ; MVP non validé pour ouverture publique.** Le socle est en place (comptes avec confirmation d'email, économie, bâtiments, recherche, chantier spatial, défense, flottes, combats, espionnage, colonisation, messagerie, alliances, classement, administration, installation web, sauvegarde/restauration). Restent ouverts : la clôture du lot d'équilibrage et de langues (SCOPE-02) et la validation de charge (OPS-03).
+**Alpha privée `v0.2.0-alpha.1` ; MVP non validé pour ouverture publique.** Le socle est en place (comptes avec confirmation d'email, économie, bâtiments, recherche, chantier spatial, défense, flottes, combats, espionnage, colonisation, messagerie, alliances, classement, administration, installation web, sauvegarde/restauration). SCOPE-02 (équilibrage et langues) et OPS-03 (charge à 200 joueurs, ×50) sont clos ; l'uptime et la charge sur le serveur du propriétaire restent à mesurer.
 
 - **Langues :** français, anglais, espagnol, allemand, italien (`npm run test:i18n` vérifie la parité des clés).
 - **Rythme de jeu :** formules et coûts d'origine ; le premier cycle (laboratoire, recherche, premier vaisseau, première mission) est calibré pour un serveur à vitesse ×50 (×20 minimum), voir [docs/PROGRESSION.md](docs/PROGRESSION.md). À ×1 le rythme est volontairement lent.
