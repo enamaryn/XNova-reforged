@@ -4,7 +4,35 @@ import { locales, defaultLocale } from './i18n/config'
 
 const protectedPaths = ["/overview", "/buildings", "/research", "/fleet", "/galaxy", "/shipyard", "/defense", "/alliance", "/messages", "/reports", "/statistics", "/settings", "/help"];
 
-export function middleware(request: NextRequest) {
+/** Langue du serveur (choisie à l'installation), lue sur l'API et gardée 60 s en mémoire. */
+let cachedServerLanguage: { value: (typeof locales)[number]; expires: number } | null = null;
+
+async function getServerLanguage(request: NextRequest): Promise<(typeof locales)[number]> {
+  if (cachedServerLanguage && cachedServerLanguage.expires > Date.now()) return cachedServerLanguage.value;
+  const env = (process.env.NEXT_PUBLIC_API_URL ?? '').trim().replace(/\/+$/, '');
+  const base = env.startsWith('/') ? `${request.nextUrl.origin}${env}` : env || 'http://localhost:3001';
+  let value: (typeof locales)[number] = defaultLocale;
+  let ttl = 5_000; // échec : on réessaie vite
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 1_500);
+    const response = await fetch(`${base}/setup/status`, { signal: controller.signal, cache: 'no-store' });
+    clearTimeout(timer);
+    if (response.ok) {
+      const body = (await response.json()) as { language?: string };
+      if (body.language && (locales as readonly string[]).includes(body.language)) {
+        value = body.language as (typeof locales)[number];
+        ttl = 60_000;
+      }
+    }
+  } catch {
+    // API injoignable : langue par défaut de l'interface
+  }
+  cachedServerLanguage = { value, expires: Date.now() + ttl };
+  return value;
+}
+
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Step 1: Handle locale detection and routing
@@ -18,24 +46,9 @@ export function middleware(request: NextRequest) {
     // Extract locale from pathname
     locale = pathname.split('/')[1] as typeof locales[number];
   } else {
-    // Get locale from cookie or Accept-Language header
-    locale = request.cookies.get('NEXT_LOCALE')?.value as typeof locales[number] || defaultLocale;
-
-    if (!locales.includes(locale)) {
-      const acceptLanguage = request.headers.get('Accept-Language');
-      if (acceptLanguage) {
-        const preferredLocale = acceptLanguage
-          .split(',')[0]
-          .split('-')[0]
-          .toLowerCase();
-
-        locale = locales.includes(preferredLocale as any)
-          ? (preferredLocale as typeof locales[number])
-          : defaultLocale;
-      } else {
-        locale = defaultLocale;
-      }
-    }
+    // Langue choisie par le visiteur (cookie), sinon langue du serveur définie à l'installation
+    const cookieLocale = request.cookies.get('NEXT_LOCALE')?.value as typeof locales[number] | undefined;
+    locale = cookieLocale && locales.includes(cookieLocale) ? cookieLocale : await getServerLanguage(request);
 
     // Redirect to locale path
     const redirectUrl = new URL(`/${locale}${pathname}`, request.url);
@@ -43,11 +56,13 @@ export function middleware(request: NextRequest) {
     redirectUrl.search = request.nextUrl.search;
     const response = NextResponse.redirect(redirectUrl);
 
-    // Set locale cookie
-    response.cookies.set('NEXT_LOCALE', locale, {
-      maxAge: 60 * 60 * 24 * 365, // 1 year
-      path: '/',
-    });
+    // Le cookie ne mémorise que le choix du visiteur : la langue du serveur peut changer ensuite
+    if (cookieLocale && locales.includes(cookieLocale)) {
+      response.cookies.set('NEXT_LOCALE', locale, {
+        maxAge: 60 * 60 * 24 * 365, // 1 year
+        path: '/',
+      });
+    }
 
     response.headers.set('x-locale', locale);
 

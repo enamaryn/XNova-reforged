@@ -2,6 +2,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { resolveAllowedOrigins } from './config/env.validation';
 import { securityHeaders } from './common/security/security-headers';
+import { requestLocaleMiddleware } from './common/request-locale';
 
 /** Configuration HTTP commune à main.ts et aux tests d'intégration (SEC-04). */
 export function configureApp(app: INestApplication, options: { swagger?: boolean } = {}) {
@@ -13,6 +14,9 @@ export function configureApp(app: INestApplication, options: { swagger?: boolean
   if (trustProxy && typeof express.set === 'function') {
     express.set('trust proxy', /^\d+$/.test(trustProxy) ? Number(trustProxy) : trustProxy);
   }
+
+  // Langue de la requête (en-tête X-Locale) pour localiser les textes du jeu
+  app.use(requestLocaleMiddleware);
 
   app.use(securityHeaders({ production: isProd, swagger: !!options.swagger }));
 

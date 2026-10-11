@@ -32,3 +32,10 @@ export function pathWithLocale(pathname: string, next: Locale): string {
 export function persistLocaleCookie(next: Locale) {
   document.cookie = `NEXT_LOCALE=${next}; max-age=${60 * 60 * 24 * 365}; path=/`;
 }
+
+/** Langue de la page courante (attribut `lang` posé par la mise en page), pour les appels hors composants. */
+export function documentLocale(): Locale | null {
+  if (typeof document === 'undefined') return null;
+  const lang = document.documentElement.lang;
+  return isLocale(lang) ? lang : null;
+}

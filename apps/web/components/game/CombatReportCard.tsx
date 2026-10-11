@@ -4,7 +4,7 @@ import { DEFENSES } from '@xnova/game-config';
 import { memo } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 
-import { useI18n } from '@/lib/i18n';
+import { useI18n, useItemText } from '@/lib/i18n';
 import type { CombatReportDetail } from '@/lib/api/reports';
 
 function formatNumber(value: number) {
@@ -25,6 +25,7 @@ export const CombatReportCard = memo(function CombatReportCard({
   report: CombatReportDetail;
 }) {
   const { t, locale } = useI18n();
+  const itemText = useItemText();
   const shouldReduceMotion = useReducedMotion();
 
   return (
@@ -110,7 +111,7 @@ export const CombatReportCard = memo(function CombatReportCard({
                 const repaired = report.defenderRepaired?.[id] ?? 0;
                 return (
                   <div key={id} className="flex items-center justify-between">
-                    <span>{DEFENSES[Number(id)]?.name ?? t('report.defenseFallback', { id })}</span>
+                    <span>{DEFENSES[Number(id)] ? itemText(Number(id), DEFENSES[Number(id)]).name : t('report.defenseFallback', { id })}</span>
                     <span>
                       {t('report.defenseLine', {
                         count: formatNumber(count),

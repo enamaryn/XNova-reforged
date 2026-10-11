@@ -5,6 +5,19 @@
 
 ---
 
+## Session — langues : installation, administration, emails, noms du jeu (PR C)
+
+**Date :** 11 octobre 2026. **Demande du propriétaire :** traduire le reste manquant (assistant d'installation, console admin, emails, noms et descriptions du jeu) en français et en multilingue ; proposer une « langue d'installation » qui devient la langue par défaut du jeu et du serveur ; PRE-02 validé, PRE-04 : comptes actuels laissés vérifiés ; attaquer PRE-03, DETTE-02 et DETTE-03 (PR suivante).
+
+- [x] **Langue d'installation / du serveur** : sélecteur en tête de l'assistant ; `PUT /setup/language` (code d'installation requis) ; `GameConfig server.language` ; champ public `language` de `GET /setup/status` ; réglage « Langue du serveur » dans l'administration (`PUT /admin/config`) ; middleware web : cookie du visiteur, sinon langue du serveur.
+- [x] **Langue du joueur** : colonne `User.locale` (migration `20261011210000_user_locale`), inscription, `PUT /auth/locale`, `/auth/me`.
+- [x] **Emails** dans les 5 langues (8 modèles), langue du destinataire, liens avec préfixe de langue.
+- [x] **Noms et descriptions du jeu** (61 éléments × en/es/de/it) localisés par l'API (`X-Locale`, `AsyncLocalStorage`), libellés d'effets d'amélioration, prérequis ; `useItemText()` côté web ; événements WebSocket résolus par identifiant.
+- [x] **Assistant d'installation**, **console d'administration** (joueurs, fiche, actions, SMTP), **écran d'erreur global** traduits (français inchangé mot pour mot : les E2E existants passent).
+- [x] Tests : `i18n-content.spec.ts` (19, complétude et modèles), intégration `i18n-server-language` (8), E2E de l'assistant (changement de langue, mémorisation côté serveur).
+- Restent en français : messages d'erreur métier de l'API, journaux, terminal (voir `docs/I18N_GUIDE.md`).
+- Prochaine PR : PRE-03 (Sentry par variable d'environnement), DETTE-02 (Tailwind 4), DETTE-03 (eslint-config-next 16).
+
 ## Session — recycleurs : champs de débris et recyclage (PR B)
 
 **Date :** 11 octobre 2026. **Suite de la PR A** (écart « éléments constructibles sans effet »).

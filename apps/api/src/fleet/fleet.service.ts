@@ -28,6 +28,7 @@ import {
 import { DatabaseService } from '../database/database.service';
 import { debitResources, debitShips, lockPlanet, lockUser } from '../common/atomic';
 import { MAX_QUANTITY, SendFleetDto } from './dto/send-fleet.dto';
+import { itemName } from '../common/request-locale';
 
 @Injectable()
 export class FleetService {
@@ -62,7 +63,7 @@ export class FleetService {
       .filter((ship) => ship.id !== SOLAR_SATELLITE_ID)
       .map((ship) => ({
         shipId: ship.id,
-        name: ship.name,
+        name: itemName(ship),
         amount: amounts.get(ship.id) ?? 0,
       }));
 
@@ -226,7 +227,7 @@ export class FleetService {
       const amount = available.get(ship.shipId) ?? 0;
       if (amount < ship.amount) {
         throw new BadRequestException(
-          `Vaisseaux insuffisants pour ${SHIPS[ship.shipId].name}`,
+          `Vaisseaux insuffisants pour ${itemName(SHIPS[ship.shipId])}`,
         );
       }
     });
@@ -347,7 +348,7 @@ export class FleetService {
           dto.planetId,
           ship.shipId,
           ship.amount,
-          `Vaisseaux insuffisants pour ${SHIPS[ship.shipId].name}`,
+          `Vaisseaux insuffisants pour ${itemName(SHIPS[ship.shipId])}`,
         );
       }
 

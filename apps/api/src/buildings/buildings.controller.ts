@@ -11,6 +11,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { BuildingsService } from './buildings.service';
 import { StartBuildDto } from './dto/build.dto';
+import { itemName } from '../common/request-locale';
 
 @Controller()
 @UseGuards(JwtAuthGuard)
@@ -27,7 +28,7 @@ export class BuildingsController {
     const { BUILDINGS, IMPLEMENTED_BUILDINGS } = await import('@xnova/game-config');
     return IMPLEMENTED_BUILDINGS.map((id) => BUILDINGS[id]).map((b) => ({
       id: b.id,
-      name: b.name,
+      name: itemName(b),
       description: b.description,
       category: b.category,
       baseCost: b.baseCost,

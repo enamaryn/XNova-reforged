@@ -21,6 +21,7 @@ import { calculateEnergyBalance } from '@xnova/game-engine';
 import { DatabaseService } from '../database/database.service';
 import { debitResources, lockPlanet, lockUser } from '../common/atomic';
 import { GameEventsGateway } from '../game-events/game-events.gateway';
+import { itemDescription, itemName, itemNameById } from '../common/request-locale';
 
 @Injectable()
 export class ResearchService {
@@ -88,8 +89,8 @@ export class ResearchService {
 
       return {
         id: tech.id,
-        name: tech.name,
-        description: tech.description,
+        name: itemName(tech),
+        description: itemDescription(tech),
         category: tech.category,
         currentLevel,
         maxLevel: maxTechnologyLevel,
@@ -132,7 +133,7 @@ export class ResearchService {
       throw new BadRequestException(`Technologie ${techId} inexistante`);
     }
     if (!IMPLEMENTED_TECHNOLOGIES.includes(techId)) {
-      throw new BadRequestException(`${tech.name} n'est pas disponible dans cette version`);
+      throw new BadRequestException(`${itemName(tech)} n'est pas disponible dans cette version`);
     }
 
     const activeQueue = await this.database.researchQueue.findFirst({
@@ -231,7 +232,7 @@ export class ResearchService {
       success: true,
       queueId: queueEntry.id,
       techId,
-      techName: tech.name,
+      techName: itemName(tech),
       targetLevel: currentLevel + 1,
       startTime: now,
       endTime,
@@ -253,7 +254,7 @@ export class ResearchService {
     return queue.map((item) => ({
       id: item.id,
       techId: item.techId,
-      techName: TECHNOLOGIES[item.techId]?.name || `Tech ${item.techId}`,
+      techName: itemNameById(item.techId, TECHNOLOGIES[item.techId]?.name) || `Tech ${item.techId}`,
       targetLevel: item.level,
       startTime: item.startTime,
       endTime: item.endTime,
@@ -386,7 +387,7 @@ export class ResearchService {
 
     this.gameEvents.emitResearchCompleted(queueEntry.userId, {
       techId: queueEntry.techId,
-      techName: tech.name,
+      techName: itemName(tech),
       newLevel: queueEntry.level,
     });
   }
@@ -506,12 +507,12 @@ export class ResearchService {
       if (BUILDINGS[reqId]) {
         const current = buildingLevels[reqId] || 0;
         if (current < level) {
-          missing.push(`${BUILDINGS[reqId].name} ${current}/${level}`);
+          missing.push(`${itemName(BUILDINGS[reqId])} ${current}/${level}`);
         }
       } else if (TECHNOLOGIES[reqId]) {
         const current = techLevels[reqId] || 0;
         if (current < level) {
-          missing.push(`${TECHNOLOGIES[reqId].name} ${current}/${level}`);
+          missing.push(`${itemName(TECHNOLOGIES[reqId])} ${current}/${level}`);
         }
       }
     });

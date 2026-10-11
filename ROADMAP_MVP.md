@@ -27,9 +27,9 @@ Implémentation fusionnée dans la [PR #34](https://github.com/enamaryn/XNova-re
 - [x] **Cadre de jeu traduit (retour du propriétaire, 10 octobre 2026)** — barre de navigation mobile du bas, sélecteur de planète, menu utilisateur, badge Admin, carte « Planète active », navigation des pages publiques ; le **nom de planète par défaut créé en français par le serveur** (« Planète Mère », « Nouvelle colonie ») est affiché dans la langue du joueur, les noms choisis par le joueur restent tels quels. Version affichée corrigée (`v0.2.0 Alpha 1`, elle indiquait `v0.1.0 Alpha`). Test `tests/mobile-ui/locale-shell.spec.ts` : 5 langues × 3 tailles d'écran.
 - [x] **Version et galaxie (retours du propriétaire, 10 octobre 2026)** — la version affichée suit la release : `v0.2.0 · PR #n · commit` (étape facultative dans `apps/web/version.json`, test `build-info` ajouté) ; la page Galaxie s'ouvre sur le système de la planète active (au lieu de 1:1), recentre au changement de planète, met en évidence la planète du joueur ; textes de la page migrés vers `useI18n` ; E2E `galaxy.spec.ts` réécrit (il supposait 1:1).
 - [x] **Migration des textes en dur vers `useI18n`/`useTranslations` (lot 2, 10 octobre 2026)** — rapports de combat (carte, liste, détail) et d'espionnage, page publique d'accueil (métadonnées comprises), paramètres du compte, récupération et réinitialisation du mot de passe, vérification d'email, renvoi de confirmation, écran d'erreur des pages. ~110 clés par langue en plus ; textes français inchangés (E2E 34/34). Test `locale-shell.spec.ts` étendu : rapports, page publique et récupération de mot de passe × 5 langues × 3 tailles d'écran (84 contrôles de rendu au total).
-- [ ] **Reste en français (assumé ou à traiter)** — assistant d'installation et console d'administration (opérateurs) ; écran d'erreur global de Next (`global-error`, hors du contexte de langue) ; noms et descriptions du jeu (bâtiments, technologies, vaisseaux, défenses) et messages métier de l'API, servis en français par le serveur ; emails. Guide joueur à relire en 5 langues.
+- [x] **Textes restés en français — traités le 11 octobre 2026** : assistant d'installation (avec **langue d'installation** : première langue choisie, elle devient la langue par défaut du serveur, du jeu et des emails), console d'administration (joueurs, fiches, actions, SMTP, réglage « Langue du serveur »), écran d'erreur global, emails transactionnels (modèles `mail-templates.ts`, langue du destinataire : requête, sinon `User.locale`, sinon langue du serveur), noms et descriptions du jeu (61 éléments × 4 langues, `item-texts.ts`, servis localisés par l'API selon l'en-tête `X-Locale`) et libellés d'effets d'amélioration. Restent volontairement en français : messages d'erreur métier de l'API, journaux, bannière et commandes du terminal (`npm run setup:*`), guide joueur à relire en 5 langues.
 - [x] **Revue de PR et CI** — PR #37 à #40 fusionnées, CI verte (E2E et rendu mobile WebKit inclus).
-- [ ] **Mesure du rythme sur le serveur du propriétaire** après application du profil ×50 (non vérifiable depuis l'environnement de développement).
+- [x] **Rythme ×50 sur le serveur du propriétaire** : validé par le propriétaire (11 octobre 2026).
 
 **Validation locale (10 octobre 2026) :** build 5/5 ; unitaires 81/81 ; parité des langues 17/17 ; intégration 280/280 ; E2E Chromium 34 réussis, 1 ignoré (installation déjà faite) ; rendu mobile 39/39 sur 3 projets Chromium (WebKit non disponible localement) ; lint sans erreur.
 
@@ -97,8 +97,9 @@ Toutes les décisions listées dans la version précédente sont prises et appli
 ## Prérequis bloquants et dette technique avant l'ouverture publique
 
 - [x] **SMTP réel configuré et validé** par le propriétaire (déclaration du 10 octobre 2026) ; à reconfirmer avec un envoi réel (test, inscription, mot de passe oublié) lors de chaque mise en production : sans SMTP l'inscription répond 503. _(PRE-01 du registre)_
-- [ ] Variables de production vérifiées (secrets JWT distincts, `SECRETS_ENCRYPTION_KEY`, `WEB_ORIGINS`), DSN Sentry par variable d'environnement uniquement. _(PRE-02, PRE-03)_
-- [ ] Reprise des comptes de l'alpha (adresses marquées confirmées) validée. _(PRE-04)_
+- [x] Variables de production vérifiées (secrets JWT distincts, `SECRETS_ENCRYPTION_KEY`, `WEB_ORIGINS`) : validé par le propriétaire le 11 octobre 2026. _(PRE-02)_
+- [ ] DSN Sentry par variable d'environnement uniquement (aucune valeur dans le dépôt ni dans l'image). _(PRE-03)_
+- [x] Reprise des comptes de l'alpha : décision du propriétaire (11 octobre 2026) — les comptes actuels restent considérés comme vérifiés. _(PRE-04)_
 - [ ] Dette technique d'outillage terminée **avant la bêta publique** : Tailwind 4 et eslint-config-next 16 (DETTE-02 et 03 ; **Jest 30 fait le 10 octobre 2026**, critique `handlebars` corrigée, hautes de développement 34 → 7, toutes issues de `braces` sans correctif amont — voir [NPM_AUDIT_2026-10.md](docs/NPM_AUDIT_2026-10.md)) ; revue des 3 modérées de production (DETTE-04).
 
 ## Écarts de gameplay constatés en rédigeant la FAQ (11 octobre 2026)
@@ -118,9 +119,9 @@ Constatés dans le code, le satellite solaire par un essai sur serveur de test ;
 - [x] GAME-01 à GAME-04 validés ; toutes les fonctions retenues dans SCOPE-01 accessibles et testées ; exclusions annoncées clairement. _(SCOPE-01 clos)_
 - [x] Clone vierge : installation verrouillée, génération Prisma, premier build, lint et suites CI réussis (QUAL-01/02). _(QUAL-01, CI verte)_
 - [x] Tests intégration sur base dédiée vierge, statuts précis et aucun 500 accepté comme succès métier ; E2E réellement exécutés. _(QUAL-02 ; E2E exécutés en CI)_
-- [ ] Parcours joueur : inscription, connexion, production, construction, recherche, chantier, attaque, rapport — **prouvé à ×50** (simulation API + E2E, 10 octobre 2026) ; restent transport/déploiement, retour de flotte, social et refus d'accès interjoueur dans un parcours complet.
+- [x] Parcours joueur : inscription, connexion, production, construction, recherche, chantier, attaque, rapport — **prouvé à ×50** (simulation API + E2E, 10 octobre 2026) et **validé par le propriétaire** (11 octobre 2026).
 - [x] Restauration isolée et retour arrière répétés ; migrations versionnées (OPS-01). _(OPS-01, job CI `database`)_
-- [ ] Charge mesurée pour au moins 100 joueurs simulés ; protocole, matériel, durée, jeu de données et p50/p95/p99 publiés. Fixer les seuils API/WebSocket avant exécution.
+- [x] Charge mesurée pour au moins 100 joueurs simulés ; protocole, matériel, durée, jeu de données et p50/p95/p99 publiés (200 joueurs à ×50, seuils fixés avant exécution, tous respectés : [docs/LOAD_TEST.md](docs/LOAD_TEST.md)). _(OPS-03, clos)_
 - [ ] Objectifs historiques couverture >70 %, Lighthouse >90 et uptime >99 % mesurés ou révisés explicitement avec justification ; aucun résultat supposé acquis.
 - [x] Documentation README, guide joueur (5 langues), endpoints (`GET /progression/onboarding` inclus) et configuration (`docs/BALANCE.md`, `.env.example`) synchronisés avec le périmètre livré le 10 octobre 2026.
 

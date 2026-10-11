@@ -14,6 +14,8 @@ export interface AdminConfig {
   baseMetal: number;
   baseCrystal: number;
   baseDeuterium: number;
+  /** Langue du serveur : défaut du jeu, de l'interface et des emails. */
+  language: string;
 }
 
 export interface AdminOverview {

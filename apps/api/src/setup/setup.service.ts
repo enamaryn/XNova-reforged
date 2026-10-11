@@ -1,4 +1,5 @@
 import { BadRequestException, ConflictException, Injectable, ServiceUnavailableException } from '@nestjs/common';
+import type { SupportedLocale } from '@xnova/game-config';
 import { AccountService } from '../auth/account.service';
 import { AuthService } from '../auth/auth.service';
 import { RegisterDto } from '../auth/dto/register.dto';
@@ -37,6 +38,16 @@ export class SetupService {
 
   private get db(): SetupDb {
     return this.database as unknown as SetupDb;
+  }
+
+  getLanguage() {
+    return this.serverConfig.getLanguage();
+  }
+
+  /** Langue d'installation : langue par défaut du serveur, du jeu et des emails. */
+  async saveLanguage(language: SupportedLocale) {
+    await this.serverConfig.applyConfig({ language });
+    return this.getState();
   }
 
   /** Progression complète : permet de reprendre le parcours après un rechargement de page. */
@@ -81,11 +92,7 @@ export class SetupService {
 
   async testSmtp(to: string) {
     try {
-      await this.mail.send({
-        to,
-        subject: "XNova Reforged - test de la configuration SMTP (installation)",
-        text: "Si vous lisez ce message, l'envoi d'emails du serveur fonctionne. Vous pouvez continuer l'installation.",
-      });
+      await this.mail.sendTemplate(to, 'setupSmtpTest');
     } catch (error) {
       if (error instanceof Error && 'getStatus' in error) throw error;
       throw new BadRequestException(`Échec de l'envoi : ${(error as Error)?.message ?? 'erreur inconnue'}`);

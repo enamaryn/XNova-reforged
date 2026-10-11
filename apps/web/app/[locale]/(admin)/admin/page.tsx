@@ -17,6 +17,7 @@ import {
   type BoostDevelopmentResult,
 } from "@/lib/api/admin";
 import { useI18n } from "@/lib/i18n";
+import { localeNames, locales } from "@/lib/i18n/locale";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { isSuperAdmin } from "@/lib/roles";
 import { SmtpSettingsPanel } from "./SmtpSettingsPanel";
@@ -228,6 +229,26 @@ function GeneralPanel() {
         </div>
 
         <div className="mt-4 grid gap-4 lg:grid-cols-2">
+          <label className="text-xs uppercase tracking-[0.2em] text-slate-500 lg:col-span-2">
+            {t("admin.serverLanguage")}
+            <select
+              data-testid="server-language"
+              value={form.language}
+              onChange={(event) =>
+                setForm((prev) => (prev ? { ...prev, language: event.target.value } : prev))
+              }
+              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm normal-case tracking-normal text-white outline-none focus:border-blue-400/60"
+            >
+              {locales.map((item) => (
+                <option key={item} value={item}>
+                  {localeNames[item]}
+                </option>
+              ))}
+            </select>
+            <span className="mt-1 block text-[11px] normal-case tracking-normal text-slate-500">
+              {t("admin.serverLanguageHint")}
+            </span>
+          </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
             {t("admin.gameSpeed")}
             <input
@@ -523,8 +544,7 @@ function GeneralPanel() {
                 </label>
               </div>
               <p className="text-xs text-slate-400">
-                Durée du bannissement. Jours, heures et minutes s’additionnent.
-                Tout à zéro = bannissement permanent.
+                {t("admin.banDurationHint")}
               </p>
               <button
                 onClick={() =>
@@ -732,7 +752,7 @@ export default function AdminPage() {
             onClick={() => setTab(value as typeof tab)}
           >
             {value === "players"
-              ? "Joueurs"
+              ? t("admin.tabPlayers")
               : value === "smtp"
                 ? t("admin.tabSmtp")
                 : t("admin.tabGeneral")}

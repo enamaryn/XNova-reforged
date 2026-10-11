@@ -5,12 +5,14 @@ import {
   Body,
   HttpCode,
   HttpStatus,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { SetLocaleDto } from './dto/locale.dto';
 import { AccountService } from './account.service';
 import {
   ChangeEmailDto,
@@ -78,6 +80,14 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async getMe(@CurrentUser('id') userId: string) {
     return this.authService.getMe(userId);
+  }
+
+  /** PUT /auth/locale : langue choisie par le joueur (emails et textes). */
+  @Put('locale')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async setLocale(@CurrentUser('id') userId: string, @Body() dto: SetLocaleDto) {
+    return this.authService.setLocale(userId, dto.locale);
   }
 
   /**

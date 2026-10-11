@@ -57,6 +57,11 @@ export class AccountService {
     return (origins[0] || 'http://localhost:3000').replace(/\/+$/, '');
   }
 
+  /** Lien de page web (dans la langue de l'email) : `<site>/<langue>/<page>?token=…`. */
+  private webLink(locale: string, page: 'verify-email' | 'reset-password', token: string) {
+    return `${this.webBaseUrl()}/${locale}/${page}?token=${token}`;
+  }
+
   /** Refuse tôt, avant d'invalider des jetons existants, quand aucun email ne pourra partir. */
   private async requireMail() {
     if (!(await this.mail.isConfigured())) {
@@ -86,16 +91,14 @@ export class AccountService {
   }
 
   /** Envoie le lien de vérification ; ne lève jamais (inscription et renvoi ne dépendent pas du SMTP). */
-  async sendVerificationEmail(user: { id: string; email: string; username: string }) {
+  async sendVerificationEmail(user: { id: string; email: string; username: string; locale?: string | null }) {
     try {
       await this.requireMail();
       const token = await this.issueToken(user.id, 'verify_email', user.email);
-      await this.mail.send({
-        to: user.email,
-        subject: 'XNova Reforged - confirmez votre adresse email',
-        text:
-          `Bonjour ${user.username},\n\nConfirmez votre adresse email avec ce lien (valable 24 heures) :\n` +
-          `${this.webBaseUrl()}/verify-email?token=${token}\n\nSi vous n'êtes pas à l'origine de cette demande, ignorez ce message.`,
+      const locale = await this.mail.resolveLocale(user.locale);
+      await this.mail.sendTemplate(user.email, 'verifyEmail', {
+        locale,
+        params: { username: user.username, link: this.webLink(locale, 'verify-email', token) },
       });
       return true;
     } catch (error) {
@@ -114,12 +117,10 @@ export class AccountService {
     }
     await this.requireMail();
     const token = await this.issueToken(user.id, 'verify_email', user.email);
-    await this.mail.send({
-      to: user.email,
-      subject: 'XNova Reforged - confirmez votre adresse email',
-      text:
-        `Bonjour ${user.username},\n\nConfirmez votre adresse email avec ce lien (valable 24 heures) :\n` +
-        `${this.webBaseUrl()}/verify-email?token=${token}`,
+    const locale = await this.mail.resolveLocale(user.locale);
+    await this.mail.sendTemplate(user.email, 'verifyEmail', {
+      locale,
+      params: { username: user.username, link: this.webLink(locale, 'verify-email', token) },
     });
     return { message: 'Email de confirmation envoyé' };
   }
@@ -154,13 +155,10 @@ export class AccountService {
     if (!user) return;
     await this.requireMail();
     const token = await this.issueToken(user.id, 'reset_password', null);
-    await this.mail.send({
-      to: user.email,
-      subject: 'XNova Reforged - réinitialisation du mot de passe',
-      text:
-        `Bonjour ${user.username},\n\nPour choisir un nouveau mot de passe, utilisez ce lien (valable 1 heure) :\n` +
-        `${this.webBaseUrl()}/reset-password?token=${token}\n\n` +
-        `Si vous n'avez rien demandé, ignorez ce message : votre mot de passe reste inchangé.`,
+    const locale = await this.mail.resolveLocale(user.locale);
+    await this.mail.sendTemplate(user.email, 'resetPassword', {
+      locale,
+      params: { username: user.username, link: this.webLink(locale, 'reset-password', token) },
     });
   }
 
@@ -225,23 +223,14 @@ export class AccountService {
 
     await this.requireMail();
     const token = await this.issueToken(userId, 'change_email', newEmail);
-    await this.mail.send({
-      to: newEmail,
-      subject: 'XNova Reforged - confirmez votre nouvelle adresse email',
-      text:
-        `Bonjour ${user.username},\n\nConfirmez cette adresse comme nouvelle adresse de votre compte (lien valable 24 heures) :\n` +
-        `${this.webBaseUrl()}/verify-email?token=${token}\n\nSi vous n'êtes pas à l'origine de cette demande, ignorez ce message.`,
+    const locale = await this.mail.resolveLocale(user.locale);
+    await this.mail.sendTemplate(newEmail, 'changeEmailConfirm', {
+      locale,
+      params: { username: user.username, link: this.webLink(locale, 'verify-email', token) },
     });
     // Alerte sur l'ancienne adresse : un changement non voulu doit pouvoir être repéré
     await this.mail
-      .send({
-        to: user.email,
-        subject: "XNova Reforged - demande de changement d'adresse email",
-        text:
-          `Bonjour ${user.username},\n\nUne demande de changement de votre adresse email vers ${newEmail} a été faite. ` +
-          `Elle ne prendra effet qu'après confirmation depuis la nouvelle adresse.\n` +
-          `Si ce n'est pas vous, changez votre mot de passe sans attendre.`,
-      })
+      .sendTemplate(user.email, 'changeEmailAlert', { locale, params: { username: user.username, newEmail } })
       .catch((error) => this.logger.warn(`Alerte ancienne adresse non envoyée : ${(error as Error).message}`));
 
     return { message: 'Un email de confirmation a été envoyé à la nouvelle adresse' };
@@ -269,9 +258,10 @@ export class AccountService {
         await tx.emailToken.updateMany({ where: { userId, usedAt: null }, data: { usedAt: now } });
         await tx.emailToken.create({ data: { userId, type: 'verify_email', email, tokenHash: hashToken(token), expiresAt: new Date(now.getTime() + TTL_MS.verify_email) } });
         await tx.adminAuditLog.create({ data: { userId: actorId, action: 'update_player_email', changes: { targetId: userId, targetUsername: user.username, before: user.email, after: email } } });
-        await this.mail.send({
-          to: email, subject: 'XNova Reforged - confirmez votre nouvelle adresse email',
-          text: `Bonjour ${user.username},\n\nVotre adresse email a été modifiée par un administrateur. Confirmez cette adresse pour pouvoir vous connecter (lien valable 24 heures) :\n${this.webBaseUrl()}/verify-email?token=${token}`,
+        const locale = await this.mail.resolveLocale(user.locale, false);
+        await this.mail.sendTemplate(email, 'adminEmailChanged', {
+          locale,
+          params: { username: user.username, link: this.webLink(locale, 'verify-email', token) },
         });
       }, { timeout: 45000 });
     } catch (error) {
@@ -306,7 +296,7 @@ export class AccountService {
           ...(row.type === 'change_email' ? { email: row.email } : {}),
           emailVerifiedAt: new Date(), mustVerifyEmail: false,
         } });
-        return { id: user.id, type: row.type, previousEmail: user.email, email: row.email, username: user.username };
+        return { id: user.id, type: row.type, previousEmail: user.email, email: row.email, username: user.username, locale: user.locale };
       });
     } catch (error) {
       if ((error as { code?: string })?.code === 'P2002') throw new ConflictException('Cet email est déjà utilisé');
@@ -316,11 +306,12 @@ export class AccountService {
       await this.setupState.completeIfReady(result.id);
       return { message: 'Adresse email confirmée', type: 'verify_email' as const };
     }
-    await this.mail.send({
-      to: result.previousEmail,
-      subject: "XNova Reforged - votre adresse email a été modifiée",
-      text: `Bonjour ${result.username},\n\nL'adresse email de votre compte est désormais ${result.email}.`,
-    }).catch(() => undefined);
+    await this.mail
+      .sendTemplate(result.previousEmail, 'emailChanged', {
+        userLocale: result.locale,
+        params: { username: result.username, newEmail: result.email },
+      })
+      .catch(() => undefined);
     return { message: 'Adresse email modifiée', type: 'change_email' as const };
   }
 

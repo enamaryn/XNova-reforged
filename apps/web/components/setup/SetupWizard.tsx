@@ -3,12 +3,16 @@
 import { RECOMMENDED_SPEED_PROFILE, SPEED_PROFILES } from "@xnova/game-config";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useI18n } from "@/lib/i18n";
+import { localeFlags, localeNames, locales, pathWithLocale, persistLocaleCookie, type Locale } from "@/lib/i18n/locale";
 import { ApiError } from "@/lib/api/client";
 import {
   createSetupAdmin,
   getSetupState,
   getSetupStatus,
   resendSetupAdmin,
+  saveSetupLanguage,
   saveSetupSettings,
   saveSetupSmtp,
   testSetupSmtp,
@@ -22,30 +26,30 @@ import { Label } from "@/components/ui/label";
 type Step = "code" | "smtp" | "settings" | "admin" | "validation" | "done";
 
 const TOKEN_KEY = "xnova-setup-token";
-const STEPS: Array<{ id: Exclude<Step, "done">; label: string }> = [
-  { id: "code", label: "Code" },
-  { id: "smtp", label: "SMTP" },
-  { id: "settings", label: "Réglages" },
-  { id: "admin", label: "Super admin" },
-  { id: "validation", label: "Validation" },
+const STEPS: Array<{ id: Exclude<Step, "done"> }> = [
+  { id: "code" },
+  { id: "smtp" },
+  { id: "settings" },
+  { id: "admin" },
+  { id: "validation" },
 ];
 
-const SETTING_FIELDS: Array<{ key: keyof ServerSettings; label: string; hint: string; step?: string }> = [
-  { key: "gameSpeed", label: "Vitesse du jeu", hint: "Accélère les durées et la production (1 = rythme d'origine)", step: "any" },
-  { key: "fleetSpeed", label: "Vitesse des flottes", hint: "Accélère les vols (1 = rythme d'origine)", step: "any" },
-  { key: "resourceMultiplier", label: "Multiplicateur de production", hint: "S'applique à toutes les ressources produites", step: "any" },
-  { key: "buildingCostMultiplier", label: "Coût des bâtiments", hint: "Multiplicateur de coût de construction", step: "any" },
-  { key: "researchCostMultiplier", label: "Coût des recherches", hint: "Multiplicateur de coût de recherche", step: "any" },
-  { key: "shipCostMultiplier", label: "Coût des vaisseaux et défenses", hint: "Multiplicateur de coût du chantier spatial", step: "any" },
-  { key: "planetSize", label: "Taille des planètes (champs)", hint: "Entre 50 et 500" },
-  { key: "maxBuildingLevel", label: "Niveau maximal des bâtiments", hint: "Plafond de construction" },
-  { key: "maxTechnologyLevel", label: "Niveau maximal des technologies", hint: "Plafond de recherche" },
-  { key: "baseMetal", label: "Production de base : métal (par heure)", hint: "Revenu sans mine", step: "any" },
-  { key: "baseCrystal", label: "Production de base : cristal (par heure)", hint: "Revenu sans mine", step: "any" },
-  { key: "baseDeuterium", label: "Production de base : deutérium (par heure)", hint: "Revenu sans mine", step: "any" },
+const SETTING_FIELDS: Array<{ key: keyof ServerSettings; step?: string }> = [
+  { key: "gameSpeed", step: "any" },
+  { key: "fleetSpeed", step: "any" },
+  { key: "resourceMultiplier", step: "any" },
+  { key: "buildingCostMultiplier", step: "any" },
+  { key: "researchCostMultiplier", step: "any" },
+  { key: "shipCostMultiplier", step: "any" },
+  { key: "planetSize" },
+  { key: "maxBuildingLevel" },
+  { key: "maxTechnologyLevel" },
+  { key: "baseMetal", step: "any" },
+  { key: "baseCrystal", step: "any" },
+  { key: "baseDeuterium", step: "any" },
 ];
 
-const messageOf = (error: unknown) => (error instanceof ApiError ? error.message : "Une erreur est survenue.");
+const messageOf = (error: unknown, fallback: string) => (error instanceof ApiError ? error.message : fallback);
 
 function firstIncomplete(state: SetupState): Step {
   if (!state.smtp.tested) return "smtp";
@@ -73,6 +77,9 @@ function Notice({ kind, children }: { kind: "ok" | "error"; children: React.Reac
  * puis validation du compte par le lien reçu par email. La validation termine et verrouille l'installation.
  */
 export function SetupWizard() {
+  const { t, locale } = useI18n();
+  const router = useRouter();
+  const pathname = usePathname();
   const [token, setToken] = useState<string>("");
   const [state, setState] = useState<SetupState | null>(null);
   const [step, setStep] = useState<Step>("code");
@@ -137,12 +144,12 @@ export function SetupWizard() {
           }
         }
       } catch (e) {
-        setError(messageOf(e));
+        setError(messageOf(e, t("setup.genericError")));
       } finally {
         setBooting(false);
       }
     })();
-  }, [adopt]);
+  }, [adopt]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Étape de validation : on attend le clic sur le lien (l'installation se termine alors côté serveur)
   useEffect(() => {
@@ -173,7 +180,7 @@ export function SetupWizard() {
         finish();
         return;
       }
-      setError(messageOf(e));
+      setError(messageOf(e, t("setup.genericError")));
     } finally {
       setBusy(false);
     }
@@ -186,6 +193,8 @@ export function SetupWizard() {
       const next = await getSetupState(code);
       sessionStorage.setItem(TOKEN_KEY, code);
       setToken(code);
+      // La langue d'installation (celle de l'interface) devient la langue du serveur dès que le code est accepté
+      await saveSetupLanguage(code, locale);
       adopt(next, firstIncomplete(next));
     });
   };
@@ -204,7 +213,7 @@ export function SetupWizard() {
       if (smtp.password) payload.password = smtp.password;
       adopt(await saveSetupSmtp(token, payload));
       setSmtp((prev) => ({ ...prev, password: "" }));
-      setNotice("Configuration enregistrée. Envoyez maintenant un email de test.");
+      setNotice(t("setup.smtp.saved"));
     });
   };
 
@@ -212,7 +221,7 @@ export function SetupWizard() {
     run(async () => {
       const result = await testSetupSmtp(token, testTo.trim());
       adopt(await getSetupState(token));
-      setNotice(`Email de test envoyé à ${result.to}. Vérifiez sa réception avant de continuer.`);
+      setNotice(t("setup.smtp.testSent", { to: result.to }));
     });
 
   const submitSettings = (event: React.FormEvent) => {
@@ -230,7 +239,7 @@ export function SetupWizard() {
   const submitAdmin = (event: React.FormEvent) => {
     event.preventDefault();
     if (admin.password !== admin.confirmation) {
-      setError("Les deux mots de passe ne correspondent pas.");
+      setError(t("setup.admin.mismatch"));
       return;
     }
     run(async () => {
@@ -244,25 +253,32 @@ export function SetupWizard() {
     });
   };
 
+  const changeLanguage = (next: Locale) => {
+    if (next === locale) return;
+    persistLocaleCookie(next);
+    // Le serveur mémorise la langue dès que le code d'installation est connu ; sinon à la validation du code
+    if (token) void saveSetupLanguage(token, next).catch(() => undefined);
+    router.replace(pathWithLocale(pathname, next));
+  };
+
   const resend = () =>
     run(async () => {
       const result = await resendSetupAdmin(token);
       setNotice(result.message);
     });
 
-  if (booting) return <p className="text-sm text-slate-500">Chargement...</p>;
+  if (booting) return <p className="text-sm text-slate-500">{t("setup.loading")}</p>;
 
   if (step === "done") {
     return (
       <div className="space-y-5" data-testid="setup-done">
-        <p className="text-xs uppercase tracking-[0.35em] text-slate-400">Installation</p>
-        <h1 className="text-xl font-semibold text-slate-900 sm:text-2xl">Installation terminée.</h1>
+        <p className="text-xs uppercase tracking-[0.35em] text-slate-400">{t("setup.done.kicker")}</p>
+        <h1 className="text-xl font-semibold text-slate-900 sm:text-2xl">{t("setup.done.title")}</h1>
         <Notice kind="ok">
-          Le compte super admin est confirmé et le parcours d&apos;installation est maintenant verrouillé définitivement.
-          Il ne peut être rouvert que depuis un terminal sur le serveur.
+          {t("setup.done.notice")}
         </Notice>
         <Link href="/login" className="text-sm font-semibold text-slate-900">
-          Aller à la connexion
+          {t("setup.done.login")}
         </Link>
       </div>
     );
@@ -278,11 +294,33 @@ export function SetupWizard() {
   return (
     <div className="space-y-6" data-testid="setup-wizard">
       <div className="space-y-2">
-        <p className="text-xs uppercase tracking-[0.35em] text-slate-400">Installation du serveur</p>
-        <h1 className="text-xl font-semibold text-slate-900 sm:text-2xl">Première configuration.</h1>
+        <p className="text-xs uppercase tracking-[0.35em] text-slate-400">{t("setup.kicker")}</p>
+        <h1 className="text-xl font-semibold text-slate-900 sm:text-2xl">{t("setup.title")}</h1>
       </div>
 
-      <ol className="flex flex-wrap gap-2 text-[11px] uppercase tracking-[0.15em]" aria-label="Étapes">
+      <div className="space-y-2" data-testid="setup-language">
+        <p className="text-sm font-semibold text-slate-800">{t("setup.language.title")}</p>
+        <p className="text-xs text-slate-500">{t("setup.language.hint")}</p>
+        <div className="flex flex-wrap gap-2" role="group" aria-label={t("setup.language.title")}>
+          {locales.map((item) => (
+            <button
+              key={item}
+              type="button"
+              lang={item}
+              aria-pressed={item === locale}
+              data-testid={`setup-language-${item}`}
+              onClick={() => changeLanguage(item)}
+              className={`rounded-full border px-3 py-1 text-sm ${
+                item === locale ? "border-slate-900 bg-slate-900 text-white" : "border-slate-200 text-slate-600 hover:border-slate-400"
+              }`}
+            >
+              {localeFlags[item]} {localeNames[item]}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <ol className="flex flex-wrap gap-2 text-[11px] uppercase tracking-[0.15em]" aria-label={t("setup.stepsLabel")}>
         {STEPS.map((s, index) => {
           const clickable = token && s.id !== "code" && s.id !== "validation" && reachable(s.id);
           return (
@@ -300,7 +338,7 @@ export function SetupWizard() {
                       : "border-slate-200 text-slate-400"
                 }`}
               >
-                {index + 1}. {s.label}
+                {index + 1}. {t(`setup.steps.${s.id}`)}
               </button>
             </li>
           );
@@ -313,17 +351,16 @@ export function SetupWizard() {
       {step === "code" && (
         <form className="space-y-5" onSubmit={submitCode}>
           <p className="text-sm text-slate-600">
-            Pour protéger le serveur, l&apos;installation est réservée à la personne qui a accès à son terminal. Lisez le
-            code d&apos;installation dans le journal de l&apos;API :
+            {t("setup.code.intro")}
           </p>
           <pre className="overflow-x-auto rounded-2xl bg-slate-900 p-3 text-xs text-slate-100">
             journalctl -u xnova-api | grep -A3 &quot;Code d&apos;installation&quot;
           </pre>
           <p className="text-xs text-slate-500">
-            Ou en générer un nouveau : <code>npm run setup:token</code> (depuis le dossier du projet sur le serveur).
+            {t("setup.code.regenerate")} <code>npm run setup:token</code> {t("setup.code.regenerateSuffix")}
           </p>
           <div className="space-y-2">
-            <Label htmlFor="setup-code">Code d&apos;installation</Label>
+            <Label htmlFor="setup-code">{t("setup.code.label")}</Label>
             <Input
               id="setup-code"
               autoComplete="off"
@@ -335,7 +372,7 @@ export function SetupWizard() {
             />
           </div>
           <Button type="submit" className="w-full" disabled={busy}>
-            Continuer
+            {t("setup.continue")}
           </Button>
         </form>
       )}
@@ -343,67 +380,66 @@ export function SetupWizard() {
       {step === "smtp" && (
         <form className="space-y-5" onSubmit={submitSmtp}>
           <p className="text-sm text-slate-600">
-            Serveur d&apos;envoi des emails (confirmation de compte, mot de passe oublié). Il sert aussi à valider votre
-            compte à la fin de l&apos;installation.
+            {t("setup.smtp.intro")}
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="smtp-host">Hôte</Label>
+              <Label htmlFor="smtp-host">{t("setup.smtp.host")}</Label>
               <Input id="smtp-host" required value={smtp.host} onChange={(e) => setSmtp({ ...smtp, host: e.target.value })} placeholder="mail.exemple.fr" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="smtp-port">Port</Label>
+              <Label htmlFor="smtp-port">{t("setup.smtp.port")}</Label>
               <Input id="smtp-port" type="number" required min={1} max={65535} value={smtp.port} onChange={(e) => setSmtp({ ...smtp, port: e.target.value })} />
             </div>
           </div>
           <label className="flex items-center gap-2 text-sm text-slate-600">
             <input type="checkbox" checked={smtp.secure} onChange={(e) => setSmtp({ ...smtp, secure: e.target.checked })} />
-            Connexion TLS directe (port 465) — décochez pour STARTTLS (port 587)
+            {t("setup.smtp.secure")}
           </label>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="smtp-user">Identifiant</Label>
+              <Label htmlFor="smtp-user">{t("setup.smtp.username")}</Label>
               <Input id="smtp-user" autoComplete="off" value={smtp.username} onChange={(e) => setSmtp({ ...smtp, username: e.target.value })} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="smtp-password">Mot de passe</Label>
+              <Label htmlFor="smtp-password">{t("setup.smtp.password")}</Label>
               <Input
                 id="smtp-password"
                 type="password"
                 autoComplete="new-password"
                 value={smtp.password}
                 onChange={(e) => setSmtp({ ...smtp, password: e.target.value })}
-                placeholder={state?.smtp.passwordSet ? "•••••••• (conservé si vide)" : ""}
+                placeholder={state?.smtp.passwordSet ? t("setup.smtp.passwordKept") : ""}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="smtp-from">Adresse d&apos;expédition</Label>
+              <Label htmlFor="smtp-from">{t("setup.smtp.fromEmail")}</Label>
               <Input id="smtp-from" type="email" required value={smtp.fromEmail} onChange={(e) => setSmtp({ ...smtp, fromEmail: e.target.value })} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="smtp-name">Nom d&apos;expéditeur</Label>
+              <Label htmlFor="smtp-name">{t("setup.smtp.fromName")}</Label>
               <Input id="smtp-name" value={smtp.fromName} onChange={(e) => setSmtp({ ...smtp, fromName: e.target.value })} />
             </div>
           </div>
           <Button type="submit" className="w-full" disabled={busy}>
-            Enregistrer la configuration
+            {t("setup.smtp.save")}
           </Button>
 
           {state?.smtp.configured && (
             <div className="space-y-3 rounded-2xl border border-slate-200 p-4">
               <p className="text-sm font-semibold text-slate-800">
-                Test d&apos;envoi {state.smtp.tested ? "— réussi ✓" : "— à faire"}
+                {t("setup.smtp.testTitle")} {state.smtp.tested ? t("setup.smtp.testOk") : t("setup.smtp.testTodo")}
               </p>
               <div className="space-y-2">
-                <Label htmlFor="smtp-test-to">Envoyer un email de test à</Label>
+                <Label htmlFor="smtp-test-to">{t("setup.smtp.testTo")}</Label>
                 <Input id="smtp-test-to" type="email" value={testTo} onChange={(e) => setTestTo(e.target.value)} />
               </div>
               <Button type="button" variant="outline" className="w-full" disabled={busy || !testTo} onClick={sendTest}>
-                Envoyer l&apos;email de test
+                {t("setup.smtp.testSend")}
               </Button>
               {state.smtp.tested && (
                 <Button type="button" className="w-full" onClick={() => setStep("settings")}>
-                  Continuer
+                  {t("setup.continue")}
                 </Button>
               )}
             </div>
@@ -414,8 +450,7 @@ export function SetupWizard() {
       {step === "settings" && (
         <form className="space-y-5" onSubmit={submitSettings}>
           <p className="text-sm text-slate-600">
-            Réglages de l&apos;univers. Ils restent modifiables ensuite depuis l&apos;administration ; laissez les valeurs
-            par défaut si vous hésitez.
+            {t("setup.settings.intro")}
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <Button
@@ -431,16 +466,14 @@ export function SetupWizard() {
                 })
               }
             >
-              Appliquer le profil de référence ×50
+              {t("setup.settings.applyProfile")}
             </Button>
-            <span className="text-xs text-slate-500">
-              Vitesse ×50, coûts d&apos;origine : laboratoire en 22 min, premier vaisseau en moins de 2 h.
-            </span>
+            <span className="text-xs text-slate-500">{t("setup.settings.profileHint")}</span>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             {SETTING_FIELDS.map((field) => (
               <div key={field.key} className="space-y-1">
-                <Label htmlFor={`set-${field.key}`}>{field.label}</Label>
+                <Label htmlFor={`set-${field.key}`}>{t(`setup.fields.${field.key}.label`)}</Label>
                 <Input
                   id={`set-${field.key}`}
                   type="number"
@@ -448,12 +481,12 @@ export function SetupWizard() {
                   value={settings[field.key] ?? ""}
                   onChange={(e) => setSettings({ ...settings, [field.key]: e.target.value })}
                 />
-                <p className="text-[11px] text-slate-500">{field.hint}</p>
+                <p className="text-[11px] text-slate-500">{t(`setup.fields.${field.key}.hint`)}</p>
               </div>
             ))}
           </div>
           <Button type="submit" className="w-full" disabled={busy}>
-            Enregistrer et continuer
+            {t("setup.settings.save")}
           </Button>
         </form>
       )}
@@ -461,28 +494,27 @@ export function SetupWizard() {
       {step === "admin" && (
         <form className="space-y-5" onSubmit={submitAdmin}>
           <p className="text-sm text-slate-600">
-            Compte super admin du serveur. Un lien de confirmation sera envoyé à cette adresse : le cliquer termine
-            l&apos;installation. Si l&apos;adresse est erronée, vous pourrez recréer le compte tant qu&apos;il n&apos;est pas confirmé.
+            {t("setup.admin.intro")}
           </p>
           <div className="space-y-2">
-            <Label htmlFor="admin-username">Identifiant</Label>
+            <Label htmlFor="admin-username">{t("setup.admin.username")}</Label>
             <Input id="admin-username" required minLength={3} maxLength={20} value={admin.username} onChange={(e) => setAdmin({ ...admin, username: e.target.value })} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="admin-email">Adresse email</Label>
+            <Label htmlFor="admin-email">{t("setup.admin.email")}</Label>
             <Input id="admin-email" type="email" required value={admin.email} onChange={(e) => setAdmin({ ...admin, email: e.target.value })} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="admin-password">Mot de passe</Label>
+            <Label htmlFor="admin-password">{t("setup.admin.password")}</Label>
             <Input id="admin-password" type="password" autoComplete="new-password" required value={admin.password} onChange={(e) => setAdmin({ ...admin, password: e.target.value })} />
-            <p className="text-[11px] text-slate-500">8 caractères minimum, avec une minuscule, une majuscule et un chiffre.</p>
+            <p className="text-[11px] text-slate-500">{t("setup.admin.passwordHint")}</p>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="admin-confirmation">Confirmation</Label>
+            <Label htmlFor="admin-confirmation">{t("setup.admin.confirmation")}</Label>
             <Input id="admin-confirmation" type="password" autoComplete="new-password" required value={admin.confirmation} onChange={(e) => setAdmin({ ...admin, confirmation: e.target.value })} />
           </div>
           <Button type="submit" className="w-full" disabled={busy}>
-            Créer le compte et envoyer le lien
+            {t("setup.admin.submit")}
           </Button>
         </form>
       )}
@@ -490,16 +522,15 @@ export function SetupWizard() {
       {step === "validation" && state?.admin && (
         <div className="space-y-5" data-testid="setup-validation">
           <p className="text-sm text-slate-600">
-            Un email de confirmation a été envoyé à <strong>{state.admin.email}</strong>. Cliquez sur le lien qu&apos;il contient :
-            cette page se met à jour toute seule et l&apos;installation se termine dès que le compte est confirmé.
+            {t("setup.validation.sentTo")} <strong>{state.admin.email}</strong>. {t("setup.validation.instructions")}
           </p>
-          <p className="text-xs text-slate-500">En attente de la confirmation...</p>
+          <p className="text-xs text-slate-500">{t("setup.validation.waiting")}</p>
           <div className="flex flex-col gap-3 sm:flex-row">
             <Button type="button" variant="outline" disabled={busy} onClick={resend}>
-              Renvoyer le lien
+              {t("setup.validation.resend")}
             </Button>
             <Button type="button" variant="outline" disabled={busy} onClick={() => setStep("admin")}>
-              Corriger l&apos;adresse ou le compte
+              {t("setup.validation.fix")}
             </Button>
           </div>
         </div>

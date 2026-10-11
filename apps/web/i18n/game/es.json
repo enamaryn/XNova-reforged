@@ -250,7 +250,143 @@
     "by": "Por",
     "expiresAt": "Expira el",
     "applyProfile": "Aplicar el perfil de referencia ×50",
-    "applyProfileHint": "Rellena velocidades, multiplicadores e ingresos base; revisa y guarda."
+    "applyProfileHint": "Rellena velocidades, multiplicadores e ingresos base; revisa y guarda.",
+    "tabPlayers": "Jugadores",
+    "banDurationHint": "Duración del bloqueo. Los días, horas y minutos se suman. Todo a cero = bloqueo permanente.",
+    "serverLanguage": "Idioma del servidor",
+    "serverLanguageHint": "Idioma por defecto del juego, de la interfaz y de los correos (elegido en la instalación). Después, cada jugador puede elegir el suyo.",
+    "playersPanel": {
+      "title": "Jugadores",
+      "searchLabel": "Buscar por nombre",
+      "searchPlaceholder": "Todos los jugadores o parte del nombre",
+      "search": "Buscar",
+      "loading": "Cargando jugadores…",
+      "count": "jugador(es)",
+      "columns": {
+        "username": "Nombre",
+        "email": "Correo",
+        "pointsRank": "Puntos / rango",
+        "planets": "Planetas",
+        "state": "Estado",
+        "actions": "Acciones"
+      },
+      "confirmed": "Confirmado",
+      "toConfirm": "Por confirmar",
+      "banned": "Bloqueado",
+      "active": "Activo",
+      "viewAria": "Ver la ficha de {name}",
+      "profile": "Ficha del jugador",
+      "none": "No se ha encontrado ningún jugador.",
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "page": "Página"
+    },
+    "actions": {
+      "ban": "Bloquear",
+      "unban": "Desbloquear",
+      "reset": "Reiniciar el progreso",
+      "delete": "Eliminar la cuenta",
+      "resetDone": "Progreso reiniciado. El jugador ha sido desconectado y puede empezar de nuevo con los mismos accesos.",
+      "banDone": "Jugador bloqueado y sesiones desconectadas.",
+      "unbanDone": "Jugador desbloqueado.",
+      "aria": "Acciones sobre el jugador",
+      "title": "Gestión de la cuenta",
+      "restricted": "Las acciones están reservadas a cuentas de rango inferior al suyo. Su propia cuenta está protegida.",
+      "confirmAria": "Confirmar: {action}",
+      "resetWarning": "Esta acción es irreversible. Se borran colonias, edificios, investigaciones, naves, defensas y colas. El planeta principal vuelve a empezar con 500 de metal y 500 de cristal. Se conservan los accesos, el rol, el bloqueo, la alianza y los mensajes. El jugador es desconectado.",
+      "deleteWarning": "Eliminación definitiva de la cuenta, sus planetas, recursos, unidades, investigaciones, mensajes e informes. El jugador será desconectado.",
+      "fleetsWarning": "Las flotas activas del jugador, o dirigidas a sus planetas, deben terminar o ser retiradas antes de esta acción. Para eliminar al fundador de una alianza, transfiera antes la fundación o disuelva la alianza.",
+      "banDays": "Duración en días (0 = permanente)",
+      "reason": "Motivo",
+      "retype": "Vuelva a escribir el nombre {name} para confirmar",
+      "pending": "Acción en curso…",
+      "confirm": "Confirmar {action}",
+      "cancel": "Cancelar"
+    },
+    "profile": {
+      "back": "← Volver a los jugadores",
+      "loading": "Cargando la ficha del jugador…",
+      "refresh": "Actualizar la ficha",
+      "levelShort": "Niv. {level}",
+      "units": "{amount} unidades",
+      "end": "Fin",
+      "noQueue": "Ninguna cola en curso.",
+      "ariaProfile": "Ficha de {name}",
+      "power": "de potencia",
+      "rank": "Rango",
+      "lastActive": "Última actividad",
+      "banned": "Bloqueado",
+      "bannedUntil": "hasta el {date}",
+      "bannedForever": "definitivamente",
+      "email": "Dirección de correo",
+      "emailHint": "El cambio desconecta al jugador y envía un nuevo enlace. El acceso queda bloqueado hasta confirmar la nueva dirección.",
+      "emailChange": "Cambiar el correo y enviar la verificación",
+      "emailConfirmed": "Correo confirmado",
+      "emailPending": "Correo por confirmar",
+      "technologies": "Tecnologías",
+      "researchQueue": "Investigación en curso",
+      "fleets": "Flotas en vuelo y entrantes",
+      "incoming": "Entrante",
+      "own": "Del jugador",
+      "mission": "Misión",
+      "arrival": "Llegada",
+      "return": "Regreso",
+      "ships": "Naves",
+      "shipFallback": "Nave {id}",
+      "cargo": "Carga",
+      "empty": "Vacía",
+      "noFleet": "Ninguna flota activa.",
+      "resource": {
+        "metal": "Metal",
+        "crystal": "Cristal",
+        "deuterium": "Deuterio"
+      },
+      "energy": "Energía",
+      "produced": "producida",
+      "consumed": "consumida",
+      "fields": "Casillas",
+      "resourcesAt": "Recursos a fecha de",
+      "dockedShips": "Naves en el hangar",
+      "defenses": "Defensas",
+      "noUnit": "Ninguna unidad.",
+      "buildQueue": "Construcciones en curso",
+      "shipQueue": "Hangar en curso"
+    },
+    "smtp": {
+      "saved": "Configuración SMTP guardada.",
+      "testSent": "Correo de prueba enviado a {to}.",
+      "loading": "Cargando la configuración SMTP...",
+      "loadError": "No se puede cargar la configuración SMTP.",
+      "title": "Configurar SMTP",
+      "intro": "Servidor de envío de los correos del juego (verificación, contraseña olvidada). Solo el superadmin puede modificar estos ajustes; la contraseña se cifra en la base de datos y nunca se muestra.",
+      "enable": "Activar el envío de correos",
+      "host": "Servidor",
+      "hostAria": "Servidor SMTP",
+      "port": "Puerto",
+      "portAria": "Puerto SMTP",
+      "secure": "Conexión TLS directa (puerto 465) — deje sin marcar para STARTTLS (puerto 587)",
+      "secureAria": "Conexión TLS directa",
+      "username": "Usuario",
+      "usernameAria": "Usuario SMTP",
+      "password": "Contraseña",
+      "passwordKept": "•••••••• (se conserva si está vacío)",
+      "passwordNone": "Sin contraseña",
+      "passwordAria": "Contraseña SMTP",
+      "passwordUnreadable": "La contraseña guardada es ilegible (clave de cifrado modificada): vuelva a introducirla.",
+      "passwordClear": "Eliminar la contraseña guardada",
+      "fromEmail": "Dirección de envío",
+      "fromEmailAria": "Dirección de envío",
+      "fromName": "Nombre del remitente",
+      "fromNameAria": "Nombre del remitente",
+      "saving": "Guardando...",
+      "save": "Guardar",
+      "testTitle": "Enviar un correo de prueba",
+      "testHint": "Usa la configuración guardada. Sin destinatario, el mensaje se envía a su propia dirección.",
+      "testPlaceholder": "destinatario@example.org (opcional)",
+      "testAria": "Destinatario de la prueba",
+      "testSending": "Enviando...",
+      "testSend": "Enviar la prueba"
+    }
   },
   "common": {
     "language": "Idioma",
@@ -478,7 +614,21 @@
     "alreadyBuilding": "Ya en construcción",
     "building": "Construyendo...",
     "buildLevel": "Construir nivel {level}",
-    "one": "Edificio"
+    "one": "Edificio",
+    "effects": {
+      "maxLevel": "Nivel máximo alcanzado: no hay más mejoras.",
+      "aria": "Efectos del nivel {level}",
+      "atLevel": "En el nivel {level}",
+      "effect": "Efecto",
+      "current": "Actual",
+      "level": "Nivel {level}",
+      "variation": "Variación",
+      "unlocks": "+ Requisitos cumplidos para: {names}.",
+      "seeDescription": "Consulte la descripción y los costes de esta mejora.",
+      "lowEnergy": "Energía insuficiente: la producción real de las minas se reducirá.",
+      "forecast": "Previsión con los niveles actuales del planeta y los multiplicadores del servidor. La producción real depende del rendimiento energético.",
+      "durationNote": "Reducción de duración con el mismo coste, antes del redondeo y del mínimo de un segundo. Las construcciones e investigaciones ya iniciadas conservan su duración."
+    }
   },
   "queue": {
     "finalizing": "Finalizando…",
@@ -533,7 +683,9 @@
     "starting": "Iniciando...",
     "maxFull": "Nivel máximo alcanzado",
     "started": "Investigación iniciada.",
-    "cannotStart": "No se puede iniciar la investigación."
+    "cannotStart": "No se puede iniciar la investigación.",
+    "completedToast": "Investigación terminada: {name}{level}",
+    "fallbackName": "Investigación"
   },
   "energy": {
     "deficitBadge": "DÉFICIT",
@@ -677,5 +829,128 @@
     "confirmation": "Confirmación",
     "confirmationAria": "Confirmación de la nueva contraseña",
     "changePassword": "Cambiar la contraseña"
+  },
+  "setup": {
+    "kicker": "Instalación del servidor",
+    "title": "Primera configuración.",
+    "stepsLabel": "Pasos",
+    "loading": "Cargando...",
+    "continue": "Continuar",
+    "genericError": "Ha ocurrido un error.",
+    "language": {
+      "title": "Idioma de instalación",
+      "hint": "Pasa a ser el idioma por defecto del juego, del servidor y de los correos. Después, cada jugador podrá elegir el suyo."
+    },
+    "steps": {
+      "code": "Código",
+      "smtp": "SMTP",
+      "settings": "Ajustes",
+      "admin": "Superadmin",
+      "validation": "Validación"
+    },
+    "done": {
+      "kicker": "Instalación",
+      "title": "Instalación terminada.",
+      "notice": "La cuenta de superadmin está confirmada y el asistente de instalación queda bloqueado definitivamente. Solo puede reabrirse desde un terminal del servidor.",
+      "login": "Ir al inicio de sesión"
+    },
+    "code": {
+      "intro": "Para proteger el servidor, la instalación está reservada a quien tiene acceso a su terminal. Lea el código de instalación en el registro de la API:",
+      "regenerate": "O generar uno nuevo:",
+      "regenerateSuffix": "(desde la carpeta del proyecto en el servidor).",
+      "label": "Código de instalación"
+    },
+    "smtp": {
+      "intro": "Servidor de envío de correos (confirmación de cuenta, contraseña olvidada). También sirve para validar su cuenta al final de la instalación.",
+      "host": "Servidor",
+      "port": "Puerto",
+      "secure": "Conexión TLS directa (puerto 465) — desmarque para STARTTLS (puerto 587)",
+      "username": "Usuario",
+      "password": "Contraseña",
+      "passwordKept": "•••••••• (se conserva si está vacío)",
+      "fromEmail": "Dirección de envío",
+      "fromName": "Nombre del remitente",
+      "save": "Guardar la configuración",
+      "saved": "Configuración guardada. Envíe ahora un correo de prueba.",
+      "testTitle": "Prueba de envío",
+      "testOk": "— superada ✓",
+      "testTodo": "— pendiente",
+      "testTo": "Enviar un correo de prueba a",
+      "testSend": "Enviar el correo de prueba",
+      "testSent": "Correo de prueba enviado a {to}. Compruebe que ha llegado antes de continuar."
+    },
+    "settings": {
+      "intro": "Ajustes del universo. Podrá modificarlos después desde la administración; deje los valores por defecto si duda.",
+      "applyProfile": "Aplicar el perfil de referencia ×50",
+      "profileHint": "Velocidad ×50, costes originales: laboratorio en 22 min, primera nave en menos de 2 h.",
+      "save": "Guardar y continuar"
+    },
+    "fields": {
+      "gameSpeed": {
+        "label": "Velocidad del juego",
+        "hint": "Acelera las duraciones y la producción (1 = ritmo original)"
+      },
+      "fleetSpeed": {
+        "label": "Velocidad de las flotas",
+        "hint": "Acelera los vuelos (1 = ritmo original)"
+      },
+      "resourceMultiplier": {
+        "label": "Multiplicador de producción",
+        "hint": "Se aplica a todos los recursos producidos"
+      },
+      "buildingCostMultiplier": {
+        "label": "Coste de los edificios",
+        "hint": "Multiplicador del coste de construcción"
+      },
+      "researchCostMultiplier": {
+        "label": "Coste de las investigaciones",
+        "hint": "Multiplicador del coste de investigación"
+      },
+      "shipCostMultiplier": {
+        "label": "Coste de naves y defensas",
+        "hint": "Multiplicador del coste del hangar"
+      },
+      "planetSize": {
+        "label": "Tamaño de los planetas (casillas)",
+        "hint": "Entre 50 y 500"
+      },
+      "maxBuildingLevel": {
+        "label": "Nivel máximo de los edificios",
+        "hint": "Límite de construcción"
+      },
+      "maxTechnologyLevel": {
+        "label": "Nivel máximo de las tecnologías",
+        "hint": "Límite de investigación"
+      },
+      "baseMetal": {
+        "label": "Producción base: metal (por hora)",
+        "hint": "Ingreso sin mina"
+      },
+      "baseCrystal": {
+        "label": "Producción base: cristal (por hora)",
+        "hint": "Ingreso sin mina"
+      },
+      "baseDeuterium": {
+        "label": "Producción base: deuterio (por hora)",
+        "hint": "Ingreso sin mina"
+      }
+    },
+    "admin": {
+      "intro": "Cuenta de superadmin del servidor. Se enviará un enlace de confirmación a esta dirección: al pulsarlo termina la instalación. Si la dirección es errónea, podrá volver a crear la cuenta mientras no esté confirmada.",
+      "username": "Usuario",
+      "email": "Dirección de correo",
+      "password": "Contraseña",
+      "passwordHint": "Mínimo 8 caracteres, con una minúscula, una mayúscula y un número.",
+      "confirmation": "Confirmación",
+      "submit": "Crear la cuenta y enviar el enlace",
+      "mismatch": "Las dos contraseñas no coinciden."
+    },
+    "validation": {
+      "sentTo": "Se ha enviado un correo de confirmación a",
+      "instructions": "Pulse el enlace que contiene: esta página se actualiza sola y la instalación termina en cuanto se confirma la cuenta.",
+      "waiting": "Esperando la confirmación...",
+      "resend": "Reenviar el enlace",
+      "fix": "Corregir la dirección o la cuenta"
+    }
   }
 }

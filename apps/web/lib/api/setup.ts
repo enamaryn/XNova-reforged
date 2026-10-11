@@ -14,6 +14,8 @@ export interface ServerSettings {
   baseMetal: number;
   baseCrystal: number;
   baseDeuterium: number;
+  /** Langue du serveur (choisie à l'installation). */
+  language?: string;
 }
 
 export interface SetupState {
@@ -49,11 +51,16 @@ const withToken = (token: string): RequestInit => ({ headers: { "x-setup-token":
 
 /** Public : faut-il proposer le parcours d'installation ? */
 export function getSetupStatus() {
-  return apiRequest<{ setupRequired: boolean }>("/setup/status");
+  return apiRequest<{ setupRequired: boolean; language?: string }>("/setup/status");
 }
 
 export function getSetupState(token: string) {
   return apiRequest<SetupState>("/setup/state", withToken(token));
+}
+
+/** Langue d'installation : langue par défaut du serveur, du jeu et des emails. */
+export function saveSetupLanguage(token: string, language: string) {
+  return apiRequest<SetupState>("/setup/language", { ...withToken(token), method: "PUT", body: JSON.stringify({ language }) });
 }
 
 export function saveSetupSmtp(token: string, payload: SetupSmtpPayload) {
