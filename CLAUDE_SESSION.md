@@ -15,6 +15,24 @@
 - [x] Docs : ROADMAP_MVP (lot + PRE-03 reformulé), OPERATIONS, WEB_INSTALLER, API_ENDPOINTS, `.env.example`, registre d'audit, README (installation : `git clone` puis `scripts/install.sh`).
 - À faire : validation sur le serveur de test du propriétaire ; fusion par le propriétaire.
 
+## Session — durées du chantier spatial
+
+**Date :** 11 octobre 2026. **Signalement du propriétaire** (capture, page Défense) : temps estimé incohérent avec la file ; calibrage validé : 5 s par chasseur léger quand tout est développé, ≈ 3 h 47 par Étoile de la Mort, mêmes règles pour les défenses.
+
+- [x] Cause : facteur 3600 manquant (formule d'origine en heures) et durée par unité arrondie puis multipliée par la quantité côté interface.
+- [x] `packages/game-config/src/shipyard-time.ts` : durée d'une unité (heures × 3600 ÷ vitesse) avec plancher `(métal + cristal) / 660` s à ×50 ; durée d'un lot = `max(1, floor(unité × quantité))`.
+- [x] API : `unitTime` pour vaisseaux et défenses ; file calculée avec la même fonction. Interface (Chantier spatial, Défense) : durée annoncée = durée de la file.
+- [x] Tests : unitaires `shipyard-time` (5), intégration `shipyard-duration` (4 : annoncée = programmée pour 1, 10 et 1000 unités, vaisseaux et défenses) ; FAQ (5 langues) et `docs/BALANCE.md` mis à jour.
+
+## Session — installateur web : langue au démarrage et erreurs visibles
+
+**Date :** 12 octobre 2026. **Retour du propriétaire** (réinstallation à zéro) : « Préparer le serveur » sans effet ni message, rien dans le terminal ; langue non proposée au démarrage.
+
+- [x] **Langue avant le code** : cinq drapeaux dès l'ouverture, traduction immédiate (5 langues, étapes de préparation comprises), mémorisée (navigateur + cookie `NEXT_LOCALE`) ; le relais ouvre `/<langue>/setup`.
+- [x] **Erreurs jamais muettes** : validation par l'assistant (`novalidate`), message fixe en haut d'écran (il était hors de vue sous un formulaire long), messages explicites pour coupure réseau et réponse non JSON d'un proxy (HTTP n°).
+- [x] **Terminal** : journal de chaque demande et de chaque étape (sans secret).
+- [x] Tests : 2 nouveaux scénarios navigateur (langues, erreurs visibles, réseau/proxy, journal) ; suite installateur 26/26 (1 ignoré).
+- Cause exacte du cas du propriétaire non reproduite ici (les scénarios existants passent) : les messages et le journal ajoutés doivent la révéler à la prochaine tentative.
 
 ## Session — dette d'outillage et Sentry (PR D)
 

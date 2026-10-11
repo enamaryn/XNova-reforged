@@ -133,3 +133,4 @@ export function maxFleetSlots(computerTechnologyLevel: number): number {
 
 export * from "./production-queue";
 export * from "./item-texts";
+export * from "./shipyard-time";

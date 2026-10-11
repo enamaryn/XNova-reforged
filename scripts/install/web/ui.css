@@ -20,3 +20,10 @@ legend { padding: 0 8px; font-weight: 700; }
 #error { color: #fecdd3; border: 1px solid #fb7185; padding: 12px; border-radius: 10px; }
 [hidden] { display: none !important; }
 @media (max-width: 500px) { body { padding: 16px; } main { padding: 22px; } }
+.language-title { margin: 12px 0 8px; font-weight: 700; color: #f1f5f9; }
+.languages { display: flex; flex-wrap: wrap; gap: 8px; }
+.languages button { width: auto; margin: 0; padding: 8px 14px; background: #0b1325; color: #e2e8f0; border: 1px solid #475569; font-weight: 600; }
+.languages button[aria-pressed="true"] { background: #67e8f9; color: #082f49; border-color: #67e8f9; }
+/* Le message d'erreur reste visible pendant le défilement du formulaire (il était hors de l'écran sous le bouton). */
+#error { position: sticky; top: 8px; z-index: 10; background: #3b0a14; box-shadow: 0 6px 20px rgba(0,0,0,.45); }
+.field-invalid { border-color: #fb7185 !important; }

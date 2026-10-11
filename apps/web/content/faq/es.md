@@ -136,7 +136,7 @@ Hiperespacio (114), Láser (120), Iones (121), Plasma (122) y Gravitón (199) so
 ## 5. Naves
 
 **¿Dónde y cómo se construyen las naves?**
-En el **hangar** (página Astillero). El pedido se paga al instante y se construye por lotes; un pedido **en espera** puede retirarse (90 % reembolsado), un lote ya iniciado termina con normalidad. La duración depende del coste y del nivel de hangar: `(metal + cristal) / (2 500 × (1 + hangar) × 2^nanobots)` segundos por unidad, divididos por la velocidad del servidor.
+En el **hangar** (página Astillero). El pedido se paga al instante y se construye por lotes; un pedido **en espera** puede retirarse (90 % reembolsado), un lote ya iniciado termina con normalidad. La duración depende del coste y del nivel de hangar: `(metal + cristal) / (2 500 × (1 + hangar) × 2^nanobots)` **horas** por unidad, divididas por la velocidad del servidor, con un **mínimo** de `(metal + cristal) / 660` segundos a ×50 (5 s para un cazador ligero, unas 3 h 47 para una Estrella de la Muerte): hangar y nanobots nunca bajan de ahí. A ×50, un cazador ligero tarda unos 48 s sin tecnología y 5 s con todo desarrollado.
 
 **¿Qué naves existen y para qué sirven?**
 

@@ -85,7 +85,7 @@ test('parcours navigateur : config locale, aucun secret dans le suivi, transfert
   const response = await f.send('handoff', {}, auth);
   assert.equal(response.status, 200);
   const target = new URL((await response.json()).next);
-  assert.equal(target.pathname, '/setup');
+  assert.equal(target.pathname, '/fr/setup');
   assert.equal(target.search, '');
   assert.equal(new URLSearchParams(target.hash.slice(1)).get('bootstrap-token'), code);
   assert.equal(released, true);

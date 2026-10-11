@@ -136,7 +136,7 @@ Hyperspace (114), Laser (120), Ion (121), Plasma (122) and Graviton (199) are pu
 ## 5. Ships
 
 **Where and how are ships built?**
-At the **shipyard** (Shipyard page). The order is paid immediately and built in batches; a **waiting** order can be removed (90 % refunded), a batch already started finishes normally. Duration depends on cost and shipyard level: `(metal + crystal) / (2,500 × (1 + shipyard) × 2^nanites)` seconds for one unit, then divided by the server speed.
+At the **shipyard** (Shipyard page). The order is paid immediately and built in batches; a **waiting** order can be removed (90 % refunded), a batch already started finishes normally. Duration depends on cost and shipyard level: `(metal + crystal) / (2,500 × (1 + shipyard) × 2^nanites)` **hours** for one unit, divided by the server speed, with a **floor** of `(metal + crystal) / 660` seconds at ×50 (5 s for a light fighter, about 3 h 47 for a Death Star): shipyard and nanites never go below it. At ×50 a light fighter takes about 48 s with no technology, then 5 s once everything is developed.
 
 **Which ships exist and what are they for?**
 
