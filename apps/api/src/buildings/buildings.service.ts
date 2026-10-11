@@ -1,4 +1,4 @@
-import { SATELLITES_INCLUDE, countSatellites } from '../common/satellites';
+import { ENERGY_SOURCES_INCLUDE, energySourcesOf } from '../common/energy';
 import {
   BadRequestException,
   ForbiddenException,
@@ -9,6 +9,9 @@ import { ProgressionService } from "../progression/progression.service";
 import { ServerConfigService } from "../server-config/server-config.service";
 import {
   BUILDINGS,
+  IMPLEMENTED_BUILDINGS,
+  TERRAFORMER_FIELDS_PER_LEVEL,
+  TERRAFORMER_ID,
   getBuildingCost,
   getBuildingTime,
   checkBuildingRequirements,
@@ -19,6 +22,9 @@ import { debitResources, lockPlanet } from "../common/atomic";
 import { GameEventsGateway } from "../game-events/game-events.gateway";
 import { getBuildingUpgradeEffects } from "./building-upgrade-effects";
 import { updateResources } from "@xnova/game-engine";
+
+/** Bâtiments qui n'occupent aucune case : hangars de stockage et terraformeur (qui en ajoute). */
+const FIELDS_EXEMPT = [22, 23, 24, TERRAFORMER_ID];
 
 // Mapping des buildingId vers les champs de la table Planet
 const BUILDING_FIELD_MAP: Record<number, string> = {
@@ -85,7 +91,7 @@ export class BuildingsService {
 
     const progression = await this.progression.get(userId);
     const capacityFull = queue.length >= progression.buildingCapacity;
-    const buildingsInfo = Object.values(BUILDINGS).map((building) => {
+    const buildingsInfo = IMPLEMENTED_BUILDINGS.map((id) => BUILDINGS[id]).map((building) => {
       const currentLevel = planetBuildings[building.id] || 0;
       const rawCost = getBuildingCost(building.id, currentLevel);
       const cost = this.applyCostMultiplier(rawCost, costFactor);
@@ -142,7 +148,7 @@ export class BuildingsService {
           : getBuildingUpgradeEffects(
               building.id,
               currentLevel,
-              { ...planet, solarSatellites: countSatellites(planet) },
+              { ...planet, ...energySourcesOf(planet) },
               resourceConfig,
               planetBuildings,
               techLevels,
@@ -180,6 +186,9 @@ export class BuildingsService {
     const building = BUILDINGS[buildingId];
     if (!building) {
       throw new BadRequestException(`Batiment ${buildingId} inexistant`);
+    }
+    if (!IMPLEMENTED_BUILDINGS.includes(buildingId)) {
+      throw new BadRequestException(`${building.name} n'est pas disponible dans cette version`);
     }
 
     // Verifier qu'il n'y a pas deja une construction en cours pour ce batiment
@@ -237,8 +246,8 @@ export class BuildingsService {
     }
 
     // Verifier les champs disponibles (sauf pour certains batiments)
-    const fieldsExempt = [22, 23, 24]; // Hangars de stockage ne prennent pas de champs
-    if (!fieldsExempt.includes(buildingId)) {
+    // Les hangars de stockage et le terraformeur ne prennent pas de champs
+    if (!FIELDS_EXEMPT.includes(buildingId)) {
       if (planet.fieldsUsed >= planet.fieldsMax) {
         throw new BadRequestException("Plus de champs disponibles");
       }
@@ -450,10 +459,13 @@ export class BuildingsService {
       [fieldName]: queueEntry.level,
     };
 
-    // Si ce n'est pas un hangar de stockage, incrementer fieldsUsed
-    const fieldsExempt = [22, 23, 24];
-    if (!fieldsExempt.includes(queueEntry.buildingId)) {
+    // Hors hangars de stockage et terraformeur, un niveau occupe une case
+    if (!FIELDS_EXEMPT.includes(queueEntry.buildingId)) {
       updateData.fieldsUsed = { increment: 1 };
+    }
+    // Chaque niveau de terraformeur ajoute des cases à la planète
+    if (queueEntry.buildingId === TERRAFORMER_ID) {
+      updateData.fieldsMax = { increment: TERRAFORMER_FIELDS_PER_LEVEL };
     }
 
     const resourceConfig = await this.serverConfig.getResourceConfig();
@@ -469,22 +481,22 @@ export class BuildingsService {
 
       const planet = await tx.planet.findUniqueOrThrow({
         where: { id: queueEntry.planetId },
-        include: SATELLITES_INCLUDE,
+        include: ENERGY_SOURCES_INCLUDE,
       });
-      const satellites = countSatellites(planet);
+      const sources = energySourcesOf(planet);
       const now = new Date(Math.max(Date.now(), planet.lastUpdate.getTime()));
       // Produire d'abord avec les anciens niveaux : le nouveau rendement n'est
       // jamais appliqué rétroactivement au temps passé avant la finalisation.
       const settled = updateResources({
         resources: planet,
-        levels: { ...planet, solarSatellites: satellites },
+        levels: { ...planet, ...sources },
         lastUpdate: planet.lastUpdate,
         now,
         config: resourceConfig,
       });
       const next = updateResources({
         resources: settled.resources,
-        levels: { ...planet, solarSatellites: satellites, [fieldName]: queueEntry.level },
+        levels: { ...planet, ...sources, [fieldName]: queueEntry.level },
         lastUpdate: now,
         now,
         config: resourceConfig,
@@ -535,7 +547,7 @@ export class BuildingsService {
   private async getPlanetOrFail(planetId: string, userId: string) {
     const planet = await this.database.planet.findUnique({
       where: { id: planetId },
-      include: SATELLITES_INCLUDE,
+      include: ENERGY_SOURCES_INCLUDE,
     });
 
     if (!planet) {

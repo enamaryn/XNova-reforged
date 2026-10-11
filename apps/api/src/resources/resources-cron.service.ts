@@ -1,4 +1,4 @@
-import { SATELLITES_INCLUDE, countSatellites } from '../common/satellites';
+import { ENERGY_SOURCES_INCLUDE, energySourcesOf } from '../common/energy';
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { DatabaseService } from '../database/database.service';
@@ -53,11 +53,12 @@ export class ResourcesCronService {
           },
         },
         include: {
-          ...SATELLITES_INCLUDE,
+          ships: ENERGY_SOURCES_INCLUDE.ships,
           user: {
             select: {
               id: true,
               username: true,
+              ...ENERGY_SOURCES_INCLUDE.user.select,
             },
           },
         },
@@ -148,7 +149,7 @@ export class ResourcesCronService {
             },
           },
         },
-        include: SATELLITES_INCLUDE,
+        include: ENERGY_SOURCES_INCLUDE,
         take: 100, // Limiter à 100 planètes par exécution pour éviter la surcharge
       });
 
@@ -204,6 +205,7 @@ export class ResourcesCronService {
     crystalStorage: number;
     deuteriumStorage: number;
     ships?: Array<{ amount: number }>;
+    user?: { technologies?: Array<{ level: number }> } | null;
   }): ResourceLevels {
     return {
       metalMine: planet.metalMine,
@@ -214,7 +216,7 @@ export class ResourcesCronService {
       metalStorage: planet.metalStorage,
       crystalStorage: planet.crystalStorage,
       deuteriumStorage: planet.deuteriumStorage,
-      solarSatellites: countSatellites(planet),
+      ...energySourcesOf(planet),
     };
   }
 

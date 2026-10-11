@@ -85,16 +85,14 @@ export function getSolarPlantProduction(level: number): number {
 
 /**
  * Calculate fusion plant energy production
- * Formula: 30 * level * 1.05^level
+ * Formula: 30 * level * (1.05 + 0.01 * energyTech)^level
  */
 export function getFusionPlantProduction(
   level: number,
   energyTechLevel: number = 0
 ): number {
   if (level === 0) return 0
-  const baseProduction = 30 * level * Math.pow(1.05, level)
-  const techBonus = 1 + energyTechLevel * 0.01
-  return Math.floor(baseProduction * techBonus)
+  return Math.floor(30 * level * Math.pow(1.05 + 0.01 * energyTechLevel, level))
 }
 
 /**

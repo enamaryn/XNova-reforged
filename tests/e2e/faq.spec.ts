@@ -15,9 +15,9 @@ test("la FAQ est publique : accessible sans connexion, dans les cinq langues", a
     await expect(page).toHaveURL(new RegExp(`/${locale}/faq$`));
     await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible();
     const doc = page.getByTestId("faq-document");
-    // Sections et tableaux rendus (vaisseaux, défenses, messages d'erreur)
+    // Sections et tableaux rendus (bâtiments, recherches, tir rapide, vaisseaux, défenses, messages d'erreur)
     await expect(doc.locator("h2")).toHaveCount(11);
-    expect(await doc.locator("table").count()).toBe(5);
+    expect(await doc.locator("table").count()).toBe(6);
   }
 });
 

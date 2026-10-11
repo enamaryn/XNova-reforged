@@ -76,6 +76,9 @@ describe('API integration - Validation des flottes et missions (GAME-01)', () =>
     planetId = me.body.planets[0].id;
     origin = me.body.planets[0];
 
+    // Plusieurs flottes en vol : technologie Ordinateur (1 flotte + 1 par niveau)
+    await database.technology.create({ data: { userId: me.body.id, techId: 108, level: 10 } });
+
     // Deuxième planète du joueur et planète d'un adversaire, à des positions libres
     const free = (g: number, s: number) => ({ galaxy: g, system: s, position: 15 });
     ownSecond = free(origin.galaxy, ((origin.system + 5) % 499) + 1);

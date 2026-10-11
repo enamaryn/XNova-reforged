@@ -145,3 +145,60 @@ describe('Moteur de ressources — satellites solaires', () => {
     }
   });
 });
+
+describe('Moteur de ressources — centrale à fusion', () => {
+  const start = new Date('2026-01-01T00:00:00.000Z');
+  const hour = new Date(start.getTime() + 3600 * 1000);
+  const config = { gameSpeed: 1, resourceMultiplier: 1 };
+  const zero = { metal: 0, crystal: 0, deuterium: 0 };
+
+  it('la technologie Énergie relève le rendement : 30 × n × (1,05 + 0,01 × Énergie)^n', () => {
+    const at = (energyTechnology: number) =>
+      updateResources({
+        resources: zero,
+        levels: { ...levels, fusionPlant: 10, energyTechnology },
+        lastUpdate: start,
+        now: hour,
+        config,
+      }).energy.available;
+    expect(at(0)).toBe(Math.floor(30 * 10 * Math.pow(1.05, 10)));
+    expect(at(3)).toBe(Math.floor(30 * 10 * Math.pow(1.08, 10)));
+    expect(at(3)).toBeGreaterThan(at(0));
+    // Une fusion niveau 10 dépasse une centrale solaire niveau 10 (518) avec Énergie 3, pas avec Énergie 0
+    expect(at(0)).toBeLessThan(518);
+    expect(at(3)).toBeGreaterThan(518);
+  });
+
+  it('brûle du deutérium en permanence (10 × n × 1,1^n par heure), sans jamais descendre sous 0', () => {
+    const rich = updateResources({
+      resources: { metal: 0, crystal: 0, deuterium: 1000 },
+      levels: { ...levels, fusionPlant: 5 },
+      lastUpdate: start,
+      now: hour,
+      config,
+    });
+    const perHour = 10 * 5 * Math.pow(1.1, 5);
+    expect(rich.productionPerHour.deuterium).toBeCloseTo(-perHour, 6);
+    expect(rich.resources.deuterium).toBeCloseTo(1000 - perHour, 6);
+
+    const poor = updateResources({
+      resources: { metal: 0, crystal: 0, deuterium: 10 },
+      levels: { ...levels, fusionPlant: 5 },
+      lastUpdate: start,
+      now: hour,
+      config,
+    });
+    expect(poor.resources.deuterium).toBe(0);
+  });
+
+  it('la consommation de deutérium suit la vitesse du serveur', () => {
+    const x50 = updateResources({
+      resources: { metal: 0, crystal: 0, deuterium: 100000 },
+      levels: { ...levels, fusionPlant: 5 },
+      lastUpdate: start,
+      now: hour,
+      config: { gameSpeed: 50, resourceMultiplier: 1 },
+    });
+    expect(x50.productionPerHour.deuterium).toBeCloseTo(-50 * 10 * 5 * Math.pow(1.1, 5), 6);
+  });
+});

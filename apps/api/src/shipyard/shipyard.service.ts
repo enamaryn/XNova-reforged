@@ -20,7 +20,7 @@ import {
 } from "@xnova/game-config";
 import { DatabaseService } from "../database/database.service";
 import { debitResources, lockPlanet } from "../common/atomic";
-import { settleBeforeSatelliteChange } from "../common/satellites";
+import { settleBeforeEnergyChange } from "../common/energy";
 
 @Injectable()
 export class ShipyardService {
@@ -509,12 +509,9 @@ export class ShipyardService {
       }
 
       if (satelliteConfig) {
-        await settleBeforeSatelliteChange(
-          tx,
-          queueEntry.planetId,
-          satelliteConfig,
-          queueEntry.amount,
-        );
+        await settleBeforeEnergyChange(tx, queueEntry.planetId, satelliteConfig, {
+          satellitesDelta: queueEntry.amount,
+        });
       }
 
       await tx.ship.upsert({

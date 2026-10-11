@@ -4,9 +4,11 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { ServerConfigService } from '../server-config/server-config.service';
 import {
   COLONY_SHIP_ID,
+  COMPUTER_TECH_ID,
   ESPIONAGE_PROBE_ID,
   GAME_CONSTANTS,
   IMPLEMENTED_MISSIONS,
@@ -14,6 +16,7 @@ import {
   SHIPS,
   SOLAR_SATELLITE_ID,
   getShipSpeed,
+  maxFleetSlots,
 } from '@xnova/game-config';
 import {
   calculateDistance,
@@ -22,7 +25,7 @@ import {
   calculateFuelConsumption,
 } from '@xnova/game-engine';
 import { DatabaseService } from '../database/database.service';
-import { debitResources, debitShips, lockPlanet } from '../common/atomic';
+import { debitResources, debitShips, lockPlanet, lockUser } from '../common/atomic';
 import { MAX_QUANTITY, SendFleetDto } from './dto/send-fleet.dto';
 
 @Injectable()
@@ -62,9 +65,19 @@ export class FleetService {
         amount: amounts.get(ship.id) ?? 0,
       }));
 
+    const [inFlight, computer] = await Promise.all([
+      this.database.fleet.count({ where: { userId, status: { in: ['traveling', 'returning'] } } }),
+      this.database.technology.findUnique({
+        where: { userId_techId: { userId, techId: COMPUTER_TECH_ID } },
+        select: { level: true },
+      }),
+    ]);
+
     return {
       planetId,
       ships: shipList,
+      // Flottes en vol : 1 de base, plus 1 par niveau de la technologie Ordinateur
+      fleetSlots: { inFlight, max: maxFleetSlots(computer?.level ?? 0) },
     };
   }
 
@@ -295,7 +308,10 @@ export class FleetService {
     }, {} as Record<number, number>);
 
     const fleet = await this.database.$transaction(async (tx) => {
-      // Verrou planete, puis debits conditionnels : pas de stock negatif ni de double usage de vaisseaux (ECO-03)
+      // Verrou joueur (quota de flottes en vol), puis planete et debits conditionnels :
+      // pas de stock negatif ni de double usage de vaisseaux (ECO-03)
+      await lockUser(tx, userId);
+      await this.assertFleetSlot(tx, userId);
       await lockPlanet(tx, dto.planetId);
 
       await debitResources(tx, dto.planetId, {
@@ -343,6 +359,26 @@ export class FleetService {
       mission: dto.mission,
       arrivalTime,
     };
+  }
+
+  /** Flottes en vol : 1 de base, plus 1 par niveau de la technologie Ordinateur. */
+  private async assertFleetSlot(
+    tx: Pick<Prisma.TransactionClient, 'fleet' | 'technology'>,
+    userId: string,
+  ) {
+    const [inFlight, computer] = await Promise.all([
+      tx.fleet.count({ where: { userId, status: { in: ['traveling', 'returning'] } } }),
+      tx.technology.findUnique({
+        where: { userId_techId: { userId, techId: COMPUTER_TECH_ID } },
+        select: { level: true },
+      }),
+    ]);
+    const max = maxFleetSlots(computer?.level ?? 0);
+    if (inFlight >= max) {
+      throw new BadRequestException(
+        `Nombre maximal de flottes en vol atteint (${inFlight}/${max}) : la technologie Ordinateur autorise 1 flotte plus 1 par niveau`,
+      );
+    }
   }
 
   /** Liste de vaisseaux : identifiants connus, quantités entières strictement positives. */

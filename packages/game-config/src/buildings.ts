@@ -66,7 +66,7 @@ export const BUILDINGS: Record<number, Building> = {
   12: {
     id: 12,
     name: 'Centrale Électrique de Fusion',
-    description: 'Produit beaucoup d\'énergie en consommant du deutérium',
+    description: 'Produit beaucoup d\'énergie en brûlant du deutérium ; rendement relevé par la technologie Énergie',
     baseCost: { metal: 900, crystal: 360, deuterium: 180 },
     factor: 1.8,
     category: 'resource',
@@ -138,7 +138,7 @@ export const BUILDINGS: Record<number, Building> = {
   33: {
     id: 33,
     name: 'Terraformeur',
-    description: 'Augmente le nombre de cases disponibles',
+    description: 'Ajoute 5 cases à la planète par niveau (ne consomme pas de case)',
     baseCost: { metal: 0, crystal: 50000, deuterium: 100000 },
     factor: 2.0,
     category: 'station',

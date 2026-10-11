@@ -13,7 +13,7 @@ import {
 } from '@xnova/game-engine';
 import { Prisma } from '@prisma/client';
 import { lockPlanet } from '../common/atomic';
-import { settleBeforeSatelliteChange } from '../common/satellites';
+import { settleBeforeEnergyChange } from '../common/energy';
 import { ServerConfigService } from '../server-config/server-config.service';
 import { DatabaseService } from '../database/database.service';
 import { GameEventsGateway } from '../game-events/game-events.gateway';
@@ -233,7 +233,9 @@ export class CombatService {
       // Satellites détruits : la production d'énergie baisse à partir de maintenant, pas rétroactivement
       const satellitesLost = Number(defenderShipLosses[SOLAR_SATELLITE_ID] ?? 0);
       if (satellitesLost > 0) {
-        await settleBeforeSatelliteChange(tx, target.id, resourceConfig, -satellitesLost);
+        await settleBeforeEnergyChange(tx, target.id, resourceConfig, {
+          satellitesDelta: -satellitesLost,
+        });
       }
 
       // Pertes du defenseur en decrement : ne jamais ecraser une construction ou un envoi concurrent

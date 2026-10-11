@@ -35,6 +35,8 @@ interface CombatUnit {
   weapon: number;
   maxHull: number;
   maxShield: number;
+  /** Tir rapide : pour chaque type de cible, le nombre moyen de tirs enchaînés (probabilité (n−1)/n de rejouer). */
+  rapidfire?: Record<number, number>;
 }
 
 function applyTech(value: number, level: number): number {
@@ -66,6 +68,7 @@ function createUnits(
         weapon: baseWeapon,
         maxHull: baseHull,
         maxShield: baseShield,
+        rapidfire: SHIPS[shipId]?.rapidfire,
       });
     }
   });
@@ -130,6 +133,50 @@ function computeDebris(
   };
 }
 
+/**
+ * Un tir de `shooter` sur une cible tirée au hasard : le bouclier absorbe d'abord, puis la coque ; une unité
+ * dont la coque tombe à 0 est détruite. Retourne la cible touchée (pour le tir rapide).
+ */
+function fireAt(shooter: CombatUnit, targets: CombatUnit[]): CombatUnit {
+  const targetIndex = Math.floor(Math.random() * targets.length);
+  const target = targets[targetIndex];
+
+  const damage = shooter.weapon;
+  if (target.shield > 0) {
+    target.shield -= damage;
+    if (target.shield < 0) {
+      target.hull += target.shield;
+      target.shield = 0;
+    }
+  } else {
+    target.hull -= damage;
+  }
+
+  if (target.hull <= 0) {
+    removeUnit(targets, targetIndex);
+  }
+  return target;
+}
+
+/** Garde-fou : un enchaînement de tirs rapides ne dépasse jamais ce nombre (probabilité de 99,99 % déjà épuisée). */
+const MAX_RAPIDFIRE_CHAIN = 200;
+
+/**
+ * Un round pour un camp : chaque unité tire une fois ; avec un tir rapide contre le type de la cible touchée
+ * (n), elle rejoue avec la probabilité (n − 1) / n, tant qu'il reste des cibles.
+ */
+function fireRound(shooters: CombatUnit[], targets: CombatUnit[]) {
+  for (let i = shooters.length - 1; i >= 0; i -= 1) {
+    if (targets.length === 0) break;
+    const shooter = shooters[i];
+    for (let shots = 0; shots < MAX_RAPIDFIRE_CHAIN && targets.length > 0; shots += 1) {
+      const target = fireAt(shooter, targets);
+      const rapidfire = shooter.rapidfire?.[target.shipId] ?? 0;
+      if (!(rapidfire > 1) || Math.random() >= (rapidfire - 1) / rapidfire) break;
+    }
+  }
+}
+
 export function simulateCombat(params: {
   attackerShips: Record<number, number>;
   defenderShips: Record<number, number>;
@@ -154,49 +201,8 @@ export function simulateCombat(params: {
   ) {
     rounds += 1;
 
-    for (let i = attackerUnits.length - 1; i >= 0; i -= 1) {
-      if (defenderUnits.length === 0) break;
-      const attacker = attackerUnits[i];
-      const targetIndex = Math.floor(Math.random() * defenderUnits.length);
-      const target = defenderUnits[targetIndex];
-
-      const damage = attacker.weapon;
-      if (target.shield > 0) {
-        target.shield -= damage;
-        if (target.shield < 0) {
-          target.hull += target.shield;
-          target.shield = 0;
-        }
-      } else {
-        target.hull -= damage;
-      }
-
-      if (target.hull <= 0) {
-        removeUnit(defenderUnits, targetIndex);
-      }
-    }
-
-    for (let i = defenderUnits.length - 1; i >= 0; i -= 1) {
-      if (attackerUnits.length === 0) break;
-      const defender = defenderUnits[i];
-      const targetIndex = Math.floor(Math.random() * attackerUnits.length);
-      const target = attackerUnits[targetIndex];
-
-      const damage = defender.weapon;
-      if (target.shield > 0) {
-        target.shield -= damage;
-        if (target.shield < 0) {
-          target.hull += target.shield;
-          target.shield = 0;
-        }
-      } else {
-        target.hull -= damage;
-      }
-
-      if (target.hull <= 0) {
-        removeUnit(attackerUnits, targetIndex);
-      }
-    }
+    fireRound(attackerUnits, defenderUnits);
+    fireRound(defenderUnits, attackerUnits);
 
     const recoverShield = (units: CombatUnit[]) => {
       units.forEach((unit) => {

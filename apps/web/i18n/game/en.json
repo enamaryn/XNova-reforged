@@ -39,6 +39,7 @@
     "subtitle": "Prepare your moves and missions.",
     "compose": "Compose a fleet",
     "availableShips": "Available ships",
+    "slots": "Fleets in flight: {used}/{max} (the Computer technology adds one fleet per level)",
     "mission": "Mission",
     "destination": "Destination",
     "active": "Active fleets",

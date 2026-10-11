@@ -40,12 +40,13 @@ Français, anglais, espagnol, allemand, italien (sélecteur de l'en-tête). Limi
 | **Mine de métal / de cristal** | produisent du métal / du cristal (consomment de l'énergie) |
 | **Synthétiseur de deutérium** | produit du deutérium (consomme le plus d'énergie) |
 | **Centrale solaire** | fournit de l'énergie aux mines |
-| **Centrale à fusion** | fournit plus d'énergie ; exige synthétiseur niveau 5 et *Technologie Énergie* niveau 3 |
+| **Centrale à fusion** | fournit plus d'énergie en brûlant du deutérium ; exige synthétiseur niveau 5 et *Technologie Énergie* niveau 3 ; son rendement monte avec la technologie Énergie |
 | **Usine de robots** | divise la durée des constructions de bâtiments (durée ÷ (1 + niveau)) |
 | **Usine de nanites** | divise encore la durée (÷ 2 par niveau) ; exige robots 10 et *Ordinateur* 10 ; très chère |
 | **Hangar** (le chantier spatial) | permet de construire vaisseaux et défenses et accélère leur construction ; son niveau conditionne presque tous les prérequis |
 | **Hangar de métal / cristal, réservoir de deutérium** | augmentent la capacité de stockage |
 | **Laboratoire de recherche** | permet les recherches et les accélère |
+| **Terraformeur** | ajoute 5 cases par niveau et n'occupe aucune case ; exige *Technologie Énergie* 12 |
 
 **Combien coûte un bâtiment et comment le coût évolue-t-il ?**
 Le coût du niveau suivant vaut `coût de base × facteur^niveau actuel`. Exemple, la mine de métal (base 60 métal / 15 cristal, facteur 1,5) : niveau 1 → 60 / 15 ; niveau 10 → 2 306 / 576. Le coût est **débité au lancement**.
@@ -60,13 +61,16 @@ Un par planète au départ ; **deux** après la recherche *Gestion des chantiers
 Oui, depuis la file : le montant débité est **remboursé exactement**. Il n'existe pas de démolition d'un niveau déjà construit.
 
 **Qu'est-ce que les « cases » d'une planète ?**
-Chaque planète de départ a **163 cases**. Chaque niveau construit d'un bâtiment (hors hangars de stockage) en consomme **une** : vous ne pourrez donc pas tout monter au maximum. Choisissez vos niveaux.
+Chaque planète de départ a **163 cases**. Chaque niveau construit d'un bâtiment (hors hangars de stockage et terraformeur) en consomme **une** : vous ne pourrez donc pas tout monter au maximum. Choisissez vos niveaux ; le **terraformeur** ajoute 5 cases par niveau.
 
 **Quelle est la différence entre « Hangar » et « chantier spatial » ?**
 C'est le même bâtiment (identifiant 21) : le « Hangar » des listes est le chantier où l'on construit vaisseaux et défenses. Ne le confondez pas avec les hangars de **stockage**.
 
-**⚠️ Certains bâtiments se construisent mais n'ont pas d'effet aujourd'hui.**
-Le **terraformeur** (exige *Technologie Énergie* 12) n'augmente pas le nombre de cases, le **dépôt d'alliance**, le **silo de missiles** (aucun missile n'est disponible) et les bâtiments **lunaires** (base lunaire, phalange, porte de saut : le jeu ne crée pas de lune) ne changent rien au jeu pour l'instant. Inutile d'y investir.
+**Le terraformeur sert-il à quelque chose ?**
+Oui : chaque niveau ajoute **5 cases** à la planète et le terraformeur **n'occupe aucune case** lui-même (il exige *Technologie Énergie* 12, ce qui le réserve à la fin de partie).
+
+**Pourquoi ne vois-je pas le dépôt d'alliance, le silo de missiles ni les bâtiments lunaires ?**
+Parce qu'ils dépendent de fonctions qui n'existent pas encore (maintien de position, missiles, lunes) : ils ne sont plus proposés ni acceptés, pour que personne n'investisse dans un bâtiment sans effet.
 
 ---
 
@@ -76,10 +80,10 @@ Le **terraformeur** (exige *Technologie Énergie* 12) n'augmente pas le nombre d
 Les mines consomment de l'énergie ; les centrales en produisent. Tant que la production couvre la consommation, les mines tournent à 100 %. Sinon, **toutes les mines ralentissent proportionnellement** (production 50 % de l'énergie nécessaire = 50 % de métal, de cristal et de deutérium). Le niveau de production et le bilan d'énergie sont affichés sur la vue d'ensemble.
 
 **Combien d'énergie produit et consomme chaque bâtiment ?**
-Par niveau `n` : centrale solaire `20 × n × 1,1^n` ; centrale à fusion `30 × n × 1,05^n` ; consommation de la mine de métal et de cristal `10 × n × 1,1^n`, du synthétiseur de deutérium `20 × n × 1,1^n`. Exemples : centrale solaire niveau 10 → 518 ; fusion niveau 10 → 488 ; mine de métal niveau 10 → consomme 260.
+Par niveau `n` : centrale solaire `20 × n × 1,1^n` ; centrale à fusion `30 × n × (1,05 + 0,01 × Énergie)^n` ; consommation de la mine de métal et de cristal `10 × n × 1,1^n`, du synthétiseur de deutérium `20 × n × 1,1^n`. Exemples : centrale solaire niveau 10 → 518 ; fusion niveau 10 → 488 (Énergie 0) ou 647 (Énergie 3) ; mine de métal niveau 10 → consomme 260.
 
 **Quelle centrale choisir ?**
-La centrale solaire : peu chère, sans prérequis. À niveau égal, la fusion produit **moins** qu'une centrale solaire dans le moteur actuel (niveau 10 : 488 contre 518) et exige des prérequis coûteux : elle n'est pas rentable aujourd'hui. ⚠️ La fusion **ne consomme pas de deutérium** (malgré sa description) et la *Technologie Énergie* n'augmente pas sa production : c'est un prérequis, pas un bonus.
+La centrale solaire : peu chère, sans prérequis. La **fusion** exige synthétiseur niveau 5 et *Technologie Énergie* 3, **brûle du deutérium** (`10 × n × 1,1^n` par heure, multiplié par la vitesse du serveur) mais produit davantage dès que la technologie Énergie monte : avec *Énergie* 3, une fusion niveau 10 donne 647 d'énergie contre 518 pour une solaire de même niveau, au prix d'environ 259 deutérium par heure ; avec *Énergie* 0 elle ne donne que 488. Elle devient rentable quand vos cases sont comptées et que la technologie Énergie est avancée ; la solaire reste meilleure au début.
 
 **Les satellites solaires donnent-ils de l'énergie ?**
 **Oui.** Dès qu'il est construit, un satellite solaire (212 : 2 000 cristal et 500 deutérium, constructible dès le hangar niveau 1) est **directement en orbite de la planète** et lui fournit **50 d'énergie** en permanence, en plus des centrales. L'énergie compte à partir de la livraison : la production du temps déjà écoulé n'est pas modifiée. Exemple : 3 satellites = 150 d'énergie. La valeur est fixe (le jeu n'a pas de température de planète).
@@ -114,11 +118,13 @@ Une seule recherche à la fois par joueur, payée au lancement, qui exige un niv
 | **Réacteur à Impulsion** (117) | +20 % de vitesse par niveau pour grand transporteur, chasseur lourd, colonisateur, recycleur, bombardier |
 | **Propulsion Hyperespace** (118) | +30 % de vitesse par niveau pour croiseur, vaisseau de bataille, destructeur, étoile de la mort, traqueur ; +5 %/niveau de capacité de cargaison pour le butin d'une attaque |
 | **Technologie Espionnage** (106) | détermine le détail des rapports d'espionnage (comparée à celle de la cible, voir §5) |
+| **Technologie Énergie** (113) | relève le rendement des centrales à fusion (+0,01 sur la base de 1,05 par niveau) |
+| **Technologie Ordinateur** (108) | **1 flotte en vol de base, +1 par niveau** (voir §6) |
 | **Gestion des chantiers** (125) | 2e construction simultanée de bâtiments |
 | **Production parallèle** (126) | lignes de production supplémentaires au chantier |
 
 **Et les autres ?**
-Énergie (113), Ordinateur (108), Hyperespace (114), Laser (120), Ions (121), Plasma (122), Réseau de recherche (123), Expédition (124), Graviton (199) servent surtout de **prérequis** pour débloquer des bâtiments, vaisseaux et défenses. ⚠️ Malgré leurs descriptions, *Ordinateur* ne limite pas le nombre de flottes (il n'y a pas de limite), *Laser/Ions/Plasma* n'améliorent pas des armes, et l'*Expédition* n'a pas de mission associée. Pour les prérequis exacts, la carte de chaque élément les affiche.
+Hyperespace (114), Laser (120), Ions (121), Plasma (122) et Graviton (199) sont de purs **prérequis** pour débloquer des bâtiments, vaisseaux et défenses (leurs descriptions l'indiquent : « aucun effet direct »). *Énergie* relève aussi le rendement de la fusion (voir §3). Le **réseau de recherche intergalactique** et l'**expédition** ne sont pas proposés tant que leurs fonctions n'existent pas.
 
 **Quelle est la première recherche conseillée ?**
 *Énergie* (prérequis de la fusion et de plusieurs défenses), puis le réacteur à combustion pour des transporteurs plus rapides, puis *Militaire/Défense/Bouclier* selon votre projet de combat.
@@ -161,7 +167,17 @@ Avec des **sondes d'espionnage** : la mission d'espionnage n'accepte que des son
 Aujourd'hui, à rien : le combat calcule des débris (30 % du métal et du cristal des **vaisseaux** détruits) mais il n'existe ni champ de débris ni mission de recyclage. Ne construisez pas de recycleurs pour l'instant.
 
 **Les vaisseaux ont-ils un « tir rapide » ?**
-⚠️ Les valeurs de tir rapide existent dans la configuration, mais le moteur de combat **ne les applique pas** encore : tous les vaisseaux tirent une fois par round sur une cible tirée au hasard.
+Oui. Quand un vaisseau touche une cible d'un type contre lequel il a un tir rapide de valeur `n`, il **tire de nouveau avec la probabilité (n − 1) / n**, et ainsi de suite : en moyenne `n` tirs contre ce type. Les autres cibles ne donnent aucun tir supplémentaire. Cela vaut aussi pour la flotte stationnée qui défend.
+
+| Vaisseau | Tir rapide contre (valeur) |
+|---|---|
+| Chasseur léger | Sonde ×5, Lanceur de missiles ×10 |
+| Chasseur lourd | Chasseur léger ×3, Sonde ×5, Lanceur de missiles ×10 |
+| Croiseur | Chasseur léger ×6, Sonde ×5, Lanceur de missiles ×10, Artillerie laser légère ×10 |
+| Bombardier | Lanceur de missiles ×20, Artillerie laser légère ×20, Artillerie laser lourde ×10 |
+| Traqueur | Croiseur ×3 |
+
+Les autres vaisseaux (dont l'Étoile de la mort, pour l'instant) n'ont pas de tir rapide.
 
 **Comment colonise-t-on ?**
 Mission *Colonisation* avec un vaisseau de colonisation vers une **position libre** : la colonie est fondée et le vaisseau consommé. Maximum **21 planètes** par joueur.
@@ -177,7 +193,7 @@ Mission *Colonisation* avec un vaisseau de colonisation vers une **position libr
 Distance : `√(Δgalaxie² × 20 000 + Δsystème² × 95 + Δposition² × 5)`. Vitesse de la flotte : celle de son **vaisseau le plus lent** (avec les bonus de réacteurs). Durée : `(35 000 / % de vitesse) × √(distance × 10 / vitesse) + 10` secondes, divisée par la vitesse de flotte du serveur. Carburant (deutérium, débité au **départ**) : `Σ nombre × consommation × (distance / 35 000) × (vitesse / 1 000 + 1)²`. Exemple avec 10 petits transporteurs : même système (4 positions) 0 deutérium ; 10 systèmes plus loin 10 ; autre galaxie 14. Le choix d'une vitesse plus basse allonge le vol (de 10 % à 100 %).
 
 **Puis-je envoyer plusieurs flottes en même temps ?**
-Oui, sans limite de nombre aujourd'hui (la technologie *Ordinateur* n'en limite pas).
+Dans la limite de vos emplacements : **1 flotte en vol de base, plus 1 par niveau de la technologie *Ordinateur***. Les flottes qui rentrent comptent encore. Le compteur « Flottes en vol : x/y » est affiché sur la page *Flotte*, et le jeu refuse l'envoi suivant quand tous les emplacements sont pris.
 
 **Comment rappeler une flotte ?**
 Depuis *Mouvements*, tant qu'elle est en vol aller et pas arrivée : elle fait demi-tour et le retour dure aussi longtemps que le trajet déjà parcouru. Une flotte arrivée ou déjà au retour ne peut plus être rappelée.
@@ -193,7 +209,7 @@ Elle peut aussi emporter de la cargaison, mais le butin n'occupe que la **place 
 ## 7. Combat
 
 **Comment se déroule un combat ?**
-Jusqu'à **6 rounds**. À chaque round, chaque unité de l'attaquant puis chaque unité du défenseur tire une fois sur une unité adverse **choisie au hasard**. Les dégâts retirent d'abord le bouclier puis la coque ; une unité à coque nulle est détruite. À la fin de chaque round, **les boucliers se régénèrent de 70 %** de leur maximum. Le combat s'arrête quand un camp est détruit ou après 6 rounds (égalité).
+Jusqu'à **6 rounds**. À chaque round, chaque unité de l'attaquant puis chaque unité du défenseur tire sur une unité adverse **choisie au hasard** (et rejoue selon son **tir rapide**, voir §5). Les dégâts retirent d'abord le bouclier puis la coque ; une unité à coque nulle est détruite. À la fin de chaque round, **les boucliers se régénèrent de 70 %** de leur maximum. Le combat s'arrête quand un camp est détruit ou après 6 rounds (égalité).
 
 **Quels bonus de technologie s'appliquent ?**
 *Militaire* (+10 % d'arme par niveau), *Défense* (+10 % de coque), *Bouclier* (+10 % de bouclier), appliqués à toutes vos unités, vaisseaux **et** défenses. Les deux camps utilisent leurs propres niveaux.
@@ -272,6 +288,7 @@ Il est établi sur la **puissance** ; votre rang apparaît dans l'en-tête et la
 | « Ressources insuffisantes » | Il manque du métal, du cristal ou du deutérium (le carburant s'ajoute à la cargaison de deutérium pour un vol). |
 | « Prérequis manquants : … » | Le détail liste les niveaux de bâtiment ou de technologie à atteindre. |
 | « Capacité de construction atteinte » | La file de la planète est pleine : attendez ou débloquez *Gestion des chantiers* (2 files). |
+| « Nombre maximal de flottes en vol atteint » | Tous vos emplacements de flotte sont pris : attendez le retour d'une flotte ou montez la technologie *Ordinateur* (§6). |
 | « Plus de champs disponibles » | La planète n'a plus de cases (163) : consacrez les dernières cases aux bâtiments utiles, ou colonisez. |
 | « Aucune planète à cette position » | Attaque ou espionnage ne visent qu'une planète existante ; pour coloniser, la position doit être **libre**. |
 | « Une mission d'espionnage n'accepte que des sondes d'espionnage » | Envoyez uniquement des sondes (210). |
@@ -284,6 +301,6 @@ Il est établi sur la **puissance** ; votre rang apparaît dans l'en-tête et la
 
 ## 11. Ce qui n'existe pas encore
 
-Officiers, marché, événements, lunes, missiles, recyclage et champs de débris, expéditions, attaques groupées, limite de flottes par *Ordinateur*, effet du terraformeur, tir rapide. Les éléments correspondants (bâtiments, vaisseaux, technologies) apparaissent parfois dans les listes et peuvent être achetés **sans effet** : lisez les ⚠️ ci-dessus avant d'investir. La feuille de route du projet ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) suit ces écarts.
+Officiers, marché, événements, lunes, missiles, recyclage et champs de débris, expéditions, attaques groupées, maintien de position. Les bâtiments et technologies qui en dépendent (dépôt d'alliance, silo de missiles, bâtiments lunaires, réseau de recherche, expédition) ne sont pas proposés. Le recycleur existe mais ne sert à rien tant que le recyclage n'existe pas : lisez les ⚠️ ci-dessus avant d'investir. La feuille de route du projet ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) suit ces écarts.
 
 *Cette FAQ a été vérifiée contre le code (`packages/game-config`, `packages/game-engine`, API) et, pour les satellites solaires, par un test automatisé d'intégration (`solar-satellites.integration.spec.ts`).*

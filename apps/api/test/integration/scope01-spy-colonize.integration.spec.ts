@@ -360,6 +360,7 @@ describe('API integration - Espionnage et colonisation (SCOPE-01)', () => {
     });
 
     it('deux flottes vers la même position : une planète, l\'autre flotte rentre intacte', async () => {
+      await setTech(spy.userId, 108, 5); // deux flottes en vol : technologie Ordinateur
       const a = await sendColony({ '208': 1 }).expect(201);
       const b = await sendColony({ '208': 1 }).expect(201);
       await Promise.all([makeDue(a.body.fleetId), makeDue(b.body.fleetId)]);
@@ -386,6 +387,7 @@ describe('API integration - Espionnage et colonisation (SCOPE-01)', () => {
       await database.planet.createMany({ data: fillers, skipDuplicates: true });
       const before = await database.planet.count({ where: { userId: spy.userId } });
       const spotB = await freePosition(7, 411);
+      await setTech(spy.userId, 108, 5); // deux flottes en vol : technologie Ordinateur
       const a = await sendColony({ '208': 1 }).expect(201);
       const b = await sendColony({ '208': 1 }, {}, spotB).expect(201);
       await Promise.all([makeDue(a.body.fleetId), makeDue(b.body.fleetId)]);

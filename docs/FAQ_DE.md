@@ -42,12 +42,13 @@ Französisch, Englisch, Spanisch, Deutsch, Italienisch (Auswahl in der Kopfzeile
 | **Metallmine / Kristallmine** (*Mine de Métal / de Cristal*) | produzieren Metall / Kristall (verbrauchen Energie) |
 | **Deuterium-Synthetisierer** (*Synthétiseur de Deutérium*) | produziert Deuterium (verbraucht am meisten Energie) |
 | **Solarkraftwerk** (*Centrale Électrique Solaire*) | liefert den Minen Energie |
-| **Fusionskraftwerk** (*Centrale Électrique de Fusion*) | liefert mehr Energie; erfordert Synthetisierer Stufe 5 und *Energietechnik* Stufe 3 |
+| **Fusionskraftwerk** (*Centrale Électrique de Fusion*) | liefert mehr Energie und verbrennt dabei Deuterium; erfordert Synthetisierer Stufe 5 und *Energietechnik* Stufe 3; sein Ertrag steigt mit der Energietechnik |
 | **Roboterfabrik** (*Usine de Robots*) | teilt die Bauzeit von Gebäuden (Zeit ÷ (1 + Stufe)) |
 | **Nanitenfabrik** (*Usine de Nanites*) | teilt sie erneut (÷ 2 pro Stufe); erfordert Roboter 10 und *Computertechnik* 10; sehr teuer |
 | **Werft** (*Hangar*) | erlaubt den Bau von Schiffen und Verteidigung und beschleunigt ihn; ihre Stufe bestimmt fast alle Voraussetzungen |
 | **Metall-/Kristallspeicher, Deuteriumtank** (*Hangar de Métal / de Cristal, Réservoir de Deutérium*) | erhöhen die Lagerkapazität |
 | **Forschungslabor** (*Laboratoire de Recherche*) | erlaubt Forschung und beschleunigt sie |
+| **Terraformer** (*Terraformeur*) | fügt 5 Felder pro Stufe hinzu und belegt kein Feld; erfordert *Energietechnik* 12 |
 
 **Was kostet ein Gebäude und wie wächst der Preis?**
 Die nächste Stufe kostet `Grundkosten × Faktor^aktuelle Stufe`. Beispiel Metallmine (Basis 60 Metall / 15 Kristall, Faktor 1,5): Stufe 1 → 60 / 15; Stufe 10 → 2 306 / 576. Die Kosten werden **beim Start abgebucht**.
@@ -62,13 +63,16 @@ Anfangs eines pro Planet; **zwei** nach der Forschung *Gestion des chantiers* (B
 Ja, aus der Warteschlange: Der abgebuchte Betrag wird **genau erstattet**. Einen bereits gebauten Stufenabriss gibt es nicht.
 
 **Was sind die „Felder“ eines Planeten?**
-Jeder Startplanet hat **163 Felder**. Jede gebaute Stufe eines Gebäudes (außer Lagergebäuden) verbraucht **eines**: Sie können also nicht alles auf das Maximum bringen. Wählen Sie Ihre Stufen.
+Jeder Startplanet hat **163 Felder**. Jede gebaute Stufe eines Gebäudes (außer Lagergebäuden und Terraformer) verbraucht **eines**: Sie können also nicht alles auf das Maximum bringen. Wählen Sie Ihre Stufen; der **Terraformer** fügt 5 Felder pro Stufe hinzu.
 
 **Was ist der Unterschied zwischen „Hangar“ und Werft?**
 Es ist dasselbe Gebäude (ID 21): Der „Hangar“ in den Listen ist die Werft, in der Schiffe und Verteidigung gebaut werden. Nicht mit den **Lager**-Hangars verwechseln.
 
-**⚠️ Manche Gebäude lassen sich bauen, haben aber heute keine Wirkung.**
-Der **Terraformer** (erfordert *Energietechnik* 12) erhöht die Zahl der Felder nicht; **Allianzdepot**, **Raketensilo** (es gibt keine Raketen) und die **Mond**-Gebäude (Mondbasis, Sensorphalanx, Sprungtor: das Spiel erzeugt keine Monde) ändern vorerst nichts am Spiel. Investieren Sie nicht darin.
+**Ist der Terraformer nützlich?**
+Ja: Jede Stufe fügt dem Planeten **5 Felder** hinzu, und der Terraformer **belegt selbst kein Feld** (er erfordert *Energietechnik* 12, was ihn dem Spätspiel vorbehält).
+
+**Warum sehe ich Allianzdepot, Raketensilo und Mondgebäude nicht?**
+Weil sie von Funktionen abhängen, die es noch nicht gibt (Halten, Raketen, Monde): Sie werden nicht mehr angeboten oder akzeptiert, damit niemand in ein Gebäude ohne Wirkung investiert.
 
 ---
 
@@ -78,10 +82,10 @@ Der **Terraformer** (erfordert *Energietechnik* 12) erhöht die Zahl der Felder 
 Minen verbrauchen Energie; Kraftwerke erzeugen sie. Solange die Erzeugung den Verbrauch deckt, laufen die Minen mit 100 %. Sonst **werden alle Minen proportional langsamer** (Erzeugung bei 50 % der nötigen Energie = 50 % Metall, Kristall und Deuterium). Produktionsstufe und Energiebilanz stehen in der Übersicht.
 
 **Wie viel Energie erzeugt und verbraucht jedes Gebäude?**
-Pro Stufe `n`: Solarkraftwerk `20 × n × 1,1^n`; Fusionskraftwerk `30 × n × 1,05^n`; Verbrauch der Metall- und Kristallmine `10 × n × 1,1^n`, des Deuterium-Synthetisierers `20 × n × 1,1^n`. Beispiele: Solarkraftwerk Stufe 10 → 518; Fusion Stufe 10 → 488; Metallmine Stufe 10 → verbraucht 260.
+Pro Stufe `n`: Solarkraftwerk `20 × n × 1,1^n`; Fusionskraftwerk `30 × n × (1,05 + 0,01 × Energie)^n`; Verbrauch der Metall- und Kristallmine `10 × n × 1,1^n`, des Deuterium-Synthetisierers `20 × n × 1,1^n`. Beispiele: Solarkraftwerk Stufe 10 → 518; Fusion Stufe 10 → 488 (Energie 0) oder 647 (Energie 3); Metallmine Stufe 10 → verbraucht 260.
 
 **Welches Kraftwerk soll ich wählen?**
-Das Solarkraftwerk: günstig, ohne Voraussetzungen. Bei gleicher Stufe erzeugt das Fusionskraftwerk im aktuellen System **weniger** als ein Solarkraftwerk (Stufe 10: 488 gegenüber 518) und hat teure Voraussetzungen: Es lohnt sich heute nicht. ⚠️ Das Fusionskraftwerk **verbraucht kein Deuterium** (trotz seiner Beschreibung), und die *Energietechnik* erhöht seine Erzeugung nicht: Sie ist eine Voraussetzung, kein Bonus.
+Das Solarkraftwerk: günstig, ohne Voraussetzungen. Das **Fusionskraftwerk** erfordert Synthetisierer Stufe 5 und *Energietechnik* 3 und **verbrennt Deuterium** (`10 × n × 1,1^n` pro Stunde, mal Servergeschwindigkeit), erzeugt aber mehr, je höher die Energietechnik steigt: mit *Energie* 3 liefert ein Fusionskraftwerk Stufe 10 647 Energie gegenüber 518 bei einem Solarkraftwerk gleicher Stufe, zum Preis von etwa 259 Deuterium pro Stunde; mit *Energie* 0 sind es nur 488. Es lohnt sich, wenn Felder knapp sind und die Energietechnik weit ist; das Solarkraftwerk bleibt am Anfang besser.
 
 **Liefern Solarsatelliten Energie?**
 **Ja.** Sobald er gebaut ist, befindet sich ein Solarsatellit (212: 2 000 Kristall und 500 Deuterium, ab Werft Stufe 1 baubar) **direkt im Orbit des Planeten** und liefert ihm dauerhaft **50 Energie**, zusätzlich zu den Kraftwerken. Die Energie zählt ab der Lieferung: Die Produktion der bereits verstrichenen Zeit ändert sich nicht. Beispiel: 3 Satelliten = 150 Energie. Der Wert ist fest (das Spiel kennt keine Planetentemperatur).
@@ -116,11 +120,13 @@ Eine Forschung gleichzeitig pro Spieler, beim Start bezahlt, mit einer Laborstuf
 | **Impulstriebwerk** (*Réacteur à Impulsion*, 117) | +20 % Geschwindigkeit pro Stufe für großen Transporter, schweren Jäger, Kolonieschiff, Recycler, Bomber |
 | **Hyperraumantrieb** (*Propulsion Hyperespace*, 118) | +30 % Geschwindigkeit pro Stufe für Kreuzer, Schlachtschiff, Zerstörer, Todesstern, Schlachtkreuzer; +5 %/Stufe Ladekapazität für die Beute eines Angriffs |
 | **Spionagetechnik** (*Technologie Espionnage*, 106) | bestimmt den Detailgrad der Spionageberichte (verglichen mit der des Ziels, siehe §5) |
+| **Energietechnik** (*Technologie Énergie*, 113) | erhöht den Ertrag der Fusionskraftwerke (+0,01 auf die Basis 1,05 pro Stufe) |
+| **Computertechnik** (*Technologie Ordinateur*, 108) | **1 Flotte im Flug als Basis, +1 pro Stufe** (siehe §6) |
 | **Bauverwaltung** (*Gestion des chantiers*, 125) | 2. gleichzeitiger Gebäudebau |
 | **Parallelproduktion** (*Production parallèle*, 126) | zusätzliche Produktionslinien in der Werft |
 
 **Und die übrigen?**
-Energie (113), Computer (108), Hyperraum (114), Laser (120), Ionen (121), Plasma (122), Intergalaktisches Forschungsnetzwerk (123), Expedition (124), Graviton (199) dienen vor allem als **Voraussetzungen**, um Gebäude, Schiffe und Verteidigung freizuschalten. ⚠️ Trotz ihrer Beschreibungen begrenzt *Computertechnik* die Zahl der Flotten nicht (es gibt kein Limit), *Laser/Ionen/Plasma* verbessern keine Waffen, und die *Expedition* hat keine zugehörige Mission. Die Karte jedes Elements zeigt die genauen Voraussetzungen.
+Hyperraum (114), Laser (120), Ionen (121), Plasma (122) und Graviton (199) sind reine **Voraussetzungen**, um Gebäude, Schiffe und Verteidigungen freizuschalten (ihre Beschreibungen sagen „keine direkte Wirkung“). *Energie* erhöht außerdem den Ertrag der Fusion (siehe §3). Das **Intergalaktische Forschungsnetzwerk** und die **Expedition** werden nicht angeboten, solange ihre Funktionen fehlen.
 
 **Was zuerst erforschen?**
 *Energie* (Voraussetzung für Fusion und mehrere Verteidigungen), dann das Verbrennungstriebwerk für schnellere Transporter, danach *Militär/Verteidigung/Schild* je nach Kampfplan.
@@ -163,7 +169,17 @@ Mit **Spionagesonden**: Die Spionagemission akzeptiert nur Sonden. Eine Sonde ko
 Heute zu nichts: Der Kampf berechnet Trümmer (30 % von Metall und Kristall der zerstörten **Schiffe**), aber es gibt weder ein Trümmerfeld noch eine Recycling-Mission. Bauen Sie vorerst keine Recycler.
 
 **Haben Schiffe „Schnellfeuer“?**
-⚠️ Schnellfeuer-Werte existieren in der Konfiguration, aber das Kampfsystem **wendet sie noch nicht an**: Jedes Schiff schießt einmal pro Runde auf ein zufällig gewähltes Ziel.
+Ja. Trifft ein Schiff ein Ziel eines Typs, gegen den es Schnellfeuer mit dem Wert `n` hat, **schießt es mit der Wahrscheinlichkeit (n − 1) / n erneut**, und so weiter: im Mittel `n` Schüsse gegen diesen Typ. Andere Ziele geben keine Zusatzschüsse. Das gilt auch für die stationierte Flotte, die verteidigt.
+
+| Schiff | Schnellfeuer gegen (Wert) |
+|---|---|
+| Leichter Jäger | Sonde ×5, Raketenwerfer ×10 |
+| Schwerer Jäger | Leichter Jäger ×3, Sonde ×5, Raketenwerfer ×10 |
+| Kreuzer | Leichter Jäger ×6, Sonde ×5, Raketenwerfer ×10, Leichtes Lasergeschütz ×10 |
+| Bomber | Raketenwerfer ×20, Leichtes Lasergeschütz ×20, Schweres Lasergeschütz ×10 |
+| Schlachtkreuzer | Kreuzer ×3 |
+
+Andere Schiffe (vorerst auch der Todesstern) haben kein Schnellfeuer.
 
 **Wie kolonisiere ich?**
 Mission *Kolonisierung* mit einem Kolonieschiff zu einer **freien Position**: Die Kolonie wird gegründet, das Schiff verbraucht. Höchstens **21 Planeten** pro Spieler.
@@ -179,7 +195,7 @@ Mission *Kolonisierung* mit einem Kolonieschiff zu einer **freien Position**: Di
 Entfernung: `√(Δgalaxie² × 20 000 + Δsystem² × 95 + Δposition² × 5)`. Flottengeschwindigkeit: die ihres **langsamsten Schiffs** (mit Triebwerksboni). Dauer: `(35 000 / Geschwindigkeits-%) × √(Entfernung × 10 / Geschwindigkeit) + 10` Sekunden, geteilt durch die Flottengeschwindigkeit des Servers. Treibstoff (Deuterium, beim **Start** abgebucht): `Σ Anzahl × Verbrauch × (Entfernung / 35 000) × (Geschwindigkeit / 1 000 + 1)²`. Beispiel mit 10 kleinen Transportern: gleiches System (4 Positionen) 0 Deuterium; 10 Systeme weiter 10; andere Galaxie 14. Eine niedrigere Geschwindigkeit verlängert den Flug (10 % bis 100 %).
 
 **Kann ich mehrere Flotten gleichzeitig schicken?**
-Ja, heute ohne Begrenzung der Anzahl (die *Computertechnik* begrenzt sie nicht).
+Im Rahmen Ihrer Plätze: **1 Flotte im Flug als Basis, plus 1 pro Stufe der Technologie *Computertechnik***. Zurückkehrende Flotten zählen weiter mit. Der Zähler „Flotten im Flug: x/y“ steht auf der Seite *Flotte*, und das Spiel lehnt den nächsten Flug ab, wenn alle Plätze belegt sind.
 
 **Wie rufe ich eine Flotte zurück?**
 Über *Bewegungen*, solange sie auf dem Hinflug und noch nicht angekommen ist: Sie dreht um, und der Rückflug dauert so lange wie die bereits geflogene Strecke. Eine angekommene oder bereits zurückkehrende Flotte kann nicht zurückgerufen werden.
@@ -195,7 +211,7 @@ Sie kann auch Fracht mitführen, aber die Beute nutzt nur den **freien Platz**, 
 ## 7. Kampf
 
 **Wie läuft ein Kampf ab?**
-Bis zu **6 Runden**. In jeder Runde schießt jede Einheit des Angreifers, dann jede Einheit des Verteidigers, einmal auf eine **zufällig gewählte** gegnerische Einheit. Schaden entfernt zuerst den Schild, dann die Hülle; eine Einheit ohne Hülle ist zerstört. Am Ende jeder Runde **regenerieren die Schilde um 70 %** ihres Maximums. Der Kampf endet, wenn eine Seite vernichtet ist oder nach 6 Runden (Unentschieden).
+Bis zu **6 Runden**. In jeder Runde schießt jede Einheit des Angreifers, dann jede Einheit des Verteidigers, auf eine **zufällig gewählte** gegnerische Einheit (und schießt gemäß ihrem **Schnellfeuer** erneut, siehe §5). Schaden entfernt zuerst den Schild, dann die Hülle; eine Einheit ohne Hülle ist zerstört. Am Ende jeder Runde **regenerieren die Schilde um 70 %** ihres Maximums. Der Kampf endet, wenn eine Seite vernichtet ist oder nach 6 Runden (Unentschieden).
 
 **Welche Technologieboni gelten?**
 *Militär* (+10 % Waffe pro Stufe), *Verteidigung* (+10 % Hülle), *Schild* (+10 % Schild), angewendet auf alle Ihre Einheiten, Schiffe **und** Verteidigungen. Jede Seite nutzt ihre eigenen Stufen.
@@ -274,6 +290,7 @@ Sie beruht auf der **Macht**; Ihr Rang erscheint in der Kopfzeile und in der Üb
 | „Ressources insuffisantes“ | Es fehlt Metall, Kristall oder Deuterium (bei einem Flug kommt der Treibstoff zur Deuteriumfracht hinzu). |
 | „Prérequis manquants : …“ | Die Details nennen die zu erreichenden Gebäude- oder Technologiestufen. |
 | „Capacité de construction atteinte“ | Die Warteschlange des Planeten ist voll: warten oder *Gestion des chantiers* freischalten (2 Warteschlangen). |
+| „Nombre maximal de flottes en vol atteint“ | Alle Ihre Flottenplätze sind belegt: Warten Sie auf die Rückkehr einer Flotte oder erhöhen Sie die *Computertechnik* (§6). |
 | „Plus de champs disponibles“ | Der Planet hat keine Felder mehr (163): Nutzen Sie die letzten Felder für nützliche Gebäude oder kolonisieren Sie. |
 | „Aucune planète à cette position“ | Angriff und Spionage zielen nur auf einen existierenden Planeten; zum Kolonisieren muss die Position **frei** sein. |
 | „Une mission d'espionnage n'accepte que des sondes d'espionnage“ | Nur Sonden (210) senden. |
@@ -286,6 +303,6 @@ Sie beruht auf der **Macht**; Ihr Rang erscheint in der Kopfzeile und in der Üb
 
 ## 11. Was es noch nicht gibt
 
-Offiziere, Markt, Ereignisse, Monde, Raketen, Recycling und Trümmerfelder, Expeditionen, Verbandsangriffe, Flottenlimit durch *Computertechnik*, Wirkung des Terraformers, Schnellfeuer. Die zugehörigen Elemente (Gebäude, Schiffe, Technologien) erscheinen manchmal in den Listen und lassen sich **ohne Wirkung** kaufen: Lesen Sie die ⚠️ oben, bevor Sie investieren. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
+Offiziere, Markt, Ereignisse, Monde, Raketen, Recycling und Trümmerfelder, Expeditionen, Verbandsangriffe, Halten. Die davon abhängigen Gebäude und Technologien (Allianzdepot, Raketensilo, Mondgebäude, Forschungsnetzwerk, Expedition) werden nicht angeboten. Der Recycler existiert, ist aber nutzlos, solange es kein Recycling gibt: Lesen Sie die ⚠️ oben, bevor Sie investieren. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
 
 *Diese FAQ wurde gegen den Code (`packages/game-config`, `packages/game-engine`, API) und, für die Solarsatelliten, durch einen automatisierten Integrationstest (`solar-satellites.integration.spec.ts`) geprüft.*
