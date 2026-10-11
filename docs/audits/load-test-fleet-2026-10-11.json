@@ -1,0 +1,327 @@
+{
+  "startedAt": "2026-10-11T09:06:22.204Z",
+  "finishedAt": "2026-10-11T09:12:26.157Z",
+  "api": "http://127.0.0.1:3001",
+  "config": {
+    "boosted": true,
+    "players": 200,
+    "rampS": 60,
+    "holdS": 300,
+    "idleS": 0
+  },
+  "playersReady": 200,
+  "holdSeconds": 304,
+  "totalRequests": 25205,
+  "throughputRps": 69.3,
+  "serverErrors": 0,
+  "errorRate": 0,
+  "rateLimited": 0,
+  "websocket": {
+    "attempted": 200,
+    "connected": 200,
+    "dropped": 0,
+    "resourceEvents": 890,
+    "resourceEventsDuringIdle": 0,
+    "stillConnectedAtEnd": 200,
+    "ratio": 1
+  },
+  "health": {
+    "checks": 72,
+    "failures": 0,
+    "maxRssMb": 253
+  },
+  "groups": {
+    "read": {
+      "count": 18001,
+      "p50": 7.758464000013191,
+      "p95": 56.8718869999866,
+      "p99": 148.53647700000147
+    },
+    "write": {
+      "count": 6804,
+      "p50": 15.403685000026599,
+      "p95": 34.517619000020204,
+      "p99": 168.79070400004275
+    },
+    "auth": {
+      "count": 400,
+      "p50": 90.29710399999749,
+      "p95": 110.40434800000367,
+      "p99": 120.7068650000001
+    }
+  },
+  "endpoints": {
+    "POST /auth/register": {
+      "kind": "auth",
+      "count": 200,
+      "p50": 92.27834699999948,
+      "p95": 110.53992500000004,
+      "p99": 121.64542299999812,
+      "max": 128.31136199999946,
+      "status": {
+        "201": 200
+      }
+    },
+    "POST /auth/login": {
+      "kind": "auth",
+      "count": 200,
+      "p50": 88.2662519999999,
+      "p95": 106.35391199999867,
+      "p99": 119.75424699999985,
+      "max": 197.29462200000125,
+      "status": {
+        "200": 200
+      }
+    },
+    "GET /auth/me": {
+      "kind": "read",
+      "count": 3258,
+      "p50": 5.605651999998372,
+      "p95": 14.380513000010978,
+      "p99": 91.70844200003194,
+      "max": 317.7749560000011,
+      "status": {
+        "200": 3258
+      }
+    },
+    "GET /research-queue": {
+      "kind": "read",
+      "count": 1236,
+      "p50": 4.718630999996094,
+      "p95": 14.257038000039756,
+      "p99": 148.063602000002,
+      "max": 317.59973800000444,
+      "status": {
+        "200": 1236
+      }
+    },
+    "POST /fleet/send": {
+      "kind": "write",
+      "count": 3444,
+      "p50": 15.22278800001368,
+      "p95": 32.99570200004382,
+      "p99": 150.828955999983,
+      "max": 648.7194330000057,
+      "status": {
+        "201": 3444
+      }
+    },
+    "GET /galaxy/:g/:s": {
+      "kind": "read",
+      "count": 1595,
+      "p50": 5.699048000009498,
+      "p95": 15.05547399999341,
+      "p99": 149.00770800000464,
+      "max": 328.95900399999664,
+      "status": {
+        "200": 1595
+      }
+    },
+    "GET /fleet/active": {
+      "kind": "read",
+      "count": 789,
+      "p50": 5.139724999986356,
+      "p95": 13.399780999985524,
+      "p99": 148.8505609999993,
+      "max": 316.83187099999486,
+      "status": {
+        "200": 789
+      }
+    },
+    "GET /messages/inbox": {
+      "kind": "read",
+      "count": 837,
+      "p50": 5.232342000002973,
+      "p95": 13.182704999984708,
+      "p99": 148.3256939999992,
+      "max": 329.1503239999947,
+      "status": {
+        "200": 837
+      }
+    },
+    "GET /planets/:id/build-queue": {
+      "kind": "read",
+      "count": 1450,
+      "p50": 6.445777999993879,
+      "p95": 20.021953999996185,
+      "p99": 122.64900299999863,
+      "max": 442.2083089999942,
+      "status": {
+        "200": 1450
+      }
+    },
+    "GET /statistics": {
+      "kind": "read",
+      "count": 1058,
+      "p50": 58.10824299999513,
+      "p95": 93.68399299998418,
+      "p99": 271.65006499999436,
+      "max": 471.52038999999786,
+      "status": {
+        "200": 1058
+      }
+    },
+    "GET /progression/onboarding": {
+      "kind": "read",
+      "count": 576,
+      "p50": 9.982629000005545,
+      "p95": 21.974841999995988,
+      "p99": 65.43929200002458,
+      "max": 336.910355,
+      "status": {
+        "200": 576
+      }
+    },
+    "GET /technologies": {
+      "kind": "read",
+      "count": 848,
+      "p50": 7.480183000006946,
+      "p95": 16.97328100001323,
+      "p99": 210.86135099997045,
+      "max": 473.11787999999797,
+      "status": {
+        "200": 848
+      }
+    },
+    "GET /planets/:id/resources": {
+      "kind": "read",
+      "count": 3949,
+      "p50": 9.329174999991665,
+      "p95": 20.451679999998305,
+      "p99": 177.44723099999828,
+      "max": 475.5281099999993,
+      "status": {
+        "200": 3949
+      }
+    },
+    "POST /messages/send": {
+      "kind": "write",
+      "count": 597,
+      "p50": 7.094534000003478,
+      "p95": 18.062357000017073,
+      "p99": 472.09968500000105,
+      "max": 484.62532400000055,
+      "status": {
+        "201": 597
+      }
+    },
+    "GET /planets/:id/buildings": {
+      "kind": "read",
+      "count": 2031,
+      "p50": 13.299755000000005,
+      "p95": 31.31027400001767,
+      "p99": 255.83484299998963,
+      "max": 520.1259809999974,
+      "status": {
+        "200": 2031
+      }
+    },
+    "POST /planets/:id/build": {
+      "kind": "write",
+      "count": 2020,
+      "p50": 18.98342499998398,
+      "p95": 41.152666999958456,
+      "p99": 523.3942549999992,
+      "max": 627.9260030000005,
+      "status": {
+        "201": 1440,
+        "400": 580
+      },
+      "reasons": {
+        "400 Prerequis manquants: Synthétiseur de Deutérium niveau 5 requis (actuel: 0), Tech": 180,
+        "400 Capacité de construction atteinte (1/1). Gestion des chantiers débloque 2 places": 147,
+        "400 Centrale Électrique Solaire est deja en cours de construction": 15,
+        "400 Mine de Cristal est deja en cours de construction": 20,
+        "400 Mine de Métal est deja en cours de construction": 18,
+        "400 Prerequis manquants: Synthétiseur de Deutérium niveau 5 requis (actuel: 1), Tech": 96,
+        "400 Prerequis manquants: Synthétiseur de Deutérium niveau 5 requis (actuel: 3), Tech": 25,
+        "400 Synthétiseur de Deutérium est deja en cours de construction": 11,
+        "400 Prerequis manquants: Synthétiseur de Deutérium niveau 5 requis (actuel: 2), Tech": 42,
+        "400 Prerequis manquants: Synthétiseur de Deutérium niveau 5 requis (actuel: 2)": 6,
+        "400 Prerequis manquants: Synthétiseur de Deutérium niveau 5 requis (actuel: 1)": 7,
+        "400 Prerequis manquants: Synthétiseur de Deutérium niveau 5 requis (actuel: 4), Tech": 4,
+        "400 Prerequis manquants: Synthétiseur de Deutérium niveau 5 requis (actuel: 0)": 6,
+        "400 Prerequis manquants: Synthétiseur de Deutérium niveau 5 requis (actuel: 3)": 2,
+        "400 Prerequis manquants: Technologie Énergie niveau 3 requis (actuel: 2)": 1
+      }
+    },
+    "GET /shipyard": {
+      "kind": "read",
+      "count": 374,
+      "p50": 13.864837000030093,
+      "p95": 26.660078999993857,
+      "p99": 53.62878999998793,
+      "max": 531.6290799999988,
+      "status": {
+        "200": 374
+      }
+    },
+    "POST /research": {
+      "kind": "write",
+      "count": 337,
+      "p50": 14.7585240000044,
+      "p95": 33.279450000001816,
+      "p99": 175.2232060000024,
+      "max": 235.87952599999699,
+      "status": {
+        "201": 327,
+        "400": 10
+      },
+      "reasons": {
+        "400 Une recherche est deja en cours": 10
+      }
+    },
+    "DELETE /fleet/:id": {
+      "kind": "write",
+      "count": 288,
+      "p50": 4.752011000004131,
+      "p95": 11.500447999998869,
+      "p99": 21.398839000001317,
+      "max": 26.58749499998521,
+      "status": {
+        "200": 78,
+        "400": 210
+      },
+      "reasons": {
+        "400 La flotte est deja arrivee": 54,
+        "400 La flotte ne peut pas etre rappelee": 156
+      }
+    },
+    "POST /shipyard/build": {
+      "kind": "write",
+      "count": 118,
+      "p50": 19.926906000007875,
+      "p95": 41.49381899996661,
+      "p99": 54.041955000022426,
+      "max": 63.87842000000819,
+      "status": {
+        "201": 118
+      }
+    }
+  },
+  "thresholds": {
+    "read": {
+      "p95": 500,
+      "p99": 1500
+    },
+    "write": {
+      "p95": 1000,
+      "p99": 2500
+    },
+    "auth": {
+      "p95": 3000
+    },
+    "errorRate": 0.005,
+    "wsRatio": 0.99
+  },
+  "checks": {
+    "read": true,
+    "write": true,
+    "auth": true,
+    "errors": true,
+    "websocket": true,
+    "health": true,
+    "rateLimited": true
+  },
+  "passed": true
+}
