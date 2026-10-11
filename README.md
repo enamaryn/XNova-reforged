@@ -267,6 +267,9 @@ npm run test:e2e:ui
 
 # Tests integration API (NestJS)
 npm run test:integration
+
+# Couverture de l'API (unitaires + intégration fusionnés, seuils vérifiés ; PostgreSQL requis)
+npm run test:coverage
 ```
 
 **Pour un guide complet des tests, voir [`SKILL.md`](SKILL.md) et [`docs/INTEGRATION_TESTS.md`](docs/INTEGRATION_TESTS.md).**

@@ -139,7 +139,7 @@ Constatés dans le code, le satellite solaire par un essai sur serveur de test ;
 - [x] Parcours joueur : inscription, connexion, production, construction, recherche, chantier, attaque, rapport — **prouvé à ×50** (simulation API + E2E, 10 octobre 2026) et **validé par le propriétaire** (11 octobre 2026).
 - [x] Restauration isolée et retour arrière répétés ; migrations versionnées (OPS-01). _(OPS-01, job CI `database`)_
 - [x] Charge mesurée pour au moins 100 joueurs simulés ; protocole, matériel, durée, jeu de données et p50/p95/p99 publiés (200 joueurs à ×50, seuils fixés avant exécution, tous respectés : [docs/LOAD_TEST.md](docs/LOAD_TEST.md)). _(OPS-03, clos)_
-- [ ] Objectifs historiques couverture >70 %, Lighthouse >90 et uptime >99 % mesurés ou révisés explicitement avec justification ; aucun résultat supposé acquis.
+- [~] Objectifs historiques : **couverture > 70 % atteinte** (API, unitaires + intégration fusionnés : lignes 91,8 %, instructions 90,5 %, branches 78,9 %, fonctions 89,7 % le 12 octobre 2026 ; `npm run test:coverage`, seuils 85/85/70/80) ; **Lighthouse > 90 atteint** (accueil mobile 96, [PR #59](https://github.com/enamaryn/XNova-reforged/pull/59)) ; **uptime > 99 %** : mesure en place ([PR #60](https://github.com/enamaryn/XNova-reforged/pull/60)), résultat à juger après plusieurs jours en production. Le 52,8 % indicatif du 10 octobre ne comptait que les fichiers touchés par les tests unitaires : la mesure correcte inclut l'intégration.
 - [x] Documentation README, guide joueur (5 langues), endpoints (`GET /progression/onboarding` inclus) et configuration (`docs/BALANCE.md`, `.env.example`) synchronisés avec le périmètre livré le 10 octobre 2026.
 
 ## État des vérifications disponibles
