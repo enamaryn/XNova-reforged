@@ -83,11 +83,17 @@ Per level `n`: solar plant `20 × n × 1.1^n`; fusion plant `30 × n × 1.05^n`;
 **Which power plant should I choose?**
 The solar plant: cheap, no requirements. At equal level the fusion plant produces **less** than a solar plant in the current engine (level 10: 488 versus 518) and has costly requirements: it is not worthwhile today. ⚠️ The fusion plant **does not consume deuterium** (despite its description) and *Energy technology* does not increase its output: it is a requirement, not a bonus.
 
-**⚠️ Do solar satellites give energy?**
-**No, not today.** The solar satellite (212: 2,000 crystal and 500 deuterium, buildable from shipyard level 1) exists, can be built and stays stationed on the planet, and its description says "supplies energy for free" — but the production calculation **ignores it**. Checked on a test server: 10 satellites built, energy balance strictly unchanged (79 available before and after). **Do not build them for energy**: you would lose crystal and deuterium. Use power plants. The expected behavior (50 energy per satellite according to the code constants) is a known gap, reported in the project register.
+**Do solar satellites give energy?**
+**Yes.** As soon as it is built, a solar satellite (212: 2,000 crystal and 500 deuterium, buildable from shipyard level 1) is **directly in orbit around the planet** and permanently supplies it with **50 energy**, in addition to the power plants. The energy counts from delivery: production for time already elapsed is not changed. Example: 3 satellites = 150 energy. The value is fixed (the game has no planet temperature).
 
-**Can a satellite be attacked or sent on a mission?**
-It has no speed: it cannot travel. If stationed on an attacked planet it counts among the defending units (hull 2,000, shield 1, weapon 1): it absorbs shots, that is all.
+**When should I choose satellites over a power plant?**
+A satellite uses **no field** and has no requirements, but costs more than a solar plant early on (40 crystal and 10 deuterium per energy point, versus a few metal and crystal for the first plant levels). Plants are therefore better at the start; satellites become worthwhile when fields run short or when plant levels get expensive.
+
+**Can a satellite be sent to another planet?**
+**No.** It stays in orbit of the planet where it was built: it does not appear on the *Fleet* page and the game refuses any mission that contains one. It cannot be moved by deployment either.
+
+**Can a satellite be destroyed?**
+Yes. On an attacked planet it fights alongside the defense (hull 2,000, shield 1, weapon 1) and soaks up shots; **a destroyed satellite is not rebuilt** (only defenses are) and energy drops from that moment. Protect it with defense.
 
 **What if my energy is insufficient?**
 Raise a solar plant before the next mine. If the production level is 80 %, your mines produce 20 % less than planned.
@@ -140,7 +146,7 @@ At the **shipyard** (Shipyard page). The order is paid immediately and built in 
 | **Recycler** (*Recycleur*, 209) | 10,000 / 6,000 / 2,000 | 20,000 | 2,000 | 1 / 10 / 16,000 | ⚠️ see below |
 | **Espionage probe** (*Sonde d'Espionnage*, 210) | 0 / 1,000 / 0 | 0 | 50,000 | 0 / 0 / 1,000 | espionage |
 | **Bomber** (*Bombardier*, 211) | 50,000 / 25,000 / 15,000 | 500 | 4,000 | 1,000 / 500 / 75,000 | meant against defenses |
-| **Solar satellite** (*Satellite Solaire*, 212) | 0 / 2,000 / 500 | 0 | 0 | 1 / 1 / 2,000 | ⚠️ no energy effect (§3) |
+| **Solar satellite** (*Satellite Solaire*, 212) | 0 / 2,000 / 500 | 0 | 0 | 1 / 1 / 2,000 | energy, stays in orbit (§3) |
 | **Destroyer** (*Destructeur*, 213) | 60,000 / 50,000 / 15,000 | 2,000 | 5,000 | 2,000 / 500 / 110,000 | heavy combat |
 | **Battlecruiser** (*Traqueur*, 215) | 30,000 / 40,000 / 15,000 | 10,000 | 10,000 | 700 / 400 / 70,000 | fast combat |
 | **Death star** (*Étoile de la Mort*, 214) | 5,000,000 / 4,000,000 / 1,000,000 | 1,000,000 | 100 | 200,000 / 50,000 / 9,000,000 | ultimate; requires shipyard 12 and *Graviton* |
@@ -195,7 +201,7 @@ Up to **6 rounds**. Each round, every attacker unit and then every defender unit
 *Military* (+10 % weapon per level), *Defense* (+10 % hull), *Shield* (+10 % shield), applied to all your units, ships **and** defenses. Each side uses its own levels.
 
 **Who defends an attacked planet?**
-The planet's **defenses** and **stationed fleet** fight together (including solar satellites, which are only targets).
+The planet's **defenses** and **stationed fleet** fight together (including solar satellites, which are very fragile).
 
 **What is lost and what is recovered?**
 - Destroyed ships are lost.
@@ -280,6 +286,6 @@ It is based on **power**; your rank appears in the header and the overview. Losi
 
 ## 11. What does not exist yet
 
-Officers, market, events, moons, missiles, recycling and debris fields, expeditions, group attacks, a fleet limit from *Computer*, terraformer effect, rapid fire, solar-satellite energy. The matching items (buildings, ships, technologies) sometimes appear in lists and can be bought **with no effect**: read the ⚠️ above before investing. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
+Officers, market, events, moons, missiles, recycling and debris fields, expeditions, group attacks, a fleet limit from *Computer*, terraformer effect, rapid fire. The matching items (buildings, ships, technologies) sometimes appear in lists and can be bought **with no effect**: read the ⚠️ above before investing. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
 
-*This FAQ was checked against the code (`packages/game-config`, `packages/game-engine`, API) and, for solar satellites, by a test on a test server on 11 October 2026.*
+*This FAQ was checked against the code (`packages/game-config`, `packages/game-engine`, API) and, for solar satellites, by an automated integration test (`solar-satellites.integration.spec.ts`).*

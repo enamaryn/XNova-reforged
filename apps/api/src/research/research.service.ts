@@ -1,3 +1,4 @@
+import { SATELLITES_INCLUDE, countSatellites } from '../common/satellites';
 import {
   BadRequestException,
   ForbiddenException,
@@ -376,6 +377,7 @@ export class ResearchService {
   private async getPlanetOrFail(planetId: string, userId: string) {
     const planet = await this.database.planet.findUnique({
       where: { id: planetId },
+      include: SATELLITES_INCLUDE,
     });
 
     if (!planet) {
@@ -400,6 +402,7 @@ export class ResearchService {
       metalStorage: number;
       crystalStorage: number;
       deuteriumStorage: number;
+      ships?: Array<{ amount: number }>;
     },
     required: number | undefined,
   ) {
@@ -413,6 +416,7 @@ export class ResearchService {
       metalStorage: planet.metalStorage,
       crystalStorage: planet.crystalStorage,
       deuteriumStorage: planet.deuteriumStorage,
+      solarSatellites: countSatellites(planet),
     });
     return { ok: available >= needed, required: needed, available };
   }

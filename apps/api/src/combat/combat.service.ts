@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CombatResult, GAME_CONSTANTS, MissionType } from '@xnova/game-config';
+import { CombatResult, GAME_CONSTANTS, MissionType, SOLAR_SATELLITE_ID } from '@xnova/game-config';
 import {
   computeCargoCapacity,
   distributeLoot,
@@ -13,6 +13,8 @@ import {
 } from '@xnova/game-engine';
 import { Prisma } from '@prisma/client';
 import { lockPlanet } from '../common/atomic';
+import { settleBeforeSatelliteChange } from '../common/satellites';
+import { ServerConfigService } from '../server-config/server-config.service';
 import { DatabaseService } from '../database/database.service';
 import { GameEventsGateway } from '../game-events/game-events.gateway';
 
@@ -31,6 +33,7 @@ export class CombatService {
   constructor(
     private readonly database: DatabaseService,
     private readonly gameEvents: GameEventsGateway,
+    private readonly serverConfig: ServerConfigService,
   ) {}
 
   /**
@@ -164,6 +167,7 @@ export class CombatService {
 
     // Resolution unique (ECO-04) : verrou de la cible, prise en charge atomique de la flotte,
     // puis rapport, butin et pertes dans la meme transaction.
+    const resourceConfig = await this.serverConfig.getResourceConfig();
     const report = await this.database.$transaction(async (tx) => {
       await lockPlanet(tx, target.id);
 
@@ -225,6 +229,12 @@ export class CombatService {
               }
             : fleetUpdate,
       });
+
+      // Satellites détruits : la production d'énergie baisse à partir de maintenant, pas rétroactivement
+      const satellitesLost = Number(defenderShipLosses[SOLAR_SATELLITE_ID] ?? 0);
+      if (satellitesLost > 0) {
+        await settleBeforeSatelliteChange(tx, target.id, resourceConfig, -satellitesLost);
+      }
 
       // Pertes du defenseur en decrement : ne jamais ecraser une construction ou un envoi concurrent
       for (const [shipId, lost] of Object.entries(defenderShipLosses)) {

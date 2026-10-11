@@ -83,11 +83,17 @@ Pro Stufe `n`: Solarkraftwerk `20 × n × 1,1^n`; Fusionskraftwerk `30 × n × 1
 **Welches Kraftwerk soll ich wählen?**
 Das Solarkraftwerk: günstig, ohne Voraussetzungen. Bei gleicher Stufe erzeugt das Fusionskraftwerk im aktuellen System **weniger** als ein Solarkraftwerk (Stufe 10: 488 gegenüber 518) und hat teure Voraussetzungen: Es lohnt sich heute nicht. ⚠️ Das Fusionskraftwerk **verbraucht kein Deuterium** (trotz seiner Beschreibung), und die *Energietechnik* erhöht seine Erzeugung nicht: Sie ist eine Voraussetzung, kein Bonus.
 
-**⚠️ Liefern Solarsatelliten Energie?**
-**Nein, heute nicht.** Der Solarsatellit (212: 2 000 Kristall und 500 Deuterium, ab Werft Stufe 1 baubar) existiert, lässt sich bauen und bleibt auf dem Planeten stationiert, und seine Beschreibung sagt „liefert Energie kostenlos“ — die Produktionsberechnung **berücksichtigt ihn aber nicht**. Auf einem Testserver geprüft: 10 Satelliten gebaut, Energiebilanz unverändert (79 verfügbar vorher und nachher). **Bauen Sie sie nicht für Energie**: Sie würden Kristall und Deuterium verlieren. Nutzen Sie Kraftwerke. Das erwartete Verhalten (50 Energie pro Satellit laut Code-Konstanten) ist eine bekannte Abweichung, im Projektregister vermerkt.
+**Liefern Solarsatelliten Energie?**
+**Ja.** Sobald er gebaut ist, befindet sich ein Solarsatellit (212: 2 000 Kristall und 500 Deuterium, ab Werft Stufe 1 baubar) **direkt im Orbit des Planeten** und liefert ihm dauerhaft **50 Energie**, zusätzlich zu den Kraftwerken. Die Energie zählt ab der Lieferung: Die Produktion der bereits verstrichenen Zeit ändert sich nicht. Beispiel: 3 Satelliten = 150 Energie. Der Wert ist fest (das Spiel kennt keine Planetentemperatur).
 
-**Kann ein Satellit angegriffen oder auf Mission geschickt werden?**
-Er hat keine Geschwindigkeit: Er kann nicht reisen. Ist er auf einem angegriffenen Planeten stationiert, zählt er zu den verteidigenden Einheiten (Hülle 2 000, Schild 1, Waffe 1): Er absorbiert Schüsse, mehr nicht.
+**Wann Satelliten statt eines Kraftwerks wählen?**
+Ein Satellit verbraucht **kein Feld** und hat keine Voraussetzungen, kostet aber anfangs mehr als ein Solarkraftwerk (40 Kristall und 10 Deuterium pro Energiepunkt, gegenüber wenigen Einheiten Metall und Kristall für die ersten Kraftwerksstufen). Kraftwerke sind am Anfang besser; Satelliten lohnen sich, wenn Felder knapp werden oder Kraftwerksstufen teuer werden.
+
+**Kann ein Satellit zu einem anderen Planeten geschickt werden?**
+**Nein.** Er bleibt im Orbit des Planeten, auf dem er gebaut wurde: Er erscheint nicht auf der Seite *Flotte*, und das Spiel lehnt jede Mission mit einem Satelliten ab. Auch per Stationieren lässt er sich nicht verlegen.
+
+**Kann ein Satellit zerstört werden?**
+Ja. Auf einem angegriffenen Planeten kämpft er zusammen mit der Verteidigung (Hülle 2 000, Schild 1, Waffe 1) und fängt Schüsse ab; **ein zerstörter Satellit wird nicht wieder aufgebaut** (nur Verteidigungen) und die Energie sinkt ab diesem Zeitpunkt. Schützen Sie ihn mit Verteidigung.
 
 **Was tun bei zu wenig Energie?**
 Bauen Sie vor der nächsten Mine ein Solarkraftwerk aus. Bei einer Produktionsstufe von 80 % produzieren Ihre Minen 20 % weniger als geplant.
@@ -140,7 +146,7 @@ In der **Werft** (Seite Werft). Der Auftrag wird sofort bezahlt und in Losen geb
 | **Recycler** (*Recycleur*, 209) | 10 000 / 6 000 / 2 000 | 20 000 | 2 000 | 1 / 10 / 16 000 | ⚠️ siehe unten |
 | **Spionagesonde** (*Sonde d'Espionnage*, 210) | 0 / 1 000 / 0 | 0 | 50 000 | 0 / 0 / 1 000 | Spionage |
 | **Bomber** (*Bombardier*, 211) | 50 000 / 25 000 / 15 000 | 500 | 4 000 | 1 000 / 500 / 75 000 | gegen Verteidigung gedacht |
-| **Solarsatellit** (*Satellite Solaire*, 212) | 0 / 2 000 / 500 | 0 | 0 | 1 / 1 / 2 000 | ⚠️ ohne Energiewirkung (§3) |
+| **Solarsatellit** (*Satellite Solaire*, 212) | 0 / 2 000 / 500 | 0 | 0 | 1 / 1 / 2 000 | Energie, bleibt im Orbit (§3) |
 | **Zerstörer** (*Destructeur*, 213) | 60 000 / 50 000 / 15 000 | 2 000 | 5 000 | 2 000 / 500 / 110 000 | schwerer Kampf |
 | **Schlachtkreuzer** (*Traqueur*, 215) | 30 000 / 40 000 / 15 000 | 10 000 | 10 000 | 700 / 400 / 70 000 | schneller Kampf |
 | **Todesstern** (*Étoile de la Mort*, 214) | 5 000 000 / 4 000 000 / 1 000 000 | 1 000 000 | 100 | 200 000 / 50 000 / 9 000 000 | ultimativ; erfordert Werft 12 und *Graviton* |
@@ -195,7 +201,7 @@ Bis zu **6 Runden**. In jeder Runde schießt jede Einheit des Angreifers, dann j
 *Militär* (+10 % Waffe pro Stufe), *Verteidigung* (+10 % Hülle), *Schild* (+10 % Schild), angewendet auf alle Ihre Einheiten, Schiffe **und** Verteidigungen. Jede Seite nutzt ihre eigenen Stufen.
 
 **Wer verteidigt einen angegriffenen Planeten?**
-Die **Verteidigungen** und die **stationierte Flotte** des Planeten kämpfen zusammen (auch Solarsatelliten, die nur Ziele sind).
+Die **Verteidigungen** und die **stationierte Flotte** des Planeten kämpfen zusammen (auch Solarsatelliten, die sehr fragil sind).
 
 **Was geht verloren und was kommt zurück?**
 - Zerstörte Schiffe sind verloren.
@@ -280,6 +286,6 @@ Sie beruht auf der **Macht**; Ihr Rang erscheint in der Kopfzeile und in der Üb
 
 ## 11. Was es noch nicht gibt
 
-Offiziere, Markt, Ereignisse, Monde, Raketen, Recycling und Trümmerfelder, Expeditionen, Verbandsangriffe, Flottenlimit durch *Computertechnik*, Wirkung des Terraformers, Schnellfeuer, Energie der Solarsatelliten. Die zugehörigen Elemente (Gebäude, Schiffe, Technologien) erscheinen manchmal in den Listen und lassen sich **ohne Wirkung** kaufen: Lesen Sie die ⚠️ oben, bevor Sie investieren. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
+Offiziere, Markt, Ereignisse, Monde, Raketen, Recycling und Trümmerfelder, Expeditionen, Verbandsangriffe, Flottenlimit durch *Computertechnik*, Wirkung des Terraformers, Schnellfeuer. Die zugehörigen Elemente (Gebäude, Schiffe, Technologien) erscheinen manchmal in den Listen und lassen sich **ohne Wirkung** kaufen: Lesen Sie die ⚠️ oben, bevor Sie investieren. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
 
-*Diese FAQ wurde gegen den Code (`packages/game-config`, `packages/game-engine`, API) und, für die Solarsatelliten, durch einen Test auf einem Testserver am 11. Oktober 2026 geprüft.*
+*Diese FAQ wurde gegen den Code (`packages/game-config`, `packages/game-engine`, API) und, für die Solarsatelliten, durch einen automatisierten Integrationstest (`solar-satellites.integration.spec.ts`) geprüft.*

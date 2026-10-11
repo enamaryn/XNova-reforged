@@ -105,7 +105,7 @@ Toutes les décisions listées dans la version précédente sont prises et appli
 
 Constatés dans le code, le satellite solaire par un essai sur serveur de test ; documentés (⚠️) dans la [FAQ](docs/FAQ.md). Aucun n'est un constat du registre d'audit ; à arbitrer par le propriétaire (corriger, ou retirer/masquer l'élément trompeur).
 
-- [ ] **Satellites solaires sans effet d'énergie** : constructibles (2 000 cristal, 500 deutérium) et décrits « Fournit de l'énergie gratuitement », mais ignorés par le calcul de production (`packages/game-engine/src/resources.ts`). Essai : 10 satellites, bilan d'énergie inchangé. Le plus trompeur, car l'achat est dommageable pour le joueur.
+- [x] **Satellites solaires** : corrigés le 11 octobre 2026. Une fois construit, un satellite est en orbite de la planète et fournit 50 d'énergie (valeur fixe, pas de température) ; il ne peut jamais être envoyé (refusé par l'API, absent de la page Flotte) ; livraison et destruction règlent la production sans effet rétroactif. Test d'intégration `solar-satellites`.
 - [ ] **Tir rapide non appliqué** par le moteur de combat, alors que les valeurs existent dans la configuration des vaisseaux.
 - [ ] **Centrale à fusion** : ne consomme pas de deutérium (description inexacte) et la *Technologie Énergie* n'augmente pas sa production ; à niveau égal elle produit moins qu'une centrale solaire.
 - [ ] **Éléments constructibles sans effet** : terraformeur (le nombre de cases ne change pas), dépôt d'alliance, silo de missiles (missiles non proposés), bâtiments lunaires (aucune lune), recycleur (ni champ de débris ni mission de recyclage).
