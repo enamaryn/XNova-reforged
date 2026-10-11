@@ -63,7 +63,7 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
             </svg>
           </button>
           <Link href="/overview" className="flex items-center gap-2">
-            <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-sky-400 via-blue-500 to-blue-700">
+            <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-linear-to-br from-sky-400 via-blue-500 to-blue-700">
               <span className="text-white font-semibold text-sm">X</span>
               <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-cyan-200/80 shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
             </div>
@@ -169,7 +169,7 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
               aria-controls={userMenuId}
               aria-label={t("nav.userMenu")}
             >
-              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-slate-600 to-slate-400 flex items-center justify-center">
+              <div className="w-7 h-7 rounded-full bg-linear-to-br from-slate-600 to-slate-400 flex items-center justify-center">
                 <span className="text-white text-xs font-bold">
                   {user?.username?.charAt(0).toUpperCase() || "U"}
                 </span>

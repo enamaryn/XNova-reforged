@@ -94,3 +94,14 @@ Contexte : `scripts/update.sh` exécute `npm ci --include=dev` sur le serveur (l
 Exploitabilité : ces paquets ne tournent qu'à la compilation et aux tests, sur des motifs de glob écrits par l'équipe ; ils ne sont pas dans le serveur en exécution. Les modérées ajoutées par Jest 30 (`ts-jest` → `js-yaml`, `@istanbuljs/*`) sont du même type. L'assistant `npm audit fix --force` proposerait des rétrogradations (ts-jest 27, eslint-config-next 14, Jest 25) : **à ne pas appliquer**.
 
 Avertissements ESLint : **0** (étaient 105). Code mort retiré (animations jamais utilisées dans cinq pages, polices Google inutilisées, variables d'erreur inutilisées), `any` typés dans `src/` (JWT, gateway WebSocket, combat), `any` des mocks de tests autorisés par une règle dédiée, `PlanetSelector` mémoïsé, interfaces vides des composants UI remplacées par des alias de types.
+
+
+## Mise à jour du 11 octobre 2026 — Tailwind 4 et eslint-config-next 16
+
+- `tailwindcss` 3 → **4.3** (`@tailwindcss/postcss`, `autoprefixer` retiré) : la chaîne `micromatch` / `chokidar` / `braces` liée à Tailwind a disparu. Hautes de développement : **7 → 5**.
+- `eslint-config-next` 15 → **16** avec **ESLint 9** (configuration plate `apps/web/eslint.config.mjs`, `next lint` remplacé par `eslint .`) ; l'API garde ESLint 8 (`typescript-eslint`). Next reste en 15.
+- Il reste 5 hautes de développement (`@next/eslint-plugin-next`, `eslint-config-next`, `fast-glob`, `micromatch`, `braces`) : toutes sont la même chaîne, sans correctif amont de `braces`. Outillage de compilation seulement. Production : 0 haute, 3 modérées (DETTE-04).
+- Les règles « React Compiler » d'`eslint-plugin-react-hooks` 7 (`set-state-in-effect`, `purity`, `refs`) sont en **avertissement** (21 occurrences, motifs voulus) ; la règle Next sur `window.location` est désactivée (navigations complètes volontaires à la connexion/déconnexion).
+
+### Migration Tailwind 4 : points traités (comparaison automatique avant/après)
+Protocole : 22 pages (publiques, jeu, FAQ) × bureau et mobile, styles calculés et rectangles de chaque élément comparés, plus différence d'images. Corrigé : pile de polices par défaut (celle de Tailwind 4.3 diffère de la 3, rétablie dans `@theme`) ; curseur « main » des boutons ; règles de base du projet placées dans `@layer base` (hors couche, `main { min-height }` écrasait `min-h-screen`) ; `space-y-*` agit désormais sur la marge basse, sans effet sur les éléments en ligne (`label` des formulaires et libellés SMTP/compte passés en `block`). Écarts acceptés : interlignes des tailles arbitraires (`text-[10px]`) plus serrés, palette en `oklch` (nuances à ±3 % près).

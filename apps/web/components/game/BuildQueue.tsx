@@ -109,7 +109,7 @@ function QueueItem({
         className="absolute inset-x-0 bottom-0 h-1 overflow-hidden bg-slate-800"
       >
         <div
-          className="h-full bg-gradient-to-r from-sky-400 to-blue-600 transition-all duration-1000"
+          className="h-full bg-linear-to-r from-sky-400 to-blue-600 transition-all duration-1000"
           style={{ width: `${progress}%` }}
         />
       </div>

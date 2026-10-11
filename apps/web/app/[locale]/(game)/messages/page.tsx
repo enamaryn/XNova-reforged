@@ -198,7 +198,7 @@ export default function MessagesPage() {
                 onChange={(event) =>
                   setForm((prev) => ({ ...prev, toUsername: event.target.value }))
                 }
-                className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
               />
               <input
                 type="text"
@@ -207,7 +207,7 @@ export default function MessagesPage() {
                 onChange={(event) =>
                   setForm((prev) => ({ ...prev, subject: event.target.value }))
                 }
-                className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
               />
               <textarea
                 placeholder={t('messages.bodyPlaceholder')}
@@ -216,7 +216,7 @@ export default function MessagesPage() {
                   setForm((prev) => ({ ...prev, body: event.target.value }))
                 }
                 rows={5}
-                className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
               />
               <button
                 type="submit"

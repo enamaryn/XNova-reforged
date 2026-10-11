@@ -173,7 +173,7 @@ export default function ResearchClient() {
         </div>
 
         <div className="relative mt-6 overflow-x-auto">
-          <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(148,163,184,0.08)_1px,transparent_1px)] bg-[size:160px_160px]" />
+          <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(148,163,184,0.08)_1px,transparent_1px)] bg-size-[160px_160px]" />
           <div className="grid min-w-[720px] grid-cols-4 gap-6">
             {(['basic', 'drive', 'advanced', 'combat'] as const).map((category) => (
               <div key={category} className="space-y-4">
@@ -342,7 +342,7 @@ export default function ResearchClient() {
       </div>
 
       {(startMutation.error || cancelMutation.error) && (
-        <div className="fixed bottom-4 right-4 max-w-sm rounded-lg bg-red-500/90 px-4 py-3 text-white shadow-lg backdrop-blur-sm">
+        <div className="fixed bottom-4 right-4 max-w-sm rounded-lg bg-red-500/90 px-4 py-3 text-white shadow-lg backdrop-blur-xs">
           <p className="text-sm">
             {((startMutation.error || cancelMutation.error) as Error).message}
           </p>
@@ -350,7 +350,7 @@ export default function ResearchClient() {
       )}
 
       {toastMessage && (
-        <div className="fixed bottom-4 left-4 max-w-sm rounded-lg border border-emerald-400/40 bg-emerald-500/10 px-4 py-3 text-emerald-200 shadow-lg backdrop-blur-sm">
+        <div className="fixed bottom-4 left-4 max-w-sm rounded-lg border border-emerald-400/40 bg-emerald-500/10 px-4 py-3 text-emerald-200 shadow-lg backdrop-blur-xs">
           <p className="text-sm">{toastMessage}</p>
         </div>
       )}

@@ -98,9 +98,9 @@ Toutes les décisions listées dans la version précédente sont prises et appli
 
 - [x] **SMTP réel configuré et validé** par le propriétaire (déclaration du 10 octobre 2026) ; à reconfirmer avec un envoi réel (test, inscription, mot de passe oublié) lors de chaque mise en production : sans SMTP l'inscription répond 503. _(PRE-01 du registre)_
 - [x] Variables de production vérifiées (secrets JWT distincts, `SECRETS_ENCRYPTION_KEY`, `WEB_ORIGINS`) : validé par le propriétaire le 11 octobre 2026. _(PRE-02)_
-- [ ] DSN Sentry par variable d'environnement uniquement (aucune valeur dans le dépôt ni dans l'image). _(PRE-03)_
+- [~] DSN Sentry par variable d'environnement uniquement (aucune valeur dans le dépôt ni dans l'image) : **prêt côté code** — procédure systemd (`docs/OPERATIONS.md`), commande `npm run sentry:test` qui vérifie l'acceptation réelle par Sentry (code HTTP, sans afficher le DSN), avertissement au démarrage de l'API en production sans DSN, test qui échoue si un DSN est versionné. **Reste à faire par le propriétaire** : fournir le DSN réel et lancer la commande. _(PRE-03)_
 - [x] Reprise des comptes de l'alpha : décision du propriétaire (11 octobre 2026) — les comptes actuels restent considérés comme vérifiés. _(PRE-04)_
-- [ ] Dette technique d'outillage terminée **avant la bêta publique** : Tailwind 4 et eslint-config-next 16 (DETTE-02 et 03 ; **Jest 30 fait le 10 octobre 2026**, critique `handlebars` corrigée, hautes de développement 34 → 7, toutes issues de `braces` sans correctif amont — voir [NPM_AUDIT_2026-10.md](docs/NPM_AUDIT_2026-10.md)) ; revue des 3 modérées de production (DETTE-04).
+- [x] Dette technique d'outillage — **Tailwind 4 et eslint-config-next 16 / ESLint 9 faits le 11 octobre 2026** (DETTE-02 et 03 ; **Jest 30 fait le 10 octobre 2026**). Hautes de développement : 7 → 5, toutes issues de `braces` via `eslint-config-next` → `fast-glob`, **sans correctif amont** (la v16 dépend toujours de `fast-glob 3.3.1`) ; outillage de compilation uniquement, absent de l'exécution — voir [NPM_AUDIT_2026-10.md](docs/NPM_AUDIT_2026-10.md). Reste : revue des 3 modérées de production (DETTE-04), à la prochaine montée majeure de NestJS.
 
 ## Écarts de gameplay constatés en rédigeant la FAQ (11 octobre 2026)
 

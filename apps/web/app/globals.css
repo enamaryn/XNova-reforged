@@ -1,6 +1,59 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  /* Pile de polices par défaut de Tailwind 3 (celle de Tailwind 4.3 diffère) : rendu inchangé. */
+  --font-sans: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-cardForeground: hsl(var(--card-foreground));
+  --color-border: hsl(var(--border));
+  --color-primary: hsl(var(--primary));
+  --color-primaryForeground: hsl(var(--primary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-mutedForeground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accentForeground: hsl(var(--accent-foreground));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --animate-shimmer: shimmer 2s infinite;
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  /* Tailwind 4 ne met plus le curseur « main » sur les boutons : comportement de Tailwind 3 conservé. */
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
 
 :root {
   --background: 222 50% 5%;
@@ -17,44 +70,51 @@
   --radius: 12px;
 }
 
-/* Focus visible pour accessibilite */
-*:focus-visible {
-  @apply outline-2 outline-offset-2 outline-blue-500;
-}
+/*
+  Règles de base du projet dans la couche `base` : en Tailwind 4, une règle hors couche l'emporte sur toute
+  classe utilitaire (`main { min-height }` écrasait `min-h-screen`). Dans la couche, les utilitaires gardent
+  la priorité, comme en Tailwind 3.
+*/
+@layer base {
+  /* Focus visible pour accessibilite */
+  *:focus-visible {
+    @apply outline-2 outline-offset-2 outline-blue-500;
+  }
 
-/* Smooth scroll */
-html {
-  scroll-behavior: smooth;
-  overflow-y: auto;
-}
+  /* Smooth scroll */
+  html {
+    scroll-behavior: smooth;
+    overflow-y: auto;
+  }
 
-/* Selection color */
-::selection {
-  @apply bg-blue-500/30 text-slate-50;
-}
+  /* Selection color */
+  ::selection {
+    @apply bg-blue-500/30 text-slate-50;
+  }
 
-html,
-body {
-  width: 100%;
-  /* clip masque le débordement horizontal sans créer un second conteneur de
-     défilement vertical (hidden transforme overflow-y: visible en auto). */
-  overflow-x: clip;
-}
+  html,
+  body {
+    width: 100%;
+    /* clip masque le débordement horizontal sans créer un second conteneur de
+       défilement vertical (hidden transforme overflow-y: visible en auto). */
+    overflow-x: clip;
+  }
 
-body {
-  @apply bg-[hsl(var(--background))] text-[hsl(var(--foreground))];
-  font-family: var(--font-spline-sans), system-ui, sans-serif;
-}
+  body {
+    @apply bg-[hsl(var(--background))] text-[hsl(var(--foreground))];
+    font-family: var(--font-spline-sans), system-ui, sans-serif;
+  }
 
-h1,
-h2,
-h3,
-h4 {
-  font-family: var(--font-space-grotesk), system-ui, sans-serif;
-}
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-space-grotesk), system-ui, sans-serif;
+  }
 
-main {
-  min-height: calc(100vh - 140px);
+  main {
+    min-height: calc(100vh - 140px);
+  }
 }
 
 @keyframes pageFade {

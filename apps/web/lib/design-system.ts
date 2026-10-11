@@ -6,7 +6,7 @@ import { designTokens } from './design-tokens';
 export const designClasses = {
   // Cartes
   card: {
-    base: 'rounded-lg border border-slate-700/50 bg-slate-800/50 backdrop-blur-sm',
+    base: 'rounded-lg border border-slate-700/50 bg-slate-800/50 backdrop-blur-xs',
     hover: 'transition-all duration-200 hover:border-slate-600 hover:shadow-lg',
     interactive:
       'cursor-pointer transition-all duration-200 hover:scale-[1.02] hover:shadow-glow',

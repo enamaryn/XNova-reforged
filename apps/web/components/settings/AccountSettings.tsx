@@ -7,8 +7,8 @@ import { ApiError } from "@/lib/api/client";
 import { changeEmail, changePassword, getMe, resendVerification } from "@/lib/api/auth";
 
 const inputClass =
-  "w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60";
-const labelClass = "text-xs uppercase tracking-[0.2em] text-slate-500";
+  "w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60";
+const labelClass = "block text-xs uppercase tracking-[0.2em] text-slate-500";
 const buttonClass =
   "rounded-full border border-blue-500/60 bg-blue-500/10 px-5 py-2 text-xs uppercase tracking-[0.2em] text-blue-200 hover:bg-blue-500/20 disabled:opacity-50";
 

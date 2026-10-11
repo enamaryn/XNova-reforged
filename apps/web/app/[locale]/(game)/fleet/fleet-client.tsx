@@ -359,7 +359,7 @@ export default function FleetClient() {
                     value={colonyName}
                     maxLength={30}
                     onChange={(event) => setColonyName(event.target.value)}
-                    className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                    className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
                   />
                   <span className="mt-2 block normal-case tracking-normal text-slate-400">
                     Joignez au moins un vaisseau de colonisation ; la destination doit être une position libre.
@@ -392,7 +392,7 @@ export default function FleetClient() {
                           position: label === 'Position' ? value : prev.position,
                         }));
                       }}
-                      className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                      className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
                       placeholder="0"
                     />
                   </label>
@@ -413,7 +413,7 @@ export default function FleetClient() {
                       onChange={(event) =>
                         setCargo((prev) => ({ ...prev, [key]: Math.max(0, Number(event.target.value)) }))
                       }
-                      className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                      className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
                     />
                   </label>
                 ))}
@@ -428,7 +428,7 @@ export default function FleetClient() {
                 max={100}
                 value={speedPercent}
                 onChange={(event) => setSpeedPercent(Math.min(100, Math.max(10, Number(event.target.value))))}
-                className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
               />
             </div>
 

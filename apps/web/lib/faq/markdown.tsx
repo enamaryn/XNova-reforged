@@ -256,7 +256,7 @@ export function renderMarkdown(markdown: string, section: string): ReactNode {
       case "table":
         return (
           <div key={key} className="my-4 overflow-x-auto rounded-lg border border-slate-800">
-            <table className="w-full min-w-[32rem] border-collapse text-sm">
+            <table className="w-full min-w-lg border-collapse text-sm">
               <thead className="bg-slate-900 text-slate-200">
                 <tr>
                   {block.header.map((cell, cellIndex) => (

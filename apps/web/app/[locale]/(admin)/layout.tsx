@@ -14,7 +14,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-slate-950 text-slate-100">
-        <header className="border-b border-slate-800/70 bg-slate-950/80 backdrop-blur">
+        <header className="border-b border-slate-800/70 bg-slate-950/80 backdrop-blur-sm">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
             <div>
               <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">

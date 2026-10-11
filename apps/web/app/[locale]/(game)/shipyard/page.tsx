@@ -264,7 +264,7 @@ export default function ShipyardPage() {
                     );
                     setAmounts((prev) => ({ ...prev, [ship.id]: value }));
                   }}
-                  className="w-24 rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                  className="w-24 rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
                 />
                 <button
                   onClick={() =>
@@ -288,7 +288,7 @@ export default function ShipyardPage() {
       </div>
 
       {(buildMutation.error || cancelMutation.error) && (
-        <div className="fixed bottom-4 right-4 max-w-sm rounded-lg bg-red-500/90 px-4 py-3 text-white shadow-lg backdrop-blur-sm">
+        <div className="fixed bottom-4 right-4 max-w-sm rounded-lg bg-red-500/90 px-4 py-3 text-white shadow-lg backdrop-blur-xs">
           <p className="text-sm">
             {((buildMutation.error || cancelMutation.error) as Error).message}
           </p>
