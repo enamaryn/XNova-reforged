@@ -1,0 +1,53 @@
+{
+  "run1": {
+    "scores": {
+      "performance": 84,
+      "accessibility": 96,
+      "best-practices": 96,
+      "seo": 100
+    },
+    "lcpMs": 3772,
+    "tbtMs": 268,
+    "cls": 0,
+    "totalKiB": 357
+  },
+  "run2": {
+    "scores": {
+      "performance": 98,
+      "accessibility": 96,
+      "best-practices": 96,
+      "seo": 100
+    },
+    "lcpMs": 2336,
+    "tbtMs": 93,
+    "cls": 0,
+    "totalKiB": 356
+  },
+  "run3": {
+    "scores": {
+      "performance": 93,
+      "accessibility": 96,
+      "best-practices": 96,
+      "seo": 100
+    },
+    "lcpMs": 3113,
+    "tbtMs": 82,
+    "cls": 0,
+    "totalKiB": 356
+  },
+  "desktop": {
+    "scores": {
+      "performance": 99
+    },
+    "lcpMs": 1033,
+    "tbtMs": 40,
+    "cls": 0,
+    "totalKiB": 494
+  },
+  "avantMobile": {
+    "perf": 67,
+    "lcpMs": 5130,
+    "tbtMs": 556,
+    "totalKiB": 607
+  }
+}

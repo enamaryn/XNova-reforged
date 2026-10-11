@@ -5,6 +5,14 @@
 
 ---
 
+## Session — optimisation de l'accueil mobile
+
+**Date :** 11 octobre 2026.
+
+- [x] Cause : image de fond de 313 Kio chargée quatre fois en CSS, sans préchargement. Correctif : `next/image` (`priority`, `sizes`, AVIF/WebP) pour le bandeau, décor fixe réservé aux grands écrans et différé, cartes en différé.
+- [x] Lighthouse mobile `/fr` : performance 67 → 84/93/98, LCP 5,1 s → 2,3–3,8 s, poids 607 → 356 Kio ; rendu vérifié par capture ; lint propre.
+- À remesurer après déploiement sur le serveur réel.
+
 ## Session — OPS-03 : compléments (refus interjoueur, succès sous charge, Lighthouse)
 
 **Date :** 11 octobre 2026.

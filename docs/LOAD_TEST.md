@@ -130,9 +130,22 @@ Défaut de mon premier essai, corrigé avant ces résultats : le scénario passa
 
 Limites : les missions d'attaque, de dépôt et de colonisation ne sont pas dans le scénario ; les rapports de combat ne sont pas comptés ; la réactivité du client (rafraîchissement des flottes) n'est pas mesurée.
 
+### Optimisation de l'accueil mobile (11 octobre 2026)
+
+Cause : l'image `space-hero.webp` (313 Kio, 1672×941) était chargée quatre fois comme fond CSS (décor fixe de la page, bandeau d'accueil, trois cartes), sans redimensionnement ni préchargement : découverte tard par le navigateur, donc LCP de 5,1 s. Correctif (`apps/web/app/[locale]/page.tsx`) : le bandeau d'accueil utilise `next/image` avec `priority` et `sizes` (image redimensionnée, AVIF/WebP, préchargée) ; le décor fixe, invisible sur mobile, n'est plus rendu qu'à partir de `lg` et en différé ; les cartes sont en différé avec `sizes` adaptés.
+
+| Accueil `/fr`, mobile (3 passages) | Avant | Après |
+| --- | ---: | ---: |
+| Performance | 67 | 84 / 93 / 98 |
+| LCP | 5,1 s | 3,8 / 3,1 / 2,3 s |
+| TBT | 556 ms | 268 / 82 / 93 ms |
+| Poids transféré | 607 Kio | 356 Kio |
+
+Bureau : 99 (LCP 1,0 s). Dispersion forte entre passages (machine partagée, limitation simulée) : l'ordre de grandeur est fiable, pas la décimale ; rapport : [`lighthouse-home-2026-10-11-apres.json`](audits/lighthouse-home-2026-10-11-apres.json). Les autres pages publiques n'ont pas changé. Le score de 98 n'est pas garanti sur le serveur réel : à remesurer après déploiement.
+
 ### Reste ouvert pour clore OPS-03
 
-Uptime en production (action du propriétaire, après mise à jour) ; mesure de charge ou de rythme sur le serveur du propriétaire avec le profil ×50 ; optimisation éventuelle de l'accueil mobile (hors périmètre de la validation).
+Uptime en production (action du propriétaire, après mise à jour) ; mesure de charge ou de rythme sur le serveur du propriétaire avec le profil ×50.
 
 ## Reproduire
 
