@@ -6,8 +6,12 @@ import { createConfiguration, readConfiguration, writeConfiguration, updateConfi
 const assets = new Map([
   ['/', ['text/html; charset=utf-8', readFileSync(new URL('./web/index.html', import.meta.url))]],
   ['/bootstrap/ui.js', ['text/javascript; charset=utf-8', readFileSync(new URL('./web/ui.js', import.meta.url))]],
+  ['/bootstrap/i18n.js', ['text/javascript; charset=utf-8', readFileSync(new URL('./web/i18n.js', import.meta.url))]],
   ['/bootstrap/ui.css', ['text/css; charset=utf-8', readFileSync(new URL('./web/ui.css', import.meta.url))]],
 ]);
+
+/** Langues proposées par l'assistant et par le site ; la langue choisie ouvre le site dans cette langue. */
+export const LANGUAGES = ['fr', 'en', 'es', 'de', 'it'];
 
 function equal(value, expected) {
   if (typeof value !== 'string') return false;
@@ -30,12 +34,13 @@ async function jsonBody(req) {
   try { return JSON.parse(body); } catch { throw Object.assign(new Error('JSON invalide.'), { status: 400 }); }
 }
 
-export function createBootstrapServer({ root, accessCode, install, handoff, existingServices = () => [], now = Date.now, logError = console.error }) {
+export function createBootstrapServer({ root, accessCode, install, handoff, existingServices = () => [], now = Date.now, logError = console.error, log = console.log }) {
   // Aucun appel apt, npm, PostgreSQL ou Prisma lors de la création du serveur.
   let config = readConfiguration(root);
   let state = { phase: 'idle', stage: '', error: null };
   let session = null;
   let attempts = [];
+  let language = 'fr';
   let job = Promise.resolve();
   const tokenExpires = now() + 2 * 60 * 60 * 1000;
   const csrf = randomBytes(32).toString('hex');
@@ -57,7 +62,7 @@ export function createBootstrapServer({ root, accessCode, install, handoff, exis
     };
     try {
       const path = new URL(req.url, 'http://localhost').pathname;
-      if (req.method === 'GET' && ['/setup', '/fr/setup', '/login', '/fr/login'].includes(path)) {
+      if (req.method === 'GET' && ['/setup', '/login', ...LANGUAGES.flatMap(code => [`/${code}/setup`, `/${code}/login`])].includes(path)) {
         const [type, body] = assets.get('/');
         res.writeHead(200, { 'Content-Type': type });
         res.end(body);
@@ -77,9 +82,11 @@ export function createBootstrapServer({ root, accessCode, install, handoff, exis
         const { code } = await jsonBody(req);
         if (!equal(code, accessCode)) {
           attempts.push(now());
+          log(`Assistant web : code d’accès refusé (${attempts.length} tentative(s) dans la dernière minute).`);
           return reply(401, { error: 'Code d’accès invalide.' });
         }
         session = { id: randomBytes(32).toString('hex'), expires: now() + 60 * 60 * 1000 };
+        log('Assistant web : code d’accès accepté, session ouverte dans le navigateur.');
         res.setHeader('Set-Cookie', `xnova_bootstrap=${session.id}; HttpOnly; SameSite=Strict; Path=/bootstrap; Max-Age=3600${requestOrigin(req).startsWith('https:') ? '; Secure' : ''}`);
         return reply(200, { csrf, ...summary() });
       }
@@ -91,7 +98,11 @@ export function createBootstrapServer({ root, accessCode, install, handoff, exis
         if (['running', 'ready', 'handoff'].includes(state.phase)) return reply(409, { error: 'L’installation est déjà en cours ou prête.' });
         const options = await jsonBody(req);
         if (!options || Array.isArray(options) || typeof options !== 'object') return reply(400, { error: 'Configuration invalide.' });
+        if (LANGUAGES.includes(options.language)) language = options.language;
+        // Journal du terminal : ce qui a été demandé, jamais un secret (l’URL de base externe n’y figure pas).
+        log(`Assistant web : installation demandée (mode ${options.mode}, adresse ${options.url}, base ${options.database}, accès ${options.tls}, langue ${language}${options.serviceAction ? `, services : ${options.serviceAction}` : ''}).`);
         if ((existingServices().length || options.serviceAction !== undefined) && !['keep', 'recreate'].includes(options.serviceAction)) {
+          log('Assistant web : demande refusée, des services XNova existent déjà et aucun choix (garder / recréer) n’a été transmis.');
           return reply(400, { error: 'Des services existent déjà. Choisissez « Garder et reprendre » ou « Supprimer et recréer ».' });
         }
         if (options.serviceAction !== undefined) options.replaceServices = options.serviceAction === 'keep';
@@ -105,19 +116,26 @@ export function createBootstrapServer({ root, accessCode, install, handoff, exis
             config = createConfiguration(options);
             writeConfiguration(root, config);
           }
-        } catch (error) { return reply(400, { error: error.message }); }
+        } catch (error) {
+          log(`Assistant web : configuration refusée : ${error.message}`);
+          return reply(400, { error: error.message });
+        }
+        log('Assistant web : configuration enregistrée, préparation du serveur en cours (le suivi s’affiche ci-dessous).');
         state = { phase: 'running', stage: 'Préparation de l’installation', error: null };
-        job = Promise.resolve().then(() => install(config, accessCode, stage => { state.stage = stage; })).then(result => {
+        job = Promise.resolve().then(() => install(config, accessCode, stage => { state.stage = stage; log(`  → ${stage}`); })).then(result => {
           state = { phase: 'ready', stage: 'La base et l’API sont prêtes. Continuer vers le SMTP.', error: null, setupRequired: result.setupRequired };
         }).catch(error => {
           logError(error);
+          log(`Assistant web : échec pendant « ${state.stage} ». Corrigez la cause indiquée ci-dessus puis reprenez l’installation depuis le navigateur.`);
           state = { phase: 'failed', stage: state.stage, error: `Échec : ${state.stage}. Consultez le terminal du serveur, puis reprenez l’installation. Les secrets et la base sont conservés.` };
         });
         return reply(202, summary());
       }
       if (path === '/bootstrap/handoff') {
         if (state.phase !== 'ready') return reply(409, { error: 'La préparation n’est pas terminée.' });
-        const next = `${config.state.url}/${state.setupRequired ? `setup#bootstrap-token=${accessCode}` : 'login'}`;
+        const body = await jsonBody(req).catch(() => ({}));
+        if (LANGUAGES.includes(body?.language)) language = body.language;
+        const next = `${config.state.url}/${language}/${state.setupRequired ? `setup#bootstrap-token=${accessCode}` : 'login'}`;
         state.phase = 'handoff';
         res.setHeader('Set-Cookie', 'xnova_bootstrap=; HttpOnly; SameSite=Strict; Path=/bootstrap; Max-Age=0');
         // Fermer l'écoute libère le port, tout en gardant cette réponse ouverte jusqu'à ce que Next soit prêt.

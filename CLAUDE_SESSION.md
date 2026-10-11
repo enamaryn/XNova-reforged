@@ -5,6 +5,16 @@
 
 ---
 
+## Session — installateur web : langue au démarrage et erreurs visibles
+
+**Date :** 12 octobre 2026. **Retour du propriétaire** (réinstallation à zéro) : « Préparer le serveur » sans effet ni message, rien dans le terminal ; langue non proposée au démarrage.
+
+- [x] **Langue avant le code** : cinq drapeaux dès l'ouverture, traduction immédiate (5 langues, étapes de préparation comprises), mémorisée (navigateur + cookie `NEXT_LOCALE`) ; le relais ouvre `/<langue>/setup`.
+- [x] **Erreurs jamais muettes** : validation par l'assistant (`novalidate`), message fixe en haut d'écran (il était hors de vue sous un formulaire long), messages explicites pour coupure réseau et réponse non JSON d'un proxy (HTTP n°).
+- [x] **Terminal** : journal de chaque demande et de chaque étape (sans secret).
+- [x] Tests : 2 nouveaux scénarios navigateur (langues, erreurs visibles, réseau/proxy, journal) ; suite installateur 26/26 (1 ignoré).
+- Cause exacte du cas du propriétaire non reproduite ici (les scénarios existants passent) : les messages et le journal ajoutés doivent la révéler à la prochaine tentative.
+
 ## Session — dette d'outillage et Sentry (PR D)
 
 **Date :** 11 octobre 2026. **Demande du propriétaire :** PRE-03, DETTE-02 (Tailwind 4) et DETTE-03 (eslint-config-next 16).

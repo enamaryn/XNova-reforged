@@ -38,6 +38,10 @@ Saisissez le code affiché par le lanceur. Il donne temporairement accès à l'i
 
 Un service web existant occupant le port 3000 doit être arrêté avant le lancement. Le lanceur signale ce cas ; il n'arrête aucun service inconnu.
 
+## Langue de l'installation
+
+La page s'ouvre avec **cinq drapeaux** (🇫🇷 Français, 🇬🇧 English, 🇪🇸 Español, 🇩🇪 Deutsch, 🇮🇹 Italiano) **avant** la saisie du code temporaire : un clic traduit immédiatement toute la page (questions, aides, étapes de préparation et messages de l'assistant). Le choix est mémorisé dans le navigateur et dans le cookie `NEXT_LOCALE` : au relais, le site s'ouvre dans la même langue (`/<langue>/setup`), et l'assistant du site l'enregistre comme **langue du serveur** (langue par défaut du jeu, de l'interface et des emails). Les messages d'erreur renvoyés par le serveur d'installation restent en français.
+
 ## Questions dans l'assistant
 
 1. **Développement/test ou production**, puis **adresse finale du site**. La production exige HTTPS. Utiliser une origine seule, sans `/fr`, `/setup` ni port particulier.
@@ -64,6 +68,14 @@ La page affiche les étapes et vérifie une vraie connexion à la base via `/hea
 Le code est transmis dans un fragment d'URL, consommé puis retiré immédiatement par l'assistant applicatif. Il n'apparaît pas dans les requêtes HTTP ni dans le Referer. Il n'est pas enregistré en clair dans `.env`. Le parcours continue directement au SMTP, puis aux réglages de l'univers, à la création du super admin et à sa confirmation par email. La confirmation clôture l'installation ; les routes applicatives de configuration sont alors verrouillées comme dans le parcours existant.
 
 La production et le développement/test utilisent tous deux le parcours SMTP réel : `EMAIL_VERIFICATION_REQUIRED=true`. L'API reste limitée à localhost. Le web écoute sur `0.0.0.0:3000` avec un proxy existant, et sur localhost lorsque nginx est installé sur ce serveur. La confiance proxy générée est de 2 pour un proxy externe plus Next, et 1 pour nginx local relayant directement l'API ; adapter `TRUST_PROXY` si votre architecture comporte d'autres proxys.
+
+## Si « Préparer le serveur » semble ne rien faire
+
+L'assistant ne doit jamais rester muet. Depuis le 12 octobre 2026 :
+
+- le formulaire est validé par l'assistant lui-même (adresse publique, URL de la base externe, email du certificat, choix « Garder / Supprimer » quand des services existent) et affiche un message **fixe en haut de l'écran**, visible même en bas du formulaire ;
+- une coupure réseau ou une réponse HTML d'un proxy (« HTTP 502 », pare-feu, WAF) donne un message explicite ; vérifier alors que le proxy transmet bien les requêtes **POST** vers le port 3000 de l'installateur ;
+- le **terminal du serveur** affiche chaque étape : `installation demandée (mode …, adresse …, langue …)`, `configuration refusée : …`, puis `→ <étape>` à chaque phase, sans jamais afficher le code d'accès ni l'URL d'une base externe.
 
 ## Reprise et mises à jour
 
