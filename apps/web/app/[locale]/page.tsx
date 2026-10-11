@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { ArrowRight, Orbit, Rocket, Shield, Sparkles } from "lucide-react";
@@ -44,10 +45,18 @@ export default async function HomePage({
   const t = await getTranslations({ locale, namespace: "home" });
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#020812] text-slate-50">
-      <div
-        className="pointer-events-none fixed inset-0 bg-cover bg-center opacity-25 blur-[2px]"
-        style={{ backgroundImage: "url('/landing/space-hero.webp')" }}
-      />
+      {/* Décor de page : inutile sur mobile (masqué par la section d'accueil), chargé en différé sur grand écran */}
+      <div className="pointer-events-none fixed inset-0 hidden opacity-25 blur-[2px] lg:block">
+        <Image
+          src="/landing/space-hero.webp"
+          alt=""
+          fill
+          loading="lazy"
+          sizes="100vw"
+          quality={40}
+          className="object-cover object-center"
+        />
+      </div>
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_50%_20%,transparent_0%,rgba(2,8,18,0.3)_55%,#020812_100%)]" />
 
       <div className="relative mx-auto flex min-h-screen w-full max-w-[1600px] flex-col px-3 py-3 sm:px-6 sm:py-5 lg:px-8">
@@ -90,9 +99,15 @@ export default async function HomePage({
           aria-labelledby="home-title"
           className="relative mt-4 isolate flex min-h-[620px] overflow-hidden rounded-[1.75rem] border border-sky-300/60 bg-[#03101f] shadow-[0_30px_90px_rgba(0,0,0,0.55)] sm:min-h-[680px] lg:min-h-[700px]"
         >
-          <div
-            className="absolute inset-0 -z-20 bg-cover bg-[62%_center] lg:bg-center"
-            style={{ backgroundImage: "url('/landing/space-hero.webp')" }}
+          {/* Élément le plus grand de la page (LCP) : image optimisée, redimensionnée et préchargée */}
+          <Image
+            src="/landing/space-hero.webp"
+            alt=""
+            fill
+            priority
+            sizes="(max-width: 1024px) 100vw, 1600px"
+            quality={70}
+            className="-z-20 object-cover object-[62%_center] lg:object-center"
           />
           <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#020812]/95 via-[#020812]/65 to-transparent lg:via-[#020812]/20" />
           <div className="absolute inset-x-0 bottom-0 -z-10 h-48 bg-gradient-to-t from-[#020812]/70 to-transparent" />
@@ -148,12 +163,15 @@ export default async function HomePage({
                 href={feature.href}
                 className="group relative isolate min-h-52 overflow-hidden rounded-2xl border border-sky-400/50 bg-[#03101f] shadow-[0_18px_50px_rgba(0,0,0,0.3)] transition hover:-translate-y-1 hover:border-sky-300"
               >
-                <div
-                  className="absolute inset-0 -z-20 bg-cover transition duration-500 group-hover:scale-105"
-                  style={{
-                    backgroundImage: "url('/landing/space-hero.webp')",
-                    backgroundPosition: feature.imagePosition,
-                  }}
+                <Image
+                  src="/landing/space-hero.webp"
+                  alt=""
+                  fill
+                  loading="lazy"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  quality={60}
+                  className="-z-20 object-cover transition duration-500 group-hover:scale-105"
+                  style={{ objectPosition: feature.imagePosition }}
                 />
                 <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[#020812] via-[#020812]/70 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 flex items-end gap-4 p-5 sm:p-6">
