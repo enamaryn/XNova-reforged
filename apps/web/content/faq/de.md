@@ -136,7 +136,7 @@ Hyperraum (114), Laser (120), Ionen (121), Plasma (122) und Graviton (199) sind 
 ## 5. Schiffe
 
 **Wo und wie werden Schiffe gebaut?**
-In der **Werft** (Seite Werft). Der Auftrag wird sofort bezahlt und in Losen gebaut; ein **wartender** Auftrag kann zurückgezogen werden (90 % erstattet), ein bereits begonnenes Los wird normal beendet. Die Dauer hängt von den Kosten und der Werftstufe ab: `(Metall + Kristall) / (2 500 × (1 + Werft) × 2^Naniten)` Sekunden pro Einheit, geteilt durch die Servergeschwindigkeit.
+In der **Werft** (Seite Werft). Der Auftrag wird sofort bezahlt und in Losen gebaut; ein **wartender** Auftrag kann zurückgezogen werden (90 % erstattet), ein bereits begonnenes Los wird normal beendet. Die Dauer hängt von den Kosten und der Werftstufe ab: `(Metall + Kristall) / (2 500 × (1 + Werft) × 2^Naniten)` **Stunden** pro Einheit, geteilt durch die Servergeschwindigkeit, mit einer **Untergrenze** von `(Metall + Kristall) / 660` Sekunden bei ×50 (5 s für einen leichten Jäger, etwa 3 h 47 für einen Todesstern): Werft und Naniten unterschreiten sie nie. Bei ×50 braucht ein leichter Jäger ohne Technologie etwa 48 s, voll ausgebaut 5 s.
 
 **Welche Schiffe gibt es und wozu dienen sie?**
 

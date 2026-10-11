@@ -12,6 +12,8 @@ export interface ShipyardShip {
   description: string;
   cost: ShipCost;
   buildTime: number;
+  /** Durée d'une unité en secondes, sans arrondi : le lot dure max(1, floor(unitTime × quantité)). */
+  unitTime: number;
   currentAmount: number;
   canBuild: boolean;
   canAfford: boolean;
@@ -95,6 +97,7 @@ export interface DefenseItem {
   description: string;
   cost: ShipCost;
   buildTime: number;
+  unitTime: number;
   stats: { hull: number; shield: number; weapon: number };
   currentAmount: number;
   inQueue: number;

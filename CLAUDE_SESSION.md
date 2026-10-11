@@ -5,6 +5,15 @@
 
 ---
 
+## Session — durées du chantier spatial
+
+**Date :** 11 octobre 2026. **Signalement du propriétaire** (capture, page Défense) : temps estimé incohérent avec la file ; calibrage validé : 5 s par chasseur léger quand tout est développé, ≈ 3 h 47 par Étoile de la Mort, mêmes règles pour les défenses.
+
+- [x] Cause : facteur 3600 manquant (formule d'origine en heures) et durée par unité arrondie puis multipliée par la quantité côté interface.
+- [x] `packages/game-config/src/shipyard-time.ts` : durée d'une unité (heures × 3600 ÷ vitesse) avec plancher `(métal + cristal) / 660` s à ×50 ; durée d'un lot = `max(1, floor(unité × quantité))`.
+- [x] API : `unitTime` pour vaisseaux et défenses ; file calculée avec la même fonction. Interface (Chantier spatial, Défense) : durée annoncée = durée de la file.
+- [x] Tests : unitaires `shipyard-time` (5), intégration `shipyard-duration` (4 : annoncée = programmée pour 1, 10 et 1000 unités, vaisseaux et défenses) ; FAQ (5 langues) et `docs/BALANCE.md` mis à jour.
+
 ## Session — dette d'outillage et Sentry (PR D)
 
 **Date :** 11 octobre 2026. **Demande du propriétaire :** PRE-03, DETTE-02 (Tailwind 4) et DETTE-03 (eslint-config-next 16).

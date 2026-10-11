@@ -112,6 +112,10 @@ Constatés dans le code, le satellite solaire par un essai sur serveur de test ;
 - [x] **Éléments constructibles sans effet** : terraformeur corrigé (+5 cases par niveau, n'occupe aucune case ; migration des planètes existantes) ; dépôt d'alliance, silo de missiles et bâtiments lunaires **masqués et refusés** par l'API tant que leurs fonctions (maintien de position, missiles, lunes) n'existent pas ; **recycleur** : table `DebrisField`, débris (30 % des vaisseaux détruits) cumulés aux coordonnées du combat, mission **Recyclage** (recycleurs seuls, 20 000 de capacité chacun, collecte proportionnelle métal/cristal sous verrou, retour crédité), débris affichés dans la Galaxie et l'API ; test d'intégration `recycling.integration.spec.ts`.
 - [x] **Technologies** : *Ordinateur* limite désormais les flottes en vol (1 + 1 par niveau, compteur sur la page Flotte, vérifié sous verrou) ; *Énergie* relève la fusion ; descriptions de Hyperespace, Laser, Ions, Plasma corrigées (prérequis, « aucun effet direct ») ; réseau de recherche et expédition masqués et refusés.
 
+## Équilibrage du chantier spatial (11 octobre 2026)
+
+- [x] **Durées de fabrication des vaisseaux et défenses** : signalé par le propriétaire (16 min 40 affichées pour 1000 artilleries laser légères alors que la file en programmait 20 s). Deux causes : l'interface multipliait un temps par unité déjà arrondi à 1 s, et la formule d'origine (en **heures**) était lue en secondes (facteur 3600 manquant : un chasseur léger prenait 0,02 s à ×50). Corrigé : formule d'origine rétablie, **plancher** `(métal + cristal) / 660` s à ×50 (5 s par chasseur léger, ≈ 3 h 47 par Étoile de la Mort, validé par le propriétaire), même règle pour les défenses, `unitTime` renvoyé par l'API et durée annoncée = durée de la file (tests `shipyard-time` et `shipyard-duration`). Voir `docs/BALANCE.md`.
+
 ## Critères de sortie obligatoires
 
 - [x] SEC-01 à SEC-04 validés _(SEC-01 : production sans haute ni critique ; outillage de développement en dette datée)_ ; aucune critique/haute de production non traitée sans analyse explicite et mesure compensatoire acceptée ; suivi des alertes build/dev conservé.
