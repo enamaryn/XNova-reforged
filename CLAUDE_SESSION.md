@@ -12,7 +12,8 @@
 - [x] `ops03-access-control.integration.spec.ts` : 19 tentatives de B sur les données de A, toutes refusées (403/404), état inchangé ; 401 sans jeton.
 - [x] Harnais : option `BOOST_CMD` ; campagne dotée (200 joueurs, 5 min) : 0 erreur, 374 recherches et 124 vaisseaux acceptés.
 - [x] Lighthouse 12.8.2 : login/inscription 95–100 en mobile ; accueil mobile 67 (LCP 5,1 s, image de fond).
-- **Reste ouvert (OPS-03 non clos)** : uptime en production (propriétaire), mesure sur le serveur du propriétaire à ×50, envoi de flotte sous charge.
+- [x] Envoi de flotte sous charge : 3 444 envois acceptés sur 3 444, 3 302 flottes résolues par le cron, 0 erreur (harnais : `FLEET_SHARE`, motifs des refus 4xx ; premier essai invalidé par un défaut du scénario, corrigé).
+- **Reste ouvert (OPS-03 non clos)** : uptime en production (propriétaire), mesure sur le serveur du propriétaire à ×50.
 
 ## Session — OPS-03 : validation de charge 200 joueurs à ×50
 

@@ -111,14 +111,34 @@ Tests unitaires de l'API (`jest --coverage`, 83 tests) : 52,8 % des instructions
 
 Constat : seule la page d'accueil mobile est faible ; l'élément le plus grand est l'image de fond `space-hero.webp` (LCP 5,1 s, TBT 556 ms ; gains estimés : 68 Kio de JavaScript inutilisé, 50 Kio d'images). Mesure sur la machine de développement avec la limitation réseau/CPU simulée de Lighthouse : à confirmer sur le serveur réel. Aucun seuil Lighthouse n'avait été fixé ; pages de jeu (authentifiées) non mesurées.
 
+### Envoi de flotte sous charge (11 octobre 2026)
+
+Troisième campagne ([`load-test-fleet-2026-10-11.json`](audits/load-test-fleet-2026-10-11.json)) : 200 joueurs, palier de 5 min, base vierge, comptes dotés (mêmes ressources et niveaux que ci-dessus, plus 300 cargos légers (202) et 300 sondes (210) par planète) et 15 % des actions consacrées aux flottes (`FLEET_SHARE=0.15`) : transport avec 1 000 de métal, espionnage ou rappel, vers la planète d'un autre joueur.
+
+| Mesure | Résultat |
+| --- | --- |
+| Requêtes / erreurs 5xx + réseau / 429 | 25 205 / 0 / 0 |
+| Lectures | p95 57 ms, p99 149 ms |
+| Écritures | p95 35 ms, p99 169 ms |
+| `POST /fleet/send` | **3 444 acceptés sur 3 444** ; p95 33 ms, p99 151 ms |
+| `GET /fleet/active` | 789 ; p95 13 ms, p99 149 ms |
+| `DELETE /fleet/:id` (rappel) | 78 acceptés, 210 refusés : 54 « déjà arrivée », 156 « ne peut pas être rappelée » (refus métier) |
+| État des flottes en base | 3 302 terminées, 103 au retour, 39 en vol : le cron des flottes résout les arrivées sous charge |
+| Seuils / `/health` / WebSocket | tous respectés ; 0 échec sur 72 contrôles ; 200/200 sockets ; RSS max 253 Mo |
+
+Défaut de mon premier essai, corrigé avant ces résultats : le scénario passait la liste des noms de joueurs au lieu de leurs coordonnées, d'où 3 524 refus de validation (« toGalaxy must not be greater than 9 ») qui ne reflétaient pas l'API. Le harnais enregistre désormais les motifs des refus 4xx (`reasons` dans le rapport) pour distinguer un refus métier d'un défaut du scénario. Les erreurs des crons relevées dans le journal de l'API (recherche, flottes) datent de la recréation de la base de test pendant que l'API tournait ; aucune erreur pendant le palier.
+
+Limites : les missions d'attaque, de dépôt et de colonisation ne sont pas dans le scénario ; les rapports de combat ne sont pas comptés ; la réactivité du client (rafraîchissement des flottes) n'est pas mesurée.
+
 ### Reste ouvert pour clore OPS-03
 
-Uptime en production (action du propriétaire, après mise à jour) ; mesure de charge ou de rythme sur le serveur du propriétaire avec le profil ×50 ; envoi de flotte sous charge avec vaisseaux en stock ; optimisation éventuelle de l'accueil mobile (hors périmètre de la validation).
+Uptime en production (action du propriétaire, après mise à jour) ; mesure de charge ou de rythme sur le serveur du propriétaire avec le profil ×50 ; optimisation éventuelle de l'accueil mobile (hors périmètre de la validation).
 
 ## Reproduire
 
 ```bash
 # API de production démarrée sur une base dédiée (voir « Conditions d'exécution »)
+# FLEET_SHARE=0.15 (facultatif) : part des actions consacrée aux flottes (vaisseaux requis, voir BOOST_CMD)
 # BOOST_CMD="commande" (facultatif) : exécutée avant le palier pour doter les comptes (psql, etc.)
 PLAYERS=200 RAMP_S=60 HOLD_S=600 IDLE_S=70 OUT=docs/audits/load-test-AAAA-MM-JJ.json npm run load
 ```

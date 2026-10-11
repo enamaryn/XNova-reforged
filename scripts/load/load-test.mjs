@@ -55,6 +55,12 @@ async function call(player, method, route, { path = route, body, kind, token = p
   if (!s) samples.set(key, (s = { kind: k, times: [], status: {} }));
   s.times.push(ms);
   s.status[status] = (s.status[status] ?? 0) + 1;
+  if (status >= 400 && status < 500) {
+    // Motifs des refus métier (message d'API tronqué) pour distinguer un refus attendu d'un défaut du scénario
+    const msg = String(Array.isArray(data?.message) ? data.message[0] : data?.message ?? '').slice(0, 80);
+    s.reasons ??= {};
+    s.reasons[`${status} ${msg}`] = (s.reasons[`${status} ${msg}`] ?? 0) + 1;
+  }
   totalRequests++;
   if (status === 0 || status >= 500) serverErrors++;
   if (status === 429) rateLimited++;
@@ -101,10 +107,35 @@ async function register(i) {
   return player.planetId ? player : null;
 }
 
-async function gameLoop(player, until, peers) {
+// Part des actions consacrée aux flottes (0,01 par défaut ; FLEET_SHARE=0.15 avec des vaisseaux en stock)
+const FLEET_SHARE = Number(process.env.FLEET_SHARE ?? 0);
+
+// Transport (cargo léger 202), espionnage (sonde 210) ou rappel d'une flotte en vol vers la planète d'un autre joueur
+async function fleetAction(player, targets) {
+  const p = player.planetId;
+  const choices = targets.filter((t) => t.id !== p);
+  const t = pick(choices) ?? player.coords;
+  const roll = Math.random();
+  if (roll < 0.1) {
+    const active = await call(player, 'GET', '/fleet/active');
+    const f = Array.isArray(active.data) ? active.data[0] : null;
+    if (f?.id) await call(player, 'DELETE', '/fleet/:id', { path: `/fleet/${f.id}` });
+    return;
+  }
+  const spy = roll < 0.25;
+  await call(player, 'POST', '/fleet/send', {
+    body: {
+      planetId: p, toGalaxy: t.galaxy, toSystem: t.system, toPosition: t.position,
+      mission: spy ? 6 : 3, speedPercent: 100, ships: spy ? { 210: 1 } : { 202: 1 },
+      ...(spy ? {} : { cargo: { metal: 1000 } }),
+    },
+  });
+}
+
+async function gameLoop(player, until, peers, targets) {
   const p = player.planetId;
   while (Date.now() < until) {
-    const roll = Math.random();
+    const roll = Math.random() < FLEET_SHARE ? 1 : Math.random();
     if (roll < 0.15) await call(player, 'GET', '/auth/me');
     else if (roll < 0.35) await call(player, 'GET', '/planets/:id/resources', { path: `/planets/${p}/resources` });
     else if (roll < 0.45) await call(player, 'GET', '/planets/:id/buildings', { path: `/planets/${p}/buildings` });
@@ -135,13 +166,7 @@ async function gameLoop(player, until, peers) {
       if (Math.random() < 0.3) await call(player, 'POST', '/shipyard/build', { body: { planetId: p, shipId: 202, amount: 1 } });
     }
     else if (roll < 0.99) await call(player, 'GET', '/fleet/active');
-    else {
-      // Envoi de flotte volontairement refusé ou accepté selon l'état : exerce la validation et les verrous
-      const c = player.coords;
-      await call(player, 'POST', '/fleet/send', {
-        body: { planetId: p, toGalaxy: c.galaxy, toSystem: c.system, toPosition: ((c.position % 15) + 1), mission: 3, speedPercent: 100, ships: { 202: 1 } },
-      });
-    }
+    else await fleetAction(player, targets);
     await sleep(rand(1000, 4000));
   }
 }
@@ -157,7 +182,7 @@ function summarize() {
   for (const [key, s] of samples) {
     const t = [...s.times].sort((a, b) => a - b);
     agg[s.kind].push(...t);
-    endpoints[key] = { kind: s.kind, count: t.length, p50: pct(t, 0.5), p95: pct(t, 0.95), p99: pct(t, 0.99), max: t.at(-1) ?? 0, status: s.status };
+    endpoints[key] = { kind: s.kind, count: t.length, p50: pct(t, 0.5), p95: pct(t, 0.95), p99: pct(t, 0.99), max: t.at(-1) ?? 0, status: s.status, ...(s.reasons ? { reasons: s.reasons } : {}) };
   }
   const groups = {};
   for (const [k, t] of Object.entries(agg)) {
@@ -202,7 +227,8 @@ async function main() {
   const holdStart = Date.now();
   const until = holdStart + HOLD_S * 1000;
   const names = players.map((p) => p.username);
-  await Promise.all(players.map((p) => gameLoop(p, until, names)));
+  const targets = players.map((p) => p.coords);
+  await Promise.all(players.map((p) => gameLoop(p, until, names, targets)));
   const holdMs = Date.now() - holdStart;
   const eventsBeforeIdle = wsStats.resourceEvents;
   if (IDLE_S > 0) await sleep(IDLE_S * 1000);
