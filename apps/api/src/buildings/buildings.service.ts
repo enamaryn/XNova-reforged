@@ -1,3 +1,4 @@
+import { SATELLITES_INCLUDE, countSatellites } from '../common/satellites';
 import {
   BadRequestException,
   ForbiddenException,
@@ -141,7 +142,7 @@ export class BuildingsService {
           : getBuildingUpgradeEffects(
               building.id,
               currentLevel,
-              planet,
+              { ...planet, solarSatellites: countSatellites(planet) },
               resourceConfig,
               planetBuildings,
               techLevels,
@@ -468,20 +469,22 @@ export class BuildingsService {
 
       const planet = await tx.planet.findUniqueOrThrow({
         where: { id: queueEntry.planetId },
+        include: SATELLITES_INCLUDE,
       });
+      const satellites = countSatellites(planet);
       const now = new Date(Math.max(Date.now(), planet.lastUpdate.getTime()));
       // Produire d'abord avec les anciens niveaux : le nouveau rendement n'est
       // jamais appliqué rétroactivement au temps passé avant la finalisation.
       const settled = updateResources({
         resources: planet,
-        levels: planet,
+        levels: { ...planet, solarSatellites: satellites },
         lastUpdate: planet.lastUpdate,
         now,
         config: resourceConfig,
       });
       const next = updateResources({
         resources: settled.resources,
-        levels: { ...planet, [fieldName]: queueEntry.level },
+        levels: { ...planet, solarSatellites: satellites, [fieldName]: queueEntry.level },
         lastUpdate: now,
         now,
         config: resourceConfig,
@@ -532,6 +535,7 @@ export class BuildingsService {
   private async getPlanetOrFail(planetId: string, userId: string) {
     const planet = await this.database.planet.findUnique({
       where: { id: planetId },
+      include: SATELLITES_INCLUDE,
     });
 
     if (!planet) {

@@ -5,6 +5,16 @@
 
 ---
 
+## Session — satellites solaires et page FAQ
+
+**Date :** 11 octobre 2026. **Demande du propriétaire :** les satellites solaires doivent fournir de l'électricité, rester en orbite de leur planète et ne jamais être envoyés ; la FAQ doit avoir une page dédiée publique et une entrée dans le menu de gauche.
+
+- [x] Moteur : `solarSatellites` dans `ResourceLevels`, 50 d'énergie par satellite (`calculateSatelliteEnergy`) ; tous les appelants (ressources, cron, bâtiments, recherche, espionnage) chargent les satellites de la planète (`common/satellites.ts`).
+- [x] Règlement sans effet rétroactif à la livraison (chantier) et à la destruction (combat) : `settleBeforeSatelliteChange`.
+- [x] Envoi refusé par l'API et satellite absent de la liste des vaisseaux disponibles ; description du jeu corrigée.
+- [x] Tests : unitaires du moteur, intégration `solar-satellites` (énergie, non-rétroactivité, refus d'envoi, perte) ; unitaires 85/85, intégration 286/286.
+- [x] FAQ réécrite dans les 5 langues (satellites, coût comparé aux centrales).
+
 ## Session — FAQ du jeu en cinq langues
 
 **Date :** 11 octobre 2026. **Demande du propriétaire :** FAQ du jeu (bâtiments, vaisseaux, puissance, utilisation, satellites solaires, défense…).

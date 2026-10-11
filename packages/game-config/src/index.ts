@@ -71,6 +71,8 @@ export const IMPLEMENTED_MISSIONS: readonly MissionType[] = [
 /** Identifiants des vaisseaux imposés par certaines missions. */
 export const ESPIONAGE_PROBE_ID = 210;
 export const COLONY_SHIP_ID = 208;
+/** Satellite solaire : reste en orbite de la planète où il est construit (aucun envoi), fournit de l'énergie. */
+export const SOLAR_SATELLITE_ID = 212;
 /** Technologie Espionnage : détermine le niveau d'information d'un rapport d'espionnage. */
 export const ESPIONAGE_TECH_ID = 106;
 

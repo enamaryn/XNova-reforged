@@ -12,6 +12,7 @@ import {
   IMPLEMENTED_MISSIONS,
   MissionType,
   SHIPS,
+  SOLAR_SATELLITE_ID,
   getShipSpeed,
 } from '@xnova/game-config';
 import {
@@ -53,11 +54,13 @@ export class FleetService {
     const amounts = new Map<number, number>();
     ships.forEach((ship) => amounts.set(ship.shipId, ship.amount));
 
-    const shipList = Object.values(SHIPS).map((ship) => ({
-      shipId: ship.id,
-      name: ship.name,
-      amount: amounts.get(ship.id) ?? 0,
-    }));
+    const shipList = Object.values(SHIPS)
+      .filter((ship) => ship.id !== SOLAR_SATELLITE_ID)
+      .map((ship) => ({
+        shipId: ship.id,
+        name: ship.name,
+        amount: amounts.get(ship.id) ?? 0,
+      }));
 
     return {
       planetId,
@@ -352,6 +355,12 @@ export class FleetService {
     for (const [key, value] of Object.entries(raw as Record<string, unknown>)) {
       if (!/^\d+$/.test(key) || !SHIPS[Number(key)]) {
         throw new BadRequestException(`Vaisseau invalide: ${key}`);
+      }
+      // Un satellite solaire reste en orbite de sa planète : il ne part jamais en mission
+      if (Number(key) === SOLAR_SATELLITE_ID) {
+        throw new BadRequestException(
+          'Les satellites solaires restent en orbite de leur planete et ne peuvent pas etre envoyes',
+        );
       }
       if (
         typeof value !== 'number' ||

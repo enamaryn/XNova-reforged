@@ -88,3 +88,60 @@ describe('Moteur de ressources — conservation des fractions (ECO-01)', () => {
     expect(floorResources(stock).metal).toBe(520);
   });
 });
+
+describe('Moteur de ressources — satellites solaires', () => {
+  const start = new Date('2026-01-01T00:00:00.000Z');
+  const hour = new Date(start.getTime() + 3600 * 1000);
+  const config = { gameSpeed: 1, resourceMultiplier: 1 };
+  const withMine = { ...levels, metalMine: 5 };
+
+  it('chaque satellite ajoute 50 d\'énergie disponible', () => {
+    const none = updateResources({
+      resources: { metal: 0, crystal: 0, deuterium: 0 },
+      levels: { ...withMine, solarSatellites: 0 },
+      lastUpdate: start,
+      now: hour,
+      config,
+    });
+    const three = updateResources({
+      resources: { metal: 0, crystal: 0, deuterium: 0 },
+      levels: { ...withMine, solarSatellites: 3 },
+      lastUpdate: start,
+      now: hour,
+      config,
+    });
+    expect(none.energy.available).toBe(0);
+    expect(none.energy.productionLevel).toBe(0);
+    expect(three.energy.available).toBe(150);
+    expect(three.energy.productionLevel).toBe(100);
+    expect(three.resources.metal).toBeGreaterThan(none.resources.metal + 200);
+  });
+
+  it('s\'additionne aux centrales et ignore les valeurs invalides', () => {
+    const solar = updateResources({
+      resources: { metal: 0, crystal: 0, deuterium: 0 },
+      levels: { ...withMine, solarPlant: 1 },
+      lastUpdate: start,
+      now: hour,
+      config,
+    });
+    const combined = updateResources({
+      resources: { metal: 0, crystal: 0, deuterium: 0 },
+      levels: { ...withMine, solarPlant: 1, solarSatellites: 2 },
+      lastUpdate: start,
+      now: hour,
+      config,
+    });
+    expect(combined.energy.available).toBe(solar.energy.available + 100);
+    for (const bad of [-4, Number.NaN, undefined]) {
+      const r = updateResources({
+        resources: { metal: 0, crystal: 0, deuterium: 0 },
+        levels: { ...withMine, solarSatellites: bad as number },
+        lastUpdate: start,
+        now: hour,
+        config,
+      });
+      expect(r.energy.available).toBe(0);
+    }
+  });
+});

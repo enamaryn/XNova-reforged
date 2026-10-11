@@ -69,7 +69,7 @@ const createService = () => {
   };
 
   return {
-    service: new CombatService(database as any, gameEvents as any),
+    service: new CombatService(database as any, gameEvents as any, { getResourceConfig: jest.fn().mockResolvedValue({}) } as any),
     database,
     gameEvents,
   };

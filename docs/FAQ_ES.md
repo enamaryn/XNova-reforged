@@ -83,11 +83,17 @@ Por nivel `n`: planta solar `20 × n × 1,1^n`; planta de fusión `30 × n × 1,
 **¿Qué planta elegir?**
 La planta solar: barata y sin requisitos. A igual nivel, la fusión produce **menos** que una solar en el motor actual (nivel 10: 488 frente a 518) y exige requisitos costosos: hoy no compensa. ⚠️ La fusión **no consume deuterio** (pese a su descripción) y la *Tecnología de energía* no aumenta su producción: es un requisito, no una bonificación.
 
-**⚠️ ¿Dan energía los satélites solares?**
-**No, hoy no.** El satélite solar (212: 2 000 de cristal y 500 de deuterio, construible desde el hangar nivel 1) existe, se construye y permanece estacionado en el planeta, y su descripción dice «suministra energía gratis», pero el cálculo de producción **no lo tiene en cuenta**. Comprobado en un servidor de prueba: 10 satélites construidos, balance de energía estrictamente igual (79 disponibles antes y después). **No los construya para obtener energía**: perdería cristal y deuterio. Use las plantas. El comportamiento esperado (50 de energía por satélite según las constantes del código) es una discrepancia conocida, anotada en el registro del proyecto.
+**¿Dan energía los satélites solares?**
+**Sí.** En cuanto se construye, un satélite solar (212: 2 000 de cristal y 500 de deuterio, construible desde el hangar nivel 1) queda **directamente en órbita del planeta** y le suministra **50 de energía** de forma permanente, además de las plantas. La energía cuenta desde la entrega: la producción del tiempo ya transcurrido no cambia. Ejemplo: 3 satélites = 150 de energía. El valor es fijo (el juego no tiene temperatura de planeta).
 
-**¿Puede un satélite ser atacado o enviado en misión?**
-No tiene velocidad: no puede viajar. Si está estacionado en un planeta atacado, cuenta entre las unidades que defienden (casco 2 000, escudo 1, arma 1): absorbe disparos, nada más.
+**¿Cuándo elegir satélites en lugar de una planta?**
+Un satélite no consume **ningún campo** y no tiene requisitos, pero al principio cuesta más que una planta solar (40 de cristal y 10 de deuterio por punto de energía, frente a unas pocas unidades de metal y cristal en los primeros niveles de planta). Las plantas son mejores al inicio; los satélites compensan cuando faltan campos o cuando los niveles de planta se encarecen.
+
+**¿Se puede enviar un satélite a otro planeta?**
+**No.** Permanece en órbita del planeta donde se construyó: no aparece en la página *Flota* y el juego rechaza cualquier misión que incluya uno. Tampoco puede trasladarse mediante despliegue.
+
+**¿Puede destruirse un satélite?**
+Sí. En un planeta atacado combate junto a la defensa (casco 2 000, escudo 1, arma 1) y absorbe disparos; **un satélite destruido no se reconstruye** (solo las defensas) y la energía baja desde ese momento. Protéjalo con defensa.
 
 **¿Qué hago si mi energía es insuficiente?**
 Suba una planta solar antes de la siguiente mina. Si el nivel de producción es del 80 %, sus minas producen un 20 % menos de lo previsto.
@@ -140,7 +146,7 @@ En el **hangar** (página Astillero). El pedido se paga al instante y se constru
 | **Reciclador** (*Recycleur*, 209) | 10 000 / 6 000 / 2 000 | 20 000 | 2 000 | 1 / 10 / 16 000 | ⚠️ véase más abajo |
 | **Sonda de espionaje** (*Sonde d'Espionnage*, 210) | 0 / 1 000 / 0 | 0 | 50 000 | 0 / 0 / 1 000 | espionaje |
 | **Bombardero** (*Bombardier*, 211) | 50 000 / 25 000 / 15 000 | 500 | 4 000 | 1 000 / 500 / 75 000 | pensado contra defensas |
-| **Satélite solar** (*Satellite Solaire*, 212) | 0 / 2 000 / 500 | 0 | 0 | 1 / 1 / 2 000 | ⚠️ sin efecto de energía (§3) |
+| **Satélite solar** (*Satellite Solaire*, 212) | 0 / 2 000 / 500 | 0 | 0 | 1 / 1 / 2 000 | energía, permanece en órbita (§3) |
 | **Destructor** (*Destructeur*, 213) | 60 000 / 50 000 / 15 000 | 2 000 | 5 000 | 2 000 / 500 / 110 000 | combate pesado |
 | **Acorazado** (*Traqueur*, 215) | 30 000 / 40 000 / 15 000 | 10 000 | 10 000 | 700 / 400 / 70 000 | combate rápido |
 | **Estrella de la muerte** (*Étoile de la Mort*, 214) | 5 000 000 / 4 000 000 / 1 000 000 | 1 000 000 | 100 | 200 000 / 50 000 / 9 000 000 | definitiva; exige hangar 12 y *Gravitón* |
@@ -195,7 +201,7 @@ Hasta **6 rondas**. En cada ronda, cada unidad atacante y luego cada unidad defe
 *Militar* (+10 % de arma por nivel), *Defensa* (+10 % de casco), *Escudo* (+10 % de escudo), aplicadas a todas sus unidades, naves **y** defensas. Cada bando usa sus propios niveles.
 
 **¿Quién defiende un planeta atacado?**
-Las **defensas** y la **flota estacionada** en el planeta combaten juntas (incluidos los satélites solares, que solo sirven de blanco).
+Las **defensas** y la **flota estacionada** en el planeta combaten juntas (incluidos los satélites solares, muy frágiles).
 
 **¿Qué se pierde y qué se recupera?**
 - Las naves destruidas se pierden.
@@ -280,6 +286,6 @@ Se basa en el **poder**; su rango aparece en la cabecera y en la vista general. 
 
 ## 11. Lo que aún no existe
 
-Oficiales, mercado, eventos, lunas, misiles, reciclaje y campos de escombros, expediciones, ataques en grupo, límite de flotas por *Computación*, efecto del terraformador, fuego rápido, energía de los satélites solares. Los elementos correspondientes (edificios, naves, tecnologías) aparecen a veces en las listas y pueden comprarse **sin efecto**: lea los ⚠️ anteriores antes de invertir. La hoja de ruta del proyecto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) sigue estas discrepancias.
+Oficiales, mercado, eventos, lunas, misiles, reciclaje y campos de escombros, expediciones, ataques en grupo, límite de flotas por *Computación*, efecto del terraformador, fuego rápido. Los elementos correspondientes (edificios, naves, tecnologías) aparecen a veces en las listas y pueden comprarse **sin efecto**: lea los ⚠️ anteriores antes de invertir. La hoja de ruta del proyecto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) sigue estas discrepancias.
 
-*Esta FAQ se ha comprobado con el código (`packages/game-config`, `packages/game-engine`, API) y, para los satélites solares, con una prueba en un servidor de prueba el 11 de octubre de 2026.*
+*Esta FAQ se ha comprobado con el código (`packages/game-config`, `packages/game-engine`, API) y, para los satélites solares, con una prueba de integración automatizada (`solar-satellites.integration.spec.ts`).*

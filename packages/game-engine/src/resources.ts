@@ -1,3 +1,5 @@
+import { PRODUCTION_CONSTANTS } from '@xnova/game-config';
+
 export interface ResourceConfig {
   baseIncome: ProductionRates;
   resourceMultiplier: number;
@@ -22,6 +24,8 @@ export interface ResourceLevels {
   metalStorage: number;
   crystalStorage: number;
   deuteriumStorage: number;
+  /** Satellites solaires en orbite de la planète : chacun fournit de l'énergie en permanence. */
+  solarSatellites?: number;
 }
 
 export interface ResourceState {
@@ -83,7 +87,8 @@ export function calculateEnergyBalance(levels: ResourceLevels) {
 
   const available =
     calculateMineOutput(20, levels.solarPlant) +
-    calculateFusionOutput(levels.fusionPlant);
+    calculateFusionOutput(levels.fusionPlant) +
+    calculateSatelliteEnergy(levels.solarSatellites ?? 0);
 
   return {
     used: Math.floor(used),
@@ -178,6 +183,12 @@ export function updateResources(input: ResourceUpdateInput): ResourceUpdateResul
 function calculateMineOutput(base: number, level: number) {
   if (level <= 0) return 0;
   return base * level * Math.pow(1.1, level);
+}
+
+/** Énergie fournie par les satellites solaires (valeur fixe par satellite : pas de température de planète). */
+export function calculateSatelliteEnergy(count: number) {
+  const satellites = Math.max(0, Math.floor(Number.isFinite(count) ? count : 0));
+  return satellites * PRODUCTION_CONSTANTS.SOLAR_SATELLITE_ENERGY;
 }
 
 function calculateFusionOutput(level: number) {

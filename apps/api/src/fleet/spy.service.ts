@@ -1,3 +1,4 @@
+import { SATELLITES_INCLUDE, countSatellites } from '../common/satellites';
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { ESPIONAGE_PROBE_ID, ESPIONAGE_TECH_ID } from '@xnova/game-config';
 import { updateResources, type ResourceLevels } from '@xnova/game-engine';
@@ -81,6 +82,7 @@ export class SpyService {
             position: fleet.toPosition,
           },
         },
+        include: SATELLITES_INCLUDE,
       });
       // Cible disparue ou devenue propre planète : les sondes rentrent sans rapport
       if (!target || target.userId === fleet.userId) return null;
@@ -110,6 +112,7 @@ export class SpyService {
         metalStorage: target.metalStorage,
         crystalStorage: target.crystalStorage,
         deuteriumStorage: target.deuteriumStorage,
+        solarSatellites: countSatellites(target),
       };
       const current = updateResources({
         resources: { metal: target.metal, crystal: target.crystal, deuterium: target.deuterium },

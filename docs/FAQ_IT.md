@@ -83,11 +83,17 @@ Per livello `n`: centrale solare `20 × n × 1,1^n`; centrale a fusione `30 × n
 **Quale centrale scegliere?**
 La centrale solare: economica e senza prerequisiti. A parità di livello la fusione produce **meno** di una solare nel motore attuale (livello 10: 488 contro 518) e ha prerequisiti costosi: oggi non conviene. ⚠️ La fusione **non consuma deuterio** (nonostante la descrizione) e la *Tecnologia energetica* non ne aumenta la produzione: è un prerequisito, non un bonus.
 
-**⚠️ I satelliti solari danno energia?**
-**No, non oggi.** Il satellite solare (212: 2 000 di cristallo e 500 di deuterio, costruibile dall'hangar livello 1) esiste, si costruisce e resta stazionato sul pianeta, e la sua descrizione dice «fornisce energia gratis» — ma il calcolo della produzione **non lo considera**. Verificato su un server di test: 10 satelliti costruiti, bilancio energetico invariato (79 disponibili prima e dopo). **Non costruirli per l'energia**: perderesti cristallo e deuterio. Usa le centrali. Il comportamento atteso (50 di energia per satellite secondo le costanti del codice) è uno scarto noto, segnalato nel registro del progetto.
+**I satelliti solari danno energia?**
+**Sì.** Appena costruito, un satellite solare (212: 2 000 di cristallo e 500 di deuterio, costruibile dall'hangar livello 1) è **direttamente in orbita attorno al pianeta** e gli fornisce in modo permanente **50 di energia**, in aggiunta alle centrali. L'energia conta dalla consegna: la produzione del tempo già trascorso non cambia. Esempio: 3 satelliti = 150 di energia. Il valore è fisso (il gioco non ha la temperatura dei pianeti).
 
-**Un satellite può essere attaccato o inviato in missione?**
-Non ha velocità: non può viaggiare. Se è stazionato su un pianeta attaccato, conta tra le unità che difendono (scafo 2 000, scudo 1, arma 1): assorbe colpi, nient'altro.
+**Quando scegliere i satelliti invece di una centrale?**
+Un satellite non consuma **nessun campo** e non ha prerequisiti, ma all'inizio costa più di una centrale solare (40 di cristallo e 10 di deuterio per punto di energia, contro poche unità di metallo e cristallo per i primi livelli di centrale). Le centrali sono migliori all'inizio; i satelliti convengono quando i campi scarseggiano o i livelli di centrale diventano costosi.
+
+**Un satellite può essere inviato su un altro pianeta?**
+**No.** Resta in orbita del pianeta dove è stato costruito: non compare nella pagina *Flotta* e il gioco rifiuta qualsiasi missione che ne contenga uno. Non può essere spostato nemmeno con lo schieramento.
+
+**Un satellite può essere distrutto?**
+Sì. Su un pianeta attaccato combatte insieme alla difesa (scafo 2 000, scudo 1, arma 1) e assorbe colpi; **un satellite distrutto non viene ricostruito** (solo le difese) e l'energia cala da quel momento. Proteggilo con la difesa.
 
 **Cosa faccio se l'energia è insufficiente?**
 Aumenta una centrale solare prima della miniera successiva. Se il livello di produzione è all'80 %, le tue miniere producono il 20 % in meno del previsto.
@@ -140,7 +146,7 @@ All'**hangar** (pagina Cantiere). L'ordine è pagato subito e costruito per lott
 | **Riciclatrice** (*Recycleur*, 209) | 10 000 / 6 000 / 2 000 | 20 000 | 2 000 | 1 / 10 / 16 000 | ⚠️ vedi sotto |
 | **Sonda spia** (*Sonde d'Espionnage*, 210) | 0 / 1 000 / 0 | 0 | 50 000 | 0 / 0 / 1 000 | spionaggio |
 | **Bombardiere** (*Bombardier*, 211) | 50 000 / 25 000 / 15 000 | 500 | 4 000 | 1 000 / 500 / 75 000 | pensato contro le difese |
-| **Satellite solare** (*Satellite Solaire*, 212) | 0 / 2 000 / 500 | 0 | 0 | 1 / 1 / 2 000 | ⚠️ nessun effetto energetico (§3) |
+| **Satellite solare** (*Satellite Solaire*, 212) | 0 / 2 000 / 500 | 0 | 0 | 1 / 1 / 2 000 | energia, resta in orbita (§3) |
 | **Corazzata** (*Destructeur*, 213) | 60 000 / 50 000 / 15 000 | 2 000 | 5 000 | 2 000 / 500 / 110 000 | combattimento pesante |
 | **Incrociatore da battaglia** (*Traqueur*, 215) | 30 000 / 40 000 / 15 000 | 10 000 | 10 000 | 700 / 400 / 70 000 | combattimento veloce |
 | **Morte nera** (*Étoile de la Mort*, 214) | 5 000 000 / 4 000 000 / 1 000 000 | 1 000 000 | 100 | 200 000 / 50 000 / 9 000 000 | definitiva; richiede hangar 12 e *Gravitone* |
@@ -195,7 +201,7 @@ Fino a **6 round**. A ogni round, ogni unità dell'attaccante e poi ogni unità 
 *Militare* (+10 % d'arma per livello), *Difesa* (+10 % di scafo), *Scudi* (+10 % di scudo), applicati a tutte le tue unità, navi **e** difese. Ogni schieramento usa i propri livelli.
 
 **Chi difende un pianeta attaccato?**
-Le **difese** e la **flotta stazionata** sul pianeta combattono insieme (compresi i satelliti solari, che servono solo da bersaglio).
+Le **difese** e la **flotta stazionata** sul pianeta combattono insieme (compresi i satelliti solari, molto fragili).
 
 **Cosa si perde e cosa si recupera?**
 - Le navi distrutte sono perse.
@@ -280,6 +286,6 @@ Si basa sulla **potenza**; il tuo rango appare nell'intestazione e nella panoram
 
 ## 11. Ciò che non esiste ancora
 
-Ufficiali, mercato, eventi, lune, missili, riciclaggio e campi di detriti, spedizioni, attacchi di gruppo, limite di flotte tramite *Informatica*, effetto del terraformatore, fuoco rapido, energia dei satelliti solari. Gli elementi corrispondenti (edifici, navi, tecnologie) compaiono a volte negli elenchi e possono essere acquistati **senza effetto**: leggi i ⚠️ qui sopra prima di investire. La roadmap del progetto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tiene traccia di questi scarti.
+Ufficiali, mercato, eventi, lune, missili, riciclaggio e campi di detriti, spedizioni, attacchi di gruppo, limite di flotte tramite *Informatica*, effetto del terraformatore, fuoco rapido. Gli elementi corrispondenti (edifici, navi, tecnologie) compaiono a volte negli elenchi e possono essere acquistati **senza effetto**: leggi i ⚠️ qui sopra prima di investire. La roadmap del progetto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tiene traccia di questi scarti.
 
-*Questa FAQ è stata verificata sul codice (`packages/game-config`, `packages/game-engine`, API) e, per i satelliti solari, con una prova su un server di test l'11 ottobre 2026.*
+*Questa FAQ è stata verificata sul codice (`packages/game-config`, `packages/game-engine`, API) e, per i satelliti solari, con un test di integrazione automatizzato (`solar-satellites.integration.spec.ts`).*

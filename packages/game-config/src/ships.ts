@@ -148,7 +148,7 @@ export const SHIPS: Record<number, Ship> = {
   212: {
     id: 212,
     name: 'Satellite Solaire',
-    description: 'Fournit de l\'énergie gratuitement',
+    description: 'Reste en orbite de la planète et lui fournit de l\'énergie (50 chacun) ; ne peut pas être envoyé',
     cost: { metal: 0, crystal: 2000, deuterium: 500 },
     stats: { hull: 2000, shield: 1, weapon: 1 },
     speed: 0, // Stationary

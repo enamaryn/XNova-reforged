@@ -13,12 +13,14 @@ import {
   DEFENSES,
   IMPLEMENTED_DEFENSES,
   SHIPS,
+  SOLAR_SATELLITE_ID,
   SINGLE_UNIT_DEFENSES,
   TECHNOLOGIES,
   type ShipCost,
 } from "@xnova/game-config";
 import { DatabaseService } from "../database/database.service";
 import { debitResources, lockPlanet } from "../common/atomic";
+import { settleBeforeSatelliteChange } from "../common/satellites";
 
 @Injectable()
 export class ShipyardService {
@@ -467,6 +469,12 @@ export class ShipyardService {
       return;
     }
 
+    // Un satellite solaire livré change l'énergie de la planète dès sa mise en orbite
+    const satelliteConfig =
+      queueEntry.shipId === SOLAR_SATELLITE_ID
+        ? await this.serverConfig.getResourceConfig()
+        : null;
+
     await this.database.$transaction(async (tx) => {
       await lockPlanet(tx, queueEntry.planetId);
       const current = await tx.shipQueue.findUnique({
@@ -498,6 +506,15 @@ export class ShipyardService {
           },
         });
         return;
+      }
+
+      if (satelliteConfig) {
+        await settleBeforeSatelliteChange(
+          tx,
+          queueEntry.planetId,
+          satelliteConfig,
+          queueEntry.amount,
+        );
       }
 
       await tx.ship.upsert({
