@@ -140,6 +140,15 @@ export default function GalaxyClient() {
                   )}
                 </div>
                 <div className="flex w-full flex-wrap items-center gap-2 text-xs text-slate-500 md:w-auto md:justify-end">
+                  {slot.debris && (
+                    <Link
+                      href={`/fleet?mission=recycle&galaxy=${galaxy}&system=${system}&position=${slot.position}`}
+                      data-testid="debris-link"
+                      className="w-full rounded-full border border-amber-500/60 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-amber-200 hover:bg-amber-500/10 sm:w-auto"
+                    >
+                      {t('galaxy.debris')} {slot.debris.metal}/{slot.debris.crystal} · {t('galaxy.recycle')}
+                    </Link>
+                  )}
                   {slot.occupied ? (
                     <>
                       {slot.isOwn ? (

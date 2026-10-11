@@ -149,7 +149,7 @@ At the **shipyard** (Shipyard page). The order is paid immediately and built in 
 | **Cruiser** (*Croiseur*, 206) | 18,000 / 6,000 / 2,000 | 800 | 15,000 | 400 / 50 / 27,000 | fast combat |
 | **Battleship** (*Vaisseau de Bataille*, 207) | 45,000 / 15,000 / 0 | 1,500 | 10,000 | 1,000 / 200 / 60,000 | fleet core |
 | **Colony ship** (*Vaisseau de Colonisation*, 208) | 10,000 / 20,000 / 10,000 | 7,500 | 2,500 | 50 / 100 / 30,000 | found a colony (consumed) |
-| **Recycler** (*Recycleur*, 209) | 10,000 / 6,000 / 2,000 | 20,000 | 2,000 | 1 / 10 / 16,000 | ⚠️ see below |
+| **Recycler** (*Recycleur*, 209) | 10,000 / 6,000 / 2,000 | 20,000 | 2,000 | 1 / 10 / 16,000 | see below |
 | **Espionage probe** (*Sonde d'Espionnage*, 210) | 0 / 1,000 / 0 | 0 | 50,000 | 0 / 0 / 1,000 | espionage |
 | **Bomber** (*Bombardier*, 211) | 50,000 / 25,000 / 15,000 | 500 | 4,000 | 1,000 / 500 / 75,000 | meant against defenses |
 | **Solar satellite** (*Satellite Solaire*, 212) | 0 / 2,000 / 500 | 0 | 0 | 1 / 1 / 2,000 | energy, stays in orbit (§3) |
@@ -165,8 +165,8 @@ The small cargo early on (cheap, available early), then the large cargo (4× the
 **How do I spy?**
 With **espionage probes**: the espionage mission accepts only probes. A probe costs 1,000 crystal and flies very fast; probes **always come back** (they are not destroyed) and the target **is not warned**. The report detail depends on a score: `score = (your Espionage − the target's) + (number of probes − 1)`. **Resources** are always visible; from **1** the **fleet** is added, from **3** the **defenses and buildings**, from **5** the **technologies**. Example: at equal level, 6 probes are enough to see everything.
 
-**⚠️ What is the recycler for?**
-Nothing today: combat computes debris (30 % of the metal and crystal of destroyed **ships**) but there is no debris field and no recycling mission. Do not build recyclers for now.
+**What is the recycler for?**
+It harvests **debris fields**. After every combat, 30 % of the metal and crystal of destroyed **ships** (both sides, not defenses) stays in orbit at the target's coordinates; fields add up from fight to fight and show in the Galaxy ("Recycle" button). Send recyclers alone with the **Recycling** mission: on arrival they collect up to 20,000 units each (metal and crystal pro rata), then return with the haul. No cargo can be loaded; whatever is left stays in the field.
 
 **Do ships have "rapid fire"?**
 Yes. When a ship hits a target of a type it has rapid fire against, with value `n`, it **fires again with probability (n − 1) / n**, and so on: on average `n` shots against that type. Other targets give no extra shots. This also applies to the stationed fleet that defends.
@@ -189,7 +189,7 @@ Other ships (including the Death star, for now) have no rapid fire.
 ## 6. Fleets and missions
 
 **Which missions exist?**
-**Transport** (delivers cargo, then the fleet returns), **Deploy** (settles fleet and cargo on *your* other planet, no return), **Attack**, **Espionage**, **Colonization**. Recycling, expedition, group attack, hold position and destroy are refused by the game without charging anything.
+**Transport** (delivers cargo, then the fleet returns), **Deploy** (settles fleet and cargo on *your* other planet, no return), **Attack**, **Espionage**, **Colonization**, **Recycling** (recyclers only, towards a debris field). Expedition, group attack, hold position and destroy are refused by the game without charging anything.
 
 **How are flight time and fuel computed?**
 Distance: `√(Δgalaxy² × 20,000 + Δsystem² × 95 + Δposition² × 5)`. Fleet speed: that of its **slowest ship** (with drive bonuses). Duration: `(35,000 / speed %) × √(distance × 10 / speed) + 10` seconds, divided by the server fleet speed. Fuel (deuterium, charged at **departure**): `Σ count × consumption × (distance / 35,000) × (speed / 1,000 + 1)²`. Example with 10 small cargos: same system (4 positions) 0 deuterium; 10 systems away 10; another galaxy 14. A lower speed lengthens the flight (10 % to 100 %).
@@ -222,7 +222,7 @@ The planet's **defenses** and **stationed fleet** fight together (including sola
 **What is lost and what is recovered?**
 - Destroyed ships are lost.
 - Destroyed **defenses** are rebuilt with a **70 % chance** each after the fight.
-- A "debris field" is computed (30 % of the metal and crystal cost of lost ships) and shown in the report, but cannot be collected (§5).
+- A "debris field" is created (30 % of the metal and crystal cost of lost ships), shown in the report and in the Galaxy, and can be harvested by recyclers (§5).
 - **Loot** (if the attacker wins): up to **50 %** of each of the target's resources, limited to the free capacity of the surviving ships.
 
 **How do I win a fight?**
@@ -303,6 +303,6 @@ It is based on **power**; your rank appears in the header and the overview. Losi
 
 ## 11. What does not exist yet
 
-Officers, market, events, moons, missiles, recycling and debris fields, expeditions, group attacks, hold position. Buildings and technologies that depend on them (alliance depot, missile silo, moon buildings, research network, expedition) are not offered. The recycler exists but is useless until recycling exists: read the ⚠️ above before investing. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
+Officers, market, events, moons, missiles, expeditions, group attacks, hold position. Buildings and technologies that depend on them (alliance depot, missile silo, moon buildings, research network, expedition) are not offered. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
 
 *This FAQ was checked against the code (`packages/game-config`, `packages/game-engine`, API) and, for solar satellites, by an automated integration test (`solar-satellites.integration.spec.ts`).*

@@ -147,7 +147,7 @@ Au **Hangar** (page Chantier spatial). La commande est payée tout de suite et c
 | **Croiseur** (206) | 18 000 / 6 000 / 2 000 | 800 | 15 000 | 400 / 50 / 27 000 | combat rapide |
 | **Vaisseau de bataille** (207) | 45 000 / 15 000 / 0 | 1 500 | 10 000 | 1 000 / 200 / 60 000 | cœur de flotte |
 | **Vaisseau de colonisation** (208) | 10 000 / 20 000 / 10 000 | 7 500 | 2 500 | 50 / 100 / 30 000 | fonder une colonie (consommé) |
-| **Recycleur** (209) | 10 000 / 6 000 / 2 000 | 20 000 | 2 000 | 1 / 10 / 16 000 | ⚠️ voir plus bas |
+| **Recycleur** (209) | 10 000 / 6 000 / 2 000 | 20 000 | 2 000 | 1 / 10 / 16 000 | voir plus bas |
 | **Sonde d'espionnage** (210) | 0 / 1 000 / 0 | 0 | 50 000 | 0 / 0 / 1 000 | espionnage |
 | **Bombardier** (211) | 50 000 / 25 000 / 15 000 | 500 | 4 000 | 1 000 / 500 / 75 000 | prévu contre les défenses |
 | **Satellite solaire** (212) | 0 / 2 000 / 500 | 0 | 0 | 1 / 1 / 2 000 | énergie, reste en orbite (§3) |
@@ -163,8 +163,8 @@ Le petit transporteur au début (peu cher, accessible tôt), puis le grand trans
 **Comment espionner ?**
 Avec des **sondes d'espionnage** : la mission d'espionnage n'accepte que des sondes. Une sonde coûte 1 000 cristal et vole très vite ; les sondes **rentrent toujours** (elles ne sont pas détruites) et la cible **n'est pas prévenue**. Le détail du rapport dépend d'un score : `score = (votre Espionnage − celui de la cible) + (nombre de sondes − 1)`. Les **ressources** sont toujours visibles ; à partir de **1** s'ajoute la **flotte**, à partir de **3** les **défenses et bâtiments**, à partir de **5** les **technologies**. Exemple : à niveau égal, 6 sondes suffisent pour tout voir.
 
-**⚠️ À quoi sert le recycleur ?**
-Aujourd'hui, à rien : le combat calcule des débris (30 % du métal et du cristal des **vaisseaux** détruits) mais il n'existe ni champ de débris ni mission de recyclage. Ne construisez pas de recycleurs pour l'instant.
+**À quoi sert le recycleur ?**
+Il récolte les **champs de débris**. Après chaque combat, 30 % du métal et du cristal des **vaisseaux** détruits (des deux camps, pas des défenses) restent en orbite aux coordonnées de la cible ; ils s'additionnent d'un combat à l'autre et apparaissent dans la Galaxie (bouton « Recycler »). Envoyez des recycleurs seuls avec la mission **Recyclage** : à l'arrivée, ils collectent jusqu'à 20 000 unités chacun (métal et cristal au prorata), puis rentrent avec la récolte. Sans cargaison embarquée ; le reste du champ demeure disponible.
 
 **Les vaisseaux ont-ils un « tir rapide » ?**
 Oui. Quand un vaisseau touche une cible d'un type contre lequel il a un tir rapide de valeur `n`, il **tire de nouveau avec la probabilité (n − 1) / n**, et ainsi de suite : en moyenne `n` tirs contre ce type. Les autres cibles ne donnent aucun tir supplémentaire. Cela vaut aussi pour la flotte stationnée qui défend.
@@ -187,7 +187,7 @@ Mission *Colonisation* avec un vaisseau de colonisation vers une **position libr
 ## 6. Flottes et missions
 
 **Quelles missions existent ?**
-**Transport** (livre la cargaison puis la flotte rentre), **Déploiement** (installe flotte et cargaison sur *votre* autre planète, sans retour), **Attaque**, **Espionnage**, **Colonisation**. Recyclage, expédition, attaque groupée, maintien de position et destruction sont refusés par le jeu sans rien débiter.
+**Transport** (livre la cargaison puis la flotte rentre), **Déploiement** (installe flotte et cargaison sur *votre* autre planète, sans retour), **Attaque**, **Espionnage**, **Colonisation**, **Recyclage** (recycleurs seuls, vers un champ de débris). Expédition, attaque groupée, maintien de position et destruction sont refusés par le jeu sans rien débiter.
 
 **Comment sont calculés la durée et le carburant d'un vol ?**
 Distance : `√(Δgalaxie² × 20 000 + Δsystème² × 95 + Δposition² × 5)`. Vitesse de la flotte : celle de son **vaisseau le plus lent** (avec les bonus de réacteurs). Durée : `(35 000 / % de vitesse) × √(distance × 10 / vitesse) + 10` secondes, divisée par la vitesse de flotte du serveur. Carburant (deutérium, débité au **départ**) : `Σ nombre × consommation × (distance / 35 000) × (vitesse / 1 000 + 1)²`. Exemple avec 10 petits transporteurs : même système (4 positions) 0 deutérium ; 10 systèmes plus loin 10 ; autre galaxie 14. Le choix d'une vitesse plus basse allonge le vol (de 10 % à 100 %).
@@ -220,7 +220,7 @@ Les **défenses** et la **flotte stationnée** sur la planète combattent ensemb
 **Que perd-on et que récupère-t-on ?**
 - Les vaisseaux détruits sont perdus.
 - Les **défenses** détruites sont reconstruites avec **70 % de chances** chacune après le combat.
-- Un « champ de débris » est calculé (30 % du coût en métal et cristal des vaisseaux perdus) et affiché dans le rapport, mais ne peut pas être récupéré (§5).
+- Un « champ de débris » est créé (30 % du coût en métal et cristal des vaisseaux perdus), affiché dans le rapport et dans la Galaxie, et peut être récolté par des recycleurs (§5).
 - **Butin** (si l'attaquant gagne) : jusqu'à **50 %** de chaque ressource de la cible, limité à la capacité libre des vaisseaux survivants.
 
 **Comment gagner un combat ?**
@@ -301,6 +301,6 @@ Il est établi sur la **puissance** ; votre rang apparaît dans l'en-tête et la
 
 ## 11. Ce qui n'existe pas encore
 
-Officiers, marché, événements, lunes, missiles, recyclage et champs de débris, expéditions, attaques groupées, maintien de position. Les bâtiments et technologies qui en dépendent (dépôt d'alliance, silo de missiles, bâtiments lunaires, réseau de recherche, expédition) ne sont pas proposés. Le recycleur existe mais ne sert à rien tant que le recyclage n'existe pas : lisez les ⚠️ ci-dessus avant d'investir. La feuille de route du projet ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) suit ces écarts.
+Officiers, marché, événements, lunes, missiles, expéditions, attaques groupées, maintien de position. Les bâtiments et technologies qui en dépendent (dépôt d'alliance, silo de missiles, bâtiments lunaires, réseau de recherche, expédition) ne sont pas proposés. La feuille de route du projet ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) suit ces écarts.
 
 *Cette FAQ a été vérifiée contre le code (`packages/game-config`, `packages/game-engine`, API) et, pour les satellites solaires, par un test automatisé d'intégration (`solar-satellites.integration.spec.ts`).*

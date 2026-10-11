@@ -1,6 +1,12 @@
 import { apiClient } from './client';
 
+export interface GalaxyDebris {
+  metal: number;
+  crystal: number;
+}
+
 export interface GalaxyPosition {
+  debris?: GalaxyDebris | null;
   position: number;
   occupied: boolean;
   planetId?: string;

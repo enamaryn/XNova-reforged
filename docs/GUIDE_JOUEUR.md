@@ -53,7 +53,7 @@ Une flotte en vol peut être **rappelée** depuis *Mouvements*. Les résultats a
 ## 6. Combat
 
 - 6 rounds au maximum ; le **tir rapide** n'est pas encore appliqué par le moteur de combat.
-- 30 % du coût des vaisseaux détruits devient des **débris**.
+- 30 % du coût des vaisseaux détruits devient des **débris**, récoltables par des recycleurs (mission Recyclage).
 - Chaque **défense** détruite est réparée avec 70 % de chances après le combat.
 - **Butin** : jusqu'à 50 % des ressources de la cible, **limité à la place restante dans les vaisseaux survivants** du vainqueur ; le reste n'est pas emporté.
 - Conseils : espionnez avant d'attaquer, vérifiez la capacité de cargo, ne laissez pas vos ressources s'accumuler.

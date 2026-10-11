@@ -52,6 +52,7 @@ export default function MovementPage() {
       4: t('fleet.missions.deploy'),
       6: t('fleet.missions.spy'),
       7: t('fleet.missions.colonize'),
+      8: t('fleet.missions.recycle'),
     }),
     [t],
   );

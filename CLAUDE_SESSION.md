@@ -5,6 +5,16 @@
 
 ---
 
+## Session — recycleurs : champs de débris et recyclage (PR B)
+
+**Date :** 11 octobre 2026. **Suite de la PR A** (écart « éléments constructibles sans effet »).
+
+- [x] Table `DebrisField` (migration `20261011200000_debris_fields`) ; chaque combat y cumule 30 % du métal/cristal des vaisseaux perdus, aux coordonnées de la cible.
+- [x] Mission **Recyclage** (id 8, `IMPLEMENTED_MISSIONS`) : recycleurs seuls, vers un champ non vide, sans cargaison ; à l'arrivée, collecte sous verrou `FOR UPDATE` limitée à la capacité (proportionnelle métal/cristal), retour crédité comme cargaison.
+- [x] Galaxie : `debris` dans `/galaxy/:g/:s` et bouton « Recycler » (5 langues) ; page Flotte et Mouvements prennent en charge la mission.
+- [x] Tests : intégration `recycling` (4 : dépôt par un combat, capacité et unicité, flottes simultanées, validation d'envoi).
+- [x] FAQ (5 langues) et ROADMAP_MVP mis à jour : l'écart « éléments sans effet » est clos.
+
 ## Session — correction des écarts de gameplay (PR A)
 
 **Date :** 11 octobre 2026. **Demande du propriétaire :** corriger les 4 écarts constatés dans la FAQ.
@@ -15,7 +25,7 @@
 - [x] **Ordinateur** : flottes en vol = 1 + niveau (verrou joueur, `fleetSlots` dans `/fleet/available`, compteur sur la page Flotte, rafraîchi après envoi).
 - [x] **Éléments masqués et refusés** : dépôt d'alliance, silo, bâtiments lunaires, réseau de recherche, expédition (`IMPLEMENTED_BUILDINGS`/`IMPLEMENTED_TECHNOLOGIES`) ; descriptions corrigées.
 - [x] Tests : unitaires 94/94, intégration 293/293 (`game-rules-corrections` : 7 ; `combat-rapidfire` : 6), E2E 42, FAQ (5 langues) et roadmap mis à jour.
-- **Reste (PR B)** : champs de débris et mission de recyclage (recycleur).
+- PR B (recycleur) : voir la session ci-dessus.
 
 ## Session — satellites solaires et page FAQ
 
