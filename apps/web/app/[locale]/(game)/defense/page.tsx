@@ -201,7 +201,7 @@ export default function DefensePage() {
                 <div className="flex justify-between">
                   <span>{t("unit.estimatedTime")}</span>
                   <span className="text-slate-200">
-                    {formatDuration(defense.buildTime * amount)}
+                    {formatDuration(Math.max(1, Math.floor(defense.unitTime * amount)))}
                   </span>
                 </div>
               </div>

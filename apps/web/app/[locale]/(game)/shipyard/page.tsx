@@ -178,7 +178,8 @@ export default function ShipyardPage() {
             crystal: ship.cost.crystal * amount,
             deuterium: ship.cost.deuterium * amount,
           };
-          const totalTime = ship.buildTime * amount;
+          // Même formule que la file du serveur : durée de l'unité sans arrondi × quantité, au moins 1 s
+          const totalTime = Math.max(1, Math.floor(ship.unitTime * amount));
           const hasResources =
             resources &&
             resources.metal >= totalCost.metal &&
@@ -240,7 +241,7 @@ export default function ShipyardPage() {
                 </div>
                 <div className="flex items-center justify-between text-[11px] text-slate-500">
                   <span>{t("unit.unitDuration")}</span>
-                  <span>{formatDuration(ship.buildTime)}</span>
+                  <span>{formatDuration(Math.max(1, ship.unitTime))}</span>
                 </div>
               </div>
 

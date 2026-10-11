@@ -136,7 +136,7 @@ Iperspazio (114), Laser (120), Ioni (121), Plasma (122) e Gravitone (199) sono p
 ## 5. Navi
 
 **Dove e come si costruiscono le navi?**
-All'**hangar** (pagina Cantiere). L'ordine è pagato subito e costruito per lotti; un ordine **in attesa** può essere ritirato (90 % rimborsato), un lotto già avviato termina normalmente. La durata dipende dal costo e dal livello di hangar: `(metallo + cristallo) / (2 500 × (1 + hangar) × 2^naniti)` secondi per unità, poi divisi per la velocità del server.
+All'**hangar** (pagina Cantiere). L'ordine è pagato subito e costruito per lotti; un ordine **in attesa** può essere ritirato (90 % rimborsato), un lotto già avviato termina normalmente. La durata dipende dal costo e dal livello di hangar: `(metallo + cristallo) / (2 500 × (1 + hangar) × 2^naniti)` **ore** per unità, divise per la velocità del server, con un **minimo** di `(metallo + cristallo) / 660` secondi a ×50 (5 s per un caccia leggero, circa 3 h 47 per una Morte Nera): hangar e naniti non scendono mai sotto. A ×50 un caccia leggero richiede circa 48 s senza tecnologia, poi 5 s con tutto sviluppato.
 
 **Quali navi esistono e a cosa servono?**
 

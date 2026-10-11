@@ -134,7 +134,7 @@ Hyperespace (114), Laser (120), Ions (121), Plasma (122) et Graviton (199) sont 
 ## 5. Vaisseaux
 
 **Où construit-on les vaisseaux et comment ?**
-Au **Hangar** (page Chantier spatial). La commande est payée tout de suite et construite par lots ; une commande **en attente** peut être retirée (90 % remboursés), un lot déjà démarré termine normalement. La durée dépend du coût et du niveau de hangar : `(métal + cristal) / (2 500 × (1 + hangar) × 2^nanites)` secondes pour une unité, puis divisé par la vitesse du serveur.
+Au **Hangar** (page Chantier spatial). La commande est payée tout de suite et construite par lots ; une commande **en attente** peut être retirée (90 % remboursés), un lot déjà démarré termine normalement. La durée dépend du coût et du niveau de hangar : `(métal + cristal) / (2 500 × (1 + hangar) × 2^nanites)` **heures** pour une unité, divisées par la vitesse du serveur, avec un **plancher** de `(métal + cristal) / 660` secondes à ×50 (5 s pour un chasseur léger, environ 3 h 47 pour une Étoile de la Mort) : hangar et nanites ne descendent jamais en dessous. À ×50, un chasseur léger demande environ 48 s sans technologie, puis 5 s une fois tout développé.
 
 **Quels sont les vaisseaux et à quoi servent-ils ?**
 

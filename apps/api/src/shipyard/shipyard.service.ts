@@ -17,6 +17,8 @@ import {
   SINGLE_UNIT_DEFENSES,
   TECHNOLOGIES,
   type ShipCost,
+  calculateShipyardBatchSeconds,
+  calculateShipyardUnitSeconds,
 } from "@xnova/game-config";
 import { DatabaseService } from "../database/database.service";
 import { debitResources, lockPlanet } from "../common/atomic";
@@ -66,16 +68,14 @@ export class ShipyardService {
 
     const ships = Object.values(SHIPS).map((ship) => {
       const cost = this.applyCostMultiplier(ship.cost, shipCostMultiplier);
-      const buildTime = Math.max(
-        1,
-        Math.floor(
-          this.getShipBuildTimeSeconds({
-            cost,
-            shipyardLevel: planet.shipyard,
-            naniteLevel: planet.naniteFactory,
-          }) / gameSpeed,
-        ),
-      );
+      // Durée d'une unité sans arrondi : le total d'un lot est max(1, floor(unité × quantité)), comme la file
+      const unitTime = calculateShipyardUnitSeconds({
+        cost,
+        shipyardLevel: planet.shipyard,
+        naniteLevel: planet.naniteFactory,
+        gameSpeed,
+      });
+      const buildTime = Math.max(1, Math.floor(unitTime));
 
       const requirements = this.checkShipRequirements(
         ship.id,
@@ -94,6 +94,7 @@ export class ShipyardService {
         description: itemDescription(ship),
         cost,
         buildTime,
+        unitTime,
         currentAmount: shipAmounts.get(ship.id) ?? 0,
         canBuild: requirements.canBuild && canAfford,
         canAfford,
@@ -153,16 +154,13 @@ export class ShipyardService {
     const defenses = IMPLEMENTED_DEFENSES.map((id) => {
       const defense = DEFENSES[id];
       const cost = this.applyCostMultiplier(defense.cost, shipCostMultiplier);
-      const buildTime = Math.max(
-        1,
-        Math.floor(
-          this.getShipBuildTimeSeconds({
-            cost,
-            shipyardLevel: planet.shipyard,
-            naniteLevel: planet.naniteFactory,
-          }) / gameSpeed,
-        ),
-      );
+      const unitTime = calculateShipyardUnitSeconds({
+        cost,
+        shipyardLevel: planet.shipyard,
+        naniteLevel: planet.naniteFactory,
+        gameSpeed,
+      });
+      const buildTime = Math.max(1, Math.floor(unitTime));
       const requirements = this.checkRequirements(
         id,
         this.extractBuildingLevels(planet),
@@ -186,6 +184,7 @@ export class ShipyardService {
         description: itemDescription(defense),
         cost,
         buildTime,
+        unitTime,
         stats: defense.stats,
         currentAmount,
         inQueue,
@@ -281,14 +280,15 @@ export class ShipyardService {
       throw new BadRequestException("Ressources insuffisantes");
     }
 
-    const timePerUnit = this.getShipBuildTimeSeconds({
-      cost: unitCost,
-      shipyardLevel: planet.shipyard,
-      naniteLevel: planet.naniteFactory,
-    });
-
-    const totalTimeSeconds = timePerUnit * safeAmount;
-    const adjustedTime = Math.max(1, Math.floor(totalTimeSeconds / gameSpeed));
+    const adjustedTime = calculateShipyardBatchSeconds(
+      {
+        cost: unitCost,
+        shipyardLevel: planet.shipyard,
+        naniteLevel: planet.naniteFactory,
+        gameSpeed,
+      },
+      safeAmount,
+    );
 
     const now = new Date();
 
@@ -583,17 +583,6 @@ export class ShipyardService {
         data: { startTime: entry.startTime, endTime: entry.endTime },
       });
     }
-  }
-
-  private getShipBuildTimeSeconds(params: {
-    cost: ShipCost;
-    shipyardLevel: number;
-    naniteLevel?: number;
-  }): number {
-    const { cost, shipyardLevel, naniteLevel = 0 } = params;
-    const baseDivisor = 2500 * (1 + shipyardLevel) * Math.pow(2, naniteLevel);
-    const buildTime = (cost.metal + cost.crystal) / baseDivisor;
-    return Math.max(1, Math.floor(buildTime));
   }
 
   private applyCostMultiplier(cost: ShipCost, multiplier: number): ShipCost {
