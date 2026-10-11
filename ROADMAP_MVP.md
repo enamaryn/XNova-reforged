@@ -1,12 +1,12 @@
 # Roadmap MVP — stabilisation après double audit
 
-Mise à jour : 11 octobre 2026. **Statut : alpha privée `v0.2.0` (release du propriétaire ; première alpha taguée `v0.2.0-alpha.1`, [PR #36](https://github.com/enamaryn/XNova-reforged/pull/36) fusionnée) ; sortie publique non validée.** 19 constats clos, dont **SCOPE-01** et **SEC-01** (voir le [suivi des clôtures](docs/DOUBLE_AUDIT_2026-10.md)) ; **SCOPE-02 clos** le 10 octobre 2026 ; **OPS-03 clos** le 11 octobre 2026 (réserves : uptime et charge sur le serveur du propriétaire). Aucun constat du registre n'est ouvert. **SMTP réel validé par le propriétaire** (PRE-01, déclaration à étayer par la preuve d'envoi lors de la mise en production) ; dette technique d'outillage (Jest 30, Tailwind 4, eslint-config-next 16) à terminer avant la bêta publique.
+Mise à jour : 12 octobre 2026. **Statut : alpha privée `v0.2.0` (release du propriétaire ; première alpha taguée `v0.2.0-alpha.1`, [PR #36](https://github.com/enamaryn/XNova-reforged/pull/36) fusionnée) ; sortie publique non validée.** 19 constats clos, dont **SCOPE-01** et **SEC-01** (voir le [suivi des clôtures](docs/DOUBLE_AUDIT_2026-10.md)) ; **SCOPE-02 clos** le 10 octobre 2026 ; **OPS-03 clos** le 11 octobre 2026 (réserves : uptime et charge sur le serveur du propriétaire). Aucun constat du registre n'est ouvert. **SMTP réel validé par le propriétaire** (PRE-01, déclaration à étayer par la preuve d'envoi lors de la mise en production) ; dette technique d'outillage (Jest 30, Tailwind 4, eslint-config-next 16) à terminer avant la bêta publique.
 
 Le socle existe et démarre sur LXC, mais aucun pourcentage global d'achèvement n'est retenu. Le [registre du double audit](docs/DOUBLE_AUDIT_2026-10.md) est la référence des constats, preuves et critères d'acceptation. La [roadmap historique](docs/history/ROADMAP_MVP_AVANT_AUDIT.md) conserve les anciens sprints ; ses cases cochées ne valent pas validation actuelle.
 
 ## SUPERVISION-LOCAL — supervision locale intégrée, Sentry externe optionnel
 
-Demande du propriétaire (11 octobre 2026) : jeu administrable sans service extérieur. **Implémentation prête pour revue** (branche `claude/supervision-locale`), ni déployée ni fusionnée.
+Demande du propriétaire (11 octobre 2026) : jeu administrable sans service extérieur. **Fusionnée ([PR #56](https://github.com/enamaryn/XNova-reforged/pull/56)), correctif de la carte « Mémoire et charge » en LXC ([PR #57](https://github.com/enamaryn/XNova-reforged/pull/57)) ; **validée par le propriétaire sur son serveur** (mise à jour, onglet Supervision, test d'envoi d'email) le 11 octobre 2026.
 
 - [x] Journal local d'incidents (migration `20261012100000_local_supervision`) : empreinte stable, regroupement atomique `ON CONFLICT`, statuts nouveau/consulté/résolu/ignoré, réouverture à la réapparition, masquage centralisé (mots de passe, JWT, cookies, DSN, SMTP, messages privés, emails), rétention 30 j, plafond d'incidents, purge automatique horaire.
 - [x] Santé locale : PostgreSQL, Redis, API, site web, WebSockets, SMTP (dernier test), disque, mémoire/charge, tâches planifiées, files de jeu, version/commit/redémarrage/dernière sauvegarde ; contrôles parallèles et indépendants, timeout court.
@@ -15,7 +15,7 @@ Demande du propriétaire (11 octobre 2026) : jeu administrable sans service ext�
 - [x] Sentry optionnel : DSN chiffrés au repos (`SECRETS_ENCRYPTION_KEY`), jamais renvoyés ni journalisés ; priorité variable d'environnement > configuration chiffrée > désactivé ; SDK navigateur initialisé à l'exécution via `GET /monitoring/public-config`, sans recompilation ; aucun `SENTRY_AUTH_TOKEN` demandé.
 - [x] Compatibilité : installations existantes sans action (supervision locale active par défaut, variables Sentry existantes conservées).
 - [x] Tests : unitaires (`supervision-core`), intégration PostgreSQL (`supervision.integration`, 34 scénarios), E2E Chromium (`admin-supervision`, assistant), mobile 320/390 px et PC en 5 langues (`tests/mobile-ui/supervision.spec.ts`). Résultats exacts dans la PR.
-- [ ] Validation sur le serveur de test du propriétaire (procédure dans la PR).
+- [x] Validation sur le serveur du propriétaire (11 octobre 2026). Note LXC : la charge CPU n'est qu'indicative (elle reflète l'hôte) ; seule la mémoire disponible < 5 % rend la carte « Dégradé ».
 
 ## Développement commandant et production — issue #32
 
@@ -143,6 +143,8 @@ Constatés dans le code, le satellite solaire par un essai sur serveur de test ;
 - [x] Documentation README, guide joueur (5 langues), endpoints (`GET /progression/onboarding` inclus) et configuration (`docs/BALANCE.md`, `.env.example`) synchronisés avec le périmètre livré le 10 octobre 2026.
 
 ## État des vérifications disponibles
+
+**Mise à jour du 11 octobre 2026 (CI GitHub verte sur `main` à la fusion de la PR #56)** : unitaires API 138/138 (18 suites), intégration PostgreSQL 344 tests (dont 34 de la supervision), E2E Chromium 46 réussis sur base vierge (assistant compris), mobile supervision 18 réussis (390, 320 px, PC × 5 langues), audit de production : 3 modérées, 0 haute. Le tableau ci-dessous date du 10 octobre et reste indicatif pour les autres lignes.
 
 Dernières exécutions locales (10 octobre 2026, environnement de développement de la session, PostgreSQL 16 et Redis locaux) ; la **CI GitHub n'a pas encore tourné sur ce lot** (dernière CI connue : verte sur `main` à la fusion de la PR #36).
 
