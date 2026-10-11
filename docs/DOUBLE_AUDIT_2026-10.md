@@ -41,7 +41,7 @@ Règle de clôture : lien PR/commit + test + résultat de validation. « Preuve 
 | QUAL-02 | Clos | [#11](https://github.com/enamaryn/XNova-reforged/pull/11) | E2E 17/17 en local et en CI ; intégration sur bases vierges | `combat.service.spec.ts` mocke le moteur (couvert par les tests GAME-03) ; couverture de code non mesurée |
 | OPS-01 | Clos | [#12](https://github.com/enamaryn/XNova-reforged/pull/12) | job CI `database` (28 contrôles) | sauvegardes planifiées non chiffrées ; baseline à exécuter sur les environnements existants ; aucune restauration d'une sauvegarde de production réelle |
 | OPS-02 | Clos | [#13](https://github.com/enamaryn/XNova-reforged/pull/13) | `ops02-registration` (9) | univers presque saturé : 503 après 10 tentatives |
-| OPS-03 | **Ouvert** | — | — | seuils de charge à fixer avant exécution |
+| OPS-03 | **Ouvert (charge faite)** | — | `docs/LOAD_TEST.md` | seuils fixés avant exécution, charge 200 joueurs ×50 respectée ; Lighthouse, uptime, refus interjoueur à faire |
 
 Un constat « clos » signifie : correctif fusionné, tests passant en CI, réserves listées. Les réserves et les décisions par défaut ne sont pas des preuves de conformité aux règles voulues ; elles restent à valider.
 
@@ -239,7 +239,7 @@ Principe : ne pas appliquer ces migrations à l'aveugle (règle du registre) ; m
 - **Constat :** 100 joueurs, latences, uptime, couverture et Lighthouse étaient des objectifs présentés comme acquis.
 - **Périmètre :** `ROADMAP_MVP.md`, `docs/INTEGRATION_TESTS.md`.
 - **Acceptation :** Rapport daté avec matériel, configuration, données, durée, p50/p95/p99 et erreurs ; seuils définis avant essai ; parcours joueur complet et sauvegarde/rollback validés.
-- **État :** ouvert. **Avancement du 10 octobre 2026 :** parcours complet inscription → rapport de mission prouvé à ×50 (simulation API 3 h et E2E navigateur). Reste : 100 joueurs simulés avec p50/p95/p99, WebSocket sous charge, Lighthouse, couverture, uptime, restauration d'une vraie sauvegarde, parcours social et refus interjoueur. Clôture : lien PR/commit + test et résultat requis.
+- **État :** ouvert. **Charge du 10 octobre 2026 :** 200 joueurs simulés à ×50 (seuils fixés avant exécution dans `docs/LOAD_TEST.md`) : 49 515 requêtes, 0 erreur, lectures p95 46 ms / p99 97 ms, écritures p95 35 ms / p99 121 ms, 200/200 WebSocket tenues, `/health` sans échec, sauvegarde puis restauration à comptages identiques ; couverture unitaire de l'API 52,8 %. Limites : machine unique, limites de débit relevées, écritures de recherche/chantier/flotte uniquement refusées (chemin de succès non exercé). **Avancement antérieur :** parcours complet inscription → rapport de mission prouvé à ×50 (simulation API 3 h et E2E navigateur). Reste : Lighthouse, uptime en production, refus interjoueur, chemin de succès des écritures sous charge, mesure sur le serveur du propriétaire. Clôture : lien PR/commit + test et résultat requis.
 
 ## Nuances à conserver
 
