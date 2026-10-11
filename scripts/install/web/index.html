@@ -3,70 +3,76 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Installation XNova Reforged</title>
+  <title data-i18n="title">Installation XNova Reforged</title>
   <link rel="stylesheet" href="/bootstrap/ui.css">
+  <script src="/bootstrap/i18n.js" defer></script>
   <script src="/bootstrap/ui.js" defer></script>
 </head>
 <body>
   <main>
     <p class="eyebrow">XNOVA REFORGED</p>
-    <h1>Installons votre serveur.</h1>
-    <p>La base, la configuration et les services seront préparés ici. Vous configurerez ensuite les emails et votre compte administrateur.</p>
     <p id="error" role="alert" hidden></p>
-    <form id="auth">
-      <label for="code">Code d’accès temporaire</label>
+    <section id="language" aria-labelledby="language-title">
+      <p id="language-title" class="language-title" data-i18n="langTitle">Langue de l’installation</p>
+      <div id="languages" class="languages" role="group" aria-labelledby="language-title"></div>
+      <p class="hint" data-i18n="langHint">Cette langue devient aussi la langue par défaut du jeu, du serveur et des emails.</p>
+    </section>
+    <h1 data-i18n="h1">Installons votre serveur.</h1>
+    <p data-i18n="intro">La base, la configuration et les services seront préparés ici. Vous configurerez ensuite les emails et votre compte administrateur.</p>
+    <form id="auth" novalidate>
+      <label for="code" data-i18n="authLabel">Code d’accès temporaire</label>
       <input id="code" type="password" required autocomplete="off" spellcheck="false">
-      <p class="hint">Recopiez le code affiché au lancement de l’installateur sur le serveur.</p>
-      <button>Ouvrir l’assistant</button>
+      <p class="hint" data-i18n="authHint">Recopiez le code affiché au lancement de l’installateur sur le serveur.</p>
+      <button id="auth-button" data-i18n="authButton">Ouvrir l’assistant</button>
     </form>
-    <form id="configuration" hidden>
-      <h2>Votre serveur</h2>
-      <label for="mode">Utilisation</label>
-      <select id="mode"><option value="production">Production</option><option value="development">Développement / test</option></select>
-      <label for="url">Adresse publique du site</label>
+    <form id="configuration" hidden novalidate>
+      <h2 data-i18n="server">Votre serveur</h2>
+      <label for="mode" data-i18n="mode">Utilisation</label>
+      <select id="mode"><option value="production" data-i18n="modeProduction">Production</option><option value="development" data-i18n="modeDevelopment">Développement / test</option></select>
+      <label for="url" data-i18n="url">Adresse publique du site</label>
       <input id="url" type="url" placeholder="https://jeu.exemple.fr" required>
-      <p class="hint">L’adresse que les joueurs utiliseront, sans chemin. HTTPS est obligatoire en production.</p>
+      <p class="hint" data-i18n="urlHint">L’adresse que les joueurs utiliseront, sans chemin. HTTPS est obligatoire en production.</p>
 
-      <h2>Base de données</h2>
-      <label for="database">Où stocker les données ?</label>
-      <select id="database"><option value="local">Créer une base locale automatiquement</option><option value="external">Utiliser une base PostgreSQL externe</option></select>
-      <p id="local-help" class="hint">La base, son utilisateur et son mot de passe seront créés sur ce serveur. Les secrets seront générés et enregistrés dans sa configuration.</p>
+      <h2 data-i18n="database">Base de données</h2>
+      <label for="database" data-i18n="databaseLabel">Où stocker les données ?</label>
+      <select id="database"><option value="local" data-i18n="databaseLocal">Créer une base locale automatiquement</option><option value="external" data-i18n="databaseExternal">Utiliser une base PostgreSQL externe</option></select>
+      <p id="local-help" class="hint" data-i18n="localHelp">La base, son utilisateur et son mot de passe seront créés sur ce serveur. Les secrets seront générés et enregistrés dans sa configuration.</p>
       <div id="external-fields" hidden>
-        <label for="database-url">URL de connexion PostgreSQL</label>
+        <label for="database-url" data-i18n="databaseUrl">URL de connexion PostgreSQL</label>
         <input id="database-url" type="password" autocomplete="off" spellcheck="false" placeholder="postgresql://utilisateur:motdepasse@hote:5432/base">
-        <p class="hint">La base doit déjà exister. L’utilisateur doit pouvoir appliquer les migrations. L’URL reste sur le serveur et n’est pas affichée dans le suivi.</p>
+        <p class="hint" data-i18n="databaseUrlHint">La base doit déjà exister. L’utilisateur doit pouvoir appliquer les migrations. L’URL reste sur le serveur et n’est pas affichée dans le suivi.</p>
       </div>
 
-      <h2>Accès web</h2>
-      <label for="tls">Comment le site sera-t-il accessible ?</label>
+      <h2 data-i18n="web">Accès web</h2>
+      <label for="tls" data-i18n="tls">Comment le site sera-t-il accessible ?</label>
       <select id="tls">
-        <option value="proxy">HTTPS déjà géré par mon reverse proxy</option>
-        <option value="certbot">Configurer HTTPS sur ce serveur avec Let’s Encrypt</option>
-        <option value="none">HTTP pour le développement / test</option>
+        <option value="proxy" data-i18n="tlsProxy">HTTPS déjà géré par mon reverse proxy</option>
+        <option value="certbot" data-i18n="tlsCertbot">Configurer HTTPS sur ce serveur avec Let’s Encrypt</option>
+        <option value="none" data-i18n="tlsNone">HTTP pour le développement / test</option>
       </select>
-      <p id="proxy-help" class="hint">Votre proxy peut être sur une autre machine : transmettez le site vers l’IP de ce serveur, port 3000. Les appels API passeront automatiquement par le site.</p>
+      <p id="proxy-help" class="hint" data-i18n="proxyHelp">Votre proxy peut être sur une autre machine : transmettez le site vers l’IP de ce serveur, port 3000. Les appels API passeront automatiquement par le site.</p>
       <div id="certificate-fields" hidden>
-        <label for="email">Email pour le certificat HTTPS</label>
+        <label for="email" data-i18n="email">Email pour le certificat HTTPS</label>
         <input id="email" type="email" autocomplete="email">
-        <p class="hint">Le DNS du domaine doit déjà pointer vers ce serveur, accessible sur les ports 80 et 443.</p>
+        <p class="hint" data-i18n="emailHint">Le DNS du domaine doit déjà pointer vers ce serveur, accessible sur les ports 80 et 443.</p>
       </div>
       <fieldset id="existing-services" hidden>
-        <legend>Des services XNova ont été trouvés</legend>
+        <legend data-i18n="servicesLegend">Des services XNova ont été trouvés</legend>
         <p id="services-found" class="hint"></p>
-        <label class="checkbox"><input id="keep-services" type="radio" name="service-action" value="keep"> Garder et reprendre</label>
-        <p class="hint">Les services seront adaptés à cette installation. Leur configuration précédente sera conservée sur le serveur.</p>
-        <label class="checkbox"><input id="recreate-services" type="radio" name="service-action" value="recreate"> Supprimer et recréer</label>
-        <p class="hint">Les anciens services et leurs réglages supplémentaires seront supprimés, puis de nouveaux services seront créés.</p>
+        <label class="checkbox"><input id="keep-services" type="radio" name="service-action" value="keep"> <span data-i18n="keep">Garder et reprendre</span></label>
+        <p class="hint" data-i18n="keepHint">Les services seront adaptés à cette installation. Leur configuration précédente sera conservée sur le serveur.</p>
+        <label class="checkbox"><input id="recreate-services" type="radio" name="service-action" value="recreate"> <span data-i18n="recreate">Supprimer et recréer</span></label>
+        <p class="hint" data-i18n="recreateHint">Les anciens services et leurs réglages supplémentaires seront supprimés, puis de nouveaux services seront créés.</p>
       </fieldset>
-      <p id="resume-info" class="hint" hidden>Une configuration a déjà été créée. La reprise conserve la base et les secrets ; vous pouvez corriger l’URL externe ou l’email du certificat.</p>
-      <button id="install-button">Préparer le serveur</button>
+      <p id="resume-info" class="hint" data-i18n="resumeInfo" hidden>Une configuration a déjà été créée. La reprise conserve la base et les secrets ; vous pouvez corriger l’URL externe ou l’email du certificat.</p>
+      <button id="install-button" data-i18n="install">Préparer le serveur</button>
     </form>
     <section id="progress" aria-live="polite" hidden>
-      <h2>Préparation du serveur</h2>
+      <h2 data-i18n="progress">Préparation du serveur</h2>
       <p id="stage"></p>
       <p id="database-summary" class="hint"></p>
-      <p class="hint">Vous pouvez laisser cette page ouverte pendant l’installation et la compilation.</p>
-      <button id="continue" hidden>Continuer : SMTP et compte administrateur</button>
+      <p class="hint" data-i18n="progressHint">Vous pouvez laisser cette page ouverte pendant l’installation et la compilation.</p>
+      <button id="continue" data-i18n="continue" hidden>Continuer : SMTP et compte administrateur</button>
     </section>
   </main>
 </body>
