@@ -49,7 +49,7 @@ describe('API integration - Supervision locale', () => {
   // --- Faux serveur Sentry ---
   let sentry: Server;
   let sentryStatus = 200;
-  let sentryHits = 0;
+  let sentryTestEvents = 0;
   const sentryDsn = () => `http://${DSN_SECRET}@127.0.0.1:${(sentry.address() as AddressInfo).port}/42`;
 
   beforeAll(async () => {
@@ -58,9 +58,11 @@ describe('API integration - Supervision locale', () => {
     ({ app, database } = await createIntegrationApp());
     incidents = app.get(IncidentService);
     sentry = createServer((req, res) => {
-      req.resume();
+      let body = '';
+      req.on('data', (chunk) => (body += chunk));
       req.on('end', () => {
-        sentryHits += 1;
+        // Le SDK actif peut envoyer d'autres événements au même serveur : on ne compte que l'événement de test
+        if (body.includes('xnova_test')) sentryTestEvents += 1;
         res.statusCode = sentryStatus;
         res.end('{}');
       });
@@ -362,10 +364,10 @@ describe('API integration - Supervision locale', () => {
     it('test Sentry : accepté, refusé, indisponible — résultat et date conservés, jamais bloquant', async () => {
       const test = (body: object = {}) => request(server()).post('/admin/supervision/sentry/test').set(auth(superAdmin)).send(body);
       sentryStatus = 200;
-      const hitsBefore = sentryHits;
+      const hitsBefore = sentryTestEvents;
       const ok = await test({ dsnApi: sentryDsn() }).expect(201);
       expect(ok.body).toMatchObject({ ok: true, code: 'accepted' });
-      expect(sentryHits).toBe(hitsBefore + 1);
+      expect(sentryTestEvents).toBe(hitsBefore + 1);
       expect(ok.body.lastTest.at).toBeTruthy();
 
       sentryStatus = 403;
