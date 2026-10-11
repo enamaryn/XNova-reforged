@@ -243,7 +243,9 @@
     "banHint": "Ultimos bloqueos y desbloqueos.",
     "banEmpty": "Sin sanciones recientes.",
     "by": "Por",
-    "expiresAt": "Expira el"
+    "expiresAt": "Expira el",
+    "applyProfile": "Aplicar el perfil de referencia ×50",
+    "applyProfileHint": "Rellena velocidades, multiplicadores e ingresos base; revisa y guarda."
   },
   "common": {
     "language": "Idioma",

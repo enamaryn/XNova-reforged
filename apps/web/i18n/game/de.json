@@ -243,7 +243,9 @@
     "banHint": "Letzte Sperrungen und Entsperrungen.",
     "banEmpty": "Keine aktuelle Sanktion.",
     "by": "Von",
-    "expiresAt": "Läuft ab am"
+    "expiresAt": "Läuft ab am",
+    "applyProfile": "Referenzprofil ×50 anwenden",
+    "applyProfileHint": "Füllt Geschwindigkeiten, Multiplikatoren und Grundeinkommen aus; prüfen und speichern."
   },
   "common": {
     "language": "Sprache",

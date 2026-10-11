@@ -1,5 +1,6 @@
 "use client";
 
+import { RECOMMENDED_SPEED_PROFILE, SPEED_PROFILES } from "@xnova/game-config";
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -208,6 +209,22 @@ function GeneralPanel() {
               {t("admin.savedAt")} {savedAt.toLocaleTimeString()}
             </span>
           )}
+        </div>
+
+        <div className="mt-3 flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            data-testid="apply-speed-profile"
+            onClick={() =>
+              setForm((prev) =>
+                prev ? { ...prev, ...SPEED_PROFILES[RECOMMENDED_SPEED_PROFILE] } : prev,
+              )
+            }
+            className="rounded-full border border-blue-500/50 px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-blue-200 hover:border-blue-400"
+          >
+            {t("admin.applyProfile")}
+          </button>
+          <span className="text-xs text-slate-500">{t("admin.applyProfileHint")}</span>
         </div>
 
         <div className="mt-4 grid gap-4 lg:grid-cols-2">

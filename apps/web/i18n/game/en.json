@@ -243,7 +243,9 @@
     "banHint": "Recent bans and unbans.",
     "banEmpty": "No recent sanctions.",
     "by": "By",
-    "expiresAt": "Expires at"
+    "expiresAt": "Expires at",
+    "applyProfile": "Apply the ×50 reference profile",
+    "applyProfileHint": "Fills speeds, multipliers and base income; review, then save."
   },
   "common": {
     "language": "Language",

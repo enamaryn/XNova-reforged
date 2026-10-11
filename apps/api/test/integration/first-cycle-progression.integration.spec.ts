@@ -1,7 +1,7 @@
 import { INestApplication } from "@nestjs/common";
 import { writeFileSync } from "fs";
 import request from "supertest";
-import { ABANDONED_USERNAME } from "@xnova/game-config";
+import { ABANDONED_USERNAME, SPEED_PROFILES } from "@xnova/game-config";
 import { DatabaseService } from "../../src/database/database.service";
 import { BuildingsCronService } from "../../src/buildings/buildings-cron.service";
 import { ResearchCronService } from "../../src/research/research-cron.service";
@@ -28,7 +28,8 @@ import {
  * Le plan d'achat est celui d'un joueur raisonnable, calculé hors ligne avec les formules du moteur
  * (minutes simulées ≈ labo 22, recherche 66, hangar 71, premier chasseur 138).
  */
-const SPEED = 50;
+const PROFILE = SPEED_PROFILES.reference;
+const SPEED = PROFILE.gameSpeed;
 const TICK_SECONDS = 5;
 const HORIZON_SECONDS = 3 * 3600 + 20 * 60;
 
@@ -66,17 +67,8 @@ describe("Premier cycle joueur à vitesse ×50, sans ajout de ressources", () =>
     ({ app, database } = await createIntegrationApp());
     config = app.get(ServerConfigService);
     previous = await config.getConfig();
-    await config.applyConfig({
-      gameSpeed: SPEED,
-      fleetSpeed: SPEED,
-      resourceMultiplier: 1,
-      buildingCostMultiplier: 1,
-      researchCostMultiplier: 1,
-      shipCostMultiplier: 1,
-      baseMetal: 20,
-      baseCrystal: 10,
-      baseDeuterium: 0,
-    });
+    // Profil de référence partagé avec la page d'administration et l'assistant d'installation
+    await config.applyConfig({ ...PROFILE });
   });
 
   afterAll(async () => {

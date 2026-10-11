@@ -1,5 +1,6 @@
 "use client";
 
+import { RECOMMENDED_SPEED_PROFILE, SPEED_PROFILES } from "@xnova/game-config";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ApiError } from "@/lib/api/client";
@@ -416,6 +417,26 @@ export function SetupWizard() {
             Réglages de l&apos;univers. Ils restent modifiables ensuite depuis l&apos;administration ; laissez les valeurs
             par défaut si vous hésitez.
           </p>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              data-testid="apply-speed-profile"
+              onClick={() =>
+                setSettings({
+                  ...settings,
+                  ...Object.fromEntries(
+                    Object.entries(SPEED_PROFILES[RECOMMENDED_SPEED_PROFILE]).map(([k, v]) => [k, String(v)]),
+                  ),
+                })
+              }
+            >
+              Appliquer le profil de référence ×50
+            </Button>
+            <span className="text-xs text-slate-500">
+              Vitesse ×50, coûts d&apos;origine : laboratoire en 22 min, premier vaisseau en moins de 2 h.
+            </span>
+          </div>
           <div className="grid gap-4 sm:grid-cols-2">
             {SETTING_FIELDS.map((field) => (
               <div key={field.key} className="space-y-1">

@@ -1,53 +1,56 @@
-# ⚖️ Balance & paramètres dynamiques
+# Équilibrage et réglages du serveur
 
-Ce guide rassemble les multiplicateurs et formules que l’équipe utilise pendant le sprint 10 pour ajuster l’équilibrage (resources, coûts, vitesses, durées). Les valeurs sont exposées via le `ServerConfigService` et peuvent être modifiées via l’interface admin (`PUT /admin/config`).
+Dernière vérification : 10 octobre 2026 (SCOPE-02). Les valeurs ci-dessous sont celles du code ; les réglages du serveur en cours d'exécution sont ceux de la **console d'administration** (onglet Général, `PUT /admin/config`), conservés en base et prioritaires sur le fichier `.env`.
 
-## Multiplicateurs principaux (`ServerConfigValues`)
+## Profil de vitesse retenu : ×50
 
-| Clé | Description | Valeur par défaut |
-|-----|-------------|-------------------|
-| `gameSpeed` | Divise les durées de construction, recherche et voyages (ex : 1 = temps réel, 2500 = accéléré). | env `GAME_SPEED` (2500 en dev) |
-| `fleetSpeed` | Impacte le calcul des vitesses de flotte. | env `FLEET_SPEED` (2500) |
-| `resourceMultiplier` | Multiplie la production par heure. | env `RESOURCE_MULTIPLIER` (1) |
-| `buildingCostMultiplier` | Appliqué à tous les coûts batiments. | env `BUILDING_COST_MULTIPLIER` (1) |
-| `researchCostMultiplier` | Appliqué aux coûts de recherche. | env `RESEARCH_COST_MULTIPLIER` (1) |
-| `shipCostMultiplier` | Appliqué aux coûts de construction vaisseaux. | env `SHIP_COST_MULTIPLIER` (1) |
-| `planetSize` | Champs max (init 163). | `GAME_CONSTANTS.INITIAL_FIELDS` |
-| `maxBuildingLevel` / `maxTechnologyLevel` | Bornes globales pour les niveaux batiments et tech. | 100 |
-| `baseMetal`, `baseCrystal`, `baseDeuterium` | Production/par seconde de base (utilisée par `game-engine`). | 20 / 10 / 0 |
+Décision du propriétaire (10 octobre 2026) : **×50**, formules, coûts et stocks de départ d'origine. Le profil est défini une seule fois dans `packages/game-config/src/speed-profiles.ts` (`SPEED_PROFILES`) et appliqué par :
 
-> Les admin peuvent ajuster ces valeurs via l’endpoint `PUT /admin/config` (JWT + permissions). Toutes les modifications sont historisées dans `AdminAuditLog`.
+- le bouton **« Appliquer le profil de référence ×50 »** de l'onglet Général de l'administration et de l'étape *Réglages* de l'assistant d'installation (remplit le formulaire ; il reste à sauvegarder) ;
+- `.env.example` (valeurs initiales d'un nouveau serveur) ;
+- le test `first-cycle-progression`, qui lit la même constante.
 
-## Formules clés
+| Profil | `gameSpeed` / `fleetSpeed` | Autres réglages | Usage |
+|---|---:|---|---|
+| `classic` | 1 | multiplicateurs 1 | rythme d'origine, très lent (laboratoire ≈ 18 h) |
+| `minimum` | 20 | multiplicateurs 1 | plancher accepté (laboratoire ≈ 55 min, estimation) |
+| **`reference`** | **50** | multiplicateurs 1 | **profil mesuré et recommandé** |
 
-- **Coûts bâtiments** : `baseCost × factor^level × buildingCostMultiplier`. Chaque `building` de `packages/game-config/src/buildings.ts` référence `baseCost` et `factor`.
-- **Durées des bâtiments (secondes)** : `30 × (metal + crystal) / (75 × (1 + robotics) × 2^nanite)`, puis divisées par `gameSpeed`. Mine de métal niveau 1 : 30 s à vitesse ×1 sans robots ni nanites. Les coûts exponentiels prolongent les niveaux suivants.
-- **Durées des recherches (secondes)** : `30 × (metal + crystal) / (200 × (1 + researchLab))`, puis divisées par `gameSpeed`. Technologie Ordinateur niveau 1 : 30 s avec laboratoire niveau 1 à vitesse ×1. Arrondi inférieur, minimum d’une seconde ; les files déjà lancées conservent leur durée.
-- **Production ressources** : calculée dans `packages/game-engine/src/resources.ts` avec `resourceMultiplier` + énergie (ventilation positive/negative).
-- **Vitesse flottes** : prend le vaisseau le plus lent (facteur de base + boost par tech `combustion/impulsion/hyperespace`). Appliqué ensuite `fleetSpeed`.
+Jalons mesurés à ×50 (API réelle, joueur sans ajout de ressources, [résultats](audits/first-cycle-progression-2026-10-10.json)) : laboratoire 22 min, première recherche 57 min, hangar 64 min, premier vaisseau 112 min, premier rapport 112 min. Détail : [PROGRESSION.md](PROGRESSION.md).
 
-## Prise de décision équilibrage
+## Réglages du serveur (`ServerConfigValues`)
 
-1. **Collecte métriques** : utiliser les endpoints `/statistics` et `/admin/overview` pour voir la distribution points/vitesse.
-2. **Expérimentation** : modifier `resourceMultiplier` ou `buildingCostMultiplier` via Swagger `PUT /admin/config`.
-3. **Validation** : relancer `npm run test:integration` (auth + planets) pour s’assurer que les calculs tiennent.
+| Clé | Rôle | Valeur par défaut du code (si ni base ni `.env`) | Profil ×50 |
+|---|---|---:|---:|
+| `gameSpeed` | divise les durées (bâtiments, recherches, chantier) **et** multiplie la production, revenu de base compris | 1 (`GAME_SPEED`) | 50 |
+| `fleetSpeed` | divise les durées de vol | 1 (`FLEET_SPEED`) | 50 |
+| `resourceMultiplier` | multiplie la production (en plus de `gameSpeed`) | 1 | 1 |
+| `buildingCostMultiplier` | coûts des bâtiments | 1 | 1 |
+| `researchCostMultiplier` | coûts des recherches | 1 | 1 |
+| `shipCostMultiplier` | coûts du chantier spatial et des défenses | 1 | 1 |
+| `planetSize` | champs d'une planète (50 à 500) | 163 | 163 |
+| `maxBuildingLevel`, `maxTechnologyLevel` | plafonds | 100 | 100 |
+| `baseMetal`, `baseCrystal`, `baseDeuterium` | revenu de base par heure, sans mine | 20 / 10 / 0 | 20 / 10 / 0 |
 
-## Références
+> Une valeur modifiée dans l'administration est historisée dans `AdminAuditLog`. Le serveur doit relire sa configuration (le cache expire ou est invalidé à la sauvegarde).
 
-- `packages/game-config/src/buildings.ts` (coûts, prérequis).
-- `packages/game-config/src/technologies.ts` et `ships.ts`.
-- `ServerConfigService` (cache + admin).
-- `docs/API_ENDPOINTS.md` pour retrouver l’endpoint `/admin/config`.
+## Formules
 
-## Valeurs appliquées (Sprint 10)
+- **Coûts bâtiments / recherches** : `coût de base × facteur^niveau × multiplicateur de coût` (`packages/game-config`).
+- **Durée d'un bâtiment** (s) : `30 × (métal + cristal) / (75 × (1 + usine de robots) × 2^nanites)`, divisée par `gameSpeed`, arrondie à l'inférieur, minimum 1 s.
+- **Durée d'une recherche** (s) : `30 × (métal + cristal) / (200 × (1 + laboratoire))`, divisée par `gameSpeed`.
+- **Durée d'un lot au chantier** (s) : `(métal + cristal) / (2 500 × (1 + hangar) × 2^nanites)`.
+- **Production par heure** : mine `base × niveau × 1,1^niveau` × rendement énergétique × `gameSpeed` × `resourceMultiplier`, plus le revenu de base × mêmes multiplicateurs (`packages/game-engine/src/resources.ts`). Bases des mines : métal 30, cristal 20, deutérium 10.
+- **Énergie** : consommation des mines (métal 10, cristal 10, deutérium 20 × `niveau × 1,1^niveau`) contre production solaire (20 × `niveau × 1,1^niveau`) et fusion ; rendement = disponible / consommé, plafonné à 100 %.
+- **Stockage** : capacité = **1 000 000 × 1,5^niveau du hangar** par ressource ; la production s'arrête à 110 % de la capacité (`storageOverflow`).
+- **Combat** : 6 rounds, débris 30 %, défenses réparées à 70 %, butin jusqu'à 50 % limité à la place restante des vaisseaux survivants.
 
-| Clé | Valeur active (`.env` / admin) |
-|-----|-------------------------------|
-| `gameSpeed` | 2000 (accélération dosée) |
-| `fleetSpeed` | 2200 (voyages rapides mais contrôlés) |
-| `resourceMultiplier` | 1.25 (bonus production) |
-| `buildingCostMultiplier` | 1.15 (coûts légèrement plus élevés) |
-| `researchCostMultiplier` | 1.1 |
-| `shipCostMultiplier` | 1.2 |
+## Revenu de base et stocks de départ
 
-Ces valeurs peuvent être disparates dans `AdminController` (changer live) ou à travers `.env` / `ServerConfigService` (cache invalide). Pense à relancer `npm run test:integration` après chaque changement critique.
+Départ : 500 métal, 500 cristal, 0 deutérium, tous bâtiments au niveau 0 (`auth.service`). Le deutérium à zéro est le principal frein du premier cycle : laboratoire 200, Technologie Énergie 400, Réacteur à combustion 690, hangar 100.
+
+## Vérifier un changement
+
+1. Modifier les valeurs dans l'administration (ou appliquer le profil).
+2. Rejouer `npm run test:integration --workspace=@xnova/api -- first-cycle` (jalons du premier cycle).
+3. Consulter `/statistics` et `/admin/overview` pour la distribution des joueurs.
