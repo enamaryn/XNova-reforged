@@ -4,6 +4,7 @@
 // Les seuils sont fixés dans docs/LOAD_TEST.md (avant exécution). Code de sortie 1 si un seuil est dépassé.
 import { io } from 'socket.io-client';
 import { writeFileSync, mkdirSync } from 'node:fs';
+import { execSync } from 'node:child_process';
 import { dirname } from 'node:path';
 
 const API = (process.env.API_URL ?? 'http://127.0.0.1:3001').replace(/\/$/, '');
@@ -192,6 +193,12 @@ async function main() {
   await Promise.all(regs);
   console.log(`Joueurs prêts : ${players.length}/${PLAYERS}, WebSocket : ${wsStats.connected}/${wsStats.attempted}`);
 
+  // Dotation des comptes avant le palier (ex. SQL via psql) : exerce le chemin de succès des écritures
+  if (process.env.BOOST_CMD) {
+    execSync(process.env.BOOST_CMD, { stdio: 'inherit', shell: '/bin/bash' });
+    console.log('Comptes dotés (BOOST_CMD)');
+  }
+
   const holdStart = Date.now();
   const until = holdStart + HOLD_S * 1000;
   const names = players.map((p) => p.username);
@@ -219,7 +226,7 @@ async function main() {
   };
   const report = {
     startedAt, finishedAt: new Date().toISOString(), api: API,
-    config: { players: PLAYERS, rampS: RAMP_S, holdS: HOLD_S, idleS: IDLE_S },
+    config: { boosted: !!process.env.BOOST_CMD, players: PLAYERS, rampS: RAMP_S, holdS: HOLD_S, idleS: IDLE_S },
     playersReady: players.length, holdSeconds: Math.round(holdMs / 1000),
     totalRequests, throughputRps: +(totalRequests / ((holdMs / 1000) + RAMP_S)).toFixed(1),
     serverErrors, errorRate, rateLimited,
