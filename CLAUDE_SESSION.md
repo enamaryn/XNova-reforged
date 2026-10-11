@@ -5,6 +5,14 @@
 
 ---
 
+## Session — supervision : faux « charge élevée » en LXC
+
+**Date :** 12 octobre 2026. **Retour du propriétaire** : la carte « Mémoire et charge » affichait « Dégradé » (charge 2,22 sur 1 cœur) alors que Proxmox montrait 0,44 % de processeur.
+
+- [x] Cause : en conteneur, `os.loadavg()` donne la charge de l'hôte entier, divisée ici par les cœurs alloués au conteneur. La charge reste affichée à titre indicatif ; seul `memoryFreePercent < 5` rend la carte « Dégradé » (la saturation du processus reste détectée par le retard de la boucle d'événements du contrôle « API »).
+- [x] Libellé traduit dans les 5 langues (`supervision.code.low_memory`).
+
+
 ## Session — SUPERVISION-LOCAL : supervision locale intégrée, Sentry optionnel
 
 **Date :** 12 octobre 2026. **Demande du propriétaire** : jeu administrable sans service extérieur ; Sentry en option, jamais requis.

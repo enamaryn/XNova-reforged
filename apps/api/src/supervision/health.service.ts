@@ -196,14 +196,25 @@ export class HealthService {
     return { status: 'ok', code: 'ok', message: `${freePercent} % d’espace libre`, details };
   }
 
+  /**
+   * Mémoire et charge. Dans un conteneur (LXC, Docker), `loadavg()` renvoie la charge de l'HÔTE entier alors que
+   * `cpus()` reflète les cœurs alloués au conteneur : le rapport « charge par cœur » est alors faux (2,2 pour un
+   * conteneur à 0,4 % de processeur). La charge reste affichée à titre indicatif ; seule la mémoire disponible
+   * déclenche l'état « dégradé » (la saturation du processus lui-même est détectée par le retard de la boucle
+   * d'événements du contrôle « API »).
+   */
   private async checkSystem(): Promise<CheckResult> {
     const cores = Math.max(1, cpus().length);
     const [load1] = loadavg();
     const memFreePercent = Math.round((freemem() / totalmem()) * 1000) / 10;
-    const loadRatio = Math.round((load1 / cores) * 100) / 100;
-    const details = { load1: Math.round(load1 * 100) / 100, cores, loadPerCore: loadRatio, memoryFreePercent: memFreePercent };
-    if (loadRatio > 2 || memFreePercent < 5) return { status: 'degraded', code: 'overloaded', message: 'Serveur chargé', details };
-    return { status: 'ok', code: 'ok', message: 'Charge et mémoire normales', details };
+    const details = {
+      load1: Math.round(load1 * 100) / 100,
+      cores,
+      loadPerCore: Math.round((load1 / cores) * 100) / 100,
+      memoryFreePercent: memFreePercent,
+    };
+    if (memFreePercent < 5) return { status: 'degraded', code: 'low_memory', message: 'Mémoire disponible presque épuisée', details };
+    return { status: 'ok', code: 'ok', message: 'Mémoire disponible suffisante', details };
   }
 
   /** Tâche planifiée bloquée : aucun battement depuis plus de 3 intervalles (au moins 2 minutes). */

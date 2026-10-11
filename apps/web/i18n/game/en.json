@@ -1015,7 +1015,8 @@
       "last_test_failed": "The last test failed",
       "unreachable": "Unreachable",
       "disabled": "Disabled",
-      "none": "Nothing to report"
+      "none": "Nothing to report",
+      "low_memory": "Available memory almost exhausted"
     },
     "stats": {
       "open": "Open incidents",
