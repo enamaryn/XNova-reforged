@@ -18,6 +18,7 @@ const gamePages = new Set([
   "settings",
   "options",
   "movement",
+  "help",
   "admin",
 ]);
 

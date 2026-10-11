@@ -1,0 +1,291 @@
+# Spiel-FAQ — XNova Reforged
+
+> Version `v0.2.0` (private Alpha). Diese FAQ beschreibt, was das Spiel heute **tatsächlich** tut, nach dem Code und Tests auf einem Testserver; wenn etwas, das die Oberfläche anzeigt, nicht das tut, was sein Text sagt, wird das klar benannt (⚠️). Sprachen: [Français](FAQ.md) · [English](FAQ_EN.md) · [Español](FAQ_ES.md) · [Deutsch](FAQ_DE.md) · [Italiano](FAQ_IT.md). Den Ablauf einer Partie finden Sie im [Spielerhandbuch](PLAYER_GUIDE_DE.md).
+>
+> **Namen im Spiel.** Namen und Beschreibungen von Gebäuden, Schiffen und Technologien werden noch **auf Französisch** angezeigt, unabhängig von der gewählten Sprache. Diese FAQ gibt die deutsche Bedeutung an, gefolgt vom Namen im Spiel in *Kursivschrift*.
+
+**Inhalt**: [1. Grundlagen](#1-grundlagen) · [2. Gebäude](#2-gebäude) · [3. Energie und Solarsatelliten](#3-energie-und-solarsatelliten) · [4. Forschung](#4-forschung) · [5. Schiffe](#5-schiffe) · [6. Flotten und Missionen](#6-flotten-und-missionen) · [7. Kampf](#7-kampf) · [8. Verteidigung](#8-verteidigung) · [9. Macht, Kommandant und Rangliste](#9-macht-kommandant-und-rangliste) · [10. „Warum kann ich nicht …?“](#10-warum-kann-ich-nicht-) · [11. Was es noch nicht gibt](#11-was-es-noch-nicht-gibt)
+
+---
+
+## 1. Grundlagen
+
+**Welche drei Rohstoffe gibt es?**
+**Metall** (Gebäude, Schiffe, Verteidigung), **Kristall** (Labor, Forschung, Schiffe, Elektronik) und **Deuterium** (Treibstoff der Flotten, Labor, die meiste Forschung). Sie starten mit 500 Metall, 500 Kristall und 0 Deuterium: Der Deuterium-Synthetisierer hat daher Vorrang.
+
+**Warum geht alles so schnell (oder so langsam)?**
+Die Kosten sind die des Originalspiels; die **Servergeschwindigkeit** ändert Dauer und Produktion. Das Referenzprofil ist **×50**: Die Produktion wird mit 50 multipliziert, alle Dauern (Gebäude, Forschung, Schiffe, Flüge) werden durch 50 geteilt. Auf einem ×1-Server ist alles etwa 50-mal langsamer. Die Kosten ändern sich nie.
+
+**Wie lange dauert das erste Schiff bei ×50?**
+Etwa 1 h 50 min für einen Spieler, der nur ausgibt, was er produziert (Labor ≈ 22 min, erste Forschung ≈ 1 h, Werft ≈ 1 h 05).
+
+**Wachsen meine Rohstoffe auch offline?**
+Ja: Die Produktion wird aus der verstrichenen Zeit berechnet, ob Sie verbunden sind oder nicht. Sie stoppt, wenn das Lager voll ist.
+
+**Was ist die Lagerkapazität und was passiert, wenn sie voll ist?**
+Die Grundkapazität beträgt **1 000 000 pro Rohstoff**; jede Lagerstufe multipliziert sie mit 1,5 (Stufe 1: 1 500 000; Stufe 5: ≈ 7,6 Millionen). Ein Bestand darf die Kapazität höchstens um 10 % überschreiten; darüber hinaus **geht die Produktion verloren**. Geben Sie aus, bevor das Lager voll ist.
+
+**Gibt es Einkommen ohne Minen?**
+Ja, ein kleines Grundeinkommen pro Planet (20 Metall und 10 Kristall pro Stunde vor der Geschwindigkeitsmultiplikation). Es hilft ganz am Anfang.
+
+**In welchen Sprachen gibt es das Spiel?**
+Französisch, Englisch, Spanisch, Deutsch, Italienisch (Auswahl in der Kopfzeile). Bekannte Einschränkung: Die **Namen und Beschreibungen** von Gebäuden, Schiffen und Technologien sowie einige Fehlermeldungen bleiben auf Französisch.
+
+---
+
+## 2. Gebäude
+
+**Wozu dient jedes Gebäude?**
+
+| Gebäude (Name im Spiel) | Tatsächlicher Nutzen heute |
+|---|---|
+| **Metallmine / Kristallmine** (*Mine de Métal / de Cristal*) | produzieren Metall / Kristall (verbrauchen Energie) |
+| **Deuterium-Synthetisierer** (*Synthétiseur de Deutérium*) | produziert Deuterium (verbraucht am meisten Energie) |
+| **Solarkraftwerk** (*Centrale Électrique Solaire*) | liefert den Minen Energie |
+| **Fusionskraftwerk** (*Centrale Électrique de Fusion*) | liefert mehr Energie; erfordert Synthetisierer Stufe 5 und *Energietechnik* Stufe 3 |
+| **Roboterfabrik** (*Usine de Robots*) | teilt die Bauzeit von Gebäuden (Zeit ÷ (1 + Stufe)) |
+| **Nanitenfabrik** (*Usine de Nanites*) | teilt sie erneut (÷ 2 pro Stufe); erfordert Roboter 10 und *Computertechnik* 10; sehr teuer |
+| **Werft** (*Hangar*) | erlaubt den Bau von Schiffen und Verteidigung und beschleunigt ihn; ihre Stufe bestimmt fast alle Voraussetzungen |
+| **Metall-/Kristallspeicher, Deuteriumtank** (*Hangar de Métal / de Cristal, Réservoir de Deutérium*) | erhöhen die Lagerkapazität |
+| **Forschungslabor** (*Laboratoire de Recherche*) | erlaubt Forschung und beschleunigt sie |
+
+**Was kostet ein Gebäude und wie wächst der Preis?**
+Die nächste Stufe kostet `Grundkosten × Faktor^aktuelle Stufe`. Beispiel Metallmine (Basis 60 Metall / 15 Kristall, Faktor 1,5): Stufe 1 → 60 / 15; Stufe 10 → 2 306 / 576. Die Kosten werden **beim Start abgebucht**.
+
+**Wie lange dauert ein Bau?**
+`30 × (Metall + Kristall) / (75 × (1 + Roboter) × 2^Naniten)` Sekunden, danach geteilt durch die Servergeschwindigkeit. Roboter und Naniten sind also die Investition, die alles andere beschleunigt.
+
+**Wie viele Gebäude kann ich gleichzeitig bauen?**
+Anfangs eines pro Planet; **zwei** nach der Forschung *Gestion des chantiers* (Bauverwaltung); **drei**, wenn zusätzlich ein Kommandant Stufe 50 vorhanden ist.
+
+**Kann ich einen Bau abbrechen?**
+Ja, aus der Warteschlange: Der abgebuchte Betrag wird **genau erstattet**. Einen bereits gebauten Stufenabriss gibt es nicht.
+
+**Was sind die „Felder“ eines Planeten?**
+Jeder Startplanet hat **163 Felder**. Jede gebaute Stufe eines Gebäudes (außer Lagergebäuden) verbraucht **eines**: Sie können also nicht alles auf das Maximum bringen. Wählen Sie Ihre Stufen.
+
+**Was ist der Unterschied zwischen „Hangar“ und Werft?**
+Es ist dasselbe Gebäude (ID 21): Der „Hangar“ in den Listen ist die Werft, in der Schiffe und Verteidigung gebaut werden. Nicht mit den **Lager**-Hangars verwechseln.
+
+**⚠️ Manche Gebäude lassen sich bauen, haben aber heute keine Wirkung.**
+Der **Terraformer** (erfordert *Energietechnik* 12) erhöht die Zahl der Felder nicht; **Allianzdepot**, **Raketensilo** (es gibt keine Raketen) und die **Mond**-Gebäude (Mondbasis, Sensorphalanx, Sprungtor: das Spiel erzeugt keine Monde) ändern vorerst nichts am Spiel. Investieren Sie nicht darin.
+
+---
+
+## 3. Energie und Solarsatelliten
+
+**Wie funktioniert Energie?**
+Minen verbrauchen Energie; Kraftwerke erzeugen sie. Solange die Erzeugung den Verbrauch deckt, laufen die Minen mit 100 %. Sonst **werden alle Minen proportional langsamer** (Erzeugung bei 50 % der nötigen Energie = 50 % Metall, Kristall und Deuterium). Produktionsstufe und Energiebilanz stehen in der Übersicht.
+
+**Wie viel Energie erzeugt und verbraucht jedes Gebäude?**
+Pro Stufe `n`: Solarkraftwerk `20 × n × 1,1^n`; Fusionskraftwerk `30 × n × 1,05^n`; Verbrauch der Metall- und Kristallmine `10 × n × 1,1^n`, des Deuterium-Synthetisierers `20 × n × 1,1^n`. Beispiele: Solarkraftwerk Stufe 10 → 518; Fusion Stufe 10 → 488; Metallmine Stufe 10 → verbraucht 260.
+
+**Welches Kraftwerk soll ich wählen?**
+Das Solarkraftwerk: günstig, ohne Voraussetzungen. Bei gleicher Stufe erzeugt das Fusionskraftwerk im aktuellen System **weniger** als ein Solarkraftwerk (Stufe 10: 488 gegenüber 518) und hat teure Voraussetzungen: Es lohnt sich heute nicht. ⚠️ Das Fusionskraftwerk **verbraucht kein Deuterium** (trotz seiner Beschreibung), und die *Energietechnik* erhöht seine Erzeugung nicht: Sie ist eine Voraussetzung, kein Bonus.
+
+**Liefern Solarsatelliten Energie?**
+**Ja.** Sobald er gebaut ist, befindet sich ein Solarsatellit (212: 2 000 Kristall und 500 Deuterium, ab Werft Stufe 1 baubar) **direkt im Orbit des Planeten** und liefert ihm dauerhaft **50 Energie**, zusätzlich zu den Kraftwerken. Die Energie zählt ab der Lieferung: Die Produktion der bereits verstrichenen Zeit ändert sich nicht. Beispiel: 3 Satelliten = 150 Energie. Der Wert ist fest (das Spiel kennt keine Planetentemperatur).
+
+**Wann Satelliten statt eines Kraftwerks wählen?**
+Ein Satellit verbraucht **kein Feld** und hat keine Voraussetzungen, kostet aber anfangs mehr als ein Solarkraftwerk (40 Kristall und 10 Deuterium pro Energiepunkt, gegenüber wenigen Einheiten Metall und Kristall für die ersten Kraftwerksstufen). Kraftwerke sind am Anfang besser; Satelliten lohnen sich, wenn Felder knapp werden oder Kraftwerksstufen teuer werden.
+
+**Kann ein Satellit zu einem anderen Planeten geschickt werden?**
+**Nein.** Er bleibt im Orbit des Planeten, auf dem er gebaut wurde: Er erscheint nicht auf der Seite *Flotte*, und das Spiel lehnt jede Mission mit einem Satelliten ab. Auch per Stationieren lässt er sich nicht verlegen.
+
+**Kann ein Satellit zerstört werden?**
+Ja. Auf einem angegriffenen Planeten kämpft er zusammen mit der Verteidigung (Hülle 2 000, Schild 1, Waffe 1) und fängt Schüsse ab; **ein zerstörter Satellit wird nicht wieder aufgebaut** (nur Verteidigungen) und die Energie sinkt ab diesem Zeitpunkt. Schützen Sie ihn mit Verteidigung.
+
+**Was tun bei zu wenig Energie?**
+Bauen Sie vor der nächsten Mine ein Solarkraftwerk aus. Bei einer Produktionsstufe von 80 % produzieren Ihre Minen 20 % weniger als geplant.
+
+---
+
+## 4. Forschung
+
+**Wie funktioniert Forschung?**
+Eine Forschung gleichzeitig pro Spieler, beim Start bezahlt, mit einer Laborstufe und manchmal weiteren Technologien als Voraussetzung (auf der Karte angezeigt). Die Kosten steigen mit jeder Stufe. Eine wartende Forschung kann abgebrochen werden.
+
+**Welche Forschungen haben eine direkte Wirkung?**
+
+| Forschung (Name im Spiel) | Tatsächliche Wirkung heute |
+|---|---|
+| **Militärtechnik** (*Technologie Militaire*, 109) | +10 % Waffenstärke **pro Stufe** für alle Ihre Schiffe und Verteidigungen |
+| **Verteidigungstechnik** (*Technologie Défense*, 110) | +10 % Hülle pro Stufe |
+| **Schildtechnik** (*Technologie Bouclier*, 111) | +10 % Schild pro Stufe |
+| **Verbrennungstriebwerk** (*Réacteur à Combustion*, 115) | +10 % Geschwindigkeit pro Stufe für kleinen Transporter, leichten Jäger, Sonde |
+| **Impulstriebwerk** (*Réacteur à Impulsion*, 117) | +20 % Geschwindigkeit pro Stufe für großen Transporter, schweren Jäger, Kolonieschiff, Recycler, Bomber |
+| **Hyperraumantrieb** (*Propulsion Hyperespace*, 118) | +30 % Geschwindigkeit pro Stufe für Kreuzer, Schlachtschiff, Zerstörer, Todesstern, Schlachtkreuzer; +5 %/Stufe Ladekapazität für die Beute eines Angriffs |
+| **Spionagetechnik** (*Technologie Espionnage*, 106) | bestimmt den Detailgrad der Spionageberichte (verglichen mit der des Ziels, siehe §5) |
+| **Bauverwaltung** (*Gestion des chantiers*, 125) | 2. gleichzeitiger Gebäudebau |
+| **Parallelproduktion** (*Production parallèle*, 126) | zusätzliche Produktionslinien in der Werft |
+
+**Und die übrigen?**
+Energie (113), Computer (108), Hyperraum (114), Laser (120), Ionen (121), Plasma (122), Intergalaktisches Forschungsnetzwerk (123), Expedition (124), Graviton (199) dienen vor allem als **Voraussetzungen**, um Gebäude, Schiffe und Verteidigung freizuschalten. ⚠️ Trotz ihrer Beschreibungen begrenzt *Computertechnik* die Zahl der Flotten nicht (es gibt kein Limit), *Laser/Ionen/Plasma* verbessern keine Waffen, und die *Expedition* hat keine zugehörige Mission. Die Karte jedes Elements zeigt die genauen Voraussetzungen.
+
+**Was zuerst erforschen?**
+*Energie* (Voraussetzung für Fusion und mehrere Verteidigungen), dann das Verbrennungstriebwerk für schnellere Transporter, danach *Militär/Verteidigung/Schild* je nach Kampfplan.
+
+---
+
+## 5. Schiffe
+
+**Wo und wie werden Schiffe gebaut?**
+In der **Werft** (Seite Werft). Der Auftrag wird sofort bezahlt und in Losen gebaut; ein **wartender** Auftrag kann zurückgezogen werden (90 % erstattet), ein bereits begonnenes Los wird normal beendet. Die Dauer hängt von den Kosten und der Werftstufe ab: `(Metall + Kristall) / (2 500 × (1 + Werft) × 2^Naniten)` Sekunden pro Einheit, geteilt durch die Servergeschwindigkeit.
+
+**Welche Schiffe gibt es und wozu dienen sie?**
+
+| Schiff (Name im Spiel) | Kosten (Metall / Kristall / Deuterium) | Fracht | Basisgeschw. | Waffe / Schild / Hülle | Nutzen |
+|---|---|---:|---:|---|---|
+| **Kleiner Transporter** (*Petit Transporteur*, 202) | 2 000 / 2 000 / 0 | 6 000 | 5 000 | 5 / 10 / 4 000 | Transport am Anfang |
+| **Großer Transporter** (*Grand Transporteur*, 203) | 6 000 / 6 000 / 0 | 25 000 | 7 500 | 5 / 25 / 12 000 | große Transporte |
+| **Leichter Jäger** (*Chasseur Léger*, 204) | 2 500 / 800 / 0 | 50 | 12 500 | 60 / 10 / 4 000 | billiger Massenkampf |
+| **Schwerer Jäger** (*Chasseur Lourd*, 205) | 6 000 / 4 000 / 0 | 100 | 10 000 | 150 / 25 / 10 000 | vielseitiger Kampf |
+| **Kreuzer** (*Croiseur*, 206) | 18 000 / 6 000 / 2 000 | 800 | 15 000 | 400 / 50 / 27 000 | schneller Kampf |
+| **Schlachtschiff** (*Vaisseau de Bataille*, 207) | 45 000 / 15 000 / 0 | 1 500 | 10 000 | 1 000 / 200 / 60 000 | Kern der Flotte |
+| **Kolonieschiff** (*Vaisseau de Colonisation*, 208) | 10 000 / 20 000 / 10 000 | 7 500 | 2 500 | 50 / 100 / 30 000 | Kolonie gründen (wird verbraucht) |
+| **Recycler** (*Recycleur*, 209) | 10 000 / 6 000 / 2 000 | 20 000 | 2 000 | 1 / 10 / 16 000 | ⚠️ siehe unten |
+| **Spionagesonde** (*Sonde d'Espionnage*, 210) | 0 / 1 000 / 0 | 0 | 50 000 | 0 / 0 / 1 000 | Spionage |
+| **Bomber** (*Bombardier*, 211) | 50 000 / 25 000 / 15 000 | 500 | 4 000 | 1 000 / 500 / 75 000 | gegen Verteidigung gedacht |
+| **Solarsatellit** (*Satellite Solaire*, 212) | 0 / 2 000 / 500 | 0 | 0 | 1 / 1 / 2 000 | Energie, bleibt im Orbit (§3) |
+| **Zerstörer** (*Destructeur*, 213) | 60 000 / 50 000 / 15 000 | 2 000 | 5 000 | 2 000 / 500 / 110 000 | schwerer Kampf |
+| **Schlachtkreuzer** (*Traqueur*, 215) | 30 000 / 40 000 / 15 000 | 10 000 | 10 000 | 700 / 400 / 70 000 | schneller Kampf |
+| **Todesstern** (*Étoile de la Mort*, 214) | 5 000 000 / 4 000 000 / 1 000 000 | 1 000 000 | 100 | 200 000 / 50 000 / 9 000 000 | ultimativ; erfordert Werft 12 und *Graviton* |
+
+Die Voraussetzungen (Werftstufe und Technologien) stehen auf jeder Karte.
+
+**Welches Schiff für den Transport?**
+Anfangs den kleinen Transporter (günstig, früh verfügbar), dann den großen (4× Kapazität für 3× Preis, schneller). Die Fracht ist die Summe aller gesendeten Schiffe.
+
+**Wie spioniere ich?**
+Mit **Spionagesonden**: Die Spionagemission akzeptiert nur Sonden. Eine Sonde kostet 1 000 Kristall und fliegt sehr schnell; Sonden **kehren immer zurück** (sie werden nicht zerstört) und das Ziel **wird nicht gewarnt**. Der Berichtsdetail hängt von einem Wert ab: `Wert = (Ihre Spionage − die des Ziels) + (Anzahl Sonden − 1)`. **Rohstoffe** sind immer sichtbar; ab **1** kommt die **Flotte** hinzu, ab **3** **Verteidigung und Gebäude**, ab **5** die **Technologien**. Beispiel: Bei gleicher Stufe genügen 6 Sonden, um alles zu sehen.
+
+**⚠️ Wozu dient der Recycler?**
+Heute zu nichts: Der Kampf berechnet Trümmer (30 % von Metall und Kristall der zerstörten **Schiffe**), aber es gibt weder ein Trümmerfeld noch eine Recycling-Mission. Bauen Sie vorerst keine Recycler.
+
+**Haben Schiffe „Schnellfeuer“?**
+⚠️ Schnellfeuer-Werte existieren in der Konfiguration, aber das Kampfsystem **wendet sie noch nicht an**: Jedes Schiff schießt einmal pro Runde auf ein zufällig gewähltes Ziel.
+
+**Wie kolonisiere ich?**
+Mission *Kolonisierung* mit einem Kolonieschiff zu einer **freien Position**: Die Kolonie wird gegründet, das Schiff verbraucht. Höchstens **21 Planeten** pro Spieler.
+
+---
+
+## 6. Flotten und Missionen
+
+**Welche Missionen gibt es?**
+**Transport** (liefert die Fracht, danach kehrt die Flotte zurück), **Stationieren** (setzt Flotte und Fracht auf *Ihren* anderen Planeten, ohne Rückkehr), **Angriff**, **Spionage**, **Kolonisierung**. Recycling, Expedition, Verbandsangriff, Halten und Zerstören lehnt das Spiel ab, ohne etwas abzubuchen.
+
+**Wie werden Flugdauer und Treibstoff berechnet?**
+Entfernung: `√(Δgalaxie² × 20 000 + Δsystem² × 95 + Δposition² × 5)`. Flottengeschwindigkeit: die ihres **langsamsten Schiffs** (mit Triebwerksboni). Dauer: `(35 000 / Geschwindigkeits-%) × √(Entfernung × 10 / Geschwindigkeit) + 10` Sekunden, geteilt durch die Flottengeschwindigkeit des Servers. Treibstoff (Deuterium, beim **Start** abgebucht): `Σ Anzahl × Verbrauch × (Entfernung / 35 000) × (Geschwindigkeit / 1 000 + 1)²`. Beispiel mit 10 kleinen Transportern: gleiches System (4 Positionen) 0 Deuterium; 10 Systeme weiter 10; andere Galaxie 14. Eine niedrigere Geschwindigkeit verlängert den Flug (10 % bis 100 %).
+
+**Kann ich mehrere Flotten gleichzeitig schicken?**
+Ja, heute ohne Begrenzung der Anzahl (die *Computertechnik* begrenzt sie nicht).
+
+**Wie rufe ich eine Flotte zurück?**
+Über *Bewegungen*, solange sie auf dem Hinflug und noch nicht angekommen ist: Sie dreht um, und der Rückflug dauert so lange wie die bereits geflogene Strecke. Eine angekommene oder bereits zurückkehrende Flotte kann nicht zurückgerufen werden.
+
+**Wo sehe ich das Ergebnis?**
+In den *Berichten*.
+
+**Was transportiert die Angriffsmission?**
+Sie kann auch Fracht mitführen, aber die Beute nutzt nur den **freien Platz**, der in den überlebenden Schiffen bleibt.
+
+---
+
+## 7. Kampf
+
+**Wie läuft ein Kampf ab?**
+Bis zu **6 Runden**. In jeder Runde schießt jede Einheit des Angreifers, dann jede Einheit des Verteidigers, einmal auf eine **zufällig gewählte** gegnerische Einheit. Schaden entfernt zuerst den Schild, dann die Hülle; eine Einheit ohne Hülle ist zerstört. Am Ende jeder Runde **regenerieren die Schilde um 70 %** ihres Maximums. Der Kampf endet, wenn eine Seite vernichtet ist oder nach 6 Runden (Unentschieden).
+
+**Welche Technologieboni gelten?**
+*Militär* (+10 % Waffe pro Stufe), *Verteidigung* (+10 % Hülle), *Schild* (+10 % Schild), angewendet auf alle Ihre Einheiten, Schiffe **und** Verteidigungen. Jede Seite nutzt ihre eigenen Stufen.
+
+**Wer verteidigt einen angegriffenen Planeten?**
+Die **Verteidigungen** und die **stationierte Flotte** des Planeten kämpfen zusammen (auch Solarsatelliten, die sehr fragil sind).
+
+**Was geht verloren und was kommt zurück?**
+- Zerstörte Schiffe sind verloren.
+- Zerstörte **Verteidigungen** werden nach dem Kampf mit je **70 % Wahrscheinlichkeit** wieder aufgebaut.
+- Ein „Trümmerfeld“ wird berechnet (30 % der Metall- und Kristallkosten der verlorenen Schiffe) und im Bericht angezeigt, kann aber nicht eingesammelt werden (§5).
+- **Beute** (wenn der Angreifer gewinnt): bis zu **50 %** jedes Rohstoffs des Ziels, begrenzt auf die freie Kapazität der überlebenden Schiffe.
+
+**Wie gewinne ich einen Kampf?**
+Spionieren Sie zuerst, um Flotte und Verteidigung zu kennen, prüfen Sie, ob Ihre Fracht für die Beute reicht, und schicken Sie eine deutlich überlegene Flotte (der Zufall spielt mit). Der Schild einer Einheit absorbiert Schüsse bis zur Erschöpfung und regeneriert dann pro Runde um 70 %; Einheiten mit großen Schilden stecken also von Runde zu Runde viele Schüsse ein.
+
+**Kann ich meinen eigenen Planeten angreifen?**
+Nein. Stationieren erfordert einen **Ihrer** Planeten, ein Angriff schließt Ihre aus.
+
+---
+
+## 8. Verteidigung
+
+**Welche Verteidigungen kann ich bauen?**
+
+| Verteidigung (Name im Spiel) | Kosten (Metall / Kristall / Deuterium) | Waffe / Schild / Hülle | Wichtigste Voraussetzungen |
+|---|---|---|---|
+| **Raketenwerfer** (*Lanceur de Missiles*, 401) | 2 000 / 0 / 0 | 80 / 20 / 200 | Werft 1 |
+| **Leichtes Lasergeschütz** (*Artillerie Laser Légère*, 402) | 1 500 / 500 / 0 | 100 / 25 / 2 000 | Werft 2, Energie 2, Laser 3 |
+| **Schweres Lasergeschütz** (*Artillerie Laser Lourde*, 403) | 6 000 / 2 000 / 0 | 250 / 100 / 8 000 | Werft 4, Energie 3, Laser 6 |
+| **Gaußkanone** (*Canon de Gauss*, 404) | 20 000 / 15 000 / 2 000 | 1 100 / 200 / 35 000 | Werft 6, Energie 6, Militär 3, Schild 1 |
+| **Ionengeschütz** (*Artillerie à Ions*, 405) | 2 000 / 6 000 / 0 | 150 / 500 / 8 000 | Werft 4, Ionen 4 |
+| **Plasmawerfer** (*Canon à Plasma*, 406) | 50 000 / 50 000 / 30 000 | 3 000 / 300 / 100 000 | Werft 8, Plasma 7 |
+| **Kleine Schildkuppel** (*Petit Bouclier*, 407) | 10 000 / 10 000 / 0 | 1 / 2 000 / 20 000 | Werft 6, Schild 2 |
+| **Große Schildkuppel** (*Grand Bouclier*, 408) | 50 000 / 50 000 / 0 | 1 / 10 000 / 100 000 | Werft 8, Schild 6 |
+
+Raketen (Abfang- und Interplanetarraketen) sind **nicht verfügbar**: Das Raketensilo ist daher vorerst nutzlos.
+
+**Sind Planetenschilde besonders?**
+Ja: **je eines pro Planet** (klein, groß). Sie haben einen riesigen Schild und eine dicke Hülle bei nahezu keiner Waffe: Sie dienen dazu, Schüsse zu **absorbieren**.
+
+**Welche Verteidigung lohnt sich am meisten?**
+Nach Kosten sind Raketenwerfer und Lasergeschütze am Anfang am effizientesten; Schildkuppeln fangen viele Schüsse ab; der Plasmawerfer ist die stärkste Verteidigung, aber sehr teuer. Kombinieren Sie sie: Schüsse verteilen sich zufällig auf **alle** Einheiten, daher schützen billige Kuppeln und Werfer Ihre teuren Verteidigungen.
+
+**Kommen zerstörte Verteidigungen zurück?**
+Jede zerstörte Verteidigung wird nach dem Kampf mit **70 % Wahrscheinlichkeit** kostenlos wieder aufgebaut; verlorene Schiffe kommen nicht zurück.
+
+**Schützt meine Verteidigung meine Rohstoffe?**
+Nicht direkt: Gewinnt der Angreifer, kann er bis zu 50 % Ihres Bestands plündern. Eine starke Verteidigung erschwert seinen Sieg; Rohstoffe auszugeben, bevor Sie sich abmelden, ist der beste Schutz.
+
+**Nehmen meine Schiffe an der Verteidigung teil?**
+Ja, die auf dem Planeten **stationierten** (nicht die im Flug) kämpfen zusammen mit der Verteidigung.
+
+**Verbessert Technologie meine Verteidigung?**
+Ja: *Verteidigung* (Hülle), *Schild* und *Militär* (Waffe) mit +10 % pro Stufe gelten auch für Verteidigungen.
+
+---
+
+## 9. Macht, Kommandant und Rangliste
+
+**Was ist Macht?**
+Eine Punktzahl für Ihre Entwicklung: **Gebäude + Forschung + Schiffe + Verteidigung + Kolonien**. Pro Kategorie werden die investierten Kosten (Metall + Kristall + Deuterium) addiert und durch 1 000 geteilt. Jede Kolonie (über den ersten Planeten hinaus) zählt 1 000 Punkte. **Rohstoffbestände zählen nicht.**
+
+**Was ist die Kommandantenstufe?**
+Eine Stufe von 1 bis 100, **nur** aus den Punkten für Gebäude und Forschung berechnet (nicht Schiffe). Die Schwelle der Stufe `n` ist `10 × (n − 1)³`: Stufe 2 bei 10 Punkten, Stufe 10 bei 7 290, Stufe 50 bei 1 176 490. Auf Stufe 50 erhalten Sie den 3. gleichzeitigen Bau (mit *Gestion des chantiers*) und die 3. Produktionslinie (mit *Production parallèle*).
+
+**Wie funktioniert die Rangliste?**
+Sie beruht auf der **Macht**; Ihr Rang erscheint in der Kopfzeile und in der Übersicht. Schiffsverluste senken Ihre Macht; der Bau von Verteidigung erhöht sie.
+
+---
+
+## 10. „Warum kann ich nicht …?“
+
+| Meldung (im Spiel auf Französisch) | Ursache und Lösung |
+|---|---|
+| „Ressources insuffisantes“ | Es fehlt Metall, Kristall oder Deuterium (bei einem Flug kommt der Treibstoff zur Deuteriumfracht hinzu). |
+| „Prérequis manquants : …“ | Die Details nennen die zu erreichenden Gebäude- oder Technologiestufen. |
+| „Capacité de construction atteinte“ | Die Warteschlange des Planeten ist voll: warten oder *Gestion des chantiers* freischalten (2 Warteschlangen). |
+| „Plus de champs disponibles“ | Der Planet hat keine Felder mehr (163): Nutzen Sie die letzten Felder für nützliche Gebäude oder kolonisieren Sie. |
+| „Aucune planète à cette position“ | Angriff und Spionage zielen nur auf einen existierenden Planeten; zum Kolonisieren muss die Position **frei** sein. |
+| „Une mission d'espionnage n'accepte que des sondes d'espionnage“ | Nur Sonden (210) senden. |
+| „Capacité de cargaison insuffisante“ | Transporter hinzufügen oder die Fracht verringern. |
+| „Un bouclier planétaire ne se construit qu'en un seul exemplaire“ | Je eine kleine und eine große Schildkuppel pro Planet. |
+| „La flotte est déjà arrivée“ | Rückruf ist nur auf dem Hinflug möglich. |
+| „Mission non disponible“ | Die Mission gibt es noch nicht (§6). |
+
+---
+
+## 11. Was es noch nicht gibt
+
+Offiziere, Markt, Ereignisse, Monde, Raketen, Recycling und Trümmerfelder, Expeditionen, Verbandsangriffe, Flottenlimit durch *Computertechnik*, Wirkung des Terraformers, Schnellfeuer. Die zugehörigen Elemente (Gebäude, Schiffe, Technologien) erscheinen manchmal in den Listen und lassen sich **ohne Wirkung** kaufen: Lesen Sie die ⚠️ oben, bevor Sie investieren. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
+
+*Diese FAQ wurde gegen den Code (`packages/game-config`, `packages/game-engine`, API) und, für die Solarsatelliten, durch einen automatisierten Integrationstest (`solar-satellites.integration.spec.ts`) geprüft.*

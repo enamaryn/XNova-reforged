@@ -7,6 +7,7 @@ const links = [
   { href: "/overview", label: "nav.overview" },
   { href: "/buildings", label: "nav.buildings" },
   { href: "/research", label: "nav.research" },
+  { href: "/faq", label: "nav.faq" },
 ];
 
 export function PrimaryNav() {

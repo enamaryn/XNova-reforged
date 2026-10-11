@@ -82,6 +82,9 @@ export default async function HomePage({
               <Link href="/research" className="transition hover:text-sky-300">
                 {t("navResearch")}
               </Link>
+              <Link href="/faq" className="transition hover:text-sky-300">
+                {t("navFaq")}
+              </Link>
             </nav>
             <Link
               href="/login"

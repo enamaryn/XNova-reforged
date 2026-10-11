@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { locales, defaultLocale } from './i18n/config'
 
-const protectedPaths = ["/overview", "/buildings", "/research", "/fleet", "/galaxy", "/shipyard", "/defense", "/alliance", "/messages", "/reports", "/statistics", "/settings"];
+const protectedPaths = ["/overview", "/buildings", "/research", "/fleet", "/galaxy", "/shipyard", "/defense", "/alliance", "/messages", "/reports", "/statistics", "/settings", "/help"];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

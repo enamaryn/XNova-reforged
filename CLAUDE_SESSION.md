@@ -14,6 +14,7 @@
 - [x] Envoi refusé par l'API et satellite absent de la liste des vaisseaux disponibles ; description du jeu corrigée.
 - [x] Tests : unitaires du moteur, intégration `solar-satellites` (énergie, non-rétroactivité, refus d'envoi, perte) ; unitaires 85/85, intégration 286/286.
 - [x] FAQ réécrite dans les 5 langues (satellites, coût comparé aux centrales).
+- [x] **Page FAQ** : publique `/<langue>/faq` (sans connexion, lien dans l'en-tête public et sur l'accueil) et dans le jeu `/<langue>/help` (entrée « FAQ » du menu de gauche, cadre du jeu conservé, connexion requise) ; contenu = `docs/FAQ*.md` copié dans `apps/web/content/faq/` par `scripts/faq/sync-faq.mjs` (automatique au `dev`/`build`, vérifié par `npm run test:i18n`) ; rendu Markdown maison sans dépendance (`apps/web/lib/faq/markdown.tsx`) ; E2E `faq.spec.ts` (6 tests) ; E2E complets 41/41 et mobile 84/84 (hors WebKit, indisponible localement).
 
 ## Session — FAQ du jeu en cinq langues
 

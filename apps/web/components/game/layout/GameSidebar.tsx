@@ -43,6 +43,7 @@ const navItems: NavItem[] = [
   { href: '/statistics', label: 'nav.statistics', icon: '📊', category: 'autre' },
   { href: '/reports', label: 'nav.reports', icon: '⚔️', category: 'autre' },
   { href: '/options', label: 'nav.options', icon: '⚙️', category: 'autre' },
+  { href: '/help', label: 'nav.faq', icon: '❓', category: 'autre' },
   { href: '/admin', label: 'nav.admin', icon: '🛠️', category: 'autre' },
 ];
 
