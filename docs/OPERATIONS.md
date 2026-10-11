@@ -115,6 +115,15 @@ Toujours active, sans service extérieur ni variable : console admin → onglet 
 - **Sentry optionnel** : onglet Supervision ou étape de l'assistant. DSN chiffrés avec `SECRETS_ENCRYPTION_KEY`, jamais réaffichés. Priorité : `SENTRY_DSN` (environnement) > configuration chiffrée > désactivé. Bouton « Tester Sentry » : envoie un événement de test identifiable et conserve le résultat et la date. Si Sentry est injoignable, le jeu et le journal local continuent. Le DSN du navigateur est servi à l'exécution par `GET /monitoring/public-config` (aucune recompilation).
 - **Mise à jour d'une installation existante** : la migration `20261012100000_local_supervision` ajoute la table `Incident` ; `scripts/update.sh` l'applique, la supervision locale démarre avec ses valeurs par défaut, un Sentry déjà fourni par variable reste actif.
 
+## Mesure de disponibilité (uptime)
+
+L'API écrit **un échantillon de santé par minute** (table `HealthSample`, tâche `uptime-sample`, conservés 90 jours). La console admin → Supervision affiche la disponibilité sur 24 h, 7 j et 30 j, le nombre de minutes d'indisponibilité et de pannes.
+
+- **Disponible** = minute avec un échantillon « sain » ou « dégradé » ; **indisponible** = « indisponible » (PostgreSQL ou API en panne) **ou aucun échantillon** (processus arrêté, redémarrage, base injoignable).
+- La mesure commence au premier échantillon : un serveur neuf n'affiche pas 0 %. Objectif du projet : > 99 %, à juger après plusieurs jours (99 % sur 7 jours = 100 minutes d'arrêt maximum).
+- Limite : la mesure est faite **depuis le serveur lui-même** ; une coupure réseau ou du proxy devant le site n'est pas vue. Pour une mesure externe, ajouter un moniteur HTTP (par exemple sur `/health/ready`).
+- Les redémarrages de `scripts/update.sh` comptent comme quelques minutes d'indisponibilité.
+
 ## Suivi d'erreurs (Sentry)
 
 L'intégration est **optionnelle et inactive par défaut** : sans DSN, rien n'est initialisé et aucune erreur n'est produite.

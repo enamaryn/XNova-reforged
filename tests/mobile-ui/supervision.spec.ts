@@ -51,6 +51,11 @@ async function fixture(page: Page, role: "ADMIN" | "SUPER_ADMIN") {
       return route.fulfill({
         json: {
           localActive: true,
+          uptime: {
+            last24h: { windowMinutes: 1440, availablePercent: 99.65, healthyPercent: 98.1, downMinutes: 5, outages: 1, measuredSince: now },
+            last7d: { windowMinutes: 10080, availablePercent: 99.9, healthyPercent: 99.2, downMinutes: 10, outages: 2, measuredSince: now },
+            last30d: { windowMinutes: 10080, availablePercent: null, healthyPercent: null, downMinutes: 0, outages: 0, measuredSince: now },
+          },
           health: { status: "degraded", checkedAt: now, checks },
           stats: { open: 7, total: 12, last24h: 5, occurrences24h: 40, byLevel: {}, bySource: {}, top: [incident(1), incident(2)] },
           config,
@@ -80,6 +85,7 @@ for (const locale of ["fr", "en", "es", "de", "it"] as const) {
     await expect(page.getByTestId("supervision-panel")).toBeVisible();
     await expect(page.getByTestId("overall-status")).toBeVisible();
     await expect(page.getByTestId("check-redis")).toBeVisible();
+    await expect(page.getByTestId("uptime-last24h")).toContainText("99.65");
     await expect(page.getByTestId("incident-list").getByRole("button").first()).toBeVisible();
     await noHorizontalOverflow(page);
 

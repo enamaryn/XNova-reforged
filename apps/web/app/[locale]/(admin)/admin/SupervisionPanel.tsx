@@ -202,7 +202,7 @@ export function SupervisionPanel() {
     );
   }
 
-  const { health, stats, config } = overview.data;
+  const { health, stats, config, uptime } = overview.data;
   const version = health.checks.find((check) => check.id === "version");
   const items = incidents.data?.items ?? [];
 
@@ -244,6 +244,32 @@ export function SupervisionPanel() {
           </p>
         )}
       </section>
+
+      {uptime && (
+        <section className={card} data-testid="uptime-section">
+          <h2 className="text-sm font-semibold text-white">{t("supervision.uptime.title")}</h2>
+          <p className="mt-1 text-xs text-slate-500">
+            {uptime.last30d.measuredSince
+              ? t("supervision.uptime.since", { date: new Date(uptime.last30d.measuredSince).toLocaleString() })
+              : t("supervision.uptime.none")}
+          </p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-3">
+            {(["last24h", "last7d", "last30d"] as const).map((key) => {
+              const w = uptime[key];
+              return (
+                <div key={key} className="rounded-2xl border border-slate-800 bg-slate-950/40 p-3" data-testid={`uptime-${key}`}>
+                  <p className="text-[11px] uppercase tracking-[0.15em] text-slate-500">{t(`supervision.uptime.${key}`)}</p>
+                  <p className="mt-1 text-xl font-semibold text-white">{w.availablePercent === null ? "—" : `${w.availablePercent} %`}</p>
+                  <p className="mt-1 text-[11px] text-slate-500">
+                    {w.availablePercent === null ? t("supervision.uptime.waiting") : t("supervision.uptime.detail", { down: w.downMinutes, outages: w.outages })}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+          <p className="mt-3 text-[11px] text-slate-600">{t("supervision.uptime.hint")}</p>
+        </section>
+      )}
 
       {stats && (
         <section className={card}>
