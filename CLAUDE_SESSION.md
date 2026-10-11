@@ -5,6 +5,15 @@
 
 ---
 
+## Session — dette d'outillage et Sentry (PR D)
+
+**Date :** 11 octobre 2026. **Demande du propriétaire :** PRE-03, DETTE-02 (Tailwind 4) et DETTE-03 (eslint-config-next 16).
+
+- [x] **PRE-03** : `npm run sentry:test` (événement de test, succès seulement si Sentry répond 200, DSN jamais affiché), avertissement de démarrage en production sans DSN, procédure systemd dans `docs/OPERATIONS.md` (le `.env` de l'installateur refuse les clés inconnues). Reste au propriétaire : fournir le DSN réel et lancer la commande.
+- [x] **DETTE-03** : ESLint 9 + eslint-config-next 16 pour le web (configuration plate), `next lint` remplacé par `eslint .`.
+- [x] **DETTE-02** : Tailwind 4.3 (outil de migration officiel, puis corrections guidées par une comparaison automatique avant/après : polices, curseur des boutons, couches CSS, `space-y` sur éléments en ligne). Hautes de développement 7 → 5.
+- Signalé par le propriétaire pendant la session : temps estimé de fabrication des défenses/vaisseaux incohérent (16 min affichées pour ~13 s réelles) → traité dans la PR suivante.
+
 ## Session — langues : installation, administration, emails, noms du jeu (PR C)
 
 **Date :** 11 octobre 2026. **Demande du propriétaire :** traduire le reste manquant (assistant d'installation, console admin, emails, noms et descriptions du jeu) en français et en multilingue ; proposer une « langue d'installation » qui devient la langue par défaut du jeu et du serveur ; PRE-02 validé, PRE-04 : comptes actuels laissés vérifiés ; attaquer PRE-03, DETTE-02 et DETTE-03 (PR suivante).

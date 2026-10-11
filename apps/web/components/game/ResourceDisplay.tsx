@@ -115,7 +115,7 @@ export const ResourceDisplay = memo(function ResourceDisplay({
   };
 
   return (
-    <div className={`rounded-2xl border ${borderColors[color as keyof typeof borderColors] || borderColors.blue} bg-slate-900/60 p-4 backdrop-blur-sm shadow-[0_0_24px_rgba(15,23,42,0.6)]`}>
+    <div className={`rounded-2xl border ${borderColors[color as keyof typeof borderColors] || borderColors.blue} bg-slate-900/60 p-4 backdrop-blur-xs shadow-[0_0_24px_rgba(15,23,42,0.6)]`}>
       {/* Header */}
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">

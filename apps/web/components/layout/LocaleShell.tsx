@@ -40,7 +40,7 @@ export function LocaleShell({
   // Game pages already provide their own fixed header, main and navigation.
   if (gamePages.has(page)) return <>{children}</>;
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900">
+    <div className="min-h-screen bg-linear-to-b from-slate-950 via-slate-950 to-slate-900">
       {header}
       <main className="w-full">{children}</main>
       {footer}

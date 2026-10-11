@@ -75,7 +75,7 @@ export const BuildingCard = memo(function BuildingCard({
       aria-label={building.name}
       whileHover={shouldReduceMotion ? undefined : { scale: 1.02 }}
       transition={{ duration: 0.2 }}
-      className={`rounded-2xl border ${borderColor} bg-slate-900/60 p-2.5 sm:p-4 backdrop-blur-sm transition-all duration-200 shadow-[0_0_24px_rgba(15,23,42,0.6)]`}
+      className={`rounded-2xl border ${borderColor} bg-slate-900/60 p-2.5 sm:p-4 backdrop-blur-xs transition-all duration-200 shadow-[0_0_24px_rgba(15,23,42,0.6)]`}
     >
       {/* Header */}
       <div className="mb-1 flex items-start justify-between gap-2 sm:mb-3">

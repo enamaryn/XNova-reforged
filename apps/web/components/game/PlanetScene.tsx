@@ -18,7 +18,7 @@ export const PlanetScene = memo(function PlanetScene({
   const { t } = useI18n();
   return (
     <div className="relative overflow-hidden rounded-3xl border border-slate-800/80 bg-slate-950/60 p-4 shadow-[0_0_40px_rgba(2,132,199,0.12)] sm:p-6">
-      <div className="absolute right-8 top-6 h-10 w-10 rounded-full bg-gradient-to-br from-amber-200 via-amber-400 to-orange-500 shadow-[0_0_16px_rgba(251,191,36,0.8)]" />
+      <div className="absolute right-8 top-6 h-10 w-10 rounded-full bg-linear-to-br from-amber-200 via-amber-400 to-orange-500 shadow-[0_0_16px_rgba(251,191,36,0.8)]" />
       <div className="absolute right-5 top-3 h-14 w-14 rounded-full bg-amber-300/10 blur-xl" />
 
       <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">

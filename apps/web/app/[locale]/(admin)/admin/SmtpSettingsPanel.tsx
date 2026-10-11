@@ -12,8 +12,8 @@ import {
 import { useI18n } from '@/lib/i18n';
 
 const inputClass =
-  'w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60';
-const labelClass = 'text-xs uppercase tracking-[0.2em] text-slate-500';
+  'w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60';
+const labelClass = 'block text-xs uppercase tracking-[0.2em] text-slate-500';
 
 interface FormState {
   enabled: boolean;

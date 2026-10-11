@@ -169,7 +169,7 @@ export default function OverviewClient() {
           <div className="mt-3 flex flex-wrap items-center gap-4">
             <button
               onClick={() => setShowCommanderPanel((prev) => !prev)}
-              className="relative h-16 w-16 rounded-full border border-blue-500/40 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 text-2xl text-white shadow-[0_0_16px_rgba(59,130,246,0.3)]"
+              className="relative h-16 w-16 rounded-full border border-blue-500/40 bg-linear-to-br from-slate-700 via-slate-800 to-slate-900 text-2xl text-white shadow-[0_0_16px_rgba(59,130,246,0.3)]"
               aria-label={t("overview.openCommander")}
             >
               {user?.username?.charAt(0).toUpperCase() || "C"}
@@ -204,7 +204,7 @@ export default function OverviewClient() {
               </div>
               <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-slate-800">
                 <div
-                  className="h-full rounded-full bg-gradient-to-r from-sky-400 via-blue-500 to-blue-600 transition-all"
+                  className="h-full rounded-full bg-linear-to-r from-sky-400 via-blue-500 to-blue-600 transition-all"
                   style={{ width: `${commanderProgress}%` }}
                 />
               </div>
@@ -279,7 +279,7 @@ export default function OverviewClient() {
               <input
                 value={planetNameDraft}
                 onChange={(event) => setPlanetNameDraft(event.target.value)}
-                className="w-full rounded-xl border border-slate-800 bg-slate-900/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                className="w-full rounded-xl border border-slate-800 bg-slate-900/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
               />
             ) : (
               <div>

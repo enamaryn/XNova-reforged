@@ -188,7 +188,7 @@ export default function AlliancePage() {
                   placeholder={t('alliance.invitePlaceholder')}
                   value={inviteUsername}
                   onChange={(event) => setInviteUsername(event.target.value)}
-                  className="flex-1 rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                  className="flex-1 rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
                 />
                 <button
                   onClick={() =>
@@ -239,7 +239,7 @@ export default function AlliancePage() {
                 onChange={(event) =>
                   setCreateForm((prev) => ({ ...prev, tag: event.target.value }))
                 }
-                className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
               />
               <input
                 type="text"
@@ -248,7 +248,7 @@ export default function AlliancePage() {
                 onChange={(event) =>
                   setCreateForm((prev) => ({ ...prev, name: event.target.value }))
                 }
-                className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
               />
               <textarea
                 placeholder={t('alliance.descriptionPlaceholder')}
@@ -257,7 +257,7 @@ export default function AlliancePage() {
                   setCreateForm((prev) => ({ ...prev, description: event.target.value }))
                 }
                 rows={5}
-                className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
               />
               <button
                 onClick={() => createMutation.mutate(createForm)}
@@ -284,7 +284,7 @@ export default function AlliancePage() {
                 placeholder={t('alliance.joinPlaceholder')}
                 value={joinId}
                 onChange={(event) => setJoinId(event.target.value)}
-                className="flex-1 rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                className="flex-1 rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
               />
               <button
                 onClick={() => joinId && joinMutation.mutate(joinId)}

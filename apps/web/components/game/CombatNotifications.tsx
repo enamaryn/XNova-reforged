@@ -70,7 +70,7 @@ export function CombatNotifications() {
       {notifications.map((notification) => (
         <div
           key={notification.id}
-          className="w-72 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-200 shadow-lg backdrop-blur"
+          className="w-72 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-200 shadow-lg backdrop-blur-sm"
         >
           <div className="text-xs uppercase tracking-[0.2em] text-red-300">
             Combat

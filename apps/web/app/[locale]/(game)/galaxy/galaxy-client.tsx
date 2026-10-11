@@ -85,7 +85,7 @@ export default function GalaxyClient() {
               min={1}
               value={galaxy}
               onChange={(event) => setGalaxy(Number(event.target.value))}
-              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60 sm:w-28"
+              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60 sm:w-28"
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
@@ -95,7 +95,7 @@ export default function GalaxyClient() {
               min={1}
               value={system}
               onChange={(event) => setSystem(Number(event.target.value))}
-              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60 sm:w-28"
+              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60 sm:w-28"
             />
           </label>
         </div>

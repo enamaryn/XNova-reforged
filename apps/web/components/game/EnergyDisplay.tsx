@@ -36,7 +36,7 @@ export const EnergyDisplay = memo(function EnergyDisplay({
     <motion.div
       whileHover={shouldReduceMotion ? undefined : { scale: 1.01 }}
       transition={{ duration: 0.2 }}
-      className="rounded-2xl border border-amber-500/40 bg-slate-900/60 p-4 backdrop-blur-sm shadow-[0_0_24px_rgba(15,23,42,0.6)]"
+      className="rounded-2xl border border-amber-500/40 bg-slate-900/60 p-4 backdrop-blur-xs shadow-[0_0_24px_rgba(15,23,42,0.6)]"
     >
       {/* Header */}
       <div className="mb-3 flex items-center justify-between">

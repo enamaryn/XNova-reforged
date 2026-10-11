@@ -237,7 +237,7 @@ function GeneralPanel() {
               onChange={(event) =>
                 setForm((prev) => (prev ? { ...prev, language: event.target.value } : prev))
               }
-              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm normal-case tracking-normal text-white outline-none focus:border-blue-400/60"
+              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm normal-case tracking-normal text-white outline-hidden focus:border-blue-400/60"
             >
               {locales.map((item) => (
                 <option key={item} value={item}>
@@ -258,7 +258,7 @@ function GeneralPanel() {
               onChange={(event) =>
                 handleChange("gameSpeed")(event.target.value)
               }
-              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
@@ -270,7 +270,7 @@ function GeneralPanel() {
               onChange={(event) =>
                 handleChange("fleetSpeed")(event.target.value)
               }
-              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
@@ -282,7 +282,7 @@ function GeneralPanel() {
               onChange={(event) =>
                 handleChange("resourceMultiplier")(event.target.value)
               }
-              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
@@ -294,7 +294,7 @@ function GeneralPanel() {
               onChange={(event) =>
                 handleChange("buildingCostMultiplier")(event.target.value)
               }
-              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
@@ -306,7 +306,7 @@ function GeneralPanel() {
               onChange={(event) =>
                 handleChange("researchCostMultiplier")(event.target.value)
               }
-              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
@@ -318,7 +318,7 @@ function GeneralPanel() {
               onChange={(event) =>
                 handleChange("shipCostMultiplier")(event.target.value)
               }
-              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
@@ -330,7 +330,7 @@ function GeneralPanel() {
               onChange={(event) =>
                 handleChange("planetSize")(event.target.value)
               }
-              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
@@ -342,7 +342,7 @@ function GeneralPanel() {
               onChange={(event) =>
                 handleChange("maxBuildingLevel")(event.target.value)
               }
-              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
@@ -354,7 +354,7 @@ function GeneralPanel() {
               onChange={(event) =>
                 handleChange("maxTechnologyLevel")(event.target.value)
               }
-              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
@@ -366,7 +366,7 @@ function GeneralPanel() {
               onChange={(event) =>
                 handleChange("baseMetal")(event.target.value)
               }
-              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
@@ -378,7 +378,7 @@ function GeneralPanel() {
               onChange={(event) =>
                 handleChange("baseCrystal")(event.target.value)
               }
-              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
             />
           </label>
           <label className="text-xs uppercase tracking-[0.2em] text-slate-500">
@@ -390,7 +390,7 @@ function GeneralPanel() {
               onChange={(event) =>
                 handleChange("baseDeuterium")(event.target.value)
               }
-              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+              className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
             />
           </label>
         </div>
@@ -423,14 +423,14 @@ function GeneralPanel() {
                   username: event.target.value,
                 }))
               }
-              className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+              className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
             />
             <select
               value={roleForm.role}
               onChange={(event) =>
                 setRoleForm((prev) => ({ ...prev, role: event.target.value }))
               }
-              className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+              className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
             >
               <option value="PLAYER">{t("admin.rolePlayer")}</option>
               <option value="MODERATOR">{t("admin.roleModerator")}</option>
@@ -476,7 +476,7 @@ function GeneralPanel() {
                     username: event.target.value,
                   }))
                 }
-                className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
               />
               <input
                 type="text"
@@ -488,7 +488,7 @@ function GeneralPanel() {
                     reason: event.target.value,
                   }))
                 }
-                className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
               />
               <div className="grid grid-cols-3 gap-2">
                 <label className="text-xs text-slate-400">
@@ -505,7 +505,7 @@ function GeneralPanel() {
                       }))
                     }
                     placeholder={t("admin.days")}
-                    className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                    className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
                   />
                 </label>
                 <label className="text-xs text-slate-400">
@@ -522,7 +522,7 @@ function GeneralPanel() {
                       }))
                     }
                     placeholder={t("admin.hours")}
-                    className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                    className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
                   />
                 </label>
                 <label className="text-xs text-slate-400">
@@ -539,7 +539,7 @@ function GeneralPanel() {
                       }))
                     }
                     placeholder={t("admin.minutes")}
-                    className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                    className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
                   />
                 </label>
               </div>
@@ -577,7 +577,7 @@ function GeneralPanel() {
                     username: event.target.value,
                   }))
                 }
-                className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
               />
               <input
                 type="text"
@@ -589,7 +589,7 @@ function GeneralPanel() {
                     reason: event.target.value,
                   }))
                 }
-                className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
               />
               <button
                 onClick={() =>
@@ -631,7 +631,7 @@ function GeneralPanel() {
                     username: event.target.value,
                   }));
                 }}
-                className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60"
+                className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
               />
             </label>
             <button

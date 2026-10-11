@@ -26,7 +26,7 @@ export function LoginErrorDialog({
       aria-labelledby={`${id}-title`}
       aria-describedby={`${id}-message`}
       onClose={onClose}
-      className="m-auto w-[calc(100%_-_2rem)] max-w-md rounded-2xl border border-red-400/50 bg-slate-950 p-6 text-white shadow-2xl backdrop:bg-black/70"
+      className="m-auto w-[calc(100%-2rem)] max-w-md rounded-2xl border border-red-400/50 bg-slate-950 p-6 text-white shadow-2xl backdrop:bg-black/70"
     >
       <h2 id={`${id}-title`} className="text-lg font-semibold">
         {title}

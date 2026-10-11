@@ -11,6 +11,9 @@ async function bootstrap() {
   const environment = process.env.NODE_ENV || 'development';
   if (sentryDsn) {
     initSentry(sentryDsn, environment);
+  } else if (environment === 'production') {
+    // Information, pas une erreur : le suivi est optionnel, mais en production son absence mérite d'être visible
+    console.warn("Suivi d'erreurs désactivé : SENTRY_DSN absent (voir docs/OPERATIONS.md, « Suivi d'erreurs »)");
   }
 
   const app = await NestFactory.create(AppModule);

@@ -59,7 +59,7 @@ export function GameLayout({ children }: GameLayoutProps) {
 
       <div className="pointer-events-none fixed inset-0 z-0 opacity-40">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(59,130,246,0.08),transparent_55%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(148,163,184,0.08)_1px,transparent_1px),linear-gradient(180deg,rgba(148,163,184,0.08)_1px,transparent_1px)] bg-[size:120px_120px]" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(148,163,184,0.08)_1px,transparent_1px),linear-gradient(180deg,rgba(148,163,184,0.08)_1px,transparent_1px)] bg-size-[120px_120px]" />
       </div>
 
       {/* Header */}
@@ -74,7 +74,7 @@ export function GameLayout({ children }: GameLayoutProps) {
         <div className="md:hidden h-10" />
 
         {/* Contenu */}
-        <div className="min-w-0 p-4 pb-[calc(5rem_+_env(safe-area-inset-bottom))] md:p-6 lg:p-8">
+        <div className="min-w-0 p-4 pb-[calc(5rem+env(safe-area-inset-bottom))] md:p-6 lg:p-8">
           <PageTransition>{children}</PageTransition>
         </div>
       </main>
@@ -82,8 +82,8 @@ export function GameLayout({ children }: GameLayoutProps) {
       <CombatNotifications />
 
       {/* Navigation mobile rapide */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-800/80 bg-slate-950/90 backdrop-blur md:hidden">
-        <div className="mx-auto flex max-w-md items-center justify-between px-4 pt-2 pb-[calc(0.5rem_+_env(safe-area-inset-bottom))] text-[10px] uppercase tracking-[0.18em] text-slate-400">
+      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-800/80 bg-slate-950/90 backdrop-blur-sm md:hidden">
+        <div className="mx-auto flex max-w-md items-center justify-between px-4 pt-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] text-[10px] uppercase tracking-[0.18em] text-slate-400">
           <Link href="/overview" className="flex flex-col items-center gap-1 text-slate-300">
             <span className="text-lg">🏠</span>
             {t("nav.overview")}

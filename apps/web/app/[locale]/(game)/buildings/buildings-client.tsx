@@ -256,7 +256,7 @@ export default function BuildingsClient() {
 
       {/* Message d'erreur flottant */}
       {(buildMutation.error || cancelMutation.error) && (
-        <div className="fixed bottom-4 right-4 max-w-sm rounded-lg bg-red-500/90 px-4 py-3 text-white shadow-lg backdrop-blur-sm">
+        <div className="fixed bottom-4 right-4 max-w-sm rounded-lg bg-red-500/90 px-4 py-3 text-white shadow-lg backdrop-blur-xs">
           <p className="text-sm">
             {((buildMutation.error || cancelMutation.error) as Error).message}
           </p>
@@ -264,7 +264,7 @@ export default function BuildingsClient() {
       )}
 
       {toastMessage && (
-        <div className="fixed bottom-4 left-4 max-w-sm rounded-lg border border-emerald-400/40 bg-emerald-500/10 px-4 py-3 text-emerald-200 shadow-lg backdrop-blur-sm">
+        <div className="fixed bottom-4 left-4 max-w-sm rounded-lg border border-emerald-400/40 bg-emerald-500/10 px-4 py-3 text-emerald-200 shadow-lg backdrop-blur-xs">
           <p className="text-sm">{toastMessage}</p>
         </div>
       )}

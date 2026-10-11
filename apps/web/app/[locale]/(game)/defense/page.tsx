@@ -228,7 +228,7 @@ export default function DefensePage() {
                     );
                     setAmounts((prev) => ({ ...prev, [defense.id]: value }));
                   }}
-                  className="w-24 rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none focus:border-blue-400/60 disabled:opacity-50"
+                  className="w-24 rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60 disabled:opacity-50"
                 />
                 <button
                   onClick={() =>
