@@ -240,7 +240,7 @@ Pour une installation détaillée : `GETTING_STARTED.md`
 - `ROADMAP_COMPLET.md` - Roadmap long terme
 - `GAME_FORMULAS.md` - Formules de jeu (référence)
 - `STRATEGIE_UPGRADE.md` - Stratégie de refonte
-- `docs/FAQ.md` - FAQ du jeu (bâtiments, énergie, vaisseaux, flottes, combat, défense, puissance), en cinq langues : [fr](docs/FAQ.md), [en](docs/FAQ_EN.md), [es](docs/FAQ_ES.md), [de](docs/FAQ_DE.md), [it](docs/FAQ_IT.md)
+- `docs/FAQ.md` - FAQ du jeu, aussi publiée sur le site (`/<langue>/faq`, sans connexion) et dans le jeu (`/<langue>/help`, menu de gauche) (bâtiments, énergie, vaisseaux, flottes, combat, défense, puissance), en cinq langues : [fr](docs/FAQ.md), [en](docs/FAQ_EN.md), [es](docs/FAQ_ES.md), [de](docs/FAQ_DE.md), [it](docs/FAQ_IT.md)
 - `docs/GUIDE_JOUEUR.md` - Guide du joueur, en cinq langues : [fr](docs/GUIDE_JOUEUR.md), [en](docs/PLAYER_GUIDE_EN.md), [es](docs/PLAYER_GUIDE_ES.md), [de](docs/PLAYER_GUIDE_DE.md), [it](docs/PLAYER_GUIDE_IT.md)
 - `docs/API_ENDPOINTS.md` - Référence des endpoints API (auth, planètes, bâtiments, etc.)
 - `docs/BALANCE.md` - Réglages du serveur, profil de vitesse ×50, formules et valeurs par défaut
