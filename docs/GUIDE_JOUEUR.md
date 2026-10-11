@@ -1,6 +1,6 @@
 # Guide du joueur — XNova Reforged
 
-> Version `v0.2.0` (alpha privée). Ce guide décrit ce que le jeu fait réellement aujourd'hui. Langues disponibles : [Français](GUIDE_JOUEUR.md) · [English](PLAYER_GUIDE_EN.md) · [Español](PLAYER_GUIDE_ES.md) · [Deutsch](PLAYER_GUIDE_DE.md) · [Italiano](PLAYER_GUIDE_IT.md).
+> Version `v0.2.0` (alpha privée). Ce guide décrit ce que le jeu fait réellement aujourd'hui. Langues disponibles : [Français](GUIDE_JOUEUR.md) · [English](PLAYER_GUIDE_EN.md) · [Español](PLAYER_GUIDE_ES.md) · [Deutsch](PLAYER_GUIDE_DE.md) · [Italiano](PLAYER_GUIDE_IT.md). FAQ : [FAQ.md](FAQ.md).
 
 ## 1. Démarrer
 
@@ -52,7 +52,7 @@ Une flotte en vol peut être **rappelée** depuis *Mouvements*. Les résultats a
 
 ## 6. Combat
 
-- 6 rounds au maximum ; certains vaisseaux ont un **tir rapide** contre d'autres types.
+- 6 rounds au maximum ; le **tir rapide** n'est pas encore appliqué par le moteur de combat.
 - 30 % du coût des vaisseaux détruits devient des **débris**.
 - Chaque **défense** détruite est réparée avec 70 % de chances après le combat.
 - **Butin** : jusqu'à 50 % des ressources de la cible, **limité à la place restante dans les vaisseaux survivants** du vainqueur ; le reste n'est pas emporté.

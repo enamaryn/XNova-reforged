@@ -101,6 +101,16 @@ Toutes les décisions listées dans la version précédente sont prises et appli
 - [ ] Reprise des comptes de l'alpha (adresses marquées confirmées) validée. _(PRE-04)_
 - [ ] Dette technique d'outillage terminée **avant la bêta publique** : Tailwind 4 et eslint-config-next 16 (DETTE-02 et 03 ; **Jest 30 fait le 10 octobre 2026**, critique `handlebars` corrigée, hautes de développement 34 → 7, toutes issues de `braces` sans correctif amont — voir [NPM_AUDIT_2026-10.md](docs/NPM_AUDIT_2026-10.md)) ; revue des 3 modérées de production (DETTE-04).
 
+## Écarts de gameplay constatés en rédigeant la FAQ (11 octobre 2026)
+
+Constatés dans le code, le satellite solaire par un essai sur serveur de test ; documentés (⚠️) dans la [FAQ](docs/FAQ.md). Aucun n'est un constat du registre d'audit ; à arbitrer par le propriétaire (corriger, ou retirer/masquer l'élément trompeur).
+
+- [ ] **Satellites solaires sans effet d'énergie** : constructibles (2 000 cristal, 500 deutérium) et décrits « Fournit de l'énergie gratuitement », mais ignorés par le calcul de production (`packages/game-engine/src/resources.ts`). Essai : 10 satellites, bilan d'énergie inchangé. Le plus trompeur, car l'achat est dommageable pour le joueur.
+- [ ] **Tir rapide non appliqué** par le moteur de combat, alors que les valeurs existent dans la configuration des vaisseaux.
+- [ ] **Centrale à fusion** : ne consomme pas de deutérium (description inexacte) et la *Technologie Énergie* n'augmente pas sa production ; à niveau égal elle produit moins qu'une centrale solaire.
+- [ ] **Éléments constructibles sans effet** : terraformeur (le nombre de cases ne change pas), dépôt d'alliance, silo de missiles (missiles non proposés), bâtiments lunaires (aucune lune), recycleur (ni champ de débris ni mission de recyclage).
+- [ ] **Technologies sans effet propre** : Ordinateur (pas de limite de flottes), Laser, Ions, Plasma, Réseau de recherche, Expédition, Hyperespace ne servent que de prérequis.
+
 ## Critères de sortie obligatoires
 
 - [x] SEC-01 à SEC-04 validés _(SEC-01 : production sans haute ni critique ; outillage de développement en dette datée)_ ; aucune critique/haute de production non traitée sans analyse explicite et mesure compensatoire acceptée ; suivi des alertes build/dev conservé.
