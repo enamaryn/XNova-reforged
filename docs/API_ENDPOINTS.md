@@ -10,7 +10,12 @@ Ce document recense les principaux endpoints exposés par `apps/api`, avec la m�
 | POST | `/auth/login` | Connexion | 
 | POST | `/auth/refresh` | Rafraîchit le token d’accès via `refreshToken`. |
 | POST | `/auth/logout` | Déconnexion (JWT stateless). |
-| GET | `/auth/me` | Infos du joueur courants (planètes, ressources) — JWT requis. |
+| GET | `/auth/me` | Infos du joueur courants (planètes, langue `locale`) — JWT requis. |
+| PUT | `/auth/locale` | Enregistre la langue du joueur (`fr`, `en`, `es`, `de`, `it`) : emails et textes — JWT requis. |
+
+### Langue (`X-Locale`)
+
+L’interface envoie l’en-tête `X-Locale` (`fr`, `en`, `es`, `de`, `it`) à chaque appel : l’API localise alors les noms et descriptions du jeu, les libellés d’effets d’amélioration et les prérequis ; absent ou inconnu, les textes restent en français. `GET /setup/status` (public) renvoie `{ setupRequired, language }` — `language` est la langue du serveur choisie à l’installation (`PUT /setup/language`, code d’installation requis, ou `PUT /admin/config` avec `language`).
 
 ## Planètes & ressources (`/planets`)
 

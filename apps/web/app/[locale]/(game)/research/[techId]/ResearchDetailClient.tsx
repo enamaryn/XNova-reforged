@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { TECHNOLOGIES, getTechnologyCost } from '@xnova/game-config';
 import { motion, useReducedMotion, type MotionProps } from 'framer-motion';
-import { useI18n } from '@/lib/i18n';
+import { useI18n, useItemText } from '@/lib/i18n';
 import { designTokens } from '@/lib/design-tokens';
 import { researchApi } from '@/lib/api/research';
 import { useAuthStore } from '@/lib/stores/auth-store';
@@ -17,6 +17,8 @@ export function ResearchDetailClient({ techId }: { techId: string }) {
   const techIdNum = Number(techId);
   const tech = TECHNOLOGIES[techIdNum];
   const { t } = useI18n();
+  const itemText = useItemText();
+  const techText = tech ? itemText(techIdNum, tech) : null;
   const queryClient = useQueryClient();
   const { user } = useAuthStore();
   const { selectedPlanetId, setSelectedPlanetId } = usePlanetStore();
@@ -71,8 +73,8 @@ export function ResearchDetailClient({ techId }: { techId: string }) {
           <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">
             {t('research.one')}
           </p>
-          <h1 className="mt-2 text-2xl font-semibold text-white">{tech.name}</h1>
-          <p className="text-sm text-slate-400">{tech.description}</p>
+          <h1 className="mt-2 text-2xl font-semibold text-white">{techText?.name ?? tech.name}</h1>
+          <p className="text-sm text-slate-400">{techText?.description ?? tech.description}</p>
         </div>
         <Link
           href="/research"

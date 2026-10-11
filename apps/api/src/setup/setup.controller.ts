@@ -3,7 +3,7 @@ import { UpdateConfigDto } from '../admin/dto/update-config.dto';
 import { UpdateSmtpDto } from '../admin/dto/update-smtp.dto';
 import { RegisterDto } from '../auth/dto/register.dto';
 import { RateLimit, RateLimitGuard } from '../common/security/rate-limit.guard';
-import { SetupSmtpTestDto } from './dto/setup.dto';
+import { SetupLanguageDto, SetupSmtpTestDto } from './dto/setup.dto';
 import { SetupGuard } from './setup.guard';
 import { SetupService } from './setup.service';
 import { SetupStateService } from './setup-state.service';
@@ -24,7 +24,8 @@ export class SetupController {
   @Get('status')
   @RateLimit('setup')
   async status() {
-    return { setupRequired: !(await this.state.isCompleted()) };
+    // La langue du serveur est publique : l'interface s'en sert comme langue par défaut
+    return { setupRequired: !(await this.state.isCompleted()), language: await this.setup.getLanguage() };
   }
 
   @Get('state')
@@ -32,6 +33,13 @@ export class SetupController {
   @UseGuards(SetupGuard)
   getState() {
     return this.setup.getState();
+  }
+
+  @Put('language')
+  @RateLimit('setup')
+  @UseGuards(SetupGuard)
+  saveLanguage(@Body() dto: SetupLanguageDto) {
+    return this.setup.saveLanguage(dto.language);
   }
 
   @Put('smtp')

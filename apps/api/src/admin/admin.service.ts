@@ -476,11 +476,7 @@ export class AdminService {
     }
 
     try {
-      await this.mail.send({
-        to: recipient,
-        subject: "XNova Reforged - test de la configuration SMTP",
-        text: "Si vous lisez ce message, la configuration SMTP fonctionne.",
-      });
+      await this.mail.sendTemplate(recipient, "smtpTest");
     } catch (error) {
       if (error instanceof Error && "getStatus" in error) throw error;
       // Message technique du serveur SMTP : utile à l'administrateur, sans secret

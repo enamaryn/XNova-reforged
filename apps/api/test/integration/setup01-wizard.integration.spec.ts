@@ -93,11 +93,12 @@ describe('API integration - Parcours d\'installation du serveur (SETUP-01)', () 
 
     it('statut public ; routes protégées sans ou avec un mauvais code : 401 ; inscriptions fermées', async () => {
       const status = await request(server()).get('/setup/status').expect(200);
-      expect(status.body).toEqual({ setupRequired: true });
+      expect(status.body).toEqual({ setupRequired: true, language: 'fr' });
 
       for (const call of [
         () => request(server()).get('/setup/state'),
         () => request(server()).put('/setup/smtp').send(smtpBody()),
+        () => request(server()).put('/setup/language').send({ language: 'en' }),
         () => request(server()).post('/setup/smtp/test').send({ to: 'x@example.test' }),
         () => request(server()).put('/setup/settings').send({ gameSpeed: 5 }),
         () => request(server()).post('/setup/admin').send(adminBody()),
@@ -127,6 +128,18 @@ describe('API integration - Parcours d\'installation du serveur (SETUP-01)', () 
       await (await import('../../src/setup/setup-core')).issueSetupToken(database as unknown as SetupDb, {
         fixedToken: FIXED,
       });
+    });
+  });
+
+  describe('langue d\'installation', () => {
+    it('est enregistrée avec le code, validée, publique, et reste modifiable', async () => {
+      await request(server()).put('/setup/language').set(asSetup()).send({ language: 'tlh' }).expect(400);
+      const saved = await request(server()).put('/setup/language').set(asSetup()).send({ language: 'en' }).expect(200);
+      expect(saved.body.settings.values.language).toBe('en');
+      expect((await request(server()).get('/setup/status').expect(200)).body.language).toBe('en');
+      // L'interface suit : la langue du serveur revient à fr pour la suite des tests
+      await request(server()).put('/setup/language').set(asSetup()).send({ language: 'fr' }).expect(200);
+      expect((await request(server()).get('/setup/status').expect(200)).body.language).toBe('fr');
     });
   });
 
@@ -261,7 +274,7 @@ describe('API integration - Parcours d\'installation du serveur (SETUP-01)', () 
       const token = extractToken(await smtp.waitFor('owner_b@example.test'));
       await request(server()).post('/auth/verify-email').send({ token }).expect(200);
 
-      expect((await request(server()).get('/setup/status').expect(200)).body).toEqual({ setupRequired: false });
+      expect((await request(server()).get('/setup/status').expect(200)).body).toEqual({ setupRequired: false, language: 'fr' });
       expect(await database.gameConfig.findUnique({ where: { key: 'setup.completedAt' } })).not.toBeNull();
       // Code et progression effacés : il ne reste que l'indicateur de fin
       const keys = (await database.gameConfig.findMany({ where: { key: { startsWith: 'setup.' } } })).map((r) => r.key);
@@ -308,7 +321,7 @@ describe('API integration - Parcours d\'installation du serveur (SETUP-01)', () 
       await start(FIXED);
       spy.mockRestore();
       expect(logs.some((line) => line.includes("Code d'installation"))).toBe(false);
-      expect((await request(server()).get('/setup/status')).body).toEqual({ setupRequired: false });
+      expect((await request(server()).get('/setup/status')).body).toEqual({ setupRequired: false, language: 'fr' });
       await request(server()).get('/setup/state').set(asSetup()).expect(404);
     }, 60_000);
   });
@@ -316,7 +329,7 @@ describe('API integration - Parcours d\'installation du serveur (SETUP-01)', () 
   describe('réarmement par commande terminal', () => {
     it('setup:reset rouvre le parcours avec un nouveau code ; comptes et réglages conservés', async () => {
       const code = await resetSetup(database as unknown as SetupDb);
-      expect((await request(server()).get('/setup/status')).body).toEqual({ setupRequired: true });
+      expect((await request(server()).get('/setup/status')).body).toEqual({ setupRequired: true, language: 'fr' });
       await request(server()).get('/setup/state').set(asSetup()).expect(401); // ancien code
       const state = await request(server()).get('/setup/state').set(asSetup(code)).expect(200);
 
@@ -338,7 +351,7 @@ describe('API integration - Parcours d\'installation du serveur (SETUP-01)', () 
       await request(server()).post('/setup/admin').set(asSetup(code)).send(adminBody('c')).expect(200);
       const token = extractToken(await smtp.waitFor('owner_c@example.test'));
       await request(server()).post('/auth/verify-email').send({ token }).expect(200);
-      expect((await request(server()).get('/setup/status')).body).toEqual({ setupRequired: false });
+      expect((await request(server()).get('/setup/status')).body).toEqual({ setupRequired: false, language: 'fr' });
     });
   });
 

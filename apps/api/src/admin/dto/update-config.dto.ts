@@ -1,7 +1,12 @@
 import { Type } from 'class-transformer';
-import { IsInt, IsNumber, IsOptional, Max, Min } from 'class-validator';
+import { IsIn, IsInt, IsNumber, IsOptional, Max, Min } from 'class-validator';
+import { SUPPORTED_LOCALES, type SupportedLocale } from '@xnova/game-config';
 
 export class UpdateConfigDto {
+  @IsOptional()
+  @IsIn([...SUPPORTED_LOCALES], { message: 'Langue non prise en charge' })
+  language?: SupportedLocale;
+
   @IsOptional()
   @Type(() => Number)
   @IsNumber({}, { message: 'La vitesse du jeu doit etre un nombre' })

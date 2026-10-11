@@ -5,14 +5,17 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { getAdminPlayers } from "@/lib/api/admin";
+import { useI18n } from "@/lib/i18n";
 
 const inputClass =
   "w-full rounded-xl border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-white";
 const buttonClass =
   "rounded-xl border border-slate-700 px-3 py-2 text-sm text-slate-200 hover:border-blue-400 disabled:opacity-50";
-const count = (value: number) => value.toLocaleString("fr-FR");
+const NUMBER_LOCALES = { fr: "fr-FR", en: "en-GB", es: "es-ES", de: "de-DE", it: "it-IT" } as const;
 
 export function PlayersPanel() {
+  const { t, locale: uiLocale } = useI18n();
+  const count = (value: number) => value.toLocaleString(NUMBER_LOCALES[uiLocale]);
   const [query, setQuery] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -24,7 +27,7 @@ export function PlayersPanel() {
   return (
     <div className="space-y-6">
       <section className="rounded-3xl border border-slate-800 bg-slate-950/60 p-6">
-        <h2 className="font-semibold text-white">Joueurs</h2>
+        <h2 className="font-semibold text-white">{t("admin.playersPanel.title")}</h2>
         <form
           className="my-4 flex flex-wrap gap-2"
           onSubmit={(event) => {
@@ -34,47 +37,40 @@ export function PlayersPanel() {
           }}
         >
           <label className="flex-1 text-sm text-slate-400">
-            Rechercher par pseudo
+            {t("admin.playersPanel.searchLabel")}
             <input
               className={`mt-1 ${inputClass}`}
               value={query}
               maxLength={20}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Tous les joueurs ou une partie du pseudo"
+              placeholder={t("admin.playersPanel.searchPlaceholder")}
             />
           </label>
           <button className={`${buttonClass} self-end`} type="submit">
-            Rechercher
+            {t("admin.playersPanel.search")}
           </button>
         </form>
-        {list.isLoading && <p role="status">Chargement des joueurs…</p>}
+        {list.isLoading && <p role="status">{t("admin.playersPanel.loading")}</p>}
         {list.error && (
           <p role="alert" className="text-red-300">
             {list.error.message}{" "}
             <button className={buttonClass} onClick={() => list.refetch()}>
-              Réessayer
+              {t("common.retry")}
             </button>
           </p>
         )}
         {list.data && (
           <>
             <p className="mb-2 text-sm text-slate-400">
-              {count(list.data.total)} joueur(s)
+              {count(list.data.total)} {t("admin.playersPanel.count")}
             </p>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead className="text-slate-400">
                   <tr>
-                    {[
-                      "Pseudo",
-                      "Email",
-                      "Points / rang",
-                      "Planètes",
-                      "État",
-                      "Actions",
-                    ].map((label) => (
-                      <th className="px-2 py-3" scope="col" key={label}>
-                        {label}
+                    {(["username", "email", "pointsRank", "planets", "state", "actions"] as const).map((column) => (
+                      <th className="px-2 py-3" scope="col" key={column}>
+                        {t(`admin.playersPanel.columns.${column}`)}
                       </th>
                     ))}
                   </tr>
@@ -91,7 +87,7 @@ export function PlayersPanel() {
                       <td className="px-2">
                         {player.email}
                         <span className="block text-xs text-slate-400">
-                          {player.emailVerifiedAt ? "Confirmé" : "À confirmer"}
+                          {player.emailVerifiedAt ? t("admin.playersPanel.confirmed") : t("admin.playersPanel.toConfirm")}
                         </span>
                       </td>
                       <td className="px-2">
@@ -101,16 +97,16 @@ export function PlayersPanel() {
                       <td
                         className={`px-2 ${player.banned ? "text-red-300" : "text-emerald-300"}`}
                       >
-                        {player.banned ? "Banni" : "Actif"}
+                        {player.banned ? t("admin.playersPanel.banned") : t("admin.playersPanel.active")}
                       </td>
                       <td className="px-2">
                         <div className="flex gap-2">
                           <Link
                             className={buttonClass}
-                            aria-label={`Voir la fiche de ${player.username}`}
+                            aria-label={t("admin.playersPanel.viewAria", { name: player.username })}
                             href={`/${locale}/admin/players/${player.id}`}
                           >
-                            Fiche joueur
+                            {t("admin.playersPanel.profile")}
                           </Link>
                         </div>
                       </td>
@@ -120,7 +116,7 @@ export function PlayersPanel() {
               </table>
             </div>
             {list.data.players.length === 0 && (
-              <p className="py-4 text-slate-400">Aucun joueur trouvé.</p>
+              <p className="py-4 text-slate-400">{t("admin.playersPanel.none")}</p>
             )}
             <div className="mt-4 flex items-center justify-between gap-3">
               <button
@@ -128,10 +124,10 @@ export function PlayersPanel() {
                 disabled={page === 1 || list.isFetching}
                 onClick={() => setPage(page - 1)}
               >
-                Précédent
+                {t("admin.playersPanel.previous")}
               </button>
               <span className="text-sm text-slate-400">
-                Page {page} /{" "}
+                {t("admin.playersPanel.page")} {page} /{" "}
                 {Math.max(1, Math.ceil(list.data.total / list.data.pageSize))}
               </span>
               <button
@@ -142,7 +138,7 @@ export function PlayersPanel() {
                 }
                 onClick={() => setPage(page + 1)}
               >
-                Suivant
+                {t("admin.playersPanel.next")}
               </button>
             </div>
           </>

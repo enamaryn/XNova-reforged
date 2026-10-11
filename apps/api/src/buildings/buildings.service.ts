@@ -22,6 +22,7 @@ import { debitResources, lockPlanet } from "../common/atomic";
 import { GameEventsGateway } from "../game-events/game-events.gateway";
 import { getBuildingUpgradeEffects } from "./building-upgrade-effects";
 import { updateResources } from "@xnova/game-engine";
+import { itemDescription, itemName, itemNameById } from '../common/request-locale';
 
 /** Bâtiments qui n'occupent aucune case : hangars de stockage et terraformeur (qui en ajoute). */
 const FIELDS_EXEMPT = [22, 23, 24, TERRAFORMER_ID];
@@ -123,8 +124,8 @@ export class BuildingsService {
 
       return {
         id: building.id,
-        name: building.name,
-        description: building.description,
+        name: itemName(building),
+        description: itemDescription(building),
         category: building.category,
         currentLevel,
         maxLevel: maxBuildingLevel,
@@ -188,7 +189,7 @@ export class BuildingsService {
       throw new BadRequestException(`Batiment ${buildingId} inexistant`);
     }
     if (!IMPLEMENTED_BUILDINGS.includes(buildingId)) {
-      throw new BadRequestException(`${building.name} n'est pas disponible dans cette version`);
+      throw new BadRequestException(`${itemName(building)} n'est pas disponible dans cette version`);
     }
 
     // Verifier qu'il n'y a pas deja une construction en cours pour ce batiment
@@ -197,7 +198,7 @@ export class BuildingsService {
     });
     if (existingQueue) {
       throw new BadRequestException(
-        `${building.name} est deja en cours de construction`,
+        `${itemName(building)} est deja en cours de construction`,
       );
     }
 
@@ -289,7 +290,7 @@ export class BuildingsService {
         });
         if (duplicate) {
           throw new BadRequestException(
-            `${building.name} est deja en cours de construction`,
+            `${itemName(building)} est deja en cours de construction`,
           );
         }
 
@@ -320,7 +321,7 @@ export class BuildingsService {
     this.gameEvents.emitToPlanet(planetId, "building:started", {
       queueId: queueEntry.id,
       buildingId,
-      buildingName: building.name,
+      buildingName: itemName(building),
       targetLevel: currentLevel + 1,
       startTime: now,
       endTime,
@@ -330,7 +331,7 @@ export class BuildingsService {
       success: true,
       queueId: queueEntry.id,
       buildingId,
-      buildingName: building.name,
+      buildingName: itemName(building),
       targetLevel: currentLevel + 1,
       startTime: now,
       endTime,
@@ -358,7 +359,7 @@ export class BuildingsService {
       id: item.id,
       buildingId: item.buildingId,
       buildingName:
-        BUILDINGS[item.buildingId]?.name || `Building ${item.buildingId}`,
+        itemNameById(item.buildingId, BUILDINGS[item.buildingId]?.name) || `Building ${item.buildingId}`,
       targetLevel: item.level,
       startTime: item.startTime,
       endTime: item.endTime,
@@ -420,7 +421,7 @@ export class BuildingsService {
     this.gameEvents.emitToPlanet(queueEntry.planetId, "building:cancelled", {
       queueId,
       buildingId: queueEntry.buildingId,
-      buildingName: building?.name,
+      buildingName: building ? itemName(building) : undefined,
       refund: cost,
     });
 
@@ -521,7 +522,7 @@ export class BuildingsService {
     // Emettre un evenement WebSocket
     this.gameEvents.emitToPlanet(queueEntry.planetId, "building:completed", {
       buildingId: queueEntry.buildingId,
-      buildingName: building?.name,
+      buildingName: building ? itemName(building) : undefined,
       newLevel: queueEntry.level,
     });
 

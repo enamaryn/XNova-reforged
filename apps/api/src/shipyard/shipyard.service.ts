@@ -21,6 +21,7 @@ import {
 import { DatabaseService } from "../database/database.service";
 import { debitResources, lockPlanet } from "../common/atomic";
 import { settleBeforeEnergyChange } from "../common/energy";
+import { itemDescription, itemName, itemNameById } from '../common/request-locale';
 
 @Injectable()
 export class ShipyardService {
@@ -89,8 +90,8 @@ export class ShipyardService {
 
       return {
         id: ship.id,
-        name: ship.name,
-        description: ship.description,
+        name: itemName(ship),
+        description: itemDescription(ship),
         cost,
         buildTime,
         currentAmount: shipAmounts.get(ship.id) ?? 0,
@@ -181,8 +182,8 @@ export class ShipyardService {
 
       return {
         id,
-        name: defense.name,
-        description: defense.description,
+        name: itemName(defense),
+        description: itemDescription(defense),
         cost,
         buildTime,
         stats: defense.stats,
@@ -349,7 +350,7 @@ export class ShipyardService {
       success: true,
       queueId: queueEntry.id,
       shipId,
-      shipName: ship.name,
+      shipName: itemName(ship),
       amount: safeAmount,
       startTime,
       endTime,
@@ -378,8 +379,8 @@ export class ShipyardService {
       id: item.id,
       shipId: item.shipId,
       shipName:
-        SHIPS[item.shipId]?.name ||
-        DEFENSES[item.shipId]?.name ||
+        itemNameById(item.shipId, SHIPS[item.shipId]?.name) ||
+        itemNameById(item.shipId, DEFENSES[item.shipId]?.name) ||
         `Ship ${item.shipId}`,
       kind: item.shipId >= 400 ? "defense" : "ship",
       amount: item.amount,
@@ -635,8 +636,8 @@ export class ShipyardService {
         if (currentLevel < reqLevel) {
           const name =
             reqIdNum < 100
-              ? BUILDINGS[reqIdNum]?.name || `Batiment ${reqIdNum}`
-              : TECHNOLOGIES[reqIdNum]?.name || `Technologie ${reqIdNum}`;
+              ? itemNameById(reqIdNum, BUILDINGS[reqIdNum]?.name) || `Batiment ${reqIdNum}`
+              : itemNameById(reqIdNum, TECHNOLOGIES[reqIdNum]?.name) || `Technologie ${reqIdNum}`;
           missingRequirements.push(
             `${name} niveau ${reqLevel} requis (actuel: ${currentLevel})`,
           );

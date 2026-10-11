@@ -250,7 +250,143 @@
     "by": "By",
     "expiresAt": "Expires at",
     "applyProfile": "Apply the ×50 reference profile",
-    "applyProfileHint": "Fills speeds, multipliers and base income; review, then save."
+    "applyProfileHint": "Fills speeds, multipliers and base income; review, then save.",
+    "tabPlayers": "Players",
+    "banDurationHint": "Ban duration. Days, hours and minutes add up. All zero = permanent ban.",
+    "serverLanguage": "Server language",
+    "serverLanguageHint": "Default language of the game, the interface and the emails (chosen at installation). Each player can then choose their own.",
+    "playersPanel": {
+      "title": "Players",
+      "searchLabel": "Search by username",
+      "searchPlaceholder": "All players or part of a username",
+      "search": "Search",
+      "loading": "Loading players…",
+      "count": "player(s)",
+      "columns": {
+        "username": "Username",
+        "email": "Email",
+        "pointsRank": "Points / rank",
+        "planets": "Planets",
+        "state": "Status",
+        "actions": "Actions"
+      },
+      "confirmed": "Confirmed",
+      "toConfirm": "To confirm",
+      "banned": "Banned",
+      "active": "Active",
+      "viewAria": "View the profile of {name}",
+      "profile": "Player profile",
+      "none": "No player found.",
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page"
+    },
+    "actions": {
+      "ban": "Ban",
+      "unban": "Unban",
+      "reset": "Reset progress",
+      "delete": "Delete the account",
+      "resetDone": "Progress reset. The player was logged out and can start again with the same access.",
+      "banDone": "Player banned and sessions disconnected.",
+      "unbanDone": "Player unbanned.",
+      "aria": "Player actions",
+      "title": "Account management",
+      "restricted": "Actions are reserved for accounts ranked below yours. Your own account is protected.",
+      "confirmAria": "Confirm: {action}",
+      "resetWarning": "This action is irreversible. Colonies, buildings, research, ships, defences and queues are erased. The main planet restarts with 500 metal and 500 crystal. Access, role, ban, alliance and messages are kept. The player is logged out.",
+      "deleteWarning": "Permanent deletion of the account, its planets, resources, units, research, messages and reports. The player will be logged out.",
+      "fleetsWarning": "The player's active fleets, or fleets heading to their planets, must finish or be recalled before this action. To delete an alliance founder, first transfer the founding or dissolve the alliance.",
+      "banDays": "Duration in days (0 = permanent)",
+      "reason": "Reason",
+      "retype": "Retype the username {name} to confirm",
+      "pending": "Action in progress…",
+      "confirm": "Confirm {action}",
+      "cancel": "Cancel"
+    },
+    "profile": {
+      "back": "← Back to players",
+      "loading": "Loading the player profile…",
+      "refresh": "Refresh the profile",
+      "levelShort": "Lv. {level}",
+      "units": "{amount} units",
+      "end": "End",
+      "noQueue": "No queue in progress.",
+      "ariaProfile": "Profile of {name}",
+      "power": "power",
+      "rank": "Rank",
+      "lastActive": "Last activity",
+      "banned": "Banned",
+      "bannedUntil": "until {date}",
+      "bannedForever": "permanently",
+      "email": "Email address",
+      "emailHint": "The change logs the player out and sends a new link. Login stays blocked until the new address is confirmed.",
+      "emailChange": "Change the email and send verification",
+      "emailConfirmed": "Email confirmed",
+      "emailPending": "Email to confirm",
+      "technologies": "Technologies",
+      "researchQueue": "Research in progress",
+      "fleets": "Fleets in flight and incoming",
+      "incoming": "Incoming",
+      "own": "Player's",
+      "mission": "Mission",
+      "arrival": "Arrival",
+      "return": "Return",
+      "ships": "Ships",
+      "shipFallback": "Ship {id}",
+      "cargo": "Cargo",
+      "empty": "Empty",
+      "noFleet": "No active fleet.",
+      "resource": {
+        "metal": "Metal",
+        "crystal": "Crystal",
+        "deuterium": "Deuterium"
+      },
+      "energy": "Energy",
+      "produced": "produced",
+      "consumed": "consumed",
+      "fields": "Fields",
+      "resourcesAt": "Resources as of",
+      "dockedShips": "Docked ships",
+      "defenses": "Defences",
+      "noUnit": "No unit.",
+      "buildQueue": "Constructions in progress",
+      "shipQueue": "Shipyard in progress"
+    },
+    "smtp": {
+      "saved": "SMTP configuration saved.",
+      "testSent": "Test email sent to {to}.",
+      "loading": "Loading the SMTP configuration...",
+      "loadError": "Unable to load the SMTP configuration.",
+      "title": "Configure SMTP",
+      "intro": "Server used to send the game's emails (verification, forgotten password). Only the super admin can change these settings; the password is encrypted in the database and never displayed.",
+      "enable": "Enable email sending",
+      "host": "Host",
+      "hostAria": "SMTP host",
+      "port": "Port",
+      "portAria": "SMTP port",
+      "secure": "Direct TLS connection (port 465) — leave unticked for STARTTLS (port 587)",
+      "secureAria": "Direct TLS connection",
+      "username": "Username",
+      "usernameAria": "SMTP username",
+      "password": "Password",
+      "passwordKept": "•••••••• (kept if empty)",
+      "passwordNone": "No password",
+      "passwordAria": "SMTP password",
+      "passwordUnreadable": "The stored password is unreadable (encryption key changed): enter it again.",
+      "passwordClear": "Delete the stored password",
+      "fromEmail": "Sender address",
+      "fromEmailAria": "Sender address",
+      "fromName": "Sender name",
+      "fromNameAria": "Sender name",
+      "saving": "Saving...",
+      "save": "Save",
+      "testTitle": "Send a test email",
+      "testHint": "Uses the saved configuration. Without a recipient, the message is sent to your own address.",
+      "testPlaceholder": "recipient@example.org (optional)",
+      "testAria": "Test recipient",
+      "testSending": "Sending...",
+      "testSend": "Send the test"
+    }
   },
   "common": {
     "language": "Language",
@@ -478,7 +614,21 @@
     "alreadyBuilding": "Already under construction",
     "building": "Building...",
     "buildLevel": "Build level {level}",
-    "one": "Building"
+    "one": "Building",
+    "effects": {
+      "maxLevel": "Maximum level reached: no further upgrade.",
+      "aria": "Effects of level {level}",
+      "atLevel": "At level {level}",
+      "effect": "Effect",
+      "current": "Current",
+      "level": "Level {level}",
+      "variation": "Change",
+      "unlocks": "+ Requirements met for: {names}.",
+      "seeDescription": "See the description and costs of this upgrade.",
+      "lowEnergy": "Not enough energy: the actual production of the mines will be reduced.",
+      "forecast": "Forecast with the planet's current levels and the server multipliers. Actual production depends on the energy efficiency.",
+      "durationNote": "Duration reduction at identical cost, before rounding and the one-second minimum. Constructions and research already started keep their duration."
+    }
   },
   "queue": {
     "finalizing": "Finalizing…",
@@ -533,7 +683,9 @@
     "starting": "Starting...",
     "maxFull": "Maximum level reached",
     "started": "Research started.",
-    "cannotStart": "Unable to start the research."
+    "cannotStart": "Unable to start the research.",
+    "completedToast": "Research completed: {name}{level}",
+    "fallbackName": "Research"
   },
   "energy": {
     "deficitBadge": "DEFICIT",
@@ -677,5 +829,128 @@
     "confirmation": "Confirmation",
     "confirmationAria": "New password confirmation",
     "changePassword": "Change the password"
+  },
+  "setup": {
+    "kicker": "Server installation",
+    "title": "First setup.",
+    "stepsLabel": "Steps",
+    "loading": "Loading...",
+    "continue": "Continue",
+    "genericError": "Something went wrong.",
+    "language": {
+      "title": "Installation language",
+      "hint": "It becomes the default language of the game, the server and the emails. Each player can then choose their own."
+    },
+    "steps": {
+      "code": "Code",
+      "smtp": "SMTP",
+      "settings": "Settings",
+      "admin": "Super admin",
+      "validation": "Validation"
+    },
+    "done": {
+      "kicker": "Installation",
+      "title": "Installation complete.",
+      "notice": "The super admin account is confirmed and the installation wizard is now locked for good. It can only be reopened from a terminal on the server.",
+      "login": "Go to login"
+    },
+    "code": {
+      "intro": "To protect the server, installation is reserved for the person with access to its terminal. Read the installation code in the API log:",
+      "regenerate": "Or generate a new one:",
+      "regenerateSuffix": "(from the project folder on the server).",
+      "label": "Installation code"
+    },
+    "smtp": {
+      "intro": "Email sending server (account confirmation, forgotten password). It is also used to validate your account at the end of the installation.",
+      "host": "Host",
+      "port": "Port",
+      "secure": "Direct TLS connection (port 465) — untick for STARTTLS (port 587)",
+      "username": "Username",
+      "password": "Password",
+      "passwordKept": "•••••••• (kept if empty)",
+      "fromEmail": "Sender address",
+      "fromName": "Sender name",
+      "save": "Save the configuration",
+      "saved": "Configuration saved. Now send a test email.",
+      "testTitle": "Sending test",
+      "testOk": "— passed ✓",
+      "testTodo": "— to do",
+      "testTo": "Send a test email to",
+      "testSend": "Send the test email",
+      "testSent": "Test email sent to {to}. Check that it arrived before continuing."
+    },
+    "settings": {
+      "intro": "Universe settings. They can still be changed later from the administration; keep the defaults if in doubt.",
+      "applyProfile": "Apply the ×50 reference profile",
+      "profileHint": "×50 speed, original costs: laboratory in 22 min, first ship in under 2 h.",
+      "save": "Save and continue"
+    },
+    "fields": {
+      "gameSpeed": {
+        "label": "Game speed",
+        "hint": "Speeds up durations and production (1 = original pace)"
+      },
+      "fleetSpeed": {
+        "label": "Fleet speed",
+        "hint": "Speeds up flights (1 = original pace)"
+      },
+      "resourceMultiplier": {
+        "label": "Production multiplier",
+        "hint": "Applies to all produced resources"
+      },
+      "buildingCostMultiplier": {
+        "label": "Building cost",
+        "hint": "Construction cost multiplier"
+      },
+      "researchCostMultiplier": {
+        "label": "Research cost",
+        "hint": "Research cost multiplier"
+      },
+      "shipCostMultiplier": {
+        "label": "Ship and defence cost",
+        "hint": "Shipyard cost multiplier"
+      },
+      "planetSize": {
+        "label": "Planet size (fields)",
+        "hint": "Between 50 and 500"
+      },
+      "maxBuildingLevel": {
+        "label": "Maximum building level",
+        "hint": "Construction cap"
+      },
+      "maxTechnologyLevel": {
+        "label": "Maximum technology level",
+        "hint": "Research cap"
+      },
+      "baseMetal": {
+        "label": "Base production: metal (per hour)",
+        "hint": "Income without a mine"
+      },
+      "baseCrystal": {
+        "label": "Base production: crystal (per hour)",
+        "hint": "Income without a mine"
+      },
+      "baseDeuterium": {
+        "label": "Base production: deuterium (per hour)",
+        "hint": "Income without a mine"
+      }
+    },
+    "admin": {
+      "intro": "Server super admin account. A confirmation link will be sent to this address: clicking it completes the installation. If the address is wrong, you can recreate the account as long as it is not confirmed.",
+      "username": "Username",
+      "email": "Email address",
+      "password": "Password",
+      "passwordHint": "At least 8 characters, with a lowercase letter, an uppercase letter and a digit.",
+      "confirmation": "Confirmation",
+      "submit": "Create the account and send the link",
+      "mismatch": "The two passwords do not match."
+    },
+    "validation": {
+      "sentTo": "A confirmation email was sent to",
+      "instructions": "Click the link it contains: this page updates by itself and the installation completes as soon as the account is confirmed.",
+      "waiting": "Waiting for confirmation...",
+      "resend": "Resend the link",
+      "fix": "Fix the address or the account"
+    }
   }
 }

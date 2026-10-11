@@ -12,14 +12,16 @@ import {
 } from "@/lib/api/admin";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { SHIPS } from "@xnova/game-config";
+import { useI18n, useItemText } from "@/lib/i18n";
 import { PlayerActions } from "./PlayerActions";
 const inputClass =
   "w-full rounded-xl border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-white";
 const buttonClass =
   "rounded-xl border border-slate-700 px-3 py-2 text-sm text-slate-200 hover:border-blue-400 disabled:opacity-50";
-const count = (value: number) => value.toLocaleString("fr-FR");
+const NUMBER_LOCALES = { fr: "fr-FR", en: "en-GB", es: "es-ES", de: "de-DE", it: "it-IT" } as const;
 
 export function PlayerProfile({ id }: { id: string }) {
+  const { t } = useI18n();
   const locale = usePathname().split("/")[1];
   const query = useQuery({
     queryKey: ["admin", "player", id],
@@ -28,14 +30,14 @@ export function PlayerProfile({ id }: { id: string }) {
   return (
     <div className="space-y-4">
       <Link href={`/${locale}/admin`} className={buttonClass}>
-        ← Retour aux joueurs
+        {t("admin.profile.back")}
       </Link>
-      {query.isLoading && <p role="status">Chargement de la fiche joueur…</p>}
+      {query.isLoading && <p role="status">{t("admin.profile.loading")}</p>}
       {query.error && (
         <div role="alert" className="space-y-3 text-red-300">
           <p>{query.error.message}</p>
           <button className={buttonClass} onClick={() => query.refetch()}>
-            Réessayer
+            {t("common.retry")}
           </button>
         </div>
       )}
@@ -46,7 +48,7 @@ export function PlayerProfile({ id }: { id: string }) {
             disabled={query.isFetching}
             onClick={() => query.refetch()}
           >
-            Actualiser la fiche
+            {t("admin.profile.refresh")}
           </button>
           <PlayerDetails
             key={`${query.data.id}:${query.data.email}`}
@@ -65,6 +67,7 @@ function Queue({
   title: string;
   entries: AdminQueueEntry[];
 }) {
+  const { t, locale } = useI18n();
   return (
     <div>
       <h4 className="mb-2 font-semibold">{title}</h4>
@@ -74,20 +77,24 @@ function Queue({
             <li key={row.id}>
               {row.name} ·{" "}
               {row.level !== undefined
-                ? `Niv. ${row.level}`
-                : `${row.amount} unités`}{" "}
-              · Fin : {new Date(row.endTime).toLocaleString("fr-FR")}
+                ? t("admin.profile.levelShort", { level: row.level })
+                : t("admin.profile.units", { amount: row.amount ?? 0 })}{" "}
+              · {t("admin.profile.end")} : {new Date(row.endTime).toLocaleString(NUMBER_LOCALES[locale])}
             </li>
           ))}
         </ul>
       ) : (
-        <p className="text-sm text-slate-500">Aucune file en cours.</p>
+        <p className="text-sm text-slate-500">{t("admin.profile.noQueue")}</p>
       )}
     </div>
   );
 }
 
 function PlayerDetails({ player }: { player: AdminPlayerDetail }) {
+  const { t, locale } = useI18n();
+  const itemText = useItemText();
+  const count = (value: number) => value.toLocaleString(NUMBER_LOCALES[locale]);
+  const dateTime = (value: string | number | Date) => new Date(value).toLocaleString(NUMBER_LOCALES[locale]);
   const { user } = useAuthStore();
   const canEditEmail =
     user?.role === "SUPER_ADMIN" ||
@@ -100,22 +107,22 @@ function PlayerDetails({ player }: { player: AdminPlayerDetail }) {
   });
   return (
     <section
-      aria-label={`Fiche de ${player.username}`}
+      aria-label={t("admin.profile.ariaProfile", { name: player.username })}
       className="space-y-6 rounded-3xl border border-slate-800 bg-slate-950/60 p-6"
     >
       <div>
         <h2 className="text-xl font-semibold">{player.username}</h2>
         <p className="text-sm text-slate-400">
-          {count(player.progression?.power ?? player.points)} de puissance ·
-          Rang {player.rank || "—"} · Dernière activité :{" "}
-          {new Date(player.lastActive).toLocaleString("fr-FR")}
+          {count(player.progression?.power ?? player.points)} {t("admin.profile.power")} ·
+          {t("admin.profile.rank")} {player.rank || "—"} · {t("admin.profile.lastActive")} :{" "}
+          {dateTime(player.lastActive)}
         </p>
         {player.banned && (
           <p className="mt-2 text-sm text-red-300">
-            Banni{" "}
+            {t("admin.profile.banned")}{" "}
             {player.bannedUntil
-              ? `jusqu’au ${new Date(player.bannedUntil).toLocaleString("fr-FR")}`
-              : "définitivement"}
+              ? t("admin.profile.bannedUntil", { date: dateTime(player.bannedUntil) })
+              : t("admin.profile.bannedForever")}
             {player.banReason ? ` : ${player.banReason}` : ""}
           </p>
         )}
@@ -133,7 +140,7 @@ function PlayerDetails({ player }: { player: AdminPlayerDetail }) {
           className="space-y-2"
         >
           <label className="block text-sm text-slate-300">
-            Adresse email
+            {t("admin.profile.email")}
             <input
               className={`mt-1 ${inputClass}`}
               type="email"
@@ -144,8 +151,7 @@ function PlayerDetails({ player }: { player: AdminPlayerDetail }) {
             />
           </label>
           <p className="text-xs text-slate-400">
-            Le changement déconnecte le joueur et envoie un nouveau lien. La
-            connexion reste bloquée jusqu’à confirmation de la nouvelle adresse.
+            {t("admin.profile.emailHint")}
           </p>
           <button
             className={buttonClass}
@@ -154,13 +160,13 @@ function PlayerDetails({ player }: { player: AdminPlayerDetail }) {
               email.trim().toLowerCase() === player.email.toLowerCase()
             }
           >
-            Changer l’email et envoyer la vérification
+            {t("admin.profile.emailChange")}
           </button>
           <p
             role="status"
             className={`text-sm ${player.emailVerifiedAt ? "text-emerald-300" : "text-amber-300"}`}
           >
-            {player.emailVerifiedAt ? "Email confirmé" : "Email à confirmer"}
+            {player.emailVerifiedAt ? t("admin.profile.emailConfirmed") : t("admin.profile.emailPending")}
           </p>
           {mutation.error && (
             <p role="alert" className="text-red-300">
@@ -170,22 +176,22 @@ function PlayerDetails({ player }: { player: AdminPlayerDetail }) {
         </form>
       )}
       <div>
-        <h3 className="mb-3 font-semibold">Technologies</h3>
+        <h3 className="mb-3 font-semibold">{t("admin.profile.technologies")}</h3>
         <dl className="grid gap-2 sm:grid-cols-2">
           {player.technologies.map((tech) => (
             <div
               key={tech.id}
               className="flex justify-between gap-3 rounded-xl bg-slate-900/60 p-3 text-sm"
             >
-              <dt>{tech.name}</dt>
-              <dd className="font-mono text-blue-300">Niv. {tech.level}</dd>
+              <dt>{itemText(tech.id, tech).name}</dt>
+              <dd className="font-mono text-blue-300">{t("admin.profile.levelShort", { level: tech.level })}</dd>
             </div>
           ))}
         </dl>
       </div>
-      <Queue title="Recherche en cours" entries={player.researchQueue} />
+      <Queue title={t("admin.profile.researchQueue")} entries={player.researchQueue} />
       <div>
-        <h3 className="mb-3 font-semibold">Flottes en vol et entrantes</h3>
+        <h3 className="mb-3 font-semibold">{t("admin.profile.fleets")}</h3>
         {[...player.fleets, ...player.incomingFleets].length ? (
           <ul className="space-y-3">
             {[...player.fleets, ...player.incomingFleets].map((fleet) => (
@@ -195,42 +201,42 @@ function PlayerDetails({ player }: { player: AdminPlayerDetail }) {
               >
                 <p>
                   {player.incomingFleets.some((row) => row.id === fleet.id)
-                    ? "Entrante"
-                    : "Du joueur"}{" "}
-                  · Mission {fleet.mission} · {fleet.status}
+                    ? t("admin.profile.incoming")
+                    : t("admin.profile.own")}{" "}
+                  · {t("admin.profile.mission")} {fleet.mission} · {fleet.status}
                 </p>
                 <p>
                   [{fleet.fromGalaxy}:{fleet.fromSystem}:{fleet.fromPosition}] →
                   [{fleet.toGalaxy}:{fleet.toSystem}:{fleet.toPosition}]
                 </p>
                 <p>
-                  Arrivée :{" "}
-                  {new Date(fleet.arrivalTime).toLocaleString("fr-FR")}
+                  {t("admin.profile.arrival")} :{" "}
+                  {dateTime(fleet.arrivalTime)}
                   {fleet.returnTime &&
-                    ` · Retour : ${new Date(fleet.returnTime).toLocaleString("fr-FR")}`}
+                    ` · ${t("admin.profile.return")} : ${dateTime(fleet.returnTime)}`}
                 </p>
                 <p>
-                  Vaisseaux :{" "}
+                  {t("admin.profile.ships")} :{" "}
                   {Object.entries(fleet.ships)
                     .map(
                       ([id, amount]) =>
-                        `${SHIPS[Number(id)]?.name ?? `Vaisseau ${id}`} : ${count(amount)}`,
+                        `${SHIPS[Number(id)] ? itemText(Number(id), SHIPS[Number(id)]).name : t("admin.profile.shipFallback", { id })} : ${count(amount)}`,
                     )
                     .join(" · ")}
                 </p>
                 <p>
-                  Cargaison :{" "}
+                  {t("admin.profile.cargo")} :{" "}
                   {Object.entries(fleet.cargo)
                     .map(
                       ([resource, amount]) => `${resource} : ${count(amount)}`,
                     )
-                    .join(" · ") || "Vide"}
+                    .join(" · ") || t("admin.profile.empty")}
                 </p>
               </li>
             ))}
           </ul>
         ) : (
-          <p className="text-sm text-slate-500">Aucune flotte active.</p>
+          <p className="text-sm text-slate-500">{t("admin.profile.noFleet")}</p>
         )}
       </div>
       {player.planets.map((planet) => (
@@ -245,29 +251,23 @@ function PlayerDetails({ player }: { player: AdminPlayerDetail }) {
             {Object.entries(planet.resources).map(([resource, amount]) => (
               <div className="rounded-xl bg-slate-900/60 p-3" key={resource}>
                 <dt className="text-xs text-slate-400">
-                  {
-                    {
-                      metal: "Métal",
-                      crystal: "Cristal",
-                      deuterium: "Deutérium",
-                    }[resource]
-                  }
+                  {t(`admin.profile.resource.${resource}`)}
                 </dt>
                 <dd className="font-mono">{count(amount)}</dd>
               </div>
             ))}
           </dl>
           <p className="text-xs text-slate-400">
-            Énergie : {count(planet.energy.produced)} produite /{" "}
-            {count(planet.energy.used)} consommée · Cases : {planet.fields.used}
-            /{planet.fields.max} · Ressources au{" "}
-            {new Date(planet.lastUpdate).toLocaleString("fr-FR")}
+            {t("admin.profile.energy")} : {count(planet.energy.produced)} {t("admin.profile.produced")} /{" "}
+            {count(planet.energy.used)} {t("admin.profile.consumed")} · {t("admin.profile.fields")} : {planet.fields.used}
+            /{planet.fields.max} · {t("admin.profile.resourcesAt")}{" "}
+            {dateTime(planet.lastUpdate)}
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             {(["ships", "defenses"] as const).map((kind) => (
               <div key={kind}>
                 <h4 className="mb-2 font-semibold">
-                  {kind === "ships" ? "Vaisseaux à quai" : "Défenses"}
+                  {kind === "ships" ? t("admin.profile.dockedShips") : t("admin.profile.defenses")}
                 </h4>
                 {planet[kind].length ? (
                   <dl className="space-y-2">
@@ -276,7 +276,7 @@ function PlayerDetails({ player }: { player: AdminPlayerDetail }) {
                         key={unit.id}
                         className="flex justify-between gap-3 text-sm"
                       >
-                        <dt>{unit.name}</dt>
+                        <dt>{itemText(unit.id, unit).name}</dt>
                         <dd className="font-mono text-blue-300">
                           {count(unit.amount)}
                         </dd>
@@ -284,22 +284,22 @@ function PlayerDetails({ player }: { player: AdminPlayerDetail }) {
                     ))}
                   </dl>
                 ) : (
-                  <p className="text-sm text-slate-500">Aucune unité.</p>
+                  <p className="text-sm text-slate-500">{t("admin.profile.noUnit")}</p>
                 )}
               </div>
             ))}
           </div>
-          <Queue title="Constructions en cours" entries={planet.buildQueue} />
-          <Queue title="Chantier spatial en cours" entries={planet.shipQueue} />
+          <Queue title={t("admin.profile.buildQueue")} entries={planet.buildQueue} />
+          <Queue title={t("admin.profile.shipQueue")} entries={planet.shipQueue} />
           <dl className="grid gap-2 sm:grid-cols-2">
             {planet.buildings.map((building) => (
               <div
                 key={building.id}
                 className="flex justify-between gap-3 text-sm"
               >
-                <dt className="text-slate-300">{building.name}</dt>
+                <dt className="text-slate-300">{itemText(building.id, building).name}</dt>
                 <dd className="font-mono text-blue-300">
-                  Niv. {building.level}
+                  {t("admin.profile.levelShort", { level: building.level })}
                 </dd>
               </div>
             ))}

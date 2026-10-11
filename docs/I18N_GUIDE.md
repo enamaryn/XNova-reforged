@@ -394,3 +394,15 @@ Avant chaque commit, vérifiez :
 ## ❓ FAQ du jeu
 
 La FAQ existe en cinq fichiers : `docs/FAQ.md` (français), `FAQ_EN.md`, `FAQ_ES.md`, `FAQ_DE.md`, `FAQ_IT.md`. Le site les affiche sur `/<langue>/faq` (publique) et `/<langue>/help` (dans le jeu, entrée « FAQ » du menu de gauche). Pour la modifier : éditer le fichier de `docs/`, puis `node scripts/faq/sync-faq.mjs` (fait automatiquement par `npm run dev` et `npm run build` dans `apps/web`) ; `npm run test:i18n` échoue si les copies de `apps/web/content/faq/` ne sont pas synchronisées ou si les cinq fichiers n'ont plus la même structure (sections, tableaux). Les cinq langues doivent être modifiées ensemble.
+
+
+---
+
+## 🌍 Langue du serveur, du joueur et des emails
+
+- **Langue d'installation** : la première étape visible de l'assistant (`/setup`) propose les cinq langues. Le choix devient la **langue du serveur** (`GameConfig` clé `server.language`, valeur initiale `DEFAULT_LANGUAGE` du `.env`, sinon `fr`) : langue par défaut de l'interface, du jeu et des emails. Elle se modifie ensuite dans l'administration (Général → Langue du serveur).
+- **Langue par défaut de l'interface** : le middleware web lit `GET /setup/status` (champ public `language`, gardé 60 s en mémoire) pour les visiteurs sans préfixe de langue et sans cookie `NEXT_LOCALE`. Le cookie ne mémorise que le choix explicite du visiteur.
+- **Langue du joueur** : `User.locale`, enregistrée à l'inscription (langue de l'interface, sinon langue du serveur) et mise à jour par `PUT /auth/locale` quand un joueur connecté change de langue. Les emails suivent : langue de la requête quand le joueur agit lui-même (mot de passe oublié, renvoi de confirmation), sinon `User.locale`, sinon langue du serveur ; les emails déclenchés par un administrateur utilisent la langue du joueur concerné.
+- **Emails** : modèles dans `apps/api/src/mail/mail-templates.ts` (5 langues, vérifiés par `test/i18n-content.spec.ts`). Les liens portent la langue : `<site>/<langue>/verify-email?token=…`.
+- **Noms et descriptions du jeu** : le français reste la source (`packages/game-config/src/{buildings,technologies,ships,defenses}.ts`) ; `item-texts.ts` porte en, es, de, it. L'interface envoie l'en-tête `X-Locale` à chaque appel API (`apps/web/lib/api/client.ts`) ; l'API localise noms, descriptions, libellés d'effets d'amélioration et prérequis. Les écrans qui lisent `@xnova/game-config` directement (rapports, administration) passent par `useItemText()`. Ajouter un élément du jeu = ajouter ses textes dans les quatre langues (le test de complétude échoue sinon).
+- **Reste en français, volontairement** : messages d'erreur métier de l'API, journaux, bannière et commandes du terminal d'installation.

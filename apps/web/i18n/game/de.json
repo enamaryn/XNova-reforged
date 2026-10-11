@@ -250,7 +250,143 @@
     "by": "Von",
     "expiresAt": "Läuft ab am",
     "applyProfile": "Referenzprofil ×50 anwenden",
-    "applyProfileHint": "Füllt Geschwindigkeiten, Multiplikatoren und Grundeinkommen aus; prüfen und speichern."
+    "applyProfileHint": "Füllt Geschwindigkeiten, Multiplikatoren und Grundeinkommen aus; prüfen und speichern.",
+    "tabPlayers": "Spieler",
+    "banDurationHint": "Dauer der Sperre. Tage, Stunden und Minuten werden addiert. Alles null = dauerhafte Sperre.",
+    "serverLanguage": "Serversprache",
+    "serverLanguageHint": "Standardsprache des Spiels, der Oberfläche und der E-Mails (bei der Installation gewählt). Jeder Spieler kann danach seine eigene wählen.",
+    "playersPanel": {
+      "title": "Spieler",
+      "searchLabel": "Nach Benutzernamen suchen",
+      "searchPlaceholder": "Alle Spieler oder Teil des Benutzernamens",
+      "search": "Suchen",
+      "loading": "Spieler werden geladen…",
+      "count": "Spieler",
+      "columns": {
+        "username": "Benutzername",
+        "email": "E-Mail",
+        "pointsRank": "Punkte / Rang",
+        "planets": "Planeten",
+        "state": "Status",
+        "actions": "Aktionen"
+      },
+      "confirmed": "Bestätigt",
+      "toConfirm": "Zu bestätigen",
+      "banned": "Gesperrt",
+      "active": "Aktiv",
+      "viewAria": "Profil von {name} ansehen",
+      "profile": "Spielerprofil",
+      "none": "Kein Spieler gefunden.",
+      "previous": "Zurück",
+      "next": "Weiter",
+      "page": "Seite"
+    },
+    "actions": {
+      "ban": "Sperren",
+      "unban": "Entsperren",
+      "reset": "Fortschritt zurücksetzen",
+      "delete": "Konto löschen",
+      "resetDone": "Fortschritt zurückgesetzt. Der Spieler wurde abgemeldet und kann mit denselben Zugangsdaten neu beginnen.",
+      "banDone": "Spieler gesperrt und Sitzungen getrennt.",
+      "unbanDone": "Spieler entsperrt.",
+      "aria": "Aktionen für den Spieler",
+      "title": "Kontoverwaltung",
+      "restricted": "Aktionen sind Konten mit niedrigerem Rang als Ihrem vorbehalten. Ihr eigenes Konto ist geschützt.",
+      "confirmAria": "Bestätigen: {action}",
+      "resetWarning": "Diese Aktion ist unumkehrbar. Kolonien, Gebäude, Forschungen, Schiffe, Verteidigung und Warteschlangen werden gelöscht. Der Hauptplanet startet mit 500 Metall und 500 Kristall neu. Zugang, Rolle, Sperre, Allianz und Nachrichten bleiben erhalten. Der Spieler wird abgemeldet.",
+      "deleteWarning": "Endgültiges Löschen des Kontos, seiner Planeten, Rohstoffe, Einheiten, Forschungen, Nachrichten und Berichte. Der Spieler wird abgemeldet.",
+      "fleetsWarning": "Aktive Flotten des Spielers oder Flotten auf dem Weg zu seinen Planeten müssen vor dieser Aktion eintreffen oder zurückgerufen werden. Um den Gründer einer Allianz zu löschen, übertragen Sie zuerst die Gründung oder lösen Sie die Allianz auf.",
+      "banDays": "Dauer in Tagen (0 = dauerhaft)",
+      "reason": "Grund",
+      "retype": "Geben Sie zur Bestätigung den Benutzernamen {name} erneut ein",
+      "pending": "Aktion läuft…",
+      "confirm": "{action} bestätigen",
+      "cancel": "Abbrechen"
+    },
+    "profile": {
+      "back": "← Zurück zu den Spielern",
+      "loading": "Spielerprofil wird geladen…",
+      "refresh": "Profil aktualisieren",
+      "levelShort": "Stufe {level}",
+      "units": "{amount} Einheiten",
+      "end": "Ende",
+      "noQueue": "Keine laufende Warteschlange.",
+      "ariaProfile": "Profil von {name}",
+      "power": "Stärke",
+      "rank": "Rang",
+      "lastActive": "Letzte Aktivität",
+      "banned": "Gesperrt",
+      "bannedUntil": "bis {date}",
+      "bannedForever": "dauerhaft",
+      "email": "E-Mail-Adresse",
+      "emailHint": "Die Änderung meldet den Spieler ab und sendet einen neuen Link. Die Anmeldung bleibt bis zur Bestätigung der neuen Adresse gesperrt.",
+      "emailChange": "E-Mail ändern und Bestätigung senden",
+      "emailConfirmed": "E-Mail bestätigt",
+      "emailPending": "E-Mail zu bestätigen",
+      "technologies": "Technologien",
+      "researchQueue": "Laufende Forschung",
+      "fleets": "Flotten im Flug und ankommend",
+      "incoming": "Ankommend",
+      "own": "Des Spielers",
+      "mission": "Mission",
+      "arrival": "Ankunft",
+      "return": "Rückkehr",
+      "ships": "Schiffe",
+      "shipFallback": "Schiff {id}",
+      "cargo": "Fracht",
+      "empty": "Leer",
+      "noFleet": "Keine aktive Flotte.",
+      "resource": {
+        "metal": "Metall",
+        "crystal": "Kristall",
+        "deuterium": "Deuterium"
+      },
+      "energy": "Energie",
+      "produced": "erzeugt",
+      "consumed": "verbraucht",
+      "fields": "Felder",
+      "resourcesAt": "Rohstoffe vom",
+      "dockedShips": "Schiffe im Hangar",
+      "defenses": "Verteidigung",
+      "noUnit": "Keine Einheit.",
+      "buildQueue": "Laufende Bauten",
+      "shipQueue": "Laufende Werft"
+    },
+    "smtp": {
+      "saved": "SMTP-Konfiguration gespeichert.",
+      "testSent": "Test-E-Mail an {to} gesendet.",
+      "loading": "SMTP-Konfiguration wird geladen...",
+      "loadError": "Die SMTP-Konfiguration konnte nicht geladen werden.",
+      "title": "SMTP konfigurieren",
+      "intro": "Server für den Versand der Spiel-E-Mails (Bestätigung, vergessenes Passwort). Nur der Super-Admin kann diese Einstellungen ändern; das Passwort wird verschlüsselt gespeichert und nie angezeigt.",
+      "enable": "E-Mail-Versand aktivieren",
+      "host": "Host",
+      "hostAria": "SMTP-Host",
+      "port": "Port",
+      "portAria": "SMTP-Port",
+      "secure": "Direkte TLS-Verbindung (Port 465) — für STARTTLS (Port 587) nicht ankreuzen",
+      "secureAria": "Direkte TLS-Verbindung",
+      "username": "Benutzername",
+      "usernameAria": "SMTP-Benutzername",
+      "password": "Passwort",
+      "passwordKept": "•••••••• (bleibt bei leerem Feld erhalten)",
+      "passwordNone": "Kein Passwort",
+      "passwordAria": "SMTP-Passwort",
+      "passwordUnreadable": "Das gespeicherte Passwort ist nicht lesbar (Schlüssel geändert): Bitte erneut eingeben.",
+      "passwordClear": "Gespeichertes Passwort löschen",
+      "fromEmail": "Absenderadresse",
+      "fromEmailAria": "Absenderadresse",
+      "fromName": "Absendername",
+      "fromNameAria": "Absendername",
+      "saving": "Wird gespeichert...",
+      "save": "Speichern",
+      "testTitle": "Test-E-Mail senden",
+      "testHint": "Nutzt die gespeicherte Konfiguration. Ohne Empfänger wird die Nachricht an Ihre eigene Adresse gesendet.",
+      "testPlaceholder": "empfaenger@example.org (optional)",
+      "testAria": "Empfänger des Tests",
+      "testSending": "Wird gesendet...",
+      "testSend": "Test senden"
+    }
   },
   "common": {
     "language": "Sprache",
@@ -478,7 +614,21 @@
     "alreadyBuilding": "Wird bereits gebaut",
     "building": "Wird gebaut...",
     "buildLevel": "Stufe {level} bauen",
-    "one": "Gebäude"
+    "one": "Gebäude",
+    "effects": {
+      "maxLevel": "Höchste Stufe erreicht: keine weitere Verbesserung.",
+      "aria": "Auswirkungen der Stufe {level}",
+      "atLevel": "Auf Stufe {level}",
+      "effect": "Auswirkung",
+      "current": "Aktuell",
+      "level": "Stufe {level}",
+      "variation": "Änderung",
+      "unlocks": "+ Voraussetzungen erfüllt für: {names}.",
+      "seeDescription": "Beschreibung und Kosten dieser Verbesserung ansehen.",
+      "lowEnergy": "Zu wenig Energie: Die tatsächliche Produktion der Minen sinkt.",
+      "forecast": "Prognose mit den aktuellen Stufen des Planeten und den Server-Multiplikatoren. Die tatsächliche Produktion hängt vom Energiewirkungsgrad ab.",
+      "durationNote": "Dauerverkürzung bei gleichen Kosten, vor Rundung und Mindestdauer von einer Sekunde. Bereits gestartete Bauten und Forschungen behalten ihre Dauer."
+    }
   },
   "queue": {
     "finalizing": "Wird abgeschlossen…",
@@ -533,7 +683,9 @@
     "starting": "Wird gestartet...",
     "maxFull": "Maximale Stufe erreicht",
     "started": "Forschung gestartet.",
-    "cannotStart": "Forschung konnte nicht gestartet werden."
+    "cannotStart": "Forschung konnte nicht gestartet werden.",
+    "completedToast": "Forschung abgeschlossen: {name}{level}",
+    "fallbackName": "Forschung"
   },
   "energy": {
     "deficitBadge": "DEFIZIT",
@@ -677,5 +829,128 @@
     "confirmation": "Bestätigung",
     "confirmationAria": "Bestätigung des neuen Passworts",
     "changePassword": "Passwort ändern"
+  },
+  "setup": {
+    "kicker": "Server-Installation",
+    "title": "Ersteinrichtung.",
+    "stepsLabel": "Schritte",
+    "loading": "Wird geladen...",
+    "continue": "Weiter",
+    "genericError": "Es ist ein Fehler aufgetreten.",
+    "language": {
+      "title": "Installationssprache",
+      "hint": "Sie wird zur Standardsprache des Spiels, des Servers und der E-Mails. Jeder Spieler kann danach seine eigene wählen."
+    },
+    "steps": {
+      "code": "Code",
+      "smtp": "SMTP",
+      "settings": "Einstellungen",
+      "admin": "Super-Admin",
+      "validation": "Bestätigung"
+    },
+    "done": {
+      "kicker": "Installation",
+      "title": "Installation abgeschlossen.",
+      "notice": "Das Super-Admin-Konto ist bestätigt und der Installationsassistent ist nun endgültig gesperrt. Er kann nur über ein Terminal auf dem Server wieder geöffnet werden.",
+      "login": "Zur Anmeldung"
+    },
+    "code": {
+      "intro": "Zum Schutz des Servers ist die Installation der Person vorbehalten, die Zugriff auf sein Terminal hat. Lesen Sie den Installationscode im API-Protokoll:",
+      "regenerate": "Oder einen neuen erzeugen:",
+      "regenerateSuffix": "(im Projektordner auf dem Server).",
+      "label": "Installationscode"
+    },
+    "smtp": {
+      "intro": "Server für den E-Mail-Versand (Kontobestätigung, vergessenes Passwort). Er dient auch dazu, Ihr Konto am Ende der Installation zu bestätigen.",
+      "host": "Host",
+      "port": "Port",
+      "secure": "Direkte TLS-Verbindung (Port 465) — für STARTTLS (Port 587) abwählen",
+      "username": "Benutzername",
+      "password": "Passwort",
+      "passwordKept": "•••••••• (bleibt bei leerem Feld erhalten)",
+      "fromEmail": "Absenderadresse",
+      "fromName": "Absendername",
+      "save": "Konfiguration speichern",
+      "saved": "Konfiguration gespeichert. Senden Sie jetzt eine Test-E-Mail.",
+      "testTitle": "Sendetest",
+      "testOk": "— bestanden ✓",
+      "testTodo": "— ausstehend",
+      "testTo": "Test-E-Mail senden an",
+      "testSend": "Test-E-Mail senden",
+      "testSent": "Test-E-Mail an {to} gesendet. Prüfen Sie den Eingang, bevor Sie fortfahren."
+    },
+    "settings": {
+      "intro": "Einstellungen des Universums. Sie lassen sich später in der Administration ändern; behalten Sie im Zweifel die Standardwerte.",
+      "applyProfile": "Referenzprofil ×50 anwenden",
+      "profileHint": "Geschwindigkeit ×50, ursprüngliche Kosten: Labor in 22 Min., erstes Schiff in unter 2 Std.",
+      "save": "Speichern und weiter"
+    },
+    "fields": {
+      "gameSpeed": {
+        "label": "Spielgeschwindigkeit",
+        "hint": "Beschleunigt Dauern und Produktion (1 = ursprüngliches Tempo)"
+      },
+      "fleetSpeed": {
+        "label": "Flottengeschwindigkeit",
+        "hint": "Beschleunigt die Flüge (1 = ursprüngliches Tempo)"
+      },
+      "resourceMultiplier": {
+        "label": "Produktionsmultiplikator",
+        "hint": "Gilt für alle produzierten Rohstoffe"
+      },
+      "buildingCostMultiplier": {
+        "label": "Gebäudekosten",
+        "hint": "Multiplikator der Baukosten"
+      },
+      "researchCostMultiplier": {
+        "label": "Forschungskosten",
+        "hint": "Multiplikator der Forschungskosten"
+      },
+      "shipCostMultiplier": {
+        "label": "Kosten für Schiffe und Verteidigung",
+        "hint": "Multiplikator der Werftkosten"
+      },
+      "planetSize": {
+        "label": "Planetengröße (Felder)",
+        "hint": "Zwischen 50 und 500"
+      },
+      "maxBuildingLevel": {
+        "label": "Maximale Gebäudestufe",
+        "hint": "Obergrenze beim Bauen"
+      },
+      "maxTechnologyLevel": {
+        "label": "Maximale Technologiestufe",
+        "hint": "Obergrenze bei der Forschung"
+      },
+      "baseMetal": {
+        "label": "Grundproduktion: Metall (pro Stunde)",
+        "hint": "Einkommen ohne Mine"
+      },
+      "baseCrystal": {
+        "label": "Grundproduktion: Kristall (pro Stunde)",
+        "hint": "Einkommen ohne Mine"
+      },
+      "baseDeuterium": {
+        "label": "Grundproduktion: Deuterium (pro Stunde)",
+        "hint": "Einkommen ohne Mine"
+      }
+    },
+    "admin": {
+      "intro": "Super-Admin-Konto des Servers. An diese Adresse wird ein Bestätigungslink gesendet: Mit einem Klick darauf endet die Installation. Ist die Adresse falsch, können Sie das Konto neu anlegen, solange es nicht bestätigt ist.",
+      "username": "Benutzername",
+      "email": "E-Mail-Adresse",
+      "password": "Passwort",
+      "passwordHint": "Mindestens 8 Zeichen, mit Kleinbuchstabe, Großbuchstabe und Ziffer.",
+      "confirmation": "Bestätigung",
+      "submit": "Konto erstellen und Link senden",
+      "mismatch": "Die beiden Passwörter stimmen nicht überein."
+    },
+    "validation": {
+      "sentTo": "Eine Bestätigungs-E-Mail wurde gesendet an",
+      "instructions": "Klicken Sie auf den enthaltenen Link: Diese Seite aktualisiert sich selbst und die Installation endet, sobald das Konto bestätigt ist.",
+      "waiting": "Warte auf die Bestätigung...",
+      "resend": "Link erneut senden",
+      "fix": "Adresse oder Konto korrigieren"
+    }
   }
 }

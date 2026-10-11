@@ -21,6 +21,7 @@ import { AuthResponseDto, RegistrationPendingDto } from './dto/auth-response.dto
 import { EMAIL_NOT_VERIFIED, isEmailVerificationRequired } from './email-verification';
 import { MailService } from '../mail/mail.service';
 import { SetupStateService } from '../setup/setup-state.service';
+import { requestLocaleOrNull } from '../common/request-locale';
 
 /** Nombre maximal de positions tentées pour la planète de départ lors d'une inscription. */
 const MAX_STARTER_ATTEMPTS = 10;
@@ -78,6 +79,8 @@ export class AuthService {
               username,
               email,
               password: hashedPassword,
+              // Langue de l'interface à l'inscription (sinon celle du serveur) : emails et textes
+              locale: requestLocaleOrNull() ?? config.language,
               points: 0,
               rank: 0,
               ...(options.role ? { role: options.role } : {}),
@@ -325,6 +328,7 @@ export class AuthService {
         username: true,
         email: true,
         emailVerifiedAt: true,
+        locale: true,
         points: true,
         rank: true,
         role: true,
@@ -350,6 +354,12 @@ export class AuthService {
     }
 
     return user;
+  }
+
+  /** Enregistre la langue choisie par le joueur (emails et textes du jeu). */
+  async setLocale(userId: string, locale: string) {
+    await this.database.user.update({ where: { id: userId }, data: { locale } });
+    return { locale };
   }
 
   /** Crée une session serveur et les tokens associés (claim `sid`). */

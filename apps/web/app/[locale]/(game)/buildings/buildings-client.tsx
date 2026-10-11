@@ -8,11 +8,13 @@ import { usePlanetStore } from "@/lib/stores/planet-store";
 import { useSocket } from "@/lib/providers/socket-provider";
 import { BuildQueue } from "@/components/game/BuildQueue";
 import { BuildingCard } from "@/components/game/BuildingCard";
-import { useI18n } from "@/lib/i18n";
+import { BUILDINGS } from "@xnova/game-config";
+import { useI18n, useItemText } from "@/lib/i18n";
 import { ContextHelp } from "@/components/game/ContextHelp";
 
 export default function BuildingsClient() {
   const { t } = useI18n();
+  const itemText = useItemText();
   const { user } = useAuthStore();
   const { selectedPlanetId, setSelectedPlanetId } = usePlanetStore();
   const { socket } = useSocket();
@@ -87,11 +89,15 @@ export default function BuildingsClient() {
     };
 
     const handleCompleted = (payload?: {
+      buildingId?: number;
       buildingName?: string;
       newLevel?: number;
     }) => {
       handleUpdate();
-      const name = payload?.buildingName || t("buildings.fallbackName");
+      // L'événement vient du serveur sans langue de requête : le nom est résolu ici par identifiant
+      const known = payload?.buildingId ? BUILDINGS[payload.buildingId] : undefined;
+      const name =
+        (known ? itemText(known.id, known).name : payload?.buildingName) || t("buildings.fallbackName");
       const level = payload?.newLevel
         ? t("buildings.shortLevel", { level: payload.newLevel })
         : "";
@@ -108,7 +114,7 @@ export default function BuildingsClient() {
       socket.off("building:completed", handleCompleted);
       socket.off("building:cancelled", handleUpdate);
     };
-  }, [socket, planetId, refetchBuildings, refetchQueue, pushToast, t]);
+  }, [socket, planetId, refetchBuildings, refetchQueue, pushToast, t, itemText]);
 
   const handleBuild = useCallback(
     async (buildingId: number) => {

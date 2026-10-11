@@ -26,12 +26,28 @@ test("assistant d'installation : du code au verrouillage", async ({ page, reques
   await page.goto('/setup');
   await expect(page.getByTestId('setup-wizard')).toBeVisible();
 
+  // Langue d'installation : l'interface suit le choix, avant même la saisie du code
+  await page.getByTestId('setup-language-en').click();
+  await expect(page.getByTestId('setup-language')).toContainText('Installation language');
+  await page.getByTestId('setup-language-fr').click();
+  await expect(page.getByTestId('setup-language')).toContainText("Langue d'installation");
+
   // Mauvais code, puis bon code
   await page.locator('#setup-code').fill('AAAA-AAAA-AAAA-AAAA');
   await page.getByRole('button', { name: 'Continuer' }).click();
   await expect(page.getByTestId('setup-error')).toBeVisible();
   await page.locator('#setup-code').fill(SETUP_TOKEN);
   await page.getByRole('button', { name: 'Continuer' }).click();
+
+  // Une fois le code accepté, le choix de langue est mémorisé par le serveur (langue par défaut du jeu)
+  const language = async () => (await (await request.get(`${API_URL}/setup/status`)).json()).language;
+  await expect.poll(language).toBe('fr');
+  await page.getByTestId('setup-language-de').click();
+  await expect(page.getByTestId('setup-language')).toContainText('Installationssprache');
+  await expect.poll(language).toBe('de');
+  await page.getByTestId('setup-language-fr').click();
+  await expect(page.getByTestId('setup-language')).toContainText("Langue d'installation");
+  await expect.poll(language).toBe('fr');
 
   // SMTP + test d'envoi
   await page.locator('#smtp-host').fill('127.0.0.1');

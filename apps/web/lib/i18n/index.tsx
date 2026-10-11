@@ -4,8 +4,11 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
+  useRef,
 } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { usePathname, useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import fr from "@/i18n/game/fr.json";
@@ -13,11 +16,12 @@ import en from "@/i18n/game/en.json";
 import es from "@/i18n/game/es.json";
 import de from "@/i18n/game/de.json";
 import it from "@/i18n/game/it.json";
+import { localizeItem } from "@xnova/game-config";
+import { rememberLocaleChoice } from "./remember-locale";
 import {
   defaultLocale,
   isLocale,
   pathWithLocale,
-  persistLocaleCookie,
   type Locale,
 } from "./locale";
 
@@ -79,10 +83,21 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   // La langue du jeu suit toujours celle de l'URL : un seul sélecteur, un seul état.
   const locale: Locale = isLocale(urlLocale) ? urlLocale : defaultLocale;
 
+  const queryClient = useQueryClient();
+  const previousLocale = useRef(locale);
+
+  // Les données servies par l'API sont localisées (noms du jeu, libellés) : recharger au changement de langue
+  useEffect(() => {
+    if (previousLocale.current !== locale) {
+      previousLocale.current = locale;
+      void queryClient.invalidateQueries();
+    }
+  }, [locale, queryClient]);
+
   const setLocale = useCallback(
     (next: Locale) => {
       if (next === locale) return;
-      persistLocaleCookie(next);
+      rememberLocaleChoice(next);
       router.push(pathWithLocale(pathname, next));
       router.refresh();
     },
@@ -105,4 +120,17 @@ export function useI18n() {
     throw new Error("useI18n doit être utilisé dans un I18nProvider");
   }
   return context;
+}
+
+/**
+ * Nom et description d'un élément du jeu (bâtiment, technologie, vaisseau, défense) dans la langue courante,
+ * pour les écrans qui lisent `@xnova/game-config` directement (rapports, administration).
+ */
+export function useItemText() {
+  const { locale } = useI18n();
+  return useCallback(
+    (id: number, source?: { name: string; description?: string } | null) =>
+      localizeItem(id, locale, source ?? { name: "" }),
+    [locale],
+  );
 }

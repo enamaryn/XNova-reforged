@@ -11,20 +11,22 @@ import {
   type AdminPlayerDetail,
 } from "@/lib/api/admin";
 import { useAuthStore } from "@/lib/stores/auth-store";
+import { useI18n } from "@/lib/i18n";
 
 type Action = "ban" | "unban" | "reset" | "delete";
 const inputClass =
   "w-full rounded-xl border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-white";
 const buttonClass =
   "rounded-xl border border-slate-700 px-3 py-2 text-sm hover:border-blue-400 disabled:opacity-50";
-const labels: Record<Action, string> = {
-  ban: "Bannir",
-  unban: "Débannir",
-  reset: "Réinitialiser la progression",
-  delete: "Supprimer le compte",
-};
 
 export function PlayerActions({ player }: { player: AdminPlayerDetail }) {
+  const { t } = useI18n();
+  const labels: Record<Action, string> = {
+    ban: t("admin.actions.ban"),
+    unban: t("admin.actions.unban"),
+    reset: t("admin.actions.reset"),
+    delete: t("admin.actions.delete"),
+  };
   const { user } = useAuthStore();
   const router = useRouter();
   const locale = usePathname().split("/")[1];
@@ -69,10 +71,10 @@ export function PlayerActions({ player }: { player: AdminPlayerDetail }) {
       } else {
         setMessage(
           selected === "reset"
-            ? "Progression réinitialisée. Le joueur a été déconnecté et peut reprendre avec les mêmes accès."
+            ? t("admin.actions.resetDone")
             : selected === "ban"
-              ? "Joueur banni et sessions déconnectées."
-              : "Joueur débanni.",
+              ? t("admin.actions.banDone")
+              : t("admin.actions.unbanDone"),
         );
       }
       await client.invalidateQueries({ queryKey: ["admin"] });
@@ -88,37 +90,36 @@ export function PlayerActions({ player }: { player: AdminPlayerDetail }) {
   };
   return (
     <section
-      aria-label="Actions sur le joueur"
+      aria-label={t("admin.actions.aria")}
       className="space-y-4 rounded-2xl border border-slate-700 p-4"
     >
-      <h3 className="font-semibold">Gestion du compte</h3>
+      <h3 className="font-semibold">{t("admin.actions.title")}</h3>
       <div className="flex flex-wrap gap-2">
         <button
           className={buttonClass}
           disabled={!canManage || mutation.isPending}
           onClick={() => choose(player.banned ? "unban" : "ban")}
         >
-          {player.banned ? "Débannir" : "Bannir"}
+          {player.banned ? labels.unban : labels.ban}
         </button>
         <button
           className={`${buttonClass} text-amber-300`}
           disabled={!canManage || mutation.isPending}
           onClick={() => choose("reset")}
         >
-          Réinitialiser la progression
+          {labels.reset}
         </button>
         <button
           className={`${buttonClass} text-red-300`}
           disabled={!canManage || mutation.isPending}
           onClick={() => choose("delete")}
         >
-          Supprimer le compte
+          {labels.delete}
         </button>
       </div>
       {!canManage && (
         <p className="text-sm text-slate-400">
-          Les actions sont réservées aux comptes de rang inférieur au vôtre.
-          Votre propre compte est protégé.
+          {t("admin.actions.restricted")}
         </p>
       )}
       {message && (
@@ -128,7 +129,7 @@ export function PlayerActions({ player }: { player: AdminPlayerDetail }) {
       )}
       {action && (
         <form
-          aria-label={`Confirmer : ${labels[action]}`}
+          aria-label={t("admin.actions.confirmAria", { action: labels[action] })}
           className="space-y-3"
           onSubmit={(event) => {
             event.preventDefault();
@@ -141,31 +142,22 @@ export function PlayerActions({ player }: { player: AdminPlayerDetail }) {
           </h4>
           {action === "reset" && (
             <p className="text-sm text-amber-200">
-              Cette action est irréversible. Les colonies, bâtiments,
-              recherches, vaisseaux, défenses et files sont effacés. La planète
-              principale repart avec 500 métal et 500 cristal. Les accès, le
-              rôle, le bannissement, l’alliance et les messages sont conservés.
-              Le joueur est déconnecté.
+              {t("admin.actions.resetWarning")}
             </p>
           )}
           {action === "delete" && (
             <p className="text-sm text-red-200">
-              Suppression définitive du compte, de ses planètes, ressources,
-              unités, recherches, messages et rapports. Le joueur sera
-              déconnecté.
+              {t("admin.actions.deleteWarning")}
             </p>
           )}
           {(action === "reset" || action === "delete") && (
             <p className="text-xs text-slate-400">
-              Les flottes actives du joueur ou dirigées vers ses planètes
-              doivent terminer ou être rappelées avant cette action. Pour
-              supprimer un fondateur d’alliance, transférez d’abord la fondation
-              ou dissolvez l’alliance.
+              {t("admin.actions.fleetsWarning")}
             </p>
           )}
           {action === "ban" && (
             <label className="block text-sm">
-              Durée en jours (0 = permanent)
+              {t("admin.actions.banDays")}
               <input
                 type="number"
                 min={0}
@@ -178,7 +170,7 @@ export function PlayerActions({ player }: { player: AdminPlayerDetail }) {
             </label>
           )}
           <label className="block text-sm">
-            Motif
+            {t("admin.actions.reason")}
             <textarea
               required
               minLength={3}
@@ -189,7 +181,7 @@ export function PlayerActions({ player }: { player: AdminPlayerDetail }) {
             />
           </label>
           <label className="block text-sm">
-            Retapez le pseudo {player.username} pour confirmer
+            {t("admin.actions.retype", { name: player.username })}
             <input
               required
               autoComplete="off"
@@ -209,8 +201,8 @@ export function PlayerActions({ player }: { player: AdminPlayerDetail }) {
               }
             >
               {mutation.isPending
-                ? "Action en cours…"
-                : `Confirmer ${labels[action].toLowerCase()}`}
+                ? t("admin.actions.pending")
+                : t("admin.actions.confirm", { action: labels[action].toLowerCase() })}
             </button>
             <button
               type="button"
@@ -218,7 +210,7 @@ export function PlayerActions({ player }: { player: AdminPlayerDetail }) {
               disabled={mutation.isPending}
               onClick={() => setAction(null)}
             >
-              Annuler
+              {t("admin.actions.cancel")}
             </button>
           </div>
           {mutation.error && (

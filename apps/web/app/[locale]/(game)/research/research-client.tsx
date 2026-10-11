@@ -8,7 +8,8 @@ import { researchApi } from '@/lib/api/research';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { usePlanetStore } from '@/lib/stores/planet-store';
 import { useSocket } from '@/lib/providers/socket-provider';
-import { useI18n } from '@/lib/i18n';
+import { TECHNOLOGIES } from '@xnova/game-config';
+import { useI18n, useItemText } from '@/lib/i18n';
 
 export default function ResearchClient() {
 
@@ -16,6 +17,7 @@ export default function ResearchClient() {
   const { selectedPlanetId, setSelectedPlanetId } = usePlanetStore();
   const { socket } = useSocket();
   const { t } = useI18n();
+  const itemText = useItemText();
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -72,12 +74,13 @@ export default function ResearchClient() {
   useEffect(() => {
     if (!socket) return;
 
-    const handleCompleted = (payload?: { techName?: string; newLevel?: number }) => {
+    const handleCompleted = (payload?: { techId?: number; techName?: string; newLevel?: number }) => {
       refetchTech();
       refetchQueue();
-      const name = payload?.techName || 'Recherche';
-      const level = payload?.newLevel ? ` niv. ${payload.newLevel}` : '';
-      pushToast(`Recherche terminée : ${name}${level}`);
+      const known = payload?.techId ? TECHNOLOGIES[payload.techId] : undefined;
+      const name = (known ? itemText(known.id, known).name : payload?.techName) || t('research.fallbackName');
+      const level = payload?.newLevel ? t('buildings.shortLevel', { level: payload.newLevel }) : '';
+      pushToast(t('research.completedToast', { name, level }));
     };
 
     socket.on('research:completed', handleCompleted);
@@ -85,7 +88,7 @@ export default function ResearchClient() {
     return () => {
       socket.off('research:completed', handleCompleted);
     };
-  }, [socket, refetchTech, refetchQueue, pushToast]);
+  }, [socket, refetchTech, refetchQueue, pushToast, t, itemText]);
 
   // Calculs dérivés - DOIVENT être avant les returns conditionnels
   // Utiliser techData entier comme dépendance, pas techData.technologies

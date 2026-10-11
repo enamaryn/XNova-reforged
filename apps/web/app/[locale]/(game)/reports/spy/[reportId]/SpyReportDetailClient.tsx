@@ -4,10 +4,13 @@ import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { DEFENSES, SHIPS, TECHNOLOGIES } from "@xnova/game-config";
 import { getSpyReport } from "@/lib/api/fleet";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, useItemText } from "@/lib/i18n";
 
 export function SpyReportDetailClient({ reportId }: { reportId: string }) {
   const { t, locale } = useI18n();
+  const itemText = useItemText();
+  const nameOf = (id: string, source?: { name: string } | null) =>
+    source ? itemText(Number(id), source).name : undefined;
   const { data, isLoading, error } = useQuery({
     queryKey: ["spy-report", reportId],
     queryFn: () => getSpyReport(reportId),
@@ -74,7 +77,7 @@ export function SpyReportDetailClient({ reportId }: { reportId: string }) {
             <ul className="mt-3 grid gap-2 text-sm text-slate-300 sm:grid-cols-2">
               {Object.entries(ships).map(([id, amount]) => (
                 <li key={id} className="rounded-xl bg-slate-900/60 px-4 py-2">
-                  {SHIPS[Number(id)]?.name ?? t("spy.shipFallback", { id })}
+                  {nameOf(id, SHIPS[Number(id)]) ?? t("spy.shipFallback", { id })}
                   <span className="float-right font-mono">{amount}</span>
                 </li>
               ))}
@@ -94,7 +97,7 @@ export function SpyReportDetailClient({ reportId }: { reportId: string }) {
             <ul className="mt-3 grid gap-2 text-sm text-slate-300 sm:grid-cols-2">
               {Object.entries(defenses).map(([id, amount]) => (
                 <li key={id} className="rounded-xl bg-slate-900/60 px-4 py-2">
-                  {DEFENSES[Number(id)]?.name ?? t("report.defenseFallback", { id })}
+                  {nameOf(id, DEFENSES[Number(id)]) ?? t("report.defenseFallback", { id })}
                   <span className="float-right font-mono">{amount}</span>
                 </li>
               ))}
@@ -127,7 +130,7 @@ export function SpyReportDetailClient({ reportId }: { reportId: string }) {
           <ul className="mt-3 grid gap-2 text-sm text-slate-300 sm:grid-cols-2">
             {Object.entries(technologies).map(([id, level]) => (
               <li key={id} className="rounded-xl bg-slate-900/60 px-4 py-2">
-                {TECHNOLOGIES[Number(id)]?.name ?? t("spy.techFallback", { id })}
+                {nameOf(id, TECHNOLOGIES[Number(id)]) ?? t("spy.techFallback", { id })}
                 <span className="float-right font-mono">{level}</span>
               </li>
             ))}

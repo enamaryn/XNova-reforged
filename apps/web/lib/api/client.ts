@@ -1,6 +1,7 @@
 import { useAuthStore } from "@/lib/stores/auth-store";
 import type { ApiErrorPayload } from "@/lib/api/types";
 import { resolveApiBaseUrl } from "@/lib/api/base-url";
+import { documentLocale } from "@/lib/i18n/locale";
 
 const ENV_API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
@@ -96,6 +97,12 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}) 
 
   if (!headers.has("Content-Type")) {
     headers.set("Content-Type", "application/json");
+  }
+
+  // Langue de l'interface : l'API localise les noms et descriptions du jeu et les libellés d'effets
+  const locale = documentLocale();
+  if (locale && !headers.has("X-Locale")) {
+    headers.set("X-Locale", locale);
   }
 
   if (auth) {
