@@ -1,4 +1,5 @@
 import { apiRequest } from "@/lib/api/client";
+import type { SentryTestResult, SupervisionConfig, SupervisionUpdatePayload } from "@/lib/api/supervision";
 
 /** Réglages serveur modifiables pendant l'installation (mêmes clés que l'administration). */
 export interface ServerSettings {
@@ -34,6 +35,7 @@ export interface SetupState {
     tested: boolean;
   };
   settings: { saved: boolean; values: ServerSettings };
+  supervision: { saved: boolean; config: SupervisionConfig };
   admin: { username: string; email: string; verified: boolean } | null;
 }
 
@@ -85,4 +87,17 @@ export function createSetupAdmin(token: string, payload: { username: string; ema
 
 export function resendSetupAdmin(token: string) {
   return apiRequest<{ message: string }>("/setup/admin/resend", { ...withToken(token), method: "POST" });
+}
+
+/** Étape « Supervision » : toujours facultative, la supervision locale reste active quoi qu'il arrive. */
+export function saveSetupSupervision(token: string, payload: SupervisionUpdatePayload) {
+  return apiRequest<SetupState>("/setup/supervision", { ...withToken(token), method: "PUT", body: JSON.stringify(payload) });
+}
+
+export function testSetupSentry(token: string, dsnApi?: string) {
+  return apiRequest<SentryTestResult>("/setup/sentry/test", {
+    ...withToken(token),
+    method: "POST",
+    body: JSON.stringify(dsnApi ? { dsnApi } : {}),
+  });
 }

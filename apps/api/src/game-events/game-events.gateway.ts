@@ -50,6 +50,12 @@ export class GameEventsGateway
     private readonly database: DatabaseService,
   ) {}
 
+  /** État de la passerelle pour la supervision : disponible et nombre de sockets connectés. */
+  getStats(): { ready: boolean; connections: number } {
+    const sockets = this.server?.sockets?.sockets;
+    return { ready: !!this.server, connections: sockets ? sockets.size : 0 };
+  }
+
   afterInit() {
     this.logger.log('WebSocket Gateway initialized');
   }

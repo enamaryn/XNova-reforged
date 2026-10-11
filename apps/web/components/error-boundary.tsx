@@ -4,6 +4,7 @@ import { useI18n } from "@/lib/i18n";
 import * as React from "react";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { reportClientError } from "@/lib/monitoring/client-reporter";
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -43,6 +44,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error("Erreur capturée par le boundary:", error, errorInfo);
+    reportClientError({ kind: "react", type: error.name, message: error.message, stack: error.stack });
   }
 
   render() {

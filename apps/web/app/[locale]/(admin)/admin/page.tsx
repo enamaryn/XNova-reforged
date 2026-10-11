@@ -19,9 +19,10 @@ import {
 import { useI18n } from "@/lib/i18n";
 import { localeNames, locales } from "@/lib/i18n/locale";
 import { useAuthStore } from "@/lib/stores/auth-store";
-import { isSuperAdmin } from "@/lib/roles";
+import { hasAdminAccess, isSuperAdmin } from "@/lib/roles";
 import { SmtpSettingsPanel } from "./SmtpSettingsPanel";
 import { PlayersPanel } from "./PlayersPanel";
+import { SupervisionPanel } from "./SupervisionPanel";
 
 function GeneralPanel() {
   const { t } = useI18n();
@@ -730,7 +731,7 @@ function GeneralPanel() {
 export default function AdminPage() {
   const { user } = useAuthStore();
   const { t } = useI18n();
-  const [tab, setTab] = useState<"players" | "general" | "smtp">("players");
+  const [tab, setTab] = useState<"players" | "general" | "smtp" | "supervision">("players");
   return (
     <div className="space-y-6">
       <div
@@ -741,6 +742,7 @@ export default function AdminPage() {
           [
             "players",
             "general",
+            ...(hasAdminAccess(user?.role) ? ["supervision"] : []),
             ...(isSuperAdmin(user?.role) ? ["smtp"] : []),
           ] as const
         ).map((value) => (
@@ -755,12 +757,15 @@ export default function AdminPage() {
               ? t("admin.tabPlayers")
               : value === "smtp"
                 ? t("admin.tabSmtp")
+                : value === "supervision"
+                  ? t("admin.tabSupervision")
                 : t("admin.tabGeneral")}
           </button>
         ))}
       </div>
       {tab === "players" && <PlayersPanel />}
       {tab === "general" && <GeneralPanel />}
+      {tab === "supervision" && hasAdminAccess(user?.role) && <SupervisionPanel />}
       {tab === "smtp" && isSuperAdmin(user?.role) && <SmtpSettingsPanel />}
     </div>
   );

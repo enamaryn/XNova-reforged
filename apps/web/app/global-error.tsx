@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import * as Sentry from '@sentry/nextjs';
+import { reportClientError } from '@/lib/monitoring/client-reporter';
 
 /** Textes de l'écran d'erreur global : hors du contexte de langue, donc dictionnaire local (cinq langues). */
 const TEXTS = {
@@ -27,6 +28,7 @@ function detectLocale(): TextLocale {
 export default function GlobalError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   useEffect(() => {
     Sentry.captureException(error);
+    reportClientError({ kind: 'react', type: error.name, message: error.message, stack: error.stack });
   }, [error]);
 
   const locale = detectLocale();

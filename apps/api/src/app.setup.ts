@@ -3,6 +3,7 @@ import type { NestExpressApplication } from '@nestjs/platform-express';
 import { resolveAllowedOrigins } from './config/env.validation';
 import { securityHeaders } from './common/security/security-headers';
 import { requestLocaleMiddleware } from './common/request-locale';
+import { SupervisedLogger } from './supervision/supervised-logger';
 
 /** Configuration HTTP commune à main.ts et aux tests d'intégration (SEC-04). */
 export function configureApp(app: INestApplication, options: { swagger?: boolean } = {}) {
@@ -17,6 +18,9 @@ export function configureApp(app: INestApplication, options: { swagger?: boolean
 
   // Langue de la requête (en-tête X-Locale) pour localiser les textes du jeu
   app.use(requestLocaleMiddleware);
+
+  // Journal NestJS inchangé en sortie, mais les erreurs alimentent aussi la supervision locale
+  app.useLogger(new SupervisedLogger());
 
   app.use(securityHeaders({ production: isProd, swagger: !!options.swagger }));
 

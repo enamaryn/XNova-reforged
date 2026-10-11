@@ -386,7 +386,8 @@
       "testAria": "Destinatario del test",
       "testSending": "Invio...",
       "testSend": "Invia il test"
-    }
+    },
+    "tabSupervision": "Supervisione"
   },
   "common": {
     "language": "Lingua",
@@ -846,7 +847,8 @@
       "smtp": "SMTP",
       "settings": "Impostazioni",
       "admin": "Super admin",
-      "validation": "Convalida"
+      "validation": "Convalida",
+      "supervision": "Supervisione"
     },
     "done": {
       "kicker": "Installazione",
@@ -951,6 +953,212 @@
       "waiting": "In attesa della conferma...",
       "resend": "Invia di nuovo il link",
       "fix": "Correggi l'indirizzo o l'account"
+    },
+    "supervision": {
+      "intro": "Scegli come seguire gli errori del server. La supervisione locale è sempre attiva e basta; Sentry è un’opzione che potrai aggiungere anche più tardi nella console di amministrazione.",
+      "save": "Salva la supervisione e continua"
+    }
+  },
+  "supervision": {
+    "title": "Supervisione",
+    "loading": "Caricamento della supervisione…",
+    "loadError": "Impossibile caricare la supervisione.",
+    "refresh": "Aggiorna",
+    "lastCheck": "Ultimo controllo: {time}",
+    "localActive": "La supervisione locale è sempre attiva: gli incidenti restano su questo server, senza servizi esterni.",
+    "saved": "Impostazioni di supervisione salvate.",
+    "versionLine": "Versione {version} (commit {commit}) · avviato il {start} · ultimo backup: {backup}",
+    "noBackup": "nessuno noto",
+    "overall": {
+      "healthy": "Sano",
+      "degraded": "Degradato",
+      "unavailable": "Non disponibile"
+    },
+    "checkStatus": {
+      "ok": "OK",
+      "degraded": "Degradato",
+      "down": "Non attivo",
+      "unknown": "Sconosciuto"
+    },
+    "service": {
+      "database": "PostgreSQL",
+      "redis": "Redis",
+      "api": "API",
+      "frontend": "Sito web",
+      "websocket": "WebSocket",
+      "smtp": "Email (SMTP)",
+      "disk": "Disco",
+      "system": "Memoria e carico",
+      "cron": "Attività pianificate",
+      "queues": "Code di gioco",
+      "version": "Versione e backup"
+    },
+    "code": {
+      "ok": "Funziona normalmente",
+      "timeout": "Nessuna risposta nel tempo previsto",
+      "error": "Il controllo non è riuscito",
+      "slow": "Risposta lenta",
+      "down": "Servizio non raggiungibile",
+      "critical": "Livello critico",
+      "low": "Spazio quasi esaurito",
+      "overloaded": "Server sovraccarico",
+      "event_loop_blocked": "Event loop bloccato",
+      "event_loop_slow": "Event loop rallentato",
+      "stalled": "Code di gioco in ritardo",
+      "stuck": "Attività pianificata bloccata",
+      "late": "Attività pianificata in ritardo",
+      "failing": "Attività pianificata in errore",
+      "http_error": "Il sito risponde con un errore",
+      "not_ready": "Non inizializzato",
+      "not_configured": "Non configurato",
+      "never_tested": "Configurato, mai testato",
+      "last_test_failed": "L’ultimo test è fallito",
+      "unreachable": "Non raggiungibile",
+      "disabled": "Disattivato",
+      "none": "Niente da segnalare"
+    },
+    "stats": {
+      "open": "Incidenti aperti",
+      "last24h": "Incidenti in 24 h",
+      "occurrences24h": "Occorrenze in 24 h",
+      "total": "Incidenti conservati",
+      "top": "Errori più frequenti"
+    },
+    "incidents": {
+      "title": "Incidenti",
+      "empty": "Nessun incidente per questi criteri."
+    },
+    "filters": {
+      "period": "Periodo",
+      "level": "Livello",
+      "source": "Origine",
+      "status": "Stato",
+      "sort": "Ordine",
+      "search": "Cerca",
+      "allLevels": "Tutti i livelli",
+      "allSources": "Tutte le origini",
+      "allStatuses": "Tutti gli stati",
+      "sortRecent": "Più recenti",
+      "sortFrequent": "Più frequenti"
+    },
+    "period": {
+      "1h": "Ultima ora",
+      "24h": "24 ore",
+      "7d": "7 giorni",
+      "30d": "30 giorni",
+      "all": "Tutto"
+    },
+    "level": {
+      "warning": "Avviso",
+      "error": "Errore",
+      "fatal": "Critico"
+    },
+    "source": {
+      "api": "API",
+      "frontend": "Browser",
+      "websocket": "WebSocket",
+      "cron": "Attività pianificata",
+      "smtp": "SMTP",
+      "database": "Database",
+      "redis": "Redis",
+      "system": "Sistema"
+    },
+    "status": {
+      "new": "Nuovo",
+      "seen": "Visto",
+      "resolved": "Risolto",
+      "ignored": "Ignorato"
+    },
+    "incident": {
+      "firstSeen": "Prima occorrenza",
+      "lastSeen": "Ultima occorrenza",
+      "route": "Percorso",
+      "httpStatus": "Codice HTTP",
+      "version": "Versione",
+      "type": "Tipo",
+      "user": "Giocatore (ID)",
+      "resolvedAt": "Risolto il"
+    },
+    "actions": {
+      "seen": "Segna come visto",
+      "resolve": "Segna come risolto",
+      "ignore": "Ignora",
+      "reopen": "Riapri"
+    },
+    "pagination": {
+      "previous": "Precedente",
+      "next": "Successivo",
+      "page": "Pagina {page} / {pages} ({total} incidenti)"
+    },
+    "export": {
+      "json": "Esporta in JSON",
+      "csv": "Esporta in CSV"
+    },
+    "settings": {
+      "title": "Impostazioni di supervisione",
+      "save": "Salva",
+      "superAdminOnly": "Sola lettura: solo il super admin può modificare queste impostazioni."
+    },
+    "purge": {
+      "title": "Svuota il registro locale",
+      "hint": "Elimina definitivamente gli incidenti vecchi. L’azione è registrata nel registro di audit.",
+      "olderThan": "Più vecchi di (giorni)",
+      "onlyClosed": "Solo risolti o ignorati",
+      "action": "Svuota",
+      "confirm": "Eliminare definitivamente gli incidenti di oltre {days} giorni?",
+      "done": "{count} incidente/i eliminato/i."
+    },
+    "mode": {
+      "title": "Modalità di supervisione",
+      "local": "Solo supervisione locale (consigliato)",
+      "localHint": "Errori e stato del server restano su questo server e si consultano nella console di amministrazione. Nessun servizio esterno richiesto.",
+      "sentry": "Supervisione locale + Sentry esterno",
+      "sentryHint": "Aggiunge l’invio degli errori al tuo account Sentry. Il registro locale resta attivo anche se Sentry non è disponibile."
+    },
+    "local": {
+      "title": "Registro locale",
+      "alwaysOn": "Sempre attivo: non può essere disattivato.",
+      "retentionDays": "Conservazione (giorni)",
+      "maxIncidents": "Numero massimo di incidenti",
+      "minLevel": "Livello minimo registrato",
+      "minLevelError": "Errore (predefinito)",
+      "minLevelFatal": "Solo critici",
+      "warnings": "Registra anche gli avvisi",
+      "autoPurge": "Pulizia automatica degli incidenti vecchi"
+    },
+    "sentry": {
+      "title": "Sentry (facoltativo)",
+      "fromEnvironment": "Sentry è configurato da una variabile d’ambiente del server, che ha la precedenza su questa pagina.",
+      "privacy": "I DSN sono cifrati sul server e non vengono mai più mostrati. Non viene richiesto alcun token API di Sentry.",
+      "dsnApi": "DSN dell’API",
+      "dsnKept": "Salvato ({hint}) — lasciare vuoto per mantenerlo",
+      "dsnUnreadable": "Il DSN salvato non è leggibile (chiave di cifratura cambiata): inseriscilo di nuovo.",
+      "dsnBrowser": "DSN del browser (facoltativo)",
+      "dsnBrowserHint": "Serve a segnalare gli errori nel browser dei giocatori; applicato senza ricompilare.",
+      "optional": "Facoltativo",
+      "environment": "Ambiente",
+      "sampleRate": "Campionamento (da 0 a {max})",
+      "test": "Prova Sentry",
+      "testing": "Test in corso…",
+      "clear": "Rimuovi la configurazione Sentry",
+      "clearConfirm": "Rimuovere la configurazione Sentry? La supervisione locale resta attiva.",
+      "cleared": "Configurazione Sentry rimossa. La supervisione locale resta attiva.",
+      "nonBlocking": "Questo non blocca nulla: il gioco e la supervisione locale proseguono.",
+      "lastTest": "Ultimo test Sentry: {date} — {result}",
+      "resultOk": "riuscito",
+      "result": {
+        "accepted": "Sentry ha accettato l’evento di prova.",
+        "invalid_dsn": "Il formato del DSN non è valido.",
+        "rejected_key": "Sentry ha rifiutato la chiave del DSN.",
+        "project_not_found": "Progetto Sentry non trovato.",
+        "rate_limited": "Sentry limita gli invii (troppe richieste).",
+        "server_error": "Sentry ha risposto con un errore del server.",
+        "unreachable": "Sentry non è raggiungibile da questo server.",
+        "timeout": "Sentry non ha risposto in tempo."
+      }
+    },
+    "errors": {
+      "dsnRequired": "Inserisci il DSN dell’API (o scegli solo la supervisione locale)."
     }
   }
 }

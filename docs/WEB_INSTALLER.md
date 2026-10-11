@@ -57,6 +57,10 @@ L'assistant génère les secrets JWT, la clé de chiffrement SMTP et l'URL de la
 
 Les dépendances sont installées avec `npm ci --include=dev`, Prisma est généré et vérifié, les migrations versionnées sont appliquées avec `migrate deploy`, puis les paquets sont compilés dans l'ordre. L'installateur utilise npm 10 comme Node 22 / CI ; si le npm système appartient à une autre génération, npm 10.9.4 est préparé dans un cache privé du compte `xnova`, sans remplacer le npm système. Cela évite les faux échecs de validation des overrides observés avec npm 11. Aucune réinitialisation de base ni baseline implicite n'est exécutée, y compris pour une base externe déjà peuplée. Si elle n'a pas d'historique de migrations, utiliser la procédure de [baseline](OPERATIONS.md#base-existante-créée-avec-db-push-une-seule-fois).
 
+## Étape « Supervision » (assistant Next, après les réglages)
+
+Deux choix : **Supervision locale uniquement** (recommandé, défaut) ou **Supervision locale + Sentry externe**. Réglages locaux : conservation (30 j), nombre maximal d'incidents, niveau minimal, avertissements, purge automatique. Avec Sentry : DSN de l'API, DSN du navigateur (facultatif), environnement, taux d'échantillonnage (0,5 maximum) et bouton « Tester Sentry » (échec sans conséquence sur l'installation). Les DSN sont chiffrés en base ; aucun jeton d'API Sentry n'est demandé. Tout reste modifiable ensuite dans la console admin.
+
 ## Relais vers le SMTP
 
 La page affiche les étapes et vérifie une vraie connexion à la base via `/health`. Cliquer sur **Continuer : SMTP et compte administrateur** ferme l'écoute du service privilégié, démarre le web applicatif, attend sa réponse et ouvre `/setup`.

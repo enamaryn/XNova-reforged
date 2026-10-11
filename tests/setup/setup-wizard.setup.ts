@@ -62,6 +62,16 @@ test("assistant d'installation : du code au verrouillage", async ({ page, reques
   // Réglages (valeurs par défaut)
   await page.getByRole('button', { name: 'Enregistrer et continuer' }).click();
 
+  // Supervision : le local est le choix par défaut ; Sentry est testable sans jamais bloquer l'installation
+  await expect(page.getByTestId('setup-supervision')).toBeVisible();
+  await expect(page.getByTestId('mode-local')).toBeChecked();
+  await page.getByTestId('mode-sentry').check();
+  await page.getByTestId('sentry-dsn-api').fill('pas-un-dsn');
+  await page.getByTestId('sentry-test').click();
+  await expect(page.getByTestId('sentry-test-result')).toContainText('invalide');
+  await page.getByTestId('mode-local').check();
+  await page.getByTestId('supervision-save').click();
+
   // Super admin
   await page.locator('#admin-username').fill('superadmin');
   await page.locator('#admin-email').fill('admin@xnova.local');

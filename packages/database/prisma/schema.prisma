@@ -369,6 +369,36 @@ model DebrisField {
   @@index([galaxy, system])
 }
 
+// Journal local des incidents (supervision locale) : erreurs regroupées par empreinte stable
+model Incident {
+  id          String    @id @default(uuid())
+  // Empreinte stable : une répétition incrémente `occurrences` au lieu de créer une ligne
+  fingerprint String    @unique
+  level       String    // warning | error | fatal
+  source      String    // api | frontend | websocket | cron | smtp | database | redis | system
+  message     String
+  errorType   String?
+  operation   String?   // route ou opération concernée
+  httpStatus  Int?
+  userId      String?   // identifiant seulement : jamais d'email
+  planetId    String?
+  firstSeen   DateTime  @default(now())
+  lastSeen    DateTime  @default(now())
+  occurrences Int       @default(1)
+  status      String    @default("new") // new | seen | resolved | ignored
+  version     String?
+  commit      String?
+  context     Json?
+  stack       String?
+  resolvedAt  DateTime?
+  resolvedById String?
+
+  @@index([status, lastSeen])
+  @@index([level, lastSeen])
+  @@index([source, lastSeen])
+  @@index([lastSeen])
+}
+
 // ============================================
 // ALLIANCES
 // ============================================

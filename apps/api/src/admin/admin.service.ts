@@ -1,4 +1,5 @@
 import { ProgressionService } from "../progression/progression.service";
+import { recordSmtpTest } from '../supervision/smtp-test-record';
 import {
   BadRequestException,
   Injectable,
@@ -477,7 +478,9 @@ export class AdminService {
 
     try {
       await this.mail.sendTemplate(recipient, "smtpTest");
+      await recordSmtpTest(this.database, true);
     } catch (error) {
+      await recordSmtpTest(this.database, false);
       if (error instanceof Error && "getStatus" in error) throw error;
       // Message technique du serveur SMTP : utile à l'administrateur, sans secret
       throw new BadRequestException(

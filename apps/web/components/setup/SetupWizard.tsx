@@ -18,18 +18,22 @@ import {
   testSetupSmtp,
   type ServerSettings,
   type SetupState,
+  saveSetupSupervision,
+  testSetupSentry,
 } from "@/lib/api/setup";
 import { Button } from "@/components/ui/button";
+import { SupervisionSettingsForm } from "@/components/monitoring/SupervisionSettingsForm";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-type Step = "code" | "smtp" | "settings" | "admin" | "validation" | "done";
+type Step = "code" | "smtp" | "settings" | "supervision" | "admin" | "validation" | "done";
 
 const TOKEN_KEY = "xnova-setup-token";
 const STEPS: Array<{ id: Exclude<Step, "done"> }> = [
   { id: "code" },
   { id: "smtp" },
   { id: "settings" },
+  { id: "supervision" },
   { id: "admin" },
   { id: "validation" },
 ];
@@ -54,6 +58,7 @@ const messageOf = (error: unknown, fallback: string) => (error instanceof ApiErr
 function firstIncomplete(state: SetupState): Step {
   if (!state.smtp.tested) return "smtp";
   if (!state.settings.saved) return "settings";
+  if (!state.supervision.saved) return "supervision";
   if (!state.admin) return "admin";
   return "validation";
 }
@@ -232,7 +237,7 @@ export function SetupWizard() {
         const raw = settings[field.key];
         if (raw !== undefined && raw !== "") payload[field.key] = Number(raw);
       }
-      adopt(await saveSetupSettings(token, payload), "admin");
+      adopt(await saveSetupSettings(token, payload), "supervision");
     });
   };
 
@@ -489,6 +494,24 @@ export function SetupWizard() {
             {t("setup.settings.save")}
           </Button>
         </form>
+      )}
+
+      {step === "supervision" && state && (
+        <div className="space-y-4" data-testid="setup-supervision">
+          <p className="text-sm text-slate-600">{t("setup.supervision.intro")}</p>
+          <SupervisionSettingsForm
+            config={state.supervision.config}
+            tone="light"
+            busy={busy}
+            saveLabel={t("setup.supervision.save")}
+            onSave={(payload) =>
+              run(async () => {
+                adopt(await saveSetupSupervision(token, payload), "admin");
+              })
+            }
+            onTest={(dsn) => testSetupSentry(token, dsn)}
+          />
+        </div>
       )}
 
       {step === "admin" && (
