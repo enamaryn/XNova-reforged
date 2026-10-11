@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { ShipyardService } from './shipyard.service';
+import { MonitoredCron } from '../supervision/cron-registry';
 
 @Injectable()
 export class ShipyardCronService {
@@ -12,6 +13,7 @@ export class ShipyardCronService {
    * Verifie toutes les 10 secondes les constructions de vaisseaux terminees
    */
   @Cron(CronExpression.EVERY_10_SECONDS)
+  @MonitoredCron('shipyard-queue', 10000)
   async handleCompletedBuilds() {
     try {
       const completedBuilds = await this.shipyardService.getCompletedBuilds();

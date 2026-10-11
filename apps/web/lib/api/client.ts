@@ -2,6 +2,12 @@ import { useAuthStore } from "@/lib/stores/auth-store";
 import type { ApiErrorPayload } from "@/lib/api/types";
 import { resolveApiBaseUrl } from "@/lib/api/base-url";
 import { documentLocale } from "@/lib/i18n/locale";
+import { reportClientError } from "@/lib/monitoring/client-reporter";
+
+/** Route sans paramètres ni identifiants : seule la forme de la route est remontée à la supervision. */
+function routeShape(path: string) {
+  return path.split("?")[0].replace(/[0-9a-f]{8}-[0-9a-f-]{27}/gi, ":id").replace(/\/\d+/g, "/:n");
+}
 
 const ENV_API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
@@ -119,6 +125,7 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}) 
       headers,
     });
   } catch {
+    reportClientError({ kind: "network", type: "NetworkError", message: `API injoignable : ${routeShape(path)}` });
     // Réseau coupé, API injoignable, contenu mixte ou CORS refusé : le navigateur ne donne aucun détail
     throw new ApiError(
       "Impossible de joindre le serveur. Vérifiez votre connexion ou réessayez dans un instant.",
@@ -134,6 +141,13 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}) 
   }
 
   if (!response.ok) {
+    if (response.status >= 500) {
+      reportClientError({
+        kind: "network",
+        type: "ServerError",
+        message: `Erreur ${response.status} de l'API : ${(fetchOptions.method ?? "GET").toUpperCase()} ${routeShape(path)}`,
+      });
+    }
     throw await parseError(response);
   }
 

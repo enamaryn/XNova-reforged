@@ -1,6 +1,7 @@
 import { ENERGY_SOURCES_INCLUDE, energySourcesOf } from '../common/energy';
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { MonitoredCron } from '../supervision/cron-registry';
 import { DatabaseService } from '../database/database.service';
 import { GameEventsGateway } from '../game-events/game-events.gateway';
 import { persistResourceRefresh } from './resource-refresh';
@@ -38,6 +39,7 @@ export class ResourcesCronService {
    * dont les joueurs se sont connectés dans les dernières 24h
    */
   @Cron(CronExpression.EVERY_MINUTE)
+  @MonitoredCron('resources-production', 60000)
   async updateAllPlanetsResources() {
     const startTime = Date.now();
     this.logger.debug('Starting resource update for all active planets');
@@ -136,6 +138,7 @@ export class ResourcesCronService {
    * (mise à jour moins fréquente pour économiser les ressources)
    */
   @Cron(CronExpression.EVERY_HOUR)
+  @MonitoredCron('resources-hourly', 3600000)
   async updateInactivePlanetsResources() {
     this.logger.debug('Starting resource update for inactive planets');
 

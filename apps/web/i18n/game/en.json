@@ -386,7 +386,8 @@
       "testAria": "Test recipient",
       "testSending": "Sending...",
       "testSend": "Send the test"
-    }
+    },
+    "tabSupervision": "Monitoring"
   },
   "common": {
     "language": "Language",
@@ -846,7 +847,8 @@
       "smtp": "SMTP",
       "settings": "Settings",
       "admin": "Super admin",
-      "validation": "Validation"
+      "validation": "Validation",
+      "supervision": "Monitoring"
     },
     "done": {
       "kicker": "Installation",
@@ -951,6 +953,212 @@
       "waiting": "Waiting for confirmation...",
       "resend": "Resend the link",
       "fix": "Fix the address or the account"
+    },
+    "supervision": {
+      "intro": "Choose how to track server errors. Local monitoring is always on and is enough; Sentry is an option you can also add later in the admin console.",
+      "save": "Save monitoring and continue"
+    }
+  },
+  "supervision": {
+    "title": "Monitoring",
+    "loading": "Loading monitoring…",
+    "loadError": "Unable to load monitoring.",
+    "refresh": "Refresh",
+    "lastCheck": "Last check: {time}",
+    "localActive": "Local monitoring is always on: incidents are kept on this server, with no external service.",
+    "saved": "Monitoring settings saved.",
+    "versionLine": "Version {version} (commit {commit}) · started {start} · last backup: {backup}",
+    "noBackup": "none known",
+    "overall": {
+      "healthy": "Healthy",
+      "degraded": "Degraded",
+      "unavailable": "Unavailable"
+    },
+    "checkStatus": {
+      "ok": "OK",
+      "degraded": "Degraded",
+      "down": "Down",
+      "unknown": "Unknown"
+    },
+    "service": {
+      "database": "PostgreSQL",
+      "redis": "Redis",
+      "api": "API",
+      "frontend": "Website",
+      "websocket": "WebSockets",
+      "smtp": "Email (SMTP)",
+      "disk": "Disk",
+      "system": "Memory and load",
+      "cron": "Scheduled tasks",
+      "queues": "Game queues",
+      "version": "Version and backup"
+    },
+    "code": {
+      "ok": "Working normally",
+      "timeout": "No response within the time limit",
+      "error": "The check failed",
+      "slow": "Slow response",
+      "down": "Service unreachable",
+      "critical": "Critical level",
+      "low": "Space almost exhausted",
+      "overloaded": "Server overloaded",
+      "event_loop_blocked": "Event loop blocked",
+      "event_loop_slow": "Event loop slowed",
+      "stalled": "Game queues running late",
+      "stuck": "Scheduled task stuck",
+      "late": "Scheduled task late",
+      "failing": "Scheduled task failing",
+      "http_error": "The website returns an error",
+      "not_ready": "Not initialised",
+      "not_configured": "Not configured",
+      "never_tested": "Configured, never tested",
+      "last_test_failed": "The last test failed",
+      "unreachable": "Unreachable",
+      "disabled": "Disabled",
+      "none": "Nothing to report"
+    },
+    "stats": {
+      "open": "Open incidents",
+      "last24h": "Incidents in 24 h",
+      "occurrences24h": "Occurrences in 24 h",
+      "total": "Stored incidents",
+      "top": "Most frequent errors"
+    },
+    "incidents": {
+      "title": "Incidents",
+      "empty": "No incidents for these filters."
+    },
+    "filters": {
+      "period": "Period",
+      "level": "Level",
+      "source": "Source",
+      "status": "Status",
+      "sort": "Sort",
+      "search": "Search",
+      "allLevels": "All levels",
+      "allSources": "All sources",
+      "allStatuses": "All statuses",
+      "sortRecent": "Most recent",
+      "sortFrequent": "Most frequent"
+    },
+    "period": {
+      "1h": "Last hour",
+      "24h": "24 hours",
+      "7d": "7 days",
+      "30d": "30 days",
+      "all": "All time"
+    },
+    "level": {
+      "warning": "Warning",
+      "error": "Error",
+      "fatal": "Fatal"
+    },
+    "source": {
+      "api": "API",
+      "frontend": "Browser",
+      "websocket": "WebSocket",
+      "cron": "Scheduled task",
+      "smtp": "SMTP",
+      "database": "Database",
+      "redis": "Redis",
+      "system": "System"
+    },
+    "status": {
+      "new": "New",
+      "seen": "Seen",
+      "resolved": "Resolved",
+      "ignored": "Ignored"
+    },
+    "incident": {
+      "firstSeen": "First seen",
+      "lastSeen": "Last seen",
+      "route": "Route",
+      "httpStatus": "HTTP status",
+      "version": "Version",
+      "type": "Type",
+      "user": "Player (ID)",
+      "resolvedAt": "Resolved on"
+    },
+    "actions": {
+      "seen": "Mark as seen",
+      "resolve": "Mark as resolved",
+      "ignore": "Ignore",
+      "reopen": "Reopen"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {page} / {pages} ({total} incidents)"
+    },
+    "export": {
+      "json": "Export as JSON",
+      "csv": "Export as CSV"
+    },
+    "settings": {
+      "title": "Monitoring settings",
+      "save": "Save",
+      "superAdminOnly": "Read-only: only the super admin can change these settings."
+    },
+    "purge": {
+      "title": "Purge the local log",
+      "hint": "Permanently deletes old incidents. The action is recorded in the audit log.",
+      "olderThan": "Older than (days)",
+      "onlyClosed": "Only resolved or ignored",
+      "action": "Purge",
+      "confirm": "Permanently delete incidents older than {days} days?",
+      "done": "{count} incident(s) deleted."
+    },
+    "mode": {
+      "title": "Monitoring mode",
+      "local": "Local monitoring only (recommended)",
+      "localHint": "Errors and server health stay on this server and can be viewed in the admin console. No external service required.",
+      "sentry": "Local monitoring + external Sentry",
+      "sentryHint": "Also sends errors to your Sentry account. The local log stays active even if Sentry is unavailable."
+    },
+    "local": {
+      "title": "Local log",
+      "alwaysOn": "Always on: it cannot be turned off.",
+      "retentionDays": "Retention (days)",
+      "maxIncidents": "Maximum number of incidents",
+      "minLevel": "Minimum level recorded",
+      "minLevelError": "Error (default)",
+      "minLevelFatal": "Fatal only",
+      "warnings": "Also record warnings",
+      "autoPurge": "Automatically purge old incidents"
+    },
+    "sentry": {
+      "title": "Sentry (optional)",
+      "fromEnvironment": "Sentry is configured by a server environment variable, which takes precedence over this page.",
+      "privacy": "DSNs are encrypted on the server and never shown again. No Sentry API token is requested.",
+      "dsnApi": "API DSN",
+      "dsnKept": "Saved ({hint}) — leave empty to keep it",
+      "dsnUnreadable": "The saved DSN is unreadable (encryption key changed): enter it again.",
+      "dsnBrowser": "Browser DSN (optional)",
+      "dsnBrowserHint": "Used to report errors seen in players’ browsers; applied without rebuilding.",
+      "optional": "Optional",
+      "environment": "Environment",
+      "sampleRate": "Sampling rate (0 to {max})",
+      "test": "Test Sentry",
+      "testing": "Testing…",
+      "clear": "Remove Sentry configuration",
+      "clearConfirm": "Remove the Sentry configuration? Local monitoring stays on.",
+      "cleared": "Sentry configuration removed. Local monitoring stays on.",
+      "nonBlocking": "This blocks nothing: the game and local monitoring carry on.",
+      "lastTest": "Last Sentry test: {date} — {result}",
+      "resultOk": "succeeded",
+      "result": {
+        "accepted": "Sentry accepted the test event.",
+        "invalid_dsn": "The DSN format is invalid.",
+        "rejected_key": "Sentry rejected the DSN key.",
+        "project_not_found": "Sentry project not found.",
+        "rate_limited": "Sentry is rate-limiting requests.",
+        "server_error": "Sentry answered with a server error.",
+        "unreachable": "Sentry cannot be reached from this server.",
+        "timeout": "Sentry did not answer in time."
+      }
+    },
+    "errors": {
+      "dsnRequired": "Enter the API DSN (or choose local monitoring only)."
     }
   }
 }

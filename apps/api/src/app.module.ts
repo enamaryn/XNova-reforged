@@ -20,6 +20,7 @@ import { RedisModule } from "./redis/redis.module";
 import { HealthModule } from "./health/health.module";
 import { MonitoringModule } from "./monitoring/monitoring.module";
 import { SetupModule } from "./setup/setup.module";
+import { SupervisionModule } from "./supervision/supervision.module";
 import { validateEnv } from "./config/env.validation";
 
 @Module({
@@ -45,6 +46,9 @@ import { validateEnv } from "./config/env.validation";
 
     // Module monitoring
     MonitoringModule,
+
+    // Supervision locale intégrée (Sentry externe optionnel)
+    SupervisionModule,
 
     // Module d'authentification
     AuthModule,

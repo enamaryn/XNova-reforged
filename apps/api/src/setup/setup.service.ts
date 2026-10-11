@@ -8,6 +8,9 @@ import { UpdateSmtpDto } from '../admin/dto/update-smtp.dto';
 import { DatabaseService } from '../database/database.service';
 import { MailService } from '../mail/mail.service';
 import { SmtpConfigService } from '../mail/smtp-config.service';
+import { recordSmtpTest } from '../supervision/smtp-test-record';
+import { SupervisionService } from '../supervision/supervision.service';
+import { UpdateSupervisionDto } from '../supervision/dto';
 import { ServerConfigService } from '../server-config/server-config.service';
 import {
   SETUP_KEYS,
@@ -34,6 +37,7 @@ export class SetupService {
     private readonly serverConfig: ServerConfigService,
     private readonly authService: AuthService,
     private readonly account: AccountService,
+    private readonly supervision: SupervisionService,
   ) {}
 
   private get db(): SetupDb {
@@ -73,6 +77,8 @@ export class SetupService {
         tested: !!flags.smtpTestedAt,
       },
       settings: { saved: !!flags.settingsSavedAt, values: settings },
+      // Étape facultative : sans choix, la supervision locale seule reste active
+      supervision: { saved: !!flags.supervisionSavedAt, config: await this.supervision.getConfig() },
       admin,
     };
   }
@@ -93,12 +99,26 @@ export class SetupService {
   async testSmtp(to: string) {
     try {
       await this.mail.sendTemplate(to, 'setupSmtpTest');
+      await recordSmtpTest(this.database, true);
     } catch (error) {
+      await recordSmtpTest(this.database, false);
       if (error instanceof Error && 'getStatus' in error) throw error;
       throw new BadRequestException(`Échec de l'envoi : ${(error as Error)?.message ?? 'erreur inconnue'}`);
     }
     await writeProgressFlag(this.db, SETUP_KEYS.smtpTestedAt, new Date().toISOString());
     return { success: true, to };
+  }
+
+  /** Étape « Supervision » : paramètres locaux et Sentry optionnel (jamais bloquant, jamais requis). */
+  async saveSupervision(dto: UpdateSupervisionDto) {
+    await this.supervision.updateConfig(null, dto);
+    await writeProgressFlag(this.db, SETUP_KEYS.supervisionSavedAt, new Date().toISOString());
+    return this.getState();
+  }
+
+  /** Teste Sentry avec le DSN saisi ; le résultat ne bloque jamais l'installation. */
+  testSentry(dsnApi?: string) {
+    return this.supervision.testSentry(null, dsnApi);
   }
 
   async saveSettings(dto: UpdateConfigDto) {

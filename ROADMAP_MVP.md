@@ -4,6 +4,19 @@ Mise à jour : 11 octobre 2026. **Statut : alpha privée `v0.2.0` (release du pr
 
 Le socle existe et démarre sur LXC, mais aucun pourcentage global d'achèvement n'est retenu. Le [registre du double audit](docs/DOUBLE_AUDIT_2026-10.md) est la référence des constats, preuves et critères d'acceptation. La [roadmap historique](docs/history/ROADMAP_MVP_AVANT_AUDIT.md) conserve les anciens sprints ; ses cases cochées ne valent pas validation actuelle.
 
+## SUPERVISION-LOCAL — supervision locale intégrée, Sentry externe optionnel
+
+Demande du propriétaire (11 octobre 2026) : jeu administrable sans service extérieur. **Implémentation prête pour revue** (branche `claude/supervision-locale`), ni déployée ni fusionnée.
+
+- [x] Journal local d'incidents (migration `20261012100000_local_supervision`) : empreinte stable, regroupement atomique `ON CONFLICT`, statuts nouveau/consulté/résolu/ignoré, réouverture à la réapparition, masquage centralisé (mots de passe, JWT, cookies, DSN, SMTP, messages privés, emails), rétention 30 j, plafond d'incidents, purge automatique horaire.
+- [x] Santé locale : PostgreSQL, Redis, API, site web, WebSockets, SMTP (dernier test), disque, mémoire/charge, tâches planifiées, files de jeu, version/commit/redémarrage/dernière sauvegarde ; contrôles parallèles et indépendants, timeout court.
+- [x] Collecte frontend (erreurs React, globales, promesses, réseau critiques) vers `POST /monitoring/client-errors` : schéma strict, taille bornée, débit limité (serveur et navigateur), anti-doublon, anti-boucle.
+- [x] Assistant d'installation : étape « Supervision » (local seul par défaut / local + Sentry, bouton « Tester Sentry » jamais bloquant). Console admin : onglet « Supervision » (état, incidents filtrables et paginés côté serveur, export JSON/CSV, paramètres, test Sentry, suppression de la configuration, purge confirmée) ; mutations SUPER_ADMIN avec audit sans secret.
+- [x] Sentry optionnel : DSN chiffrés au repos (`SECRETS_ENCRYPTION_KEY`), jamais renvoyés ni journalisés ; priorité variable d'environnement > configuration chiffrée > désactivé ; SDK navigateur initialisé à l'exécution via `GET /monitoring/public-config`, sans recompilation ; aucun `SENTRY_AUTH_TOKEN` demandé.
+- [x] Compatibilité : installations existantes sans action (supervision locale active par défaut, variables Sentry existantes conservées).
+- [x] Tests : unitaires (`supervision-core`), intégration PostgreSQL (`supervision.integration`, 34 scénarios), E2E Chromium (`admin-supervision`, assistant), mobile 320/390 px et PC en 5 langues (`tests/mobile-ui/supervision.spec.ts`). Résultats exacts dans la PR.
+- [ ] Validation sur le serveur de test du propriétaire (procédure dans la PR).
+
 ## Développement commandant et production — issue #32
 
 Implémentation fusionnée dans la [PR #34](https://github.com/enamaryn/XNova-reforged/pull/34) : commandant 1–100 basé sur bâtiments/recherches ; puissance incluant développement, unités et colonies, sans stocks ; capacités 1/2/3 par planète avec recherches et commandant niveau 50 ; production en attente prépayée et retrait remboursé à 90 %. Les constructions existantes sont conservées. Règles et premier équilibrage : [PROGRESSION.md](docs/PROGRESSION.md). Ce commandant de joueur est distinct des officiers et héros prévus dans la roadmap historique.
@@ -98,7 +111,7 @@ Toutes les décisions listées dans la version précédente sont prises et appli
 
 - [x] **SMTP réel configuré et validé** par le propriétaire (déclaration du 10 octobre 2026) ; à reconfirmer avec un envoi réel (test, inscription, mot de passe oublié) lors de chaque mise en production : sans SMTP l'inscription répond 503. _(PRE-01 du registre)_
 - [x] Variables de production vérifiées (secrets JWT distincts, `SECRETS_ENCRYPTION_KEY`, `WEB_ORIGINS`) : validé par le propriétaire le 11 octobre 2026. _(PRE-02)_
-- [~] DSN Sentry par variable d'environnement uniquement (aucune valeur dans le dépôt ni dans l'image) : **prêt côté code** — procédure systemd (`docs/OPERATIONS.md`), commande `npm run sentry:test` qui vérifie l'acceptation réelle par Sentry (code HTTP, sans afficher le DSN), avertissement au démarrage de l'API en production sans DSN, test qui échoue si un DSN est versionné. **Reste à faire par le propriétaire** : fournir le DSN réel et lancer la commande. _(PRE-03)_
+- [x] **Supervision d'erreurs (PRE-03, reformulé par le lot SUPERVISION-LOCAL)** : la supervision locale intégrée est le prérequis par défaut et **l'absence de DSN Sentry n'est plus un blocage avant ouverture publique** ; un DSN réel n'est exigé que si l'administrateur active Sentry (assistant ou onglet Supervision). La variable d'environnement `SENTRY_DSN` reste prioritaire. _(PRE-03)_
 - [x] Reprise des comptes de l'alpha : décision du propriétaire (11 octobre 2026) — les comptes actuels restent considérés comme vérifiés. _(PRE-04)_
 - [x] Dette technique d'outillage — **Tailwind 4 et eslint-config-next 16 / ESLint 9 faits le 11 octobre 2026** (DETTE-02 et 03 ; **Jest 30 fait le 10 octobre 2026**). Hautes de développement : 7 → 5, toutes issues de `braces` via `eslint-config-next` → `fast-glob`, **sans correctif amont** (la v16 dépend toujours de `fast-glob 3.3.1`) ; outillage de compilation uniquement, absent de l'exécution — voir [NPM_AUDIT_2026-10.md](docs/NPM_AUDIT_2026-10.md). Reste : revue des 3 modérées de production (DETTE-04), à la prochaine montée majeure de NestJS.
 

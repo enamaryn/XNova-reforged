@@ -108,6 +108,23 @@ L’interface envoie l’en-tête `X-Locale` (`fr`, `en`, `es`, `de`, `it`) à c
 | GET | `/admin/audit` | Logs d’administration. |
 | GET | `/admin/ban-logs` | Historique des sanctions. |
 
+## Supervision (`/admin/supervision`, `/monitoring`, `/setup`)
+
+| Route | Accès | Rôle |
+|---|---|---|
+| `GET /admin/supervision/overview` | ADMIN, SUPER_ADMIN | santé, statistiques, configuration (sans secret) |
+| `GET /admin/supervision/incidents` | ADMIN, SUPER_ADMIN | liste paginée côté serveur (`period`, `level`, `source`, `status`, `q`, `sort`, `page`, `pageSize` ≤ 50) |
+| `GET /admin/supervision/incidents/:id` | ADMIN, SUPER_ADMIN | détail (trace et contexte filtrés) |
+| `PATCH /admin/supervision/incidents/:id/status` | SUPER_ADMIN | `new`/`seen`/`resolved`/`ignored` (audit) |
+| `GET /admin/supervision/export?format=json\|csv` | ADMIN, SUPER_ADMIN | export filtré (5 000 lignes max) |
+| `GET/PUT /admin/supervision/config` | lecture ADMIN, écriture SUPER_ADMIN | paramètres locaux et Sentry (DSN chiffrés, jamais renvoyés) |
+| `DELETE /admin/supervision/sentry` | SUPER_ADMIN | supprime la configuration Sentry |
+| `POST /admin/supervision/sentry/test` | SUPER_ADMIN | test Sentry, résultat conservé |
+| `POST /admin/supervision/purge` | SUPER_ADMIN | purge (`confirm: true` obligatoire) |
+| `POST /monitoring/client-errors` | public, limité par adresse | erreurs du navigateur (schéma strict) |
+| `GET /monitoring/public-config` | public | DSN navigateur seulement si Sentry est actif |
+| `PUT /setup/supervision`, `POST /setup/sentry/test` | code d'installation | étape « Supervision » de l'assistant |
+
 ## Statistiques (`/statistics`)
 
 | Méthode | Endpoint | Description |

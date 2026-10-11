@@ -4,6 +4,7 @@ import { UpdateSmtpDto } from '../admin/dto/update-smtp.dto';
 import { RegisterDto } from '../auth/dto/register.dto';
 import { RateLimit, RateLimitGuard } from '../common/security/rate-limit.guard';
 import { SetupLanguageDto, SetupSmtpTestDto } from './dto/setup.dto';
+import { SentryTestDto, UpdateSupervisionDto } from '../supervision/dto';
 import { SetupGuard } from './setup.guard';
 import { SetupService } from './setup.service';
 import { SetupStateService } from './setup-state.service';
@@ -55,6 +56,21 @@ export class SetupController {
   @UseGuards(SetupGuard)
   testSmtp(@Body() dto: SetupSmtpTestDto) {
     return this.setup.testSmtp(dto.to);
+  }
+
+  @Put('supervision')
+  @RateLimit('setup')
+  @UseGuards(SetupGuard)
+  saveSupervision(@Body() dto: UpdateSupervisionDto) {
+    return this.setup.saveSupervision(dto);
+  }
+
+  @Post('sentry/test')
+  @RateLimit('setup')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(SetupGuard)
+  testSentry(@Body() dto: SentryTestDto) {
+    return this.setup.testSentry(dto.dsnApi);
   }
 
   @Put('settings')

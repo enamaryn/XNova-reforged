@@ -104,6 +104,17 @@ Voir aussi la section « Première connexion » du `README.md`. Rappels d'exploi
 - Migration d'un serveur existant : `20261006100000_setup_completed_for_existing_installs` marque l'installation
   terminée dès qu'un compte joueur existe.
 
+## Supervision locale intégrée
+
+Toujours active, sans service extérieur ni variable : console admin → onglet **Supervision** (ADMIN en lecture, SUPER_ADMIN pour modifier).
+
+- **État** : PostgreSQL, Redis, API, site web, WebSockets, SMTP (dernier test), disque, mémoire/charge, tâches planifiées (battement par tâche, alerte si silence prolongé), files de construction/recherche/chantier/flotte, version, commit, dernier démarrage, dernière sauvegarde connue. Contrôles parallèles, timeout 2,5 s ; critiques : PostgreSQL et API (« indisponible »), le reste « dégradé ».
+- **Incidents** : erreurs 5xx, erreurs journalisées par l'API, tâches planifiées, exceptions non rattrapées, erreurs critiques du navigateur. Regroupés par empreinte (compteur), statuts nouveau/consulté/résolu/ignoré, détail avec trace filtrée. Données sensibles masquées avant écriture (fonction centrale `apps/api/src/supervision/redact.ts`).
+- **Rétention** : 30 jours par défaut, 5 000 incidents distincts maximum, purge automatique horaire (désactivable), purge manuelle confirmée, export JSON/CSV (5 000 lignes max).
+- **Base indisponible** : l'incident est écrit sur la sortie standard (journald : `journalctl -u xnova-api | grep '"supervision":"incident"'`) puis réessayé ; la requête du joueur n'est jamais affectée.
+- **Sentry optionnel** : onglet Supervision ou étape de l'assistant. DSN chiffrés avec `SECRETS_ENCRYPTION_KEY`, jamais réaffichés. Priorité : `SENTRY_DSN` (environnement) > configuration chiffrée > désactivé. Bouton « Tester Sentry » : envoie un événement de test identifiable et conserve le résultat et la date. Si Sentry est injoignable, le jeu et le journal local continuent. Le DSN du navigateur est servi à l'exécution par `GET /monitoring/public-config` (aucune recompilation).
+- **Mise à jour d'une installation existante** : la migration `20261012100000_local_supervision` ajoute la table `Incident` ; `scripts/update.sh` l'applique, la supervision locale démarre avec ses valeurs par défaut, un Sentry déjà fourni par variable reste actif.
+
 ## Suivi d'erreurs (Sentry)
 
 L'intégration est **optionnelle et inactive par défaut** : sans DSN, rien n'est initialisé et aucune erreur n'est produite.

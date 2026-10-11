@@ -43,6 +43,17 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     await this.client.quit();
   }
 
+  /** Contrôle de santé : `disabled` sans Redis configuré, `up` si PING répond, `down` sinon. */
+  async ping(): Promise<'up' | 'down' | 'disabled'> {
+    if (!this.enabled && !this.client) return 'disabled';
+    if (!this.client || !this.client.isOpen) return 'down';
+    try {
+      return (await this.client.ping()) === 'PONG' ? 'up' : 'down';
+    } catch {
+      return 'down';
+    }
+  }
+
   async get(key: string) {
     if (!this.client || !this.client.isOpen) return null;
     try {

@@ -6,6 +6,7 @@ import { DatabaseService } from '../database/database.service';
 import { GameEventsGateway } from '../game-events/game-events.gateway';
 import { ColonizationService } from './colonization.service';
 import { SpyService } from './spy.service';
+import { MonitoredCron } from '../supervision/cron-registry';
 
 @Injectable()
 export class FleetCronService {
@@ -23,6 +24,7 @@ export class FleetCronService {
    * Vérifie toutes les 10 secondes les flottes arrivées et de retour
    */
   @Cron(CronExpression.EVERY_10_SECONDS)
+  @MonitoredCron('fleet-status', 10000)
   async handleFleetStatus() {
     try {
       await this.processArrivals();

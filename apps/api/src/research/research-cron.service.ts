@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { ResearchService } from './research.service';
+import { MonitoredCron } from '../supervision/cron-registry';
 
 @Injectable()
 export class ResearchCronService {
@@ -12,6 +13,7 @@ export class ResearchCronService {
    * Verifie toutes les 10 secondes si des recherches sont terminees
    */
   @Cron(CronExpression.EVERY_10_SECONDS)
+  @MonitoredCron('research-queue', 10000)
   async handleCompletedResearch() {
     try {
       const completedResearch = await this.researchService.getCompletedResearch();

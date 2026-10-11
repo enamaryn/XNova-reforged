@@ -26,6 +26,7 @@ export const SETUP_KEYS = {
   tokenExpiresAt: 'setup.tokenExpiresAt',
   smtpTestedAt: 'setup.smtpTestedAt',
   settingsSavedAt: 'setup.settingsSavedAt',
+  supervisionSavedAt: 'setup.supervisionSavedAt',
   adminId: 'setup.adminId',
 } as const;
 
@@ -117,6 +118,7 @@ export async function clearSetupArtifacts(db: SetupDb) {
           SETUP_KEYS.tokenExpiresAt,
           SETUP_KEYS.smtpTestedAt,
           SETUP_KEYS.settingsSavedAt,
+          SETUP_KEYS.supervisionSavedAt,
           SETUP_KEYS.adminId,
         ],
       },
@@ -146,6 +148,7 @@ export async function resetSetup(
 export interface SetupProgressFlags {
   smtpTestedAt: string | null;
   settingsSavedAt: string | null;
+  supervisionSavedAt: string | null;
   adminId: string | null;
 }
 
@@ -155,13 +158,18 @@ export async function readProgressFlags(db: SetupDb): Promise<SetupProgressFlags
   return {
     smtpTestedAt: map.get(SETUP_KEYS.smtpTestedAt) ?? null,
     settingsSavedAt: map.get(SETUP_KEYS.settingsSavedAt) ?? null,
+    supervisionSavedAt: map.get(SETUP_KEYS.supervisionSavedAt) ?? null,
     adminId: map.get(SETUP_KEYS.adminId) ?? null,
   };
 }
 
 export async function writeProgressFlag(
   db: SetupDb,
-  key: typeof SETUP_KEYS.smtpTestedAt | typeof SETUP_KEYS.settingsSavedAt | typeof SETUP_KEYS.adminId,
+  key:
+    | typeof SETUP_KEYS.smtpTestedAt
+    | typeof SETUP_KEYS.settingsSavedAt
+    | typeof SETUP_KEYS.supervisionSavedAt
+    | typeof SETUP_KEYS.adminId,
   value: string,
 ) {
   await setValue(db, key, value);

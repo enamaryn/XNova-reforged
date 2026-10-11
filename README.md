@@ -54,24 +54,27 @@ XNova-reforged/
 
 ## Démarrage rapide
 
-### Première installation serveur, dans le navigateur
-
-Sur un clone neuf **Ubuntu 24.04 / LXC**, lancer :
+### Installer un serveur (Ubuntu 24.04 / LXC) : deux commandes
 
 ```bash
-sudo bash scripts/install.sh
+sudo git clone https://github.com/enamaryn/XNova-reforged.git /opt/xnova
+cd /opt/xnova && sudo bash scripts/install.sh
 ```
 
-Une première page autonome démarre avant la base et avant le build. Le navigateur demande le mode développement/production, l'adresse web HTTPS et le choix d'une base locale créée automatiquement ou d'une URL PostgreSQL externe. L'installateur génère les identifiants et les secrets, prépare les migrations et les services, puis passe directement au SMTP et au super admin. Ouvrir la page via un proxy HTTPS existant ou un tunnel SSH, avec le code temporaire affiché au lancement.
+C'est tout. Le script installe Node.js si besoin et affiche un **code temporaire** ainsi que l'adresse à ouvrir dans le navigateur. Tout le reste se fait dans le navigateur : langue du serveur, mode, adresse web HTTPS, base locale créée automatiquement ou PostgreSQL externe, SMTP, supervision (locale par défaut, Sentry facultatif) et compte super admin. L'installateur génère lui-même les identifiants et secrets, applique les migrations, compile et crée les services.
 
-Procédure complète et prérequis réseau : [assistant web d'installation](docs/WEB_INSTALLER.md). Les procédures manuelles ci-dessous restent disponibles.
+Mise à jour ensuite : `cd /opt/xnova && sudo bash scripts/update.sh` ([docs/UPDATE.md](docs/UPDATE.md)).
 
-### Prérequis
+Prérequis réseau et détails : [assistant web d'installation](docs/WEB_INSTALLER.md). Les sections suivantes (développement local, procédure manuelle) ne servent qu'aux développeurs ou aux installations sur mesure.
+
+### Développement local (poste de développement)
+
+#### Prérequis
 - Node.js >= 20
 - npm >= 10
 - Docker + Docker Compose
 
-### Installation
+#### Installation
 
 ```bash
 # Cloner le repo
@@ -98,7 +101,9 @@ cd ../..
 npm run dev
 ```
 
-### Installer sur un serveur LXC (Ubuntu 24.04, sans Docker)
+### Procédure manuelle sur serveur LXC (avancé, sans l'assistant)
+
+> Inutile dans le cas général : `scripts/install.sh` fait tout cela. À réserver à une installation entièrement manuelle.
 
 Procédure complète pour un conteneur LXC vierge, derrière nginx, avec PostgreSQL 16 et Redis 7 installés dans le conteneur.
 Exemple de domaine : `xnova.exemple.fr` (remplacer partout). Commandes à lancer en `root` sauf mention contraire.

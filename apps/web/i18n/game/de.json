@@ -386,7 +386,8 @@
       "testAria": "Empfänger des Tests",
       "testSending": "Wird gesendet...",
       "testSend": "Test senden"
-    }
+    },
+    "tabSupervision": "Überwachung"
   },
   "common": {
     "language": "Sprache",
@@ -846,7 +847,8 @@
       "smtp": "SMTP",
       "settings": "Einstellungen",
       "admin": "Super-Admin",
-      "validation": "Bestätigung"
+      "validation": "Bestätigung",
+      "supervision": "Überwachung"
     },
     "done": {
       "kicker": "Installation",
@@ -951,6 +953,212 @@
       "waiting": "Warte auf die Bestätigung...",
       "resend": "Link erneut senden",
       "fix": "Adresse oder Konto korrigieren"
+    },
+    "supervision": {
+      "intro": "Wählen Sie, wie Serverfehler verfolgt werden. Die lokale Überwachung ist immer aktiv und genügt; Sentry ist eine Option, die Sie auch später in der Admin-Konsole hinzufügen können.",
+      "save": "Überwachung speichern und fortfahren"
+    }
+  },
+  "supervision": {
+    "title": "Überwachung",
+    "loading": "Überwachung wird geladen …",
+    "loadError": "Die Überwachung konnte nicht geladen werden.",
+    "refresh": "Aktualisieren",
+    "lastCheck": "Letzte Prüfung: {time}",
+    "localActive": "Die lokale Überwachung ist immer aktiv: Vorfälle werden auf diesem Server gespeichert, ohne externen Dienst.",
+    "saved": "Überwachungseinstellungen gespeichert.",
+    "versionLine": "Version {version} (Commit {commit}) · gestartet am {start} · letztes Backup: {backup}",
+    "noBackup": "keines bekannt",
+    "overall": {
+      "healthy": "Gesund",
+      "degraded": "Eingeschränkt",
+      "unavailable": "Nicht verfügbar"
+    },
+    "checkStatus": {
+      "ok": "OK",
+      "degraded": "Eingeschränkt",
+      "down": "Ausgefallen",
+      "unknown": "Unbekannt"
+    },
+    "service": {
+      "database": "PostgreSQL",
+      "redis": "Redis",
+      "api": "API",
+      "frontend": "Website",
+      "websocket": "WebSockets",
+      "smtp": "E-Mail (SMTP)",
+      "disk": "Festplatte",
+      "system": "Speicher und Last",
+      "cron": "Geplante Aufgaben",
+      "queues": "Spielwarteschlangen",
+      "version": "Version und Backup"
+    },
+    "code": {
+      "ok": "Funktioniert normal",
+      "timeout": "Keine Antwort innerhalb der Frist",
+      "error": "Die Prüfung ist fehlgeschlagen",
+      "slow": "Langsame Antwort",
+      "down": "Dienst nicht erreichbar",
+      "critical": "Kritischer Wert",
+      "low": "Speicherplatz fast erschöpft",
+      "overloaded": "Server überlastet",
+      "event_loop_blocked": "Event-Loop blockiert",
+      "event_loop_slow": "Event-Loop verlangsamt",
+      "stalled": "Spielwarteschlangen im Rückstand",
+      "stuck": "Geplante Aufgabe hängt",
+      "late": "Geplante Aufgabe verspätet",
+      "failing": "Geplante Aufgabe fehlerhaft",
+      "http_error": "Die Website antwortet mit einem Fehler",
+      "not_ready": "Nicht initialisiert",
+      "not_configured": "Nicht konfiguriert",
+      "never_tested": "Konfiguriert, nie getestet",
+      "last_test_failed": "Der letzte Test ist fehlgeschlagen",
+      "unreachable": "Nicht erreichbar",
+      "disabled": "Deaktiviert",
+      "none": "Nichts zu melden"
+    },
+    "stats": {
+      "open": "Offene Vorfälle",
+      "last24h": "Vorfälle in 24 Std.",
+      "occurrences24h": "Auftreten in 24 Std.",
+      "total": "Gespeicherte Vorfälle",
+      "top": "Häufigste Fehler"
+    },
+    "incidents": {
+      "title": "Vorfälle",
+      "empty": "Keine Vorfälle für diese Filter."
+    },
+    "filters": {
+      "period": "Zeitraum",
+      "level": "Stufe",
+      "source": "Herkunft",
+      "status": "Status",
+      "sort": "Sortierung",
+      "search": "Suchen",
+      "allLevels": "Alle Stufen",
+      "allSources": "Alle Herkünfte",
+      "allStatuses": "Alle Status",
+      "sortRecent": "Neueste",
+      "sortFrequent": "Häufigste"
+    },
+    "period": {
+      "1h": "Letzte Stunde",
+      "24h": "24 Stunden",
+      "7d": "7 Tage",
+      "30d": "30 Tage",
+      "all": "Alles"
+    },
+    "level": {
+      "warning": "Warnung",
+      "error": "Fehler",
+      "fatal": "Kritisch"
+    },
+    "source": {
+      "api": "API",
+      "frontend": "Browser",
+      "websocket": "WebSocket",
+      "cron": "Geplante Aufgabe",
+      "smtp": "SMTP",
+      "database": "Datenbank",
+      "redis": "Redis",
+      "system": "System"
+    },
+    "status": {
+      "new": "Neu",
+      "seen": "Gesehen",
+      "resolved": "Gelöst",
+      "ignored": "Ignoriert"
+    },
+    "incident": {
+      "firstSeen": "Erstes Auftreten",
+      "lastSeen": "Letztes Auftreten",
+      "route": "Route",
+      "httpStatus": "HTTP-Status",
+      "version": "Version",
+      "type": "Typ",
+      "user": "Spieler (ID)",
+      "resolvedAt": "Gelöst am"
+    },
+    "actions": {
+      "seen": "Als gesehen markieren",
+      "resolve": "Als gelöst markieren",
+      "ignore": "Ignorieren",
+      "reopen": "Wieder öffnen"
+    },
+    "pagination": {
+      "previous": "Zurück",
+      "next": "Weiter",
+      "page": "Seite {page} / {pages} ({total} Vorfälle)"
+    },
+    "export": {
+      "json": "Als JSON exportieren",
+      "csv": "Als CSV exportieren"
+    },
+    "settings": {
+      "title": "Überwachungseinstellungen",
+      "save": "Speichern",
+      "superAdminOnly": "Nur Lesezugriff: Nur der Super-Admin darf diese Einstellungen ändern."
+    },
+    "purge": {
+      "title": "Lokales Protokoll bereinigen",
+      "hint": "Löscht alte Vorfälle endgültig. Die Aktion wird im Audit-Protokoll festgehalten.",
+      "olderThan": "Älter als (Tage)",
+      "onlyClosed": "Nur gelöste oder ignorierte",
+      "action": "Bereinigen",
+      "confirm": "Vorfälle, die älter als {days} Tage sind, endgültig löschen?",
+      "done": "{count} Vorfall/Vorfälle gelöscht."
+    },
+    "mode": {
+      "title": "Überwachungsmodus",
+      "local": "Nur lokale Überwachung (empfohlen)",
+      "localHint": "Fehler und Serverzustand bleiben auf diesem Server und sind in der Admin-Konsole einsehbar. Kein externer Dienst nötig.",
+      "sentry": "Lokale Überwachung + externes Sentry",
+      "sentryHint": "Sendet Fehler zusätzlich an Ihr Sentry-Konto. Das lokale Protokoll bleibt auch bei Sentry-Ausfall aktiv."
+    },
+    "local": {
+      "title": "Lokales Protokoll",
+      "alwaysOn": "Immer aktiv: Es kann nicht deaktiviert werden.",
+      "retentionDays": "Aufbewahrung (Tage)",
+      "maxIncidents": "Maximale Anzahl Vorfälle",
+      "minLevel": "Mindeststufe",
+      "minLevelError": "Fehler (Standard)",
+      "minLevelFatal": "Nur kritisch",
+      "warnings": "Auch Warnungen aufzeichnen",
+      "autoPurge": "Alte Vorfälle automatisch bereinigen"
+    },
+    "sentry": {
+      "title": "Sentry (optional)",
+      "fromEnvironment": "Sentry ist über eine Umgebungsvariable des Servers konfiguriert, die Vorrang vor dieser Seite hat.",
+      "privacy": "DSNs werden auf dem Server verschlüsselt und nie wieder angezeigt. Es wird kein Sentry-API-Token verlangt.",
+      "dsnApi": "DSN der API",
+      "dsnKept": "Gespeichert ({hint}) — leer lassen, um ihn zu behalten",
+      "dsnUnreadable": "Der gespeicherte DSN ist nicht lesbar (Schlüssel geändert): bitte erneut eingeben.",
+      "dsnBrowser": "Browser-DSN (optional)",
+      "dsnBrowserHint": "Dient zur Meldung von Fehlern in den Browsern der Spieler; wirkt ohne Neukompilierung.",
+      "optional": "Optional",
+      "environment": "Umgebung",
+      "sampleRate": "Stichprobenrate (0 bis {max})",
+      "test": "Sentry testen",
+      "testing": "Test läuft …",
+      "clear": "Sentry-Konfiguration entfernen",
+      "clearConfirm": "Sentry-Konfiguration entfernen? Die lokale Überwachung bleibt aktiv.",
+      "cleared": "Sentry-Konfiguration entfernt. Die lokale Überwachung bleibt aktiv.",
+      "nonBlocking": "Das blockiert nichts: Spiel und lokale Überwachung laufen weiter.",
+      "lastTest": "Letzter Sentry-Test: {date} — {result}",
+      "resultOk": "erfolgreich",
+      "result": {
+        "accepted": "Sentry hat das Testereignis akzeptiert.",
+        "invalid_dsn": "Das DSN-Format ist ungültig.",
+        "rejected_key": "Sentry hat den DSN-Schlüssel abgelehnt.",
+        "project_not_found": "Sentry-Projekt nicht gefunden.",
+        "rate_limited": "Sentry begrenzt die Anfragen (zu viele).",
+        "server_error": "Sentry hat mit einem Serverfehler geantwortet.",
+        "unreachable": "Sentry ist von diesem Server aus nicht erreichbar.",
+        "timeout": "Sentry hat nicht rechtzeitig geantwortet."
+      }
+    },
+    "errors": {
+      "dsnRequired": "Geben Sie den API-DSN ein (oder wählen Sie nur lokale Überwachung)."
     }
   }
 }

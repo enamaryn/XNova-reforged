@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { BuildingsService } from './buildings.service';
+import { MonitoredCron } from '../supervision/cron-registry';
 
 @Injectable()
 export class BuildingsCronService {
@@ -13,6 +14,7 @@ export class BuildingsCronService {
    * et les finalise automatiquement
    */
   @Cron(CronExpression.EVERY_10_SECONDS)
+  @MonitoredCron('buildings-queue', 10000)
   async handleCompletedBuildings() {
     try {
       const completedBuildings =

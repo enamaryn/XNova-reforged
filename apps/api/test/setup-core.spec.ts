@@ -123,10 +123,10 @@ describe('Code d\'installation (SETUP-01)', () => {
 
   it('progression : lecture, écriture et effacement des indicateurs', async () => {
     const db = fakeDb();
-    expect(await readProgressFlags(db)).toEqual({ smtpTestedAt: null, settingsSavedAt: null, adminId: null });
+    expect(await readProgressFlags(db)).toEqual({ smtpTestedAt: null, settingsSavedAt: null, supervisionSavedAt: null, adminId: null });
     await writeProgressFlag(db, SETUP_KEYS.settingsSavedAt, '2026');
     await writeProgressFlag(db, SETUP_KEYS.adminId, 'u1');
-    expect(await readProgressFlags(db)).toEqual({ smtpTestedAt: null, settingsSavedAt: '2026', adminId: 'u1' });
+    expect(await readProgressFlags(db)).toEqual({ smtpTestedAt: null, settingsSavedAt: '2026', supervisionSavedAt: null, adminId: 'u1' });
     await clearProgressFlag(db, 'adminId');
     expect((await readProgressFlags(db)).adminId).toBeNull();
   });

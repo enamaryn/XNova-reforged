@@ -5,6 +5,16 @@
 
 ---
 
+## Session — SUPERVISION-LOCAL : supervision locale intégrée, Sentry optionnel
+
+**Date :** 12 octobre 2026. **Demande du propriétaire** : jeu administrable sans service extérieur ; Sentry en option, jamais requis.
+
+- [x] Backend `apps/api/src/supervision/` : masquage central, empreinte, journal `Incident` (migration `20261012100000_local_supervision`), UPSERT atomique, santé parallèle avec timeouts, registre `@MonitoredCron`, filtre d'exceptions, purge/rétention, configuration chiffrée (priorité env > chiffré > désactivé), test Sentry (réponse HTTP réelle), routes admin/monitoring/setup.
+- [x] Frontend : onglet admin « Supervision » (responsive, 5 langues), étape « Supervision » de l'assistant, collecte des erreurs navigateur (anti-boucle, débit limité), Sentry navigateur à l'exécution.
+- [x] Tests : unitaires `supervision-core` (20), intégration `supervision.integration` (34), E2E `admin-supervision` + assistant, mobile 320/390/PC × 5 langues.
+- [x] Docs : ROADMAP_MVP (lot + PRE-03 reformulé), OPERATIONS, WEB_INSTALLER, API_ENDPOINTS, `.env.example`, registre d'audit, README (installation : `git clone` puis `scripts/install.sh`).
+- À faire : validation sur le serveur de test du propriétaire ; fusion par le propriétaire.
+
 ## Session — durées du chantier spatial
 
 **Date :** 11 octobre 2026. **Signalement du propriétaire** (capture, page Défense) : temps estimé incohérent avec la file ; calibrage validé : 5 s par chasseur léger quand tout est développé, ≈ 3 h 47 par Étoile de la Mort, mêmes règles pour les défenses.
