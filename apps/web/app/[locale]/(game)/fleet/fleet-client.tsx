@@ -45,6 +45,7 @@ const MISSION_IDS: Record<string, number> = {
   transport: 3,
   espionnage: 6,
   colonisation: 7,
+  recyclage: 8,
 };
 
 export default function FleetClient() {
@@ -79,6 +80,7 @@ export default function FleetClient() {
       if (missionParam === 'transport') setMission('transport');
       if (missionParam === 'spy') setMission('espionnage');
       if (missionParam === 'colonize') setMission('colonisation');
+      if (missionParam === 'recycle') setMission('recyclage');
     }
 
     const galaxyValue = galaxyParam ? Number(galaxyParam) : null;
@@ -236,7 +238,7 @@ export default function FleetClient() {
         speedPercent,
         ships: Object.fromEntries(selectedShips.map((ship) => [ship.shipId, ship.amount])),
         // Espionnage et colonisation n'embarquent aucune ressource
-        cargo: mission === 'espionnage' || mission === 'colonisation' ? { metal: 0, crystal: 0, deuterium: 0 } : cargo,
+        cargo: mission === 'espionnage' || mission === 'colonisation' || mission === 'recyclage' ? { metal: 0, crystal: 0, deuterium: 0 } : cargo,
         ...(mission === 'colonisation' ? { planetName: colonyName.trim() || 'Colonie' } : {}),
       }),
     onSuccess: () => {
@@ -330,6 +332,7 @@ export default function FleetClient() {
                   { id: 'attaque', label: t('fleet.missions.attack') },
                   { id: 'espionnage', label: t('fleet.missions.spy') },
                   { id: 'colonisation', label: t('fleet.missions.colonize') },
+                  { id: 'recyclage', label: t('fleet.missions.recycle') },
                 ].map((item) => (
                   <button
                     key={item.id}

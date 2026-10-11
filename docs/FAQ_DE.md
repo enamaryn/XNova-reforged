@@ -149,7 +149,7 @@ In der **Werft** (Seite Werft). Der Auftrag wird sofort bezahlt und in Losen geb
 | **Kreuzer** (*Croiseur*, 206) | 18 000 / 6 000 / 2 000 | 800 | 15 000 | 400 / 50 / 27 000 | schneller Kampf |
 | **Schlachtschiff** (*Vaisseau de Bataille*, 207) | 45 000 / 15 000 / 0 | 1 500 | 10 000 | 1 000 / 200 / 60 000 | Kern der Flotte |
 | **Kolonieschiff** (*Vaisseau de Colonisation*, 208) | 10 000 / 20 000 / 10 000 | 7 500 | 2 500 | 50 / 100 / 30 000 | Kolonie gründen (wird verbraucht) |
-| **Recycler** (*Recycleur*, 209) | 10 000 / 6 000 / 2 000 | 20 000 | 2 000 | 1 / 10 / 16 000 | ⚠️ siehe unten |
+| **Recycler** (*Recycleur*, 209) | 10 000 / 6 000 / 2 000 | 20 000 | 2 000 | 1 / 10 / 16 000 | siehe unten |
 | **Spionagesonde** (*Sonde d'Espionnage*, 210) | 0 / 1 000 / 0 | 0 | 50 000 | 0 / 0 / 1 000 | Spionage |
 | **Bomber** (*Bombardier*, 211) | 50 000 / 25 000 / 15 000 | 500 | 4 000 | 1 000 / 500 / 75 000 | gegen Verteidigung gedacht |
 | **Solarsatellit** (*Satellite Solaire*, 212) | 0 / 2 000 / 500 | 0 | 0 | 1 / 1 / 2 000 | Energie, bleibt im Orbit (§3) |
@@ -165,8 +165,8 @@ Anfangs den kleinen Transporter (günstig, früh verfügbar), dann den großen (
 **Wie spioniere ich?**
 Mit **Spionagesonden**: Die Spionagemission akzeptiert nur Sonden. Eine Sonde kostet 1 000 Kristall und fliegt sehr schnell; Sonden **kehren immer zurück** (sie werden nicht zerstört) und das Ziel **wird nicht gewarnt**. Der Berichtsdetail hängt von einem Wert ab: `Wert = (Ihre Spionage − die des Ziels) + (Anzahl Sonden − 1)`. **Rohstoffe** sind immer sichtbar; ab **1** kommt die **Flotte** hinzu, ab **3** **Verteidigung und Gebäude**, ab **5** die **Technologien**. Beispiel: Bei gleicher Stufe genügen 6 Sonden, um alles zu sehen.
 
-**⚠️ Wozu dient der Recycler?**
-Heute zu nichts: Der Kampf berechnet Trümmer (30 % von Metall und Kristall der zerstörten **Schiffe**), aber es gibt weder ein Trümmerfeld noch eine Recycling-Mission. Bauen Sie vorerst keine Recycler.
+**Wozu dient der Recycler?**
+Er erntet **Trümmerfelder**. Nach jedem Kampf bleiben 30 % von Metall und Kristall der zerstörten **Schiffe** (beider Seiten, nicht der Verteidigung) an den Zielkoordinaten im Orbit; sie summieren sich von Kampf zu Kampf und erscheinen in der Galaxie (Schaltfläche „Recyceln“). Schicken Sie Recycler allein mit der Mission **Recycling**: Bei Ankunft sammeln sie je bis zu 20 000 Einheiten (Metall und Kristall anteilig) und kehren mit der Ernte zurück. Es kann keine Fracht geladen werden; der Rest bleibt im Feld.
 
 **Haben Schiffe „Schnellfeuer“?**
 Ja. Trifft ein Schiff ein Ziel eines Typs, gegen den es Schnellfeuer mit dem Wert `n` hat, **schießt es mit der Wahrscheinlichkeit (n − 1) / n erneut**, und so weiter: im Mittel `n` Schüsse gegen diesen Typ. Andere Ziele geben keine Zusatzschüsse. Das gilt auch für die stationierte Flotte, die verteidigt.
@@ -189,7 +189,7 @@ Mission *Kolonisierung* mit einem Kolonieschiff zu einer **freien Position**: Di
 ## 6. Flotten und Missionen
 
 **Welche Missionen gibt es?**
-**Transport** (liefert die Fracht, danach kehrt die Flotte zurück), **Stationieren** (setzt Flotte und Fracht auf *Ihren* anderen Planeten, ohne Rückkehr), **Angriff**, **Spionage**, **Kolonisierung**. Recycling, Expedition, Verbandsangriff, Halten und Zerstören lehnt das Spiel ab, ohne etwas abzubuchen.
+**Transport** (liefert die Fracht, danach kehrt die Flotte zurück), **Stationieren** (setzt Flotte und Fracht auf *Ihren* anderen Planeten, ohne Rückkehr), **Angriff**, **Spionage**, **Kolonisierung**, **Recycling** (nur Recycler, zu einem Trümmerfeld). Expedition, Verbandsangriff, Halten und Zerstören lehnt das Spiel ab, ohne etwas abzubuchen.
 
 **Wie werden Flugdauer und Treibstoff berechnet?**
 Entfernung: `√(Δgalaxie² × 20 000 + Δsystem² × 95 + Δposition² × 5)`. Flottengeschwindigkeit: die ihres **langsamsten Schiffs** (mit Triebwerksboni). Dauer: `(35 000 / Geschwindigkeits-%) × √(Entfernung × 10 / Geschwindigkeit) + 10` Sekunden, geteilt durch die Flottengeschwindigkeit des Servers. Treibstoff (Deuterium, beim **Start** abgebucht): `Σ Anzahl × Verbrauch × (Entfernung / 35 000) × (Geschwindigkeit / 1 000 + 1)²`. Beispiel mit 10 kleinen Transportern: gleiches System (4 Positionen) 0 Deuterium; 10 Systeme weiter 10; andere Galaxie 14. Eine niedrigere Geschwindigkeit verlängert den Flug (10 % bis 100 %).
@@ -222,7 +222,7 @@ Die **Verteidigungen** und die **stationierte Flotte** des Planeten kämpfen zus
 **Was geht verloren und was kommt zurück?**
 - Zerstörte Schiffe sind verloren.
 - Zerstörte **Verteidigungen** werden nach dem Kampf mit je **70 % Wahrscheinlichkeit** wieder aufgebaut.
-- Ein „Trümmerfeld“ wird berechnet (30 % der Metall- und Kristallkosten der verlorenen Schiffe) und im Bericht angezeigt, kann aber nicht eingesammelt werden (§5).
+- Ein „Trümmerfeld“ wird erzeugt (30 % der Metall- und Kristallkosten der verlorenen Schiffe), im Bericht und in der Galaxie angezeigt und kann von Recyclern geerntet werden (§5).
 - **Beute** (wenn der Angreifer gewinnt): bis zu **50 %** jedes Rohstoffs des Ziels, begrenzt auf die freie Kapazität der überlebenden Schiffe.
 
 **Wie gewinne ich einen Kampf?**
@@ -303,6 +303,6 @@ Sie beruht auf der **Macht**; Ihr Rang erscheint in der Kopfzeile und in der Üb
 
 ## 11. Was es noch nicht gibt
 
-Offiziere, Markt, Ereignisse, Monde, Raketen, Recycling und Trümmerfelder, Expeditionen, Verbandsangriffe, Halten. Die davon abhängigen Gebäude und Technologien (Allianzdepot, Raketensilo, Mondgebäude, Forschungsnetzwerk, Expedition) werden nicht angeboten. Der Recycler existiert, ist aber nutzlos, solange es kein Recycling gibt: Lesen Sie die ⚠️ oben, bevor Sie investieren. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
+Offiziere, Markt, Ereignisse, Monde, Raketen, Expeditionen, Verbandsangriffe, Halten. Die davon abhängigen Gebäude und Technologien (Allianzdepot, Raketensilo, Mondgebäude, Forschungsnetzwerk, Expedition) werden nicht angeboten. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
 
 *Diese FAQ wurde gegen den Code (`packages/game-config`, `packages/game-engine`, API) und, für die Solarsatelliten, durch einen automatisierten Integrationstest (`solar-satellites.integration.spec.ts`) geprüft.*

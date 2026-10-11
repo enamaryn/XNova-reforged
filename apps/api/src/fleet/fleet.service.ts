@@ -10,6 +10,7 @@ import {
   COLONY_SHIP_ID,
   COMPUTER_TECH_ID,
   ESPIONAGE_PROBE_ID,
+  RECYCLER_ID,
   GAME_CONSTANTS,
   IMPLEMENTED_MISSIONS,
   MissionType,
@@ -187,6 +188,24 @@ export class FleetService {
       if (owned >= GAME_CONSTANTS.MAX_PLAYER_PLANETS) {
         throw new BadRequestException('Nombre maximal de planetes atteint');
       }
+    } else if (dto.mission === MissionType.RECYCLE) {
+      // Recyclage : uniquement des recycleurs, vers un champ de débris non vide
+      if (shipsToSend.some((ship) => ship.shipId !== RECYCLER_ID)) {
+        throw new BadRequestException('Une mission de recyclage n\'accepte que des recycleurs');
+      }
+      const debris = await this.database.debrisField.findUnique({
+        where: {
+          galaxy_system_position: {
+            galaxy: dto.toGalaxy,
+            system: dto.toSystem,
+            position: dto.toPosition,
+          },
+        },
+        select: { metal: true, crystal: true },
+      });
+      if (!debris || debris.metal + debris.crystal < 1) {
+        throw new BadRequestException('Aucun champ de débris à ces coordonnées');
+      }
     } else if (!target) {
       // TRANSPORT : la cible doit exister
       throw new BadRequestException('Aucune planete a cette position');
@@ -218,9 +237,11 @@ export class FleetService {
       deuterium: this.parseQuantity(dto.cargo?.deuterium),
     };
 
-    // Espionnage et colonisation n'embarquent aucune ressource
+    // Espionnage, colonisation et recyclage n'embarquent aucune ressource
     if (
-      (dto.mission === MissionType.SPY || dto.mission === MissionType.COLONIZE) &&
+      (dto.mission === MissionType.SPY ||
+      dto.mission === MissionType.COLONIZE ||
+      dto.mission === MissionType.RECYCLE) &&
       cargo.metal + cargo.crystal + cargo.deuterium > 0
     ) {
       throw new BadRequestException('Cette mission n\'accepte aucune cargaison');

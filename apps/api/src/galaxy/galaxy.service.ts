@@ -64,6 +64,12 @@ export class GalaxyService implements OnModuleInit {
       },
     });
 
+    const debrisFields = await this.database.debrisField.findMany({
+      where: { galaxy, system, OR: [{ metal: { gte: 1 } }, { crystal: { gte: 1 } }] },
+      select: { position: true, metal: true, crystal: true },
+    });
+    const debrisMap = new Map(debrisFields.map((field) => [field.position, field]));
+
     const planetMap = new Map<number, typeof planets[number]>();
     planets.forEach((planet) => planetMap.set(planet.position, planet));
 
@@ -71,10 +77,16 @@ export class GalaxyService implements OnModuleInit {
       const position = index + 1;
       const planet = planetMap.get(position);
 
+      const debrisField = debrisMap.get(position);
+      const debris = debrisField
+        ? { metal: Math.floor(debrisField.metal), crystal: Math.floor(debrisField.crystal) }
+        : null;
+
       if (!planet) {
         return {
           position,
           occupied: false,
+          debris,
         };
       }
 
@@ -95,6 +107,7 @@ export class GalaxyService implements OnModuleInit {
         activityMinutes: isAbandoned ? null : activityMinutes,
         hasMoon: planet.moonBase > 0,
         isOwn: planet.userId === userId,
+        debris,
       };
     });
 

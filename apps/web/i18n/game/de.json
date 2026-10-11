@@ -50,6 +50,7 @@
       "attack": "Angriff",
       "spy": "Spionage",
       "colonize": "Kolonisierung",
+      "recycle": "Recycling",
       "deploy": "Stationierung"
     },
     "summary": "Missionsübersicht",
@@ -96,7 +97,9 @@
     "spy": "Spionieren",
     "attack": "Angreifen",
     "transport": "Transportieren",
-    "colonize": "Kolonisieren"
+    "colonize": "Kolonisieren",
+    "recycle": "Recyceln",
+    "debris": "Trümmerfeld"
   },
   "messages": {
     "kicker": "Kommunikation",

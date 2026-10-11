@@ -59,18 +59,20 @@ export enum MissionType {
 }
 
 // Missions réellement traitées à l'arrivée (liste commune API/UI, GAME-01).
-// Les autres missions (recyclage, expédition...) restent refusées par l'API sans débit.
+// Les autres missions (expédition...) restent refusées par l'API sans débit.
 export const IMPLEMENTED_MISSIONS: readonly MissionType[] = [
   MissionType.ATTACK,
   MissionType.TRANSPORT,
   MissionType.DEPLOY,
   MissionType.SPY,
   MissionType.COLONIZE,
+  MissionType.RECYCLE,
 ];
 
 /** Identifiants des vaisseaux imposés par certaines missions. */
 export const ESPIONAGE_PROBE_ID = 210;
 export const COLONY_SHIP_ID = 208;
+export const RECYCLER_ID = 209;
 /** Satellite solaire : reste en orbite de la planète où il est construit (aucun envoi), fournit de l'énergie. */
 export const SOLAR_SATELLITE_ID = 212;
 /** Technologie Espionnage : détermine le niveau d'information d'un rapport d'espionnage. */

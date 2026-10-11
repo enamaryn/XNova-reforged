@@ -149,7 +149,7 @@ All'**hangar** (pagina Cantiere). L'ordine è pagato subito e costruito per lott
 | **Incrociatore** (*Croiseur*, 206) | 18 000 / 6 000 / 2 000 | 800 | 15 000 | 400 / 50 / 27 000 | combattimento veloce |
 | **Nave da battaglia** (*Vaisseau de Bataille*, 207) | 45 000 / 15 000 / 0 | 1 500 | 10 000 | 1 000 / 200 / 60 000 | nucleo della flotta |
 | **Colonizzatrice** (*Vaisseau de Colonisation*, 208) | 10 000 / 20 000 / 10 000 | 7 500 | 2 500 | 50 / 100 / 30 000 | fondare una colonia (consumata) |
-| **Riciclatrice** (*Recycleur*, 209) | 10 000 / 6 000 / 2 000 | 20 000 | 2 000 | 1 / 10 / 16 000 | ⚠️ vedi sotto |
+| **Riciclatrice** (*Recycleur*, 209) | 10 000 / 6 000 / 2 000 | 20 000 | 2 000 | 1 / 10 / 16 000 | vedi sotto |
 | **Sonda spia** (*Sonde d'Espionnage*, 210) | 0 / 1 000 / 0 | 0 | 50 000 | 0 / 0 / 1 000 | spionaggio |
 | **Bombardiere** (*Bombardier*, 211) | 50 000 / 25 000 / 15 000 | 500 | 4 000 | 1 000 / 500 / 75 000 | pensato contro le difese |
 | **Satellite solare** (*Satellite Solaire*, 212) | 0 / 2 000 / 500 | 0 | 0 | 1 / 1 / 2 000 | energia, resta in orbita (§3) |
@@ -165,8 +165,8 @@ Il cargo piccolo all'inizio (economico, disponibile presto), poi il grande (4× 
 **Come si spia?**
 Con le **sonde spia**: la missione di spionaggio accetta solo sonde. Una sonda costa 1 000 di cristallo e vola molto veloce; le sonde **tornano sempre** (non vengono distrutte) e il bersaglio **non viene avvisato**. Il dettaglio del rapporto dipende da un punteggio: `punteggio = (il tuo Spionaggio − quello del bersaglio) + (numero di sonde − 1)`. Le **risorse** sono sempre visibili; da **1** si aggiunge la **flotta**, da **3** le **difese e gli edifici**, da **5** le **tecnologie**. Esempio: a parità di livello bastano 6 sonde per vedere tutto.
 
-**⚠️ A cosa serve la riciclatrice?**
-Oggi a niente: il combattimento calcola dei detriti (30 % del metallo e del cristallo delle **navi** distrutte), ma non esistono né campo di detriti né missione di riciclaggio. Per ora non costruire riciclatrici.
+**A cosa serve la riciclatrice?**
+Raccoglie i **campi di detriti**. Dopo ogni combattimento, il 30 % del metallo e del cristallo delle **navi** distrutte (di entrambe le parti, non delle difese) resta in orbita alle coordinate del bersaglio; si sommano da un combattimento all'altro e compaiono nella Galassia (pulsante «Ricicla»). Invia riciclatrici da sole con la missione **Riciclaggio**: all'arrivo raccolgono fino a 20 000 unità ciascuna (metallo e cristallo in proporzione) e rientrano con il raccolto. Non si può imbarcare carico; il resto rimane nel campo.
 
 **Le navi hanno il «fuoco rapido»?**
 Sì. Quando una nave colpisce un bersaglio di un tipo contro cui ha il fuoco rapido di valore `n`, **spara di nuovo con probabilità (n − 1) / n**, e così via: in media `n` colpi contro quel tipo. Gli altri bersagli non danno colpi extra. Vale anche per la flotta stazionata che difende.
@@ -189,7 +189,7 @@ Missione *Colonizzazione* con una colonizzatrice verso una **posizione libera**:
 ## 6. Flotte e missioni
 
 **Quali missioni esistono?**
-**Trasporto** (consegna il carico, poi la flotta rientra), **Schieramento** (installa flotta e carico su *un tuo altro* pianeta, senza ritorno), **Attacco**, **Spionaggio**, **Colonizzazione**. Riciclaggio, spedizione, attacco di gruppo, mantenimento della posizione e distruzione sono rifiutati dal gioco senza addebitare nulla.
+**Trasporto** (consegna il carico, poi la flotta rientra), **Schieramento** (installa flotta e carico su *un tuo altro* pianeta, senza ritorno), **Attacco**, **Spionaggio**, **Colonizzazione**, **Riciclaggio** (solo riciclatrici, verso un campo di detriti). Spedizione, attacco di gruppo, mantenimento della posizione e distruzione sono rifiutati dal gioco senza addebitare nulla.
 
 **Come si calcolano durata e carburante di un volo?**
 Distanza: `√(Δgalassia² × 20 000 + Δsistema² × 95 + Δposizione² × 5)`. Velocità della flotta: quella della sua **nave più lenta** (con i bonus dei propulsori). Durata: `(35 000 / % di velocità) × √(distanza × 10 / velocità) + 10` secondi, divisi per la velocità di flotta del server. Carburante (deuterio, addebitato alla **partenza**): `Σ numero × consumo × (distanza / 35 000) × (velocità / 1 000 + 1)²`. Esempio con 10 cargo piccoli: stesso sistema (4 posizioni) 0 di deuterio; 10 sistemi più in là 10; altra galassia 14. Una velocità più bassa allunga il volo (dal 10 % al 100 %).
@@ -222,7 +222,7 @@ Le **difese** e la **flotta stazionata** sul pianeta combattono insieme (compres
 **Cosa si perde e cosa si recupera?**
 - Le navi distrutte sono perse.
 - Le **difese** distrutte vengono ricostruite con il **70 % di probabilità** ciascuna dopo il combattimento.
-- Un «campo di detriti» viene calcolato (30 % del costo in metallo e cristallo delle navi perse) e mostrato nel rapporto, ma non può essere raccolto (§5).
+- Un «campo di detriti» viene creato (30 % del costo in metallo e cristallo delle navi perse), mostrato nel rapporto e nella Galassia, e può essere raccolto dalle riciclatrici (§5).
 - **Bottino** (se vince l'attaccante): fino al **50 %** di ogni risorsa del bersaglio, limitato alla capacità libera delle navi sopravvissute.
 
 **Come vinco un combattimento?**
@@ -303,6 +303,6 @@ Si basa sulla **potenza**; il tuo rango appare nell'intestazione e nella panoram
 
 ## 11. Ciò che non esiste ancora
 
-Ufficiali, mercato, eventi, lune, missili, riciclaggio e campi di detriti, spedizioni, attacchi di gruppo, mantenimento della posizione. Gli edifici e le tecnologie che ne dipendono (deposito dell'alleanza, silo missilistico, edifici lunari, rete di ricerca, spedizione) non vengono proposti. La riciclatrice esiste ma non serve a nulla finché il riciclaggio non esiste: leggi i ⚠️ qui sopra prima di investire. La roadmap del progetto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tiene traccia di questi scarti.
+Ufficiali, mercato, eventi, lune, missili, spedizioni, attacchi di gruppo, mantenimento della posizione. Gli edifici e le tecnologie che ne dipendono (deposito dell'alleanza, silo missilistico, edifici lunari, rete di ricerca, spedizione) non vengono proposti. La roadmap del progetto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tiene traccia di questi scarti.
 
 *Questa FAQ è stata verificata sul codice (`packages/game-config`, `packages/game-engine`, API) e, per i satelliti solari, con un test di integrazione automatizzato (`solar-satellites.integration.spec.ts`).*

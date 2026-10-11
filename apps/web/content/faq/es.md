@@ -149,7 +149,7 @@ En el **hangar** (página Astillero). El pedido se paga al instante y se constru
 | **Crucero** (*Croiseur*, 206) | 18 000 / 6 000 / 2 000 | 800 | 15 000 | 400 / 50 / 27 000 | combate rápido |
 | **Nave de batalla** (*Vaisseau de Bataille*, 207) | 45 000 / 15 000 / 0 | 1 500 | 10 000 | 1 000 / 200 / 60 000 | núcleo de la flota |
 | **Colonizador** (*Vaisseau de Colonisation*, 208) | 10 000 / 20 000 / 10 000 | 7 500 | 2 500 | 50 / 100 / 30 000 | fundar una colonia (se consume) |
-| **Reciclador** (*Recycleur*, 209) | 10 000 / 6 000 / 2 000 | 20 000 | 2 000 | 1 / 10 / 16 000 | ⚠️ véase más abajo |
+| **Reciclador** (*Recycleur*, 209) | 10 000 / 6 000 / 2 000 | 20 000 | 2 000 | 1 / 10 / 16 000 | véase más abajo |
 | **Sonda de espionaje** (*Sonde d'Espionnage*, 210) | 0 / 1 000 / 0 | 0 | 50 000 | 0 / 0 / 1 000 | espionaje |
 | **Bombardero** (*Bombardier*, 211) | 50 000 / 25 000 / 15 000 | 500 | 4 000 | 1 000 / 500 / 75 000 | pensado contra defensas |
 | **Satélite solar** (*Satellite Solaire*, 212) | 0 / 2 000 / 500 | 0 | 0 | 1 / 1 / 2 000 | energía, permanece en órbita (§3) |
@@ -165,8 +165,8 @@ El carguero pequeño al principio (barato, accesible pronto), luego el grande (4
 **¿Cómo se espía?**
 Con **sondas de espionaje**: la misión de espionaje solo acepta sondas. Una sonda cuesta 1 000 de cristal y vuela muy rápido; las sondas **siempre regresan** (no se destruyen) y el objetivo **no es avisado**. El detalle del informe depende de una puntuación: `puntuación = (su Espionaje − el del objetivo) + (número de sondas − 1)`. Los **recursos** siempre se ven; desde **1** se añade la **flota**, desde **3** las **defensas y edificios**, desde **5** las **tecnologías**. Ejemplo: a igual nivel, 6 sondas bastan para verlo todo.
 
-**⚠️ ¿Para qué sirve el reciclador?**
-Hoy, para nada: el combate calcula escombros (30 % del metal y cristal de las **naves** destruidas), pero no existe campo de escombros ni misión de reciclaje. No construya recicladores por ahora.
+**¿Para qué sirve el reciclador?**
+Recoge los **campos de escombros**. Tras cada combate, el 30 % del metal y cristal de las **naves** destruidas (de ambos bandos, no de las defensas) queda en órbita en las coordenadas del objetivo; se acumulan de un combate a otro y aparecen en la Galaxia (botón «Reciclar»). Envíe recicladores solos con la misión **Reciclaje**: al llegar recogen hasta 20 000 unidades cada uno (metal y cristal en proporción) y regresan con lo recogido. No se puede embarcar carga; lo que sobre permanece en el campo.
 
 **¿Tienen las naves «fuego rápido»?**
 Sí. Cuando una nave alcanza un objetivo de un tipo contra el que tiene fuego rápido de valor `n`, **dispara de nuevo con probabilidad (n − 1) / n**, y así sucesivamente: de media `n` disparos contra ese tipo. Los demás objetivos no dan disparos extra. Vale también para la flota estacionada que defiende.
@@ -189,7 +189,7 @@ Misión *Colonización* con un colonizador hacia una **posición libre**: se fun
 ## 6. Flotas y misiones
 
 **¿Qué misiones existen?**
-**Transporte** (entrega la carga y la flota regresa), **Despliegue** (instala flota y carga en *otro planeta suyo*, sin regreso), **Ataque**, **Espionaje**, **Colonización**. Reciclaje, expedición, ataque en grupo, mantener posición y destruir son rechazados por el juego sin descontar nada.
+**Transporte** (entrega la carga y la flota regresa), **Despliegue** (instala flota y carga en *otro planeta suyo*, sin regreso), **Ataque**, **Espionaje**, **Colonización**, **Reciclaje** (solo recicladores, hacia un campo de escombros). Expedición, ataque en grupo, mantener posición y destruir son rechazados por el juego sin descontar nada.
 
 **¿Cómo se calculan la duración y el combustible de un vuelo?**
 Distancia: `√(Δgalaxia² × 20 000 + Δsistema² × 95 + Δposición² × 5)`. Velocidad de la flota: la de su **nave más lenta** (con las bonificaciones de motores). Duración: `(35 000 / % de velocidad) × √(distancia × 10 / velocidad) + 10` segundos, divididos por la velocidad de flota del servidor. Combustible (deuterio, descontado a la **salida**): `Σ número × consumo × (distancia / 35 000) × (velocidad / 1 000 + 1)²`. Ejemplo con 10 cargueros pequeños: mismo sistema (4 posiciones) 0 de deuterio; 10 sistemas más allá 10; otra galaxia 14. Una velocidad menor alarga el vuelo (del 10 % al 100 %).
@@ -222,7 +222,7 @@ Las **defensas** y la **flota estacionada** en el planeta combaten juntas (inclu
 **¿Qué se pierde y qué se recupera?**
 - Las naves destruidas se pierden.
 - Las **defensas** destruidas se reconstruyen con un **70 % de probabilidad** cada una tras el combate.
-- Se calcula un «campo de escombros» (30 % del coste en metal y cristal de las naves perdidas) y se muestra en el informe, pero no se puede recoger (§5).
+- Se crea un «campo de escombros» (30 % del coste en metal y cristal de las naves perdidas), que se muestra en el informe y en la Galaxia y que los recicladores pueden recoger (§5).
 - **Botín** (si gana el atacante): hasta el **50 %** de cada recurso del objetivo, limitado a la capacidad libre de las naves supervivientes.
 
 **¿Cómo gano un combate?**
@@ -303,6 +303,6 @@ Se basa en el **poder**; su rango aparece en la cabecera y en la vista general. 
 
 ## 11. Lo que aún no existe
 
-Oficiales, mercado, eventos, lunas, misiles, reciclaje y campos de escombros, expediciones, ataques en grupo, mantener posición. Los edificios y tecnologías que dependen de ello (depósito de la alianza, silo de misiles, edificios lunares, red de investigación, expedición) no se ofrecen. El reciclador existe pero no sirve de nada mientras no exista el reciclaje: lea los ⚠️ anteriores antes de invertir. La hoja de ruta del proyecto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) sigue estas discrepancias.
+Oficiales, mercado, eventos, lunas, misiles, expediciones, ataques en grupo, mantener posición. Los edificios y tecnologías que dependen de ello (depósito de la alianza, silo de misiles, edificios lunares, red de investigación, expedición) no se ofrecen. La hoja de ruta del proyecto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) sigue estas discrepancias.
 
 *Esta FAQ se ha comprobado con el código (`packages/game-config`, `packages/game-engine`, API) y, para los satélites solares, con una prueba de integración automatizada (`solar-satellites.integration.spec.ts`).*

@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { MissionType } from '@xnova/game-config';
+import { MissionType, SHIPS } from '@xnova/game-config';
 import { ALREADY_PROCESSED, CombatService } from '../combat/combat.service';
 import { DatabaseService } from '../database/database.service';
 import { GameEventsGateway } from '../game-events/game-events.gateway';
@@ -51,6 +51,8 @@ export class FleetCronService {
         processed = await this.spyService.resolveSpyMission(fleet);
       } else if (fleet.mission === MissionType.COLONIZE) {
         processed = await this.colonizationService.resolveColonizeMission(fleet);
+      } else if (fleet.mission === MissionType.RECYCLE) {
+        processed = await this.resolveRecycle(fleet);
       } else {
         processed = await this.database.$transaction(async (tx) => {
           // Prise en charge atomique (ECO-04) : un seul worker traite cette arrivee
@@ -142,6 +144,61 @@ export class FleetCronService {
         to: `${fleet.toGalaxy}:${fleet.toSystem}:${fleet.toPosition}`,
       });
     }
+  }
+
+  /**
+   * Recyclage : la flotte collecte le champ de débris des coordonnées, dans la limite de sa capacité
+   * (répartie proportionnellement entre métal et cristal), puis rentre avec la récolte comme cargaison.
+   * Le champ est verrouillé pour qu'aucune récolte concurrente ne compte deux fois les mêmes débris.
+   */
+  private async resolveRecycle(fleet: {
+    id: string;
+    ships: unknown;
+    toGalaxy: number;
+    toSystem: number;
+    toPosition: number;
+  }): Promise<boolean> {
+    return this.database.$transaction(async (tx) => {
+      const claimed = await tx.fleet.updateMany({
+        where: { id: fleet.id, status: 'traveling' },
+        data: { status: 'returning' },
+      });
+      if (claimed.count !== 1) return false;
+
+      const rows = await tx.$queryRaw<{ id: string; metal: number; crystal: number }[]>`
+        SELECT "id", "metal", "crystal" FROM "DebrisField"
+        WHERE "galaxy" = ${fleet.toGalaxy} AND "system" = ${fleet.toSystem} AND "position" = ${fleet.toPosition}
+        FOR UPDATE`;
+      const field = rows[0];
+      if (!field) return true;
+
+      const ships = fleet.ships as Record<string, number>;
+      const capacity = Object.entries(ships).reduce(
+        (sum, [shipId, amount]) => sum + (SHIPS[Number(shipId)]?.cargo ?? 0) * Number(amount),
+        0,
+      );
+      const metalAvailable = Math.max(0, Math.floor(field.metal));
+      const crystalAvailable = Math.max(0, Math.floor(field.crystal));
+      const total = metalAvailable + crystalAvailable;
+      let metal = metalAvailable;
+      let crystal = crystalAvailable;
+      if (total > capacity) {
+        metal = Math.floor((metalAvailable * capacity) / total);
+        crystal = Math.min(crystalAvailable, capacity - metal);
+      }
+
+      if (metal > 0 || crystal > 0) {
+        await tx.debrisField.update({
+          where: { id: field.id },
+          data: { metal: { decrement: metal }, crystal: { decrement: crystal } },
+        });
+        await tx.fleet.update({
+          where: { id: fleet.id },
+          data: { cargo: { metal, crystal, deuterium: 0 } },
+        });
+      }
+      return true;
+    });
   }
 
   private async processReturns() {

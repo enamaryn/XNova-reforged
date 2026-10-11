@@ -353,6 +353,20 @@ model CombatReport {
   @@index([defenderId, createdAt])
 }
 
+// Champ de débris : ruines de vaisseaux détruits (30 % métal/cristal), en orbite aux coordonnées du combat
+model DebrisField {
+  id        String   @id @default(uuid())
+  galaxy    Int
+  system    Int
+  position  Int
+  metal     Float    @default(0)
+  crystal   Float    @default(0)
+  updatedAt DateTime @updatedAt
+
+  @@unique([galaxy, system, position])
+  @@index([galaxy, system])
+}
+
 // ============================================
 // ALLIANCES
 // ============================================

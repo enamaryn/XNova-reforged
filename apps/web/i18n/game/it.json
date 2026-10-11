@@ -50,6 +50,7 @@
       "attack": "Attacco",
       "spy": "Spionaggio",
       "colonize": "Colonizzazione",
+      "recycle": "Riciclaggio",
       "deploy": "Schieramento"
     },
     "summary": "Riepilogo della missione",
@@ -96,7 +97,9 @@
     "spy": "Spiare",
     "attack": "Attaccare",
     "transport": "Trasportare",
-    "colonize": "Colonizzare"
+    "colonize": "Colonizzare",
+    "recycle": "Ricicla",
+    "debris": "Detriti"
   },
   "messages": {
     "kicker": "Comunicazione",

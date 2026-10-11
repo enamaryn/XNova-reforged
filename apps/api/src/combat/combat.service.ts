@@ -206,6 +206,28 @@ export class CombatService {
         }),
       });
 
+      // Débris du combat : cumulés au champ de débris des coordonnées (recyclables)
+      const debris = combat.debris;
+      if (debris.metal > 0 || debris.crystal > 0) {
+        await tx.debrisField.upsert({
+          where: {
+            galaxy_system_position: {
+              galaxy: fleet.toGalaxy,
+              system: fleet.toSystem,
+              position: fleet.toPosition,
+            },
+          },
+          update: { metal: { increment: debris.metal }, crystal: { increment: debris.crystal } },
+          create: {
+            galaxy: fleet.toGalaxy,
+            system: fleet.toSystem,
+            position: fleet.toPosition,
+            metal: debris.metal,
+            crystal: debris.crystal,
+          },
+        });
+      }
+
       await tx.planet.update({
         where: { id: target.id },
         data: {
