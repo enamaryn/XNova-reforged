@@ -120,7 +120,24 @@ Côté web : `instrumentation.ts` (serveur Node et edge, `onRequestError`), `ins
 `app/global-error.tsx` (erreurs de rendu), tunnel `/monitoring` exclu de la redirection de langue. Côté API : `src/monitoring/sentry.ts`
 (profilage chargé seulement avec un DSN ; son échec n'empêche pas le démarrage). Node ≥ 20.19 requis ; le profilage Node demande la
 compilation native de `@sentry/profiling-node` (`npm ci` sans `--ignore-scripts` en production).
-**À valider avant l'ouverture publique** : fournir un DSN réel dans l'environnement de production et vérifier qu'une erreur de test apparaît.
+**Activer le suivi sur un serveur installé par l'installateur** : le fichier `.env` est géré par l'installateur (toute clé inconnue est refusée) ; le DSN se fournit donc par un fichier de surcharge systemd, hors du dépôt :
+
+```bash
+sudo systemctl edit xnova-api     # crée /etc/systemd/system/xnova-api.service.d/override.conf
+# contenu :
+#   [Service]
+#   Environment="SENTRY_DSN=https://<clé>@<hôte>/<projet>"
+sudo systemctl edit xnova-web     # même contenu : erreurs du serveur Next (SENTRY_DSN)
+sudo systemctl restart xnova-api xnova-web
+sudo chmod 600 /etc/systemd/system/xnova-*.service.d/override.conf
+```
+
+Vérification : `SENTRY_DSN='https://…' npm run sentry:test` (depuis le dossier du projet) envoie un événement de test, attend la
+confirmation d'envoi et affiche son identifiant — sans jamais afficher le DSN. Le journal de l'API affiche « Sentry initialisé pour
+l'environnement : … » au démarrage ; en production sans DSN, il affiche un avertissement. Les erreurs du **navigateur** exigent
+`NEXT_PUBLIC_SENTRY_DSN` **à la compilation** du site web (`npm run build -w @xnova/web`) : tant qu'il n'est pas fourni à ce moment,
+seuls l'API et le serveur Next sont suivis.
+**À valider avant l'ouverture publique** : fournir un DSN réel dans l'environnement de production et vérifier qu'une erreur de test apparaît (commande ci-dessus).
 
 ## Déploiement : procédure et vérification de l'installation
 
