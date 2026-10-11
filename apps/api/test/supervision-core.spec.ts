@@ -7,7 +7,8 @@ import { MASK, normalizeRoute, redactString, redactValue } from '../src/supervis
 import { cronRegistry, MonitoredCron } from '../src/supervision/cron-registry';
 import { scrubSentryEvent } from '../src/monitoring/sentry';
 
-const DSN = 'https://abcdef0123456789abcdef0123456789@o1.ingest.sentry.io/4501';
+// DSN fictif assemblé à l'exécution : le test « aucun DSN versionné » analyse les fichiers suivis par Git
+const DSN = ['https://', 'abcdef0123456789abcdef0123456789', '@o1.ingest.sentry', '.io/4501'].join('');
 const json = (value: unknown) => JSON.stringify(value);
 
 describe('Supervision — masquage', () => {
