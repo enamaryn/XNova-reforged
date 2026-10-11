@@ -106,10 +106,10 @@ Toutes les décisions listées dans la version précédente sont prises et appli
 Constatés dans le code, le satellite solaire par un essai sur serveur de test ; documentés (⚠️) dans la [FAQ](docs/FAQ.md). Aucun n'est un constat du registre d'audit ; à arbitrer par le propriétaire (corriger, ou retirer/masquer l'élément trompeur).
 
 - [x] **Satellites solaires** : corrigés le 11 octobre 2026. Une fois construit, un satellite est en orbite de la planète et fournit 50 d'énergie (valeur fixe, pas de température) ; il ne peut jamais être envoyé (refusé par l'API, absent de la page Flotte) ; livraison et destruction règlent la production sans effet rétroactif. Test d'intégration `solar-satellites`.
-- [ ] **Tir rapide non appliqué** par le moteur de combat, alors que les valeurs existent dans la configuration des vaisseaux.
-- [ ] **Centrale à fusion** : ne consomme pas de deutérium (description inexacte) et la *Technologie Énergie* n'augmente pas sa production ; à niveau égal elle produit moins qu'une centrale solaire.
-- [ ] **Éléments constructibles sans effet** : terraformeur (le nombre de cases ne change pas), dépôt d'alliance, silo de missiles (missiles non proposés), bâtiments lunaires (aucune lune), recycleur (ni champ de débris ni mission de recyclage).
-- [ ] **Technologies sans effet propre** : Ordinateur (pas de limite de flottes), Laser, Ions, Plasma, Réseau de recherche, Expédition, Hyperespace ne servent que de prérequis.
+- [x] **Tir rapide** : corrigé le 11 octobre 2026. À chaque tir, si la cible est d'un type contre lequel le vaisseau a un tir rapide de valeur n, il rejoue avec la probabilité (n−1)/n (aussi pour la flotte stationnée qui défend) ; tests `combat-rapidfire` (statistique : ≈ n tirs en moyenne). L'Étoile de la mort n'en a pas encore.
+- [x] **Centrale à fusion** : corrigée le 11 octobre 2026. Elle brûle du deutérium (10·n·1,1^n par heure, ×vitesse du serveur) et son énergie vaut 30·n·(1,05 + 0,01·Énergie)^n : plus rentable que la solaire à partir d'Énergie 3 environ ; changement de niveau d'Énergie réglé sans effet rétroactif sur toutes les planètes du joueur.
+- [~] **Éléments constructibles sans effet** : terraformeur corrigé (+5 cases par niveau, n'occupe aucune case ; migration des planètes existantes) ; dépôt d'alliance, silo de missiles et bâtiments lunaires **masqués et refusés** par l'API tant que leurs fonctions (maintien de position, missiles, lunes) n'existent pas ; **recycleur** : champs de débris et recyclage à venir (PR dédiée).
+- [x] **Technologies** : *Ordinateur* limite désormais les flottes en vol (1 + 1 par niveau, compteur sur la page Flotte, vérifié sous verrou) ; *Énergie* relève la fusion ; descriptions de Hyperespace, Laser, Ions, Plasma corrigées (prérequis, « aucun effet direct ») ; réseau de recherche et expédition masqués et refusés.
 
 ## Critères de sortie obligatoires
 

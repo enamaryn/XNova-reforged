@@ -31,7 +31,7 @@ export const TECHNOLOGIES: Record<number, Technology> = {
   108: {
     id: 108,
     name: "Technologie Ordinateur",
-    description: "Augmente le nombre de flottes simultanées",
+    description: "Chaque niveau autorise une flotte en vol de plus (1 flotte + 1 par niveau)",
     baseCost: { metal: 0, crystal: 400, deuterium: 600 },
     factor: 1.8,
     category: "basic",
@@ -40,7 +40,7 @@ export const TECHNOLOGIES: Record<number, Technology> = {
   113: {
     id: 113,
     name: "Technologie Énergie",
-    description: "Requis pour certains bâtiments et technologies",
+    description: "Relève le rendement des centrales à fusion ; requis pour certains bâtiments, vaisseaux et défenses",
     baseCost: { metal: 0, crystal: 800, deuterium: 400 },
     factor: 1.8,
     category: "basic",
@@ -49,7 +49,7 @@ export const TECHNOLOGIES: Record<number, Technology> = {
   114: {
     id: 114,
     name: "Technologie Hyperespace",
-    description: "Permet le voyage intergalactique",
+    description: "Requis pour la propulsion hyperespace et les plus gros vaisseaux (aucun effet direct)",
     baseCost: { metal: 0, crystal: 4000, deuterium: 2000 },
     factor: 1.8,
     category: "advanced",
@@ -146,7 +146,7 @@ export const TECHNOLOGIES: Record<number, Technology> = {
   120: {
     id: 120,
     name: "Technologie Laser",
-    description: "Augmente la puissance des armes laser",
+    description: "Requis pour les artilleries laser et les technologies avancées (aucun effet direct)",
     baseCost: { metal: 200, crystal: 100, deuterium: 0 },
     factor: 1.8,
     category: "combat",
@@ -155,7 +155,7 @@ export const TECHNOLOGIES: Record<number, Technology> = {
   121: {
     id: 121,
     name: "Technologie Ions",
-    description: "Augmente la puissance des armes à ions",
+    description: "Requis pour l'artillerie à ions et la technologie plasma (aucun effet direct)",
     baseCost: { metal: 1000, crystal: 300, deuterium: 100 },
     factor: 1.8,
     category: "combat",
@@ -164,7 +164,7 @@ export const TECHNOLOGIES: Record<number, Technology> = {
   122: {
     id: 122,
     name: "Technologie Plasma",
-    description: "Augmente la puissance des armes à plasma",
+    description: "Requis pour le canon à plasma et les plus puissants vaisseaux (aucun effet direct)",
     baseCost: { metal: 2000, crystal: 4000, deuterium: 1000 },
     factor: 1.8,
     category: "combat",

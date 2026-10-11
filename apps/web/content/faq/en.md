@@ -42,12 +42,13 @@ French, English, Spanish, German, Italian (header selector). Known limit: the **
 | **Metal mine / Crystal mine** (*Mine de Métal / de Cristal*) | produce metal / crystal (they consume energy) |
 | **Deuterium synthesizer** (*Synthétiseur de Deutérium*) | produces deuterium (consumes the most energy) |
 | **Solar power plant** (*Centrale Électrique Solaire*) | supplies energy to the mines |
-| **Fusion power plant** (*Centrale Électrique de Fusion*) | supplies more energy; requires synthesizer level 5 and *Energy technology* level 3 |
+| **Fusion power plant** (*Centrale Électrique de Fusion*) | supplies more energy by burning deuterium; requires synthesizer level 5 and *Energy technology* level 3; its output rises with Energy technology |
 | **Robotics factory** (*Usine de Robots*) | divides building construction time (time ÷ (1 + level)) |
 | **Nanite factory** (*Usine de Nanites*) | divides it again (÷ 2 per level); requires robotics 10 and *Computer* 10; very expensive |
 | **Shipyard** (*Hangar*) | allows building ships and defenses and speeds them up; its level gates almost every requirement |
 | **Metal storage / Crystal storage / Deuterium tank** (*Hangar de Métal / de Cristal, Réservoir de Deutérium*) | increase storage capacity |
 | **Research lab** (*Laboratoire de Recherche*) | allows research and speeds it up |
+| **Terraformer** (*Terraformeur*) | adds 5 fields per level and uses no field; requires *Energy technology* 12 |
 
 **How much does a building cost and how does the cost grow?**
 The next level costs `base cost × factor^current level`. Example, the metal mine (base 60 metal / 15 crystal, factor 1.5): level 1 → 60 / 15; level 10 → 2,306 / 576. The cost is **charged at launch**.
@@ -62,13 +63,16 @@ One per planet at the start; **two** after the *Gestion des chantiers* research 
 Yes, from the queue: the amount charged is **refunded exactly**. There is no demolition of an already built level.
 
 **What are a planet's "fields"?**
-Each starter planet has **163 fields**. Each built level of a building (except storage buildings) uses **one**, so you cannot max everything. Choose your levels.
+Each starter planet has **163 fields**. Each built level of a building (except storage buildings and the terraformer) uses **one**, so you cannot max everything. Choose your levels; the **terraformer** adds 5 fields per level.
 
 **What is the difference between "Hangar" and the "shipyard"?**
 They are the same building (id 21): the "Hangar" in the lists is the yard where ships and defenses are built. Do not confuse it with **storage** hangars.
 
-**⚠️ Some buildings can be built but have no effect today.**
-The **terraformer** (requires *Energy technology* 12) does not increase the number of fields; the **alliance depot**, the **missile silo** (no missile is available) and the **moon** buildings (moon base, sensor phalanx, jump gate: the game does not create moons) change nothing in the game for now. Do not invest in them.
+**Is the terraformer useful?**
+Yes: each level adds **5 fields** to the planet and the terraformer **uses no field** itself (it requires *Energy technology* 12, which reserves it for the late game).
+
+**Why can't I see the alliance depot, the missile silo or the moon buildings?**
+Because they depend on features that do not exist yet (hold position, missiles, moons): they are no longer offered or accepted, so nobody invests in a building with no effect.
 
 ---
 
@@ -78,10 +82,10 @@ The **terraformer** (requires *Energy technology* 12) does not increase the numb
 Mines consume energy; power plants produce it. As long as production covers consumption, mines run at 100 %. Otherwise **all mines slow down proportionally** (production at 50 % of the needed energy = 50 % of metal, crystal and deuterium). The production level and energy balance are shown on the overview.
 
 **How much energy does each building produce and consume?**
-Per level `n`: solar plant `20 × n × 1.1^n`; fusion plant `30 × n × 1.05^n`; metal and crystal mine consumption `10 × n × 1.1^n`, deuterium synthesizer `20 × n × 1.1^n`. Examples: solar plant level 10 → 518; fusion level 10 → 488; metal mine level 10 → consumes 260.
+Per level `n`: solar plant `20 × n × 1.1^n`; fusion plant `30 × n × (1.05 + 0.01 × Energy)^n`; metal and crystal mine consumption `10 × n × 1.1^n`, deuterium synthesizer `20 × n × 1.1^n`. Examples: solar plant level 10 → 518; fusion level 10 → 488 (Energy 0) or 647 (Energy 3); metal mine level 10 → consumes 260.
 
 **Which power plant should I choose?**
-The solar plant: cheap, no requirements. At equal level the fusion plant produces **less** than a solar plant in the current engine (level 10: 488 versus 518) and has costly requirements: it is not worthwhile today. ⚠️ The fusion plant **does not consume deuterium** (despite its description) and *Energy technology* does not increase its output: it is a requirement, not a bonus.
+The solar plant: cheap, no requirements. The **fusion plant** requires synthesizer level 5 and *Energy technology* 3 and **burns deuterium** (`10 × n × 1.1^n` per hour, multiplied by the server speed), but produces more as Energy technology rises: with *Energy* 3, a level 10 fusion plant gives 647 energy against 518 for a solar plant of the same level, at a cost of about 259 deuterium per hour; with *Energy* 0 it gives only 488. It pays off when fields are scarce and Energy technology is advanced; the solar plant stays better early on.
 
 **Do solar satellites give energy?**
 **Yes.** As soon as it is built, a solar satellite (212: 2,000 crystal and 500 deuterium, buildable from shipyard level 1) is **directly in orbit around the planet** and permanently supplies it with **50 energy**, in addition to the power plants. The energy counts from delivery: production for time already elapsed is not changed. Example: 3 satellites = 150 energy. The value is fixed (the game has no planet temperature).
@@ -116,11 +120,13 @@ One research at a time per player, paid at launch, requiring a laboratory level 
 | **Impulse drive** (*Réacteur à Impulsion*, 117) | +20 % speed per level for large cargo, heavy fighter, colony ship, recycler, bomber |
 | **Hyperspace propulsion** (*Propulsion Hyperespace*, 118) | +30 % speed per level for cruiser, battleship, destroyer, death star, battlecruiser; +5 %/level cargo capacity for attack loot |
 | **Espionage technology** (*Technologie Espionnage*, 106) | sets the detail of espionage reports (compared with the target's, see §5) |
+| **Energy technology** (*Technologie Énergie*, 113) | raises the output of fusion plants (+0.01 on the 1.05 base per level) |
+| **Computer technology** (*Technologie Ordinateur*, 108) | **1 fleet in flight as a base, +1 per level** (see §6) |
 | **Construction management** (*Gestion des chantiers*, 125) | 2nd simultaneous building construction |
 | **Parallel production** (*Production parallèle*, 126) | extra production lines at the shipyard |
 
 **And the others?**
-Energy (113), Computer (108), Hyperspace (114), Laser (120), Ion (121), Plasma (122), Intergalactic research network (123), Expedition (124), Graviton (199) mainly serve as **requirements** to unlock buildings, ships and defenses. ⚠️ Despite their descriptions, *Computer* does not limit the number of fleets (there is no limit), *Laser/Ion/Plasma* do not improve weapons, and *Expedition* has no associated mission. Each card shows its exact requirements.
+Hyperspace (114), Laser (120), Ion (121), Plasma (122) and Graviton (199) are pure **requirements** to unlock buildings, ships and defenses (their descriptions say "no direct effect"). *Energy* also raises the fusion plant's output (see §3). The **intergalactic research network** and **expedition** are not offered until their features exist.
 
 **Which research first?**
 *Energy* (requirement for fusion and several defenses), then the combustion drive for faster transports, then *Military/Defense/Shield* depending on your combat plans.
@@ -163,7 +169,17 @@ With **espionage probes**: the espionage mission accepts only probes. A probe co
 Nothing today: combat computes debris (30 % of the metal and crystal of destroyed **ships**) but there is no debris field and no recycling mission. Do not build recyclers for now.
 
 **Do ships have "rapid fire"?**
-⚠️ Rapid-fire values exist in the configuration, but the combat engine **does not apply them** yet: every ship fires once per round at a randomly chosen target.
+Yes. When a ship hits a target of a type it has rapid fire against, with value `n`, it **fires again with probability (n − 1) / n**, and so on: on average `n` shots against that type. Other targets give no extra shots. This also applies to the stationed fleet that defends.
+
+| Ship | Rapid fire against (value) |
+|---|---|
+| Light fighter | Probe ×5, Rocket launcher ×10 |
+| Heavy fighter | Light fighter ×3, Probe ×5, Rocket launcher ×10 |
+| Cruiser | Light fighter ×6, Probe ×5, Rocket launcher ×10, Light laser ×10 |
+| Bomber | Rocket launcher ×20, Light laser ×20, Heavy laser ×10 |
+| Battlecruiser | Cruiser ×3 |
+
+Other ships (including the Death star, for now) have no rapid fire.
 
 **How do I colonize?**
 *Colonization* mission with a colony ship to a **free position**: the colony is founded and the ship consumed. Maximum **21 planets** per player.
@@ -179,7 +195,7 @@ Nothing today: combat computes debris (30 % of the metal and crystal of destroye
 Distance: `√(Δgalaxy² × 20,000 + Δsystem² × 95 + Δposition² × 5)`. Fleet speed: that of its **slowest ship** (with drive bonuses). Duration: `(35,000 / speed %) × √(distance × 10 / speed) + 10` seconds, divided by the server fleet speed. Fuel (deuterium, charged at **departure**): `Σ count × consumption × (distance / 35,000) × (speed / 1,000 + 1)²`. Example with 10 small cargos: same system (4 positions) 0 deuterium; 10 systems away 10; another galaxy 14. A lower speed lengthens the flight (10 % to 100 %).
 
 **Can I send several fleets at once?**
-Yes, with no limit on the number today (the *Computer* technology does not limit it).
+Within your slots: **1 fleet in flight as a base, plus 1 per level of the *Computer* technology**. Fleets that are returning still count. The "Fleets in flight: x/y" counter is shown on the *Fleet* page, and the game refuses the next send when all slots are taken.
 
 **How do I recall a fleet?**
 From *Movements*, while it is on its outbound flight and has not arrived: it turns around and the return takes as long as the distance already travelled. A fleet that has arrived or is already returning cannot be recalled.
@@ -195,7 +211,7 @@ It can also carry cargo, but loot only uses the **free space** left in the survi
 ## 7. Combat
 
 **How does a fight go?**
-Up to **6 rounds**. Each round, every attacker unit and then every defender unit fires once at an enemy unit **chosen at random**. Damage removes shield first, then hull; a unit with no hull is destroyed. At the end of each round, **shields regenerate by 70 %** of their maximum. Combat stops when one side is destroyed or after 6 rounds (draw).
+Up to **6 rounds**. Each round, every attacker unit and then every defender unit fires at an enemy unit **chosen at random** (and fires again according to its **rapid fire**, see §5). Damage removes shield first, then hull; a unit with no hull is destroyed. At the end of each round, **shields regenerate by 70 %** of their maximum. Combat stops when one side is destroyed or after 6 rounds (draw).
 
 **Which technology bonuses apply?**
 *Military* (+10 % weapon per level), *Defense* (+10 % hull), *Shield* (+10 % shield), applied to all your units, ships **and** defenses. Each side uses its own levels.
@@ -274,6 +290,7 @@ It is based on **power**; your rank appears in the header and the overview. Losi
 | "Ressources insuffisantes" | You lack metal, crystal or deuterium (fuel is added to the deuterium cargo for a flight). |
 | "Prérequis manquants : …" | The detail lists the building or technology levels to reach. |
 | "Capacité de construction atteinte" | The planet's queue is full: wait or unlock *Gestion des chantiers* (2 queues). |
+| "Nombre maximal de flottes en vol atteint" | All your fleet slots are taken: wait for a fleet to return or raise the *Computer* technology (§6). |
 | "Plus de champs disponibles" | The planet has no fields left (163): spend the last fields on useful buildings, or colonize. |
 | "Aucune planète à cette position" | Attack and espionage only target an existing planet; to colonize, the position must be **free**. |
 | "Une mission d'espionnage n'accepte que des sondes d'espionnage" | Send only probes (210). |
@@ -286,6 +303,6 @@ It is based on **power**; your rank appears in the header and the overview. Losi
 
 ## 11. What does not exist yet
 
-Officers, market, events, moons, missiles, recycling and debris fields, expeditions, group attacks, a fleet limit from *Computer*, terraformer effect, rapid fire. The matching items (buildings, ships, technologies) sometimes appear in lists and can be bought **with no effect**: read the ⚠️ above before investing. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
+Officers, market, events, moons, missiles, recycling and debris fields, expeditions, group attacks, hold position. Buildings and technologies that depend on them (alliance depot, missile silo, moon buildings, research network, expedition) are not offered. The recycler exists but is useless until recycling exists: read the ⚠️ above before investing. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
 
 *This FAQ was checked against the code (`packages/game-config`, `packages/game-engine`, API) and, for solar satellites, by an automated integration test (`solar-satellites.integration.spec.ts`).*

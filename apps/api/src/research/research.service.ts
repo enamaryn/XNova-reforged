@@ -1,4 +1,9 @@
-import { SATELLITES_INCLUDE, countSatellites } from '../common/satellites';
+import {
+  ENERGY_SOURCES_INCLUDE,
+  ENERGY_TECH_ID,
+  energySourcesOf,
+  settleBeforeEnergyChange,
+} from '../common/energy';
 import {
   BadRequestException,
   ForbiddenException,
@@ -8,12 +13,13 @@ import {
 import { ServerConfigService } from '../server-config/server-config.service';
 import {
   BUILDINGS,
+  IMPLEMENTED_TECHNOLOGIES,
   TECHNOLOGIES,
   getTechnologyCost,
 } from '@xnova/game-config';
 import { calculateEnergyBalance } from '@xnova/game-engine';
 import { DatabaseService } from '../database/database.service';
-import { debitResources, lockUser } from '../common/atomic';
+import { debitResources, lockPlanet, lockUser } from '../common/atomic';
 import { GameEventsGateway } from '../game-events/game-events.gateway';
 
 @Injectable()
@@ -48,7 +54,7 @@ export class ResearchService {
     const { maxTechnologyLevel, researchCostMultiplier, gameSpeed } =
       await this.serverConfig.getConfig();
 
-    const technologies = Object.values(TECHNOLOGIES).map((tech) => {
+    const technologies = IMPLEMENTED_TECHNOLOGIES.map((id) => TECHNOLOGIES[id]).map((tech) => {
       const currentLevel = techLevels[tech.id] || 0;
       const rawCost = getTechnologyCost(tech.id, currentLevel);
       const cost = this.applyCostMultiplier(rawCost, researchCostMultiplier);
@@ -124,6 +130,9 @@ export class ResearchService {
     const tech = TECHNOLOGIES[techId];
     if (!tech) {
       throw new BadRequestException(`Technologie ${techId} inexistante`);
+    }
+    if (!IMPLEMENTED_TECHNOLOGIES.includes(techId)) {
+      throw new BadRequestException(`${tech.name} n'est pas disponible dans cette version`);
     }
 
     const activeQueue = await this.database.researchQueue.findFirst({
@@ -331,6 +340,9 @@ export class ResearchService {
       where: { userId_techId: { userId: queueEntry.userId, techId: queueEntry.techId } },
     });
 
+    const energyConfig =
+      queueEntry.techId === ENERGY_TECH_ID ? await this.serverConfig.getResourceConfig() : null;
+
     const finalized = await this.database.$transaction(async (tx) => {
       // Prise en charge atomique : ignore une recherche deja annulee ou terminee
       const claimed = await tx.researchQueue.updateMany({
@@ -338,6 +350,20 @@ export class ResearchService {
         data: { completed: true },
       });
       if (claimed.count !== 1) return false;
+
+      // Technologie Énergie : le rendement des centrales à fusion change pour toutes les planètes du joueur,
+      // à partir de maintenant (la production passée est réglée avec l'ancien niveau). Verrous dans l'ordre des ids.
+      if (energyConfig) {
+        const planets = await tx.planet.findMany({
+          where: { userId: queueEntry.userId },
+          select: { id: true },
+          orderBy: { id: 'asc' },
+        });
+        for (const { id } of planets) {
+          await lockPlanet(tx, id);
+          await settleBeforeEnergyChange(tx, id, energyConfig, { energyTechnology: queueEntry.level });
+        }
+      }
 
       if (existing) {
         await tx.technology.update({
@@ -377,7 +403,7 @@ export class ResearchService {
   private async getPlanetOrFail(planetId: string, userId: string) {
     const planet = await this.database.planet.findUnique({
       where: { id: planetId },
-      include: SATELLITES_INCLUDE,
+      include: ENERGY_SOURCES_INCLUDE,
     });
 
     if (!planet) {
@@ -403,6 +429,7 @@ export class ResearchService {
       crystalStorage: number;
       deuteriumStorage: number;
       ships?: Array<{ amount: number }>;
+      user?: { technologies?: Array<{ level: number }> } | null;
     },
     required: number | undefined,
   ) {
@@ -416,7 +443,7 @@ export class ResearchService {
       metalStorage: planet.metalStorage,
       crystalStorage: planet.crystalStorage,
       deuteriumStorage: planet.deuteriumStorage,
-      solarSatellites: countSatellites(planet),
+      ...energySourcesOf(planet),
     });
     return { ok: available >= needed, required: needed, available };
   }

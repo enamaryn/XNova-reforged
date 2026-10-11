@@ -1,4 +1,4 @@
-import { SATELLITES_INCLUDE, countSatellites } from '../common/satellites';
+import { ENERGY_SOURCES_INCLUDE, energySourcesOf } from '../common/energy';
 import {
   ForbiddenException,
   Injectable,
@@ -104,7 +104,7 @@ export class ResourcesService {
   private async refreshPlanet(planetId: string, userId: string) {
     const planet = await this.database.planet.findUnique({
       where: { id: planetId },
-      include: SATELLITES_INCLUDE,
+      include: ENERGY_SOURCES_INCLUDE,
     });
 
     if (!planet) {
@@ -159,6 +159,7 @@ export class ResourcesService {
     crystalStorage: number;
     deuteriumStorage: number;
     ships?: Array<{ amount: number }>;
+    user?: { technologies?: Array<{ level: number }> } | null;
   }): ResourceLevels {
     return {
       metalMine: planet.metalMine,
@@ -169,7 +170,7 @@ export class ResourcesService {
       metalStorage: planet.metalStorage,
       crystalStorage: planet.crystalStorage,
       deuteriumStorage: planet.deuteriumStorage,
-      solarSatellites: countSatellites(planet),
+      ...energySourcesOf(planet),
     };
   }
 

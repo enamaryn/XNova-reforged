@@ -102,4 +102,31 @@ export const IMPLEMENTED_DEFENSES: readonly number[] = [
 /** Boucliers planétaires : une seule unité par planète. */
 export const SINGLE_UNIT_DEFENSES: readonly number[] = [407, 408];
 
+/**
+ * Bâtiments réellement fonctionnels : les autres (dépôt d'alliance, silo de missiles, bâtiments lunaires) dépendent
+ * de fonctions absentes (maintien de position, missiles, lunes) et ne sont ni proposés ni acceptés.
+ */
+export const IMPLEMENTED_BUILDINGS: readonly number[] = [
+  1, 2, 3, 4, 12, 14, 15, 21, 22, 23, 24, 31, 33,
+];
+
+/**
+ * Technologies réellement fonctionnelles : le réseau de recherche intergalactique (123) et l'expédition (124)
+ * dépendent de fonctions absentes et ne sont ni proposés ni acceptés.
+ */
+export const IMPLEMENTED_TECHNOLOGIES: readonly number[] = [
+  106, 108, 109, 110, 111, 113, 114, 115, 117, 118, 120, 121, 122, 125, 126, 199,
+];
+
+/** Cases ajoutées par niveau de terraformeur (le terraformeur lui-même n'occupe pas de case). */
+export const TERRAFORMER_FIELDS_PER_LEVEL = 5;
+export const TERRAFORMER_ID = 33;
+
+/** Technologie Ordinateur : une flotte en vol de base, plus une par niveau. */
+export const COMPUTER_TECH_ID = 108;
+export const BASE_FLEET_SLOTS = 1;
+export function maxFleetSlots(computerTechnologyLevel: number): number {
+  return BASE_FLEET_SLOTS + Math.max(0, Math.floor(computerTechnologyLevel || 0));
+}
+
 export * from "./production-queue";

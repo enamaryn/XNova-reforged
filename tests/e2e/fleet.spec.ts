@@ -90,10 +90,15 @@ test('envoi flotte', async ({ page }) => {
   const shipRow = page.getByText('Petit Transporteur');
   await expect(shipRow).toBeVisible();
 
+  // Emplacements de flottes : 1 de base (technologie Ordinateur à 0)
+  await expect(page.getByTestId('fleet-slots')).toContainText('0/1');
+
   const shipInput = shipRow.locator('..').locator('..').getByRole('spinbutton');
   await shipInput.fill('1');
 
   await page.getByRole('button', { name: 'Envoyer la flotte' }).click();
   // Transport (mission 3) vers la planète cible : la flotte apparaît dans les mouvements actifs
   await expect(page.getByText(/Mission 3/)).toBeVisible();
+  // Le compteur reflète la flotte en vol : tous les emplacements sont pris
+  await expect(page.getByTestId('fleet-slots')).toContainText('1/1');
 });

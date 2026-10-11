@@ -3,7 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import { DatabaseService } from '../../src/database/database.service';
 import { ShipyardService } from '../../src/shipyard/shipyard.service';
 import { ServerConfigService } from '../../src/server-config/server-config.service';
-import { settleBeforeSatelliteChange } from '../../src/common/satellites';
+import { settleBeforeEnergyChange } from '../../src/common/energy';
 import { buildTestUser, cleanupTestUser, createIntegrationApp, registerAndLogin } from './helpers';
 
 /**
@@ -139,7 +139,7 @@ describe('API integration - satellites solaires', () => {
     await database.ship.create({ data: { planetId, shipId: 212, amount: 3 } });
 
     const config = await serverConfig.getResourceConfig();
-    await database.$transaction((tx) => settleBeforeSatelliteChange(tx, planetId, config, -3));
+    await database.$transaction((tx) => settleBeforeEnergyChange(tx, planetId, config, { satellitesDelta: -3 }));
     await database.ship.delete({ where: { planetId_shipId: { planetId, shipId: 212 } } });
 
     const planet = await database.planet.findUniqueOrThrow({ where: { id: planetId } });

@@ -9,6 +9,7 @@ export interface AvailableShip {
 export interface AvailableShipsResponse {
   planetId: string;
   ships: AvailableShip[];
+  fleetSlots?: { inFlight: number; max: number };
 }
 
 export interface ActiveFleet {

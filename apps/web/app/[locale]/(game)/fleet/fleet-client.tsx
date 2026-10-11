@@ -243,6 +243,8 @@ export default function FleetClient() {
       setShipSelection({});
       setCargo({ metal: 0, crystal: 0, deuterium: 0 });
       queryClient.invalidateQueries({ queryKey: ['fleet-active'] });
+      // Vaisseaux restants et emplacements de flottes en vol
+      queryClient.invalidateQueries({ queryKey: ['fleet-available'] });
     },
   });
 
@@ -266,6 +268,14 @@ export default function FleetClient() {
           <div className="mt-4 grid gap-4">
             <div className="rounded-2xl bg-slate-900/60 p-4">
               <p className="text-sm text-slate-300">{t('fleet.availableShips')}</p>
+              {shipsData?.fleetSlots && (
+                <p data-testid="fleet-slots" className="mt-1 text-xs text-slate-400">
+                  {t('fleet.slots', {
+                    used: shipsData.fleetSlots.inFlight,
+                    max: shipsData.fleetSlots.max,
+                  })}
+                </p>
+              )}
               <div className="mt-3 grid gap-2 sm:grid-cols-2">
                 {shipsLoading && (
                   <div className="rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-slate-400">

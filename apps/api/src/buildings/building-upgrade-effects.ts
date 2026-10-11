@@ -3,7 +3,11 @@ import {
   TECHNOLOGIES,
   SHIPS,
   DEFENSES,
+  IMPLEMENTED_BUILDINGS,
   IMPLEMENTED_DEFENSES,
+  IMPLEMENTED_TECHNOLOGIES,
+  TERRAFORMER_FIELDS_PER_LEVEL,
+  TERRAFORMER_ID,
 } from "@xnova/game-config";
 import {
   calculateMineProduction,
@@ -181,7 +185,15 @@ export function getBuildingUpgradeEffects(
       true,
     );
   }
-  if (!storageResource) {
+  if (buildingId === TERRAFORMER_ID) {
+    add(
+      "fields",
+      "Cases libres sur la planète",
+      "fields",
+      planet.fieldsMax - planet.fieldsUsed,
+      planet.fieldsMax - planet.fieldsUsed + TERRAFORMER_FIELDS_PER_LEVEL,
+    );
+  } else if (!storageResource) {
     add(
       "fields",
       "Cases libres sur la planète",
@@ -192,8 +204,8 @@ export function getBuildingUpgradeEffects(
   }
   const levelsAfter = { ...buildingLevels, [buildingId]: nextLevel };
   const candidates = [
-    ...Object.values(BUILDINGS),
-    ...Object.values(TECHNOLOGIES),
+    ...IMPLEMENTED_BUILDINGS.map((id) => BUILDINGS[id]),
+    ...IMPLEMENTED_TECHNOLOGIES.map((id) => TECHNOLOGIES[id]),
     ...Object.values(SHIPS),
     ...IMPLEMENTED_DEFENSES.map((id) => DEFENSES[id]),
   ];

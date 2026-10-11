@@ -152,6 +152,7 @@ Uptime en production (action du propriétaire, après mise à jour) ; mesure de 
 ```bash
 # API de production démarrée sur une base dédiée (voir « Conditions d'exécution »)
 # FLEET_SHARE=0.15 (facultatif) : part des actions consacrée aux flottes (vaisseaux requis, voir BOOST_CMD)
+# Depuis la limite de flottes en vol, doter aussi les comptes de la technologie Ordinateur (108) niveau ≥ 20
 # BOOST_CMD="commande" (facultatif) : exécutée avant le palier pour doter les comptes (psql, etc.)
 PLAYERS=200 RAMP_S=60 HOLD_S=600 IDLE_S=70 OUT=docs/audits/load-test-AAAA-MM-JJ.json npm run load
 ```

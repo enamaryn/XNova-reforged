@@ -39,6 +39,7 @@
     "subtitle": "Préparez vos mouvements et missions.",
     "compose": "Composer une flotte",
     "availableShips": "Vaisseaux disponibles",
+    "slots": "Flottes en vol : {used}/{max} (la technologie Ordinateur ajoute une flotte par niveau)",
     "mission": "Mission",
     "destination": "Destination",
     "active": "Flottes en cours",

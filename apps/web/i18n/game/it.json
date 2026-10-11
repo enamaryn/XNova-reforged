@@ -39,6 +39,7 @@
     "subtitle": "Prepara i tuoi movimenti e le tue missioni.",
     "compose": "Comporre una flotta",
     "availableShips": "Navi disponibili",
+    "slots": "Flotte in volo: {used}/{max} (la tecnologia Informatica aggiunge una flotta per livello)",
     "mission": "Missione",
     "destination": "Destinazione",
     "active": "Flotte in corso",

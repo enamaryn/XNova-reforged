@@ -24,8 +24,8 @@ export class BuildingsController {
   @Get('buildings')
   async getAllBuildings() {
     // Importer directement la config pour avoir la liste complete
-    const { BUILDINGS } = await import('@xnova/game-config');
-    return Object.values(BUILDINGS).map((b) => ({
+    const { BUILDINGS, IMPLEMENTED_BUILDINGS } = await import('@xnova/game-config');
+    return IMPLEMENTED_BUILDINGS.map((id) => BUILDINGS[id]).map((b) => ({
       id: b.id,
       name: b.name,
       description: b.description,

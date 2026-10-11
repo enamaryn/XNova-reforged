@@ -26,6 +26,8 @@ export interface ResourceLevels {
   deuteriumStorage: number;
   /** Satellites solaires en orbite de la planète : chacun fournit de l'énergie en permanence. */
   solarSatellites?: number;
+  /** Niveau de la technologie Énergie du joueur : augmente le rendement de la centrale à fusion. */
+  energyTechnology?: number;
 }
 
 export interface ResourceState {
@@ -79,6 +81,11 @@ export function calculateMineProduction(levels: ResourceLevels): ProductionRates
   };
 }
 
+/** Deutérium consommé par heure (avant vitesse du serveur) par la centrale à fusion. */
+export function calculateFusionDeuteriumConsumption(level: number) {
+  return calculateMineOutput(10, level);
+}
+
 export function calculateEnergyBalance(levels: ResourceLevels) {
   const used =
     calculateMineOutput(10, levels.metalMine) +
@@ -87,7 +94,7 @@ export function calculateEnergyBalance(levels: ResourceLevels) {
 
   const available =
     calculateMineOutput(20, levels.solarPlant) +
-    calculateFusionOutput(levels.fusionPlant) +
+    calculateFusionOutput(levels.fusionPlant, levels.energyTechnology ?? 0) +
     calculateSatelliteEnergy(levels.solarSatellites ?? 0);
 
   return {
@@ -138,6 +145,9 @@ export function updateResources(input: ResourceUpdateInput): ResourceUpdateResul
     productionMultiplier,
     productionLevel
   );
+  // La centrale à fusion brûle du deutérium en permanence (indépendamment du niveau de production)
+  adjustedProduction.deuterium -=
+    calculateFusionDeuteriumConsumption(input.levels.fusionPlant) * productionMultiplier;
   const baseIncome = applyBaseIncome(config.baseIncome, productionMultiplier);
 
   const produced = calculateProducedResources(
@@ -191,9 +201,11 @@ export function calculateSatelliteEnergy(count: number) {
   return satellites * PRODUCTION_CONSTANTS.SOLAR_SATELLITE_ENERGY;
 }
 
-function calculateFusionOutput(level: number) {
+/** 30 × niveau × (1,05 + 0,01 × technologie Énergie)^niveau. */
+export function calculateFusionOutput(level: number, energyTechnology = 0) {
   if (level <= 0) return 0;
-  return 30 * level * Math.pow(1.05, level);
+  const tech = Math.max(0, Math.floor(Number.isFinite(energyTechnology) ? energyTechnology : 0));
+  return 30 * level * Math.pow(1.05 + 0.01 * tech, level);
 }
 
 function calculateStorage(level: number, config: ResourceConfig) {

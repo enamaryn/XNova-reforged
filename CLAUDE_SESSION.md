@@ -5,6 +5,18 @@
 
 ---
 
+## Session — correction des écarts de gameplay (PR A)
+
+**Date :** 11 octobre 2026. **Demande du propriétaire :** corriger les 4 écarts constatés dans la FAQ.
+
+- [x] **Tir rapide** appliqué au combat (`fireRound` : rejoue avec la probabilité (n−1)/n ; garde-fou de 200 tirs).
+- [x] **Fusion** : consomme du deutérium ; énergie 30·n·(1,05+0,01·Énergie)^n ; sources d'énergie (satellites, technologie Énergie) chargées par `common/energy.ts` partout ; règlement sans effet rétroactif à la livraison de satellites, à leur destruction et à la fin de la recherche Énergie (toutes les planètes du joueur).
+- [x] **Terraformeur** : +5 cases par niveau, n'occupe aucune case ; migration SQL `20261011100000_terraformer_adds_fields`.
+- [x] **Ordinateur** : flottes en vol = 1 + niveau (verrou joueur, `fleetSlots` dans `/fleet/available`, compteur sur la page Flotte, rafraîchi après envoi).
+- [x] **Éléments masqués et refusés** : dépôt d'alliance, silo, bâtiments lunaires, réseau de recherche, expédition (`IMPLEMENTED_BUILDINGS`/`IMPLEMENTED_TECHNOLOGIES`) ; descriptions corrigées.
+- [x] Tests : unitaires 94/94, intégration 293/293 (`game-rules-corrections` : 7 ; `combat-rapidfire` : 6), E2E 42, FAQ (5 langues) et roadmap mis à jour.
+- **Reste (PR B)** : champs de débris et mission de recyclage (recycleur).
+
 ## Session — satellites solaires et page FAQ
 
 **Date :** 11 octobre 2026. **Demande du propriétaire :** les satellites solaires doivent fournir de l'électricité, rester en orbite de leur planète et ne jamais être envoyés ; la FAQ doit avoir une page dédiée publique et une entrée dans le menu de gauche.
