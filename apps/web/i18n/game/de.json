@@ -1015,7 +1015,8 @@
       "last_test_failed": "Der letzte Test ist fehlgeschlagen",
       "unreachable": "Nicht erreichbar",
       "disabled": "Deaktiviert",
-      "none": "Nichts zu melden"
+      "none": "Nichts zu melden",
+      "low_memory": "Verfügbarer Speicher fast erschöpft"
     },
     "stats": {
       "open": "Offene Vorfälle",
