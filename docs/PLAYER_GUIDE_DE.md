@@ -1,6 +1,6 @@
 # Spielerhandbuch — XNova Reforged
 
-> Version `v0.2.0` (private Alpha). Dieses Handbuch beschreibt, was das Spiel heute tatsächlich tut. Sprachen: [Français](GUIDE_JOUEUR.md) · [English](PLAYER_GUIDE_EN.md) · [Español](PLAYER_GUIDE_ES.md) · [Deutsch](PLAYER_GUIDE_DE.md) · [Italiano](PLAYER_GUIDE_IT.md).
+> Version `v0.2.0` (private Alpha). Dieses Handbuch beschreibt, was das Spiel heute tatsächlich tut. Sprachen: [Français](GUIDE_JOUEUR.md) · [English](PLAYER_GUIDE_EN.md) · [Español](PLAYER_GUIDE_ES.md) · [Deutsch](PLAYER_GUIDE_DE.md) · [Italiano](PLAYER_GUIDE_IT.md). FAQ: [FAQ_DE.md](FAQ_DE.md).
 
 ## 1. Erste Schritte
 
@@ -52,7 +52,7 @@ Eine Flotte im Flug kann unter *Bewegungen* **zurückgerufen** werden. Die Ergeb
 
 ## 6. Kampf
 
-- Höchstens 6 Runden; manche Schiffe haben **Schnellfeuer** gegen andere Typen.
+- Höchstens 6 Runden; **Schnellfeuer** wird vom Kampfsystem noch nicht angewendet.
 - 30 % der Kosten zerstörter Schiffe werden zu **Trümmern**.
 - Jede zerstörte **Verteidigungsanlage** wird nach dem Kampf mit 70 % Wahrscheinlichkeit repariert.
 - **Beute**: bis zu 50 % der Rohstoffe des Ziels, **begrenzt auf den freien Platz in den überlebenden Schiffen** des Siegers; der Rest wird nicht mitgenommen.

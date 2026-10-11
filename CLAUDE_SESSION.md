@@ -5,6 +5,15 @@
 
 ---
 
+## Session — FAQ du jeu en cinq langues
+
+**Date :** 11 octobre 2026. **Demande du propriétaire :** FAQ du jeu (bâtiments, vaisseaux, puissance, utilisation, satellites solaires, défense…).
+
+- [x] `docs/FAQ.md` (fr) + `FAQ_EN/ES/DE/IT.md` : bases, bâtiments, énergie et satellites solaires, recherches, vaisseaux, flottes, combat, défense, puissance/commandant, messages d'erreur, éléments absents. Valeurs tirées du code (`game-config`, `game-engine`, API), formules recalculées, noms du jeu conservés en français.
+- [x] **Écarts constatés** (⚠️ dans la FAQ, listés dans `ROADMAP_MVP.md`) : **les satellites solaires ne produisent aucune énergie** (essai : 10 satellites, bilan inchangé, alors que leur description l'annonce) ; tir rapide non appliqué ; fusion sans consommation de deutérium et moins productive qu'une solaire ; terraformeur, dépôt d'alliance, silo, bâtiments lunaires, recycleur sans effet ; plusieurs technologies purement prérequis.
+- [x] Guides joueur corrigés (le tir rapide n'est pas appliqué) et reliés à la FAQ.
+- **Décision à prendre :** corriger ces écarts (surtout les satellites solaires) ou retirer les éléments trompeurs.
+
 ## Session — clôture d'OPS-03
 
 **Date :** 11 octobre 2026. **Décision du propriétaire :** fermer OPS-03.

@@ -1,6 +1,6 @@
 # Player guide — XNova Reforged
 
-> Version `v0.2.0` (private alpha). This guide describes what the game actually does today. Languages: [Français](GUIDE_JOUEUR.md) · [English](PLAYER_GUIDE_EN.md) · [Español](PLAYER_GUIDE_ES.md) · [Deutsch](PLAYER_GUIDE_DE.md) · [Italiano](PLAYER_GUIDE_IT.md).
+> Version `v0.2.0` (private alpha). This guide describes what the game actually does today. Languages: [Français](GUIDE_JOUEUR.md) · [English](PLAYER_GUIDE_EN.md) · [Español](PLAYER_GUIDE_ES.md) · [Deutsch](PLAYER_GUIDE_DE.md) · [Italiano](PLAYER_GUIDE_IT.md). FAQ: [FAQ_EN.md](FAQ_EN.md).
 
 ## 1. Getting started
 
@@ -52,7 +52,7 @@ A fleet in flight can be **recalled** from *Movements*. Results arrive in *Repor
 
 ## 6. Combat
 
-- 6 rounds at most; some ships have **rapid fire** against other types.
+- 6 rounds at most; **rapid fire** is not applied by the combat engine yet.
 - 30% of the cost of destroyed ships becomes **debris**.
 - Each destroyed **defense** is repaired with a 70% chance after the battle.
 - **Loot**: up to 50% of the target's resources, **limited to the space left in the winner's surviving ships**; the rest is not carried off.

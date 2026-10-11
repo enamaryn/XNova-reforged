@@ -1,6 +1,6 @@
 # Guía del jugador — XNova Reforged
 
-> Versión `v0.2.0` (alfa privada). Esta guía describe lo que el juego hace realmente hoy. Idiomas: [Français](GUIDE_JOUEUR.md) · [English](PLAYER_GUIDE_EN.md) · [Español](PLAYER_GUIDE_ES.md) · [Deutsch](PLAYER_GUIDE_DE.md) · [Italiano](PLAYER_GUIDE_IT.md).
+> Versión `v0.2.0` (alfa privada). Esta guía describe lo que el juego hace realmente hoy. Idiomas: [Français](GUIDE_JOUEUR.md) · [English](PLAYER_GUIDE_EN.md) · [Español](PLAYER_GUIDE_ES.md) · [Deutsch](PLAYER_GUIDE_DE.md) · [Italiano](PLAYER_GUIDE_IT.md). FAQ: [FAQ_ES.md](FAQ_ES.md).
 
 ## 1. Empezar
 
@@ -52,7 +52,7 @@ Una flota en vuelo puede **recuperarse** desde *Movimientos*. Los resultados lle
 
 ## 6. Combate
 
-- Máximo 6 rondas; algunas naves tienen **fuego rápido** contra otros tipos.
+- Máximo 6 rondas; el **fuego rápido** aún no lo aplica el motor de combate.
 - El 30 % del coste de las naves destruidas se convierte en **escombros**.
 - Cada **defensa** destruida se repara con un 70 % de probabilidad tras el combate.
 - **Botín**: hasta el 50 % de los recursos del objetivo, **limitado al espacio libre en las naves supervivientes** del vencedor; el resto no se lleva.
