@@ -5,6 +5,15 @@
 
 ---
 
+## Session — OPS-03 : compléments (refus interjoueur, succès sous charge, Lighthouse)
+
+**Date :** 11 octobre 2026.
+
+- [x] `ops03-access-control.integration.spec.ts` : 19 tentatives de B sur les données de A, toutes refusées (403/404), état inchangé ; 401 sans jeton.
+- [x] Harnais : option `BOOST_CMD` ; campagne dotée (200 joueurs, 5 min) : 0 erreur, 374 recherches et 124 vaisseaux acceptés.
+- [x] Lighthouse 12.8.2 : login/inscription 95–100 en mobile ; accueil mobile 67 (LCP 5,1 s, image de fond).
+- **Reste ouvert (OPS-03 non clos)** : uptime en production (propriétaire), mesure sur le serveur du propriétaire à ×50, envoi de flotte sous charge.
+
 ## Session — OPS-03 : validation de charge 200 joueurs à ×50
 
 **Date :** 10 octobre 2026.

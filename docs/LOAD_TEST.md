@@ -95,13 +95,30 @@ Rapport brut : [`docs/audits/load-test-2026-10-10.json`](audits/load-test-2026-1
 
 Tests unitaires de l'API (`jest --coverage`, 83 tests) : 52,8 % des instructions, 48,2 % des branches, 43,5 % des fonctions — uniquement les fichiers chargés par les unitaires ; la couverture de l'intégration n'est pas mesurée. Aucun seuil n'avait été fixé : mesure à titre indicatif.
 
+### Compléments du 11 octobre 2026
+
+**Chemin de succès des écritures sous charge.** Seconde campagne (200 joueurs, palier de 5 min, comptes dotés avant le palier par `BOOST_CMD` : ressources 900 000/900 000/300 000, laboratoire 4, chantier 3, robotique 2, technologies 115 et 106 au niveau 2) : [`load-test-boosted-2026-10-11.json`](audits/load-test-boosted-2026-10-11.json). 25 101 requêtes, 0 erreur, lectures p95 41 ms / p99 218 ms, écritures p95 32 ms / p99 274 ms ; **374 recherches et 124 constructions de vaisseaux acceptées**, 1 669 constructions de bâtiments acceptées, 735 messages. Seul `POST /fleet/send` reste intégralement refusé (400 × 239) : les comptes n'ont aucun vaisseau en stock, l'envoi de flotte n'a donc exercé que la validation.
+
+**Refus d'accès interjoueur.** Nouveau test d'intégration `ops03-access-control.integration.spec.ts` : un joueur B tente 19 lectures ou écritures sur les données de A (planète, ressources, renommage, bâtiments, construction, files, annulation de construction, technologies, recherche, chantier, défenses, flotte disponible, envoi de flotte, lecture et suppression d'un message). Résultat : 403 pour une planète d'autrui, 404 pour une file ou un message d'autrui (pas d'énumération d'identifiants), état de A strictement inchangé, aucun contenu privé dans les réponses ; sans jeton ou avec un jeton invalide : 401.
+
+**Lighthouse** (v12.8.2, Chromium, build de production local, [rapport](audits/lighthouse-2026-10-11.json), émulation mobile et bureau) :
+
+| Page | Mobile (perf / accès. / bonnes pratiques / SEO) | LCP mobile | Bureau (perf) |
+| --- | --- | ---: | ---: |
+| `/fr` (accueil) | 67 / 95 / 96 / 100 | 5,1 s | 99 |
+| `/fr/login` | 95 / 100 / 96 / 100 | 2,3 s | 100 |
+| `/fr/register` | 97 / 100 / 96 / 100 | 2,2 s | 100 |
+
+Constat : seule la page d'accueil mobile est faible ; l'élément le plus grand est l'image de fond `space-hero.webp` (LCP 5,1 s, TBT 556 ms ; gains estimés : 68 Kio de JavaScript inutilisé, 50 Kio d'images). Mesure sur la machine de développement avec la limitation réseau/CPU simulée de Lighthouse : à confirmer sur le serveur réel. Aucun seuil Lighthouse n'avait été fixé ; pages de jeu (authentifiées) non mesurées.
+
 ### Reste ouvert pour clore OPS-03
 
-Lighthouse (pages publiques), uptime en production (action du propriétaire, après mise à jour), test d'intégration de refus d'accès interjoueur, mesure sur le serveur du propriétaire avec le profil ×50, chemin de succès des écritures sous charge (recherche, chantier, flotte) avec des comptes préalablement dotés.
+Uptime en production (action du propriétaire, après mise à jour) ; mesure de charge ou de rythme sur le serveur du propriétaire avec le profil ×50 ; envoi de flotte sous charge avec vaisseaux en stock ; optimisation éventuelle de l'accueil mobile (hors périmètre de la validation).
 
 ## Reproduire
 
 ```bash
 # API de production démarrée sur une base dédiée (voir « Conditions d'exécution »)
+# BOOST_CMD="commande" (facultatif) : exécutée avant le palier pour doter les comptes (psql, etc.)
 PLAYERS=200 RAMP_S=60 HOLD_S=600 IDLE_S=70 OUT=docs/audits/load-test-AAAA-MM-JJ.json npm run load
 ```
