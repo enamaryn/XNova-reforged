@@ -351,7 +351,8 @@ describe('API integration - lunes', () => {
       await database.defense.create({ data: { planetId: moon.id, defenseId: 401, amount: 2 } });
       await database.defense.create({ data: { planetId: defender.planetId, defenseId: 401, amount: 7 } });
       await database.ship.create({ data: { planetId: attacker.planetId, shipId: 206, amount: 20 } });
-      await database.planet.update({ where: { id: attacker.planetId }, data: { deuterium: 100000 } });
+      // Positions de départ aléatoires : de quoi payer un vol entre galaxies éloignées
+      await database.planet.update({ where: { id: attacker.planetId }, data: { deuterium: 500_000_000 } });
       const planetBefore = await database.planet.findUniqueOrThrow({ where: { id: defender.planetId } });
 
       const res = await send(attacker, {

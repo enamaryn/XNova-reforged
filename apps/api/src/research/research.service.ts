@@ -14,8 +14,10 @@ import { ServerConfigService } from '../server-config/server-config.service';
 import {
   BUILDINGS,
   IMPLEMENTED_TECHNOLOGIES,
+  RESEARCH_NETWORK_TECH_ID,
   TECHNOLOGIES,
   getTechnologyCost,
+  linkedLabLevel,
 } from '@xnova/game-config';
 import { calculateEnergyBalance } from '@xnova/game-engine';
 import { DatabaseService } from '../database/database.service';
@@ -54,6 +56,7 @@ export class ResearchService {
     const queueBlocked = queue.length > 0;
     const { maxTechnologyLevel, researchCostMultiplier, gameSpeed } =
       await this.serverConfig.getConfig();
+    const lab = await this.labNetwork(userId, planet, techLevels[RESEARCH_NETWORK_TECH_ID] ?? 0);
 
     const technologies = IMPLEMENTED_TECHNOLOGIES.map((id) => TECHNOLOGIES[id]).map((tech) => {
       const currentLevel = techLevels[tech.id] || 0;
@@ -61,7 +64,7 @@ export class ResearchService {
       const cost = this.applyCostMultiplier(rawCost, researchCostMultiplier);
       const baseBuildTime = this.getResearchTimeSeconds({
         cost,
-        labLevel: planet.researchLab,
+        labLevel: lab.effectiveLab,
       });
       const buildTime = Math.max(1, Math.floor(baseBuildTime / gameSpeed));
       const requirements = this.checkTechRequirements(
@@ -118,6 +121,7 @@ export class ResearchService {
     return {
       planetId,
       technologies,
+      labNetwork: lab,
       resources: {
         metal: planet.metal,
         crystal: planet.crystal,
@@ -191,9 +195,10 @@ export class ResearchService {
       throw new BadRequestException('Ressources insuffisantes');
     }
 
+    const lab = await this.labNetwork(userId, planet, techLevels[RESEARCH_NETWORK_TECH_ID] ?? 0);
     const buildTimeSeconds = this.getResearchTimeSeconds({
       cost,
-      labLevel: planet.researchLab,
+      labLevel: lab.effectiveLab,
     });
     const adjustedTime = Math.max(1, Math.floor(buildTimeSeconds / gameSpeed));
 
@@ -534,6 +539,26 @@ export class ResearchService {
       deuterium: Math.floor(cost.deuterium * factor),
       energy: cost.energy ? Math.floor(cost.energy * factor) : undefined,
     };
+  }
+
+  /**
+   * Laboratoire effectif d'une recherche lancée sur `planet` : son laboratoire plus les `niveau du réseau`
+   * laboratoires les plus élevés des autres planètes du joueur (les lunes n'ont pas de laboratoire).
+   */
+  private async labNetwork(userId: string, planet: { id: string; researchLab: number }, networkLevel: number) {
+    const others =
+      networkLevel > 0
+        ? await this.database.planet.findMany({
+            where: { userId, isMoon: false, id: { not: planet.id }, researchLab: { gt: 0 } },
+            select: { researchLab: true },
+          })
+        : [];
+    const { effective, linked } = linkedLabLevel(
+      planet.researchLab,
+      others.map((p) => p.researchLab),
+      networkLevel,
+    );
+    return { networkLevel, ownLab: planet.researchLab, effectiveLab: effective, linked };
   }
 
   private getResearchTimeSeconds(params: {

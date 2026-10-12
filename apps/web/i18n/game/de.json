@@ -692,7 +692,8 @@
     "cannotStart": "Forschung konnte nicht gestartet werden.",
     "completedToast": "Forschung abgeschlossen: {name}{level}",
     "fallbackName": "Forschung",
-    "costNextLevel": "Kosten der nächsten Stufe"
+    "costNextLevel": "Kosten der nächsten Stufe",
+    "labNetwork": "Forschungsnetzwerk (Stufe {level}): wirksames Labor {effective} = lokales Labor {own} + {linked} verbundene(s) Labor(e) deiner anderen Planeten. Die Forschungszeiten berücksichtigen das."
   },
   "energy": {
     "deficitBadge": "DEFIZIT",

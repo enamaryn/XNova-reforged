@@ -692,7 +692,8 @@
     "cannotStart": "Impossibile avviare la ricerca.",
     "completedToast": "Ricerca completata: {name}{level}",
     "fallbackName": "Ricerca",
-    "costNextLevel": "Costo del livello successivo"
+    "costNextLevel": "Costo del livello successivo",
+    "labNetwork": "Rete di ricerca (livello {level}): laboratorio effettivo {effective} = laboratorio locale {own} + {linked} laboratorio/i collegato/i degli altri pianeti. I tempi di ricerca ne tengono conto."
   },
   "energy": {
     "deficitBadge": "DEFICIT",

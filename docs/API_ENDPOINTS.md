@@ -74,6 +74,10 @@ Les missiles se fabriquent par `/defense/build` (502, 503) dans la limite de 10 
 | POST | `/moons/:moonId/phalanx` | Balayage d'une planète d'un autre joueur à portée (`galaxy`, `system`, `position`) : mouvements de flotte (mission, sens, trajet, heure, nombre de vaisseaux) ; coûte 5 000 deutérium de la lune. |
 | POST | `/moons/:moonId/jump` | Saut instantané de vaisseaux (`toMoonId`, `ships`) vers une autre lune du joueur équipée d'une porte ; recharge des deux portes. |
 
+## Recherche : réseau intergalactique
+
+`GET /technologies?planetId=…` renvoie en plus `labNetwork` : `{ networkLevel, ownLab, effectiveLab, linked }`. Le temps de recherche (annoncé et réel) utilise `effectiveLab` = laboratoire de la planète + les `networkLevel` meilleurs laboratoires des autres planètes du joueur (lunes exclues).
+
 ## Chantier spatial (`/shipyard`)
 
 | Méthode | Endpoint | Description |

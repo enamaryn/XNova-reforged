@@ -155,6 +155,20 @@ export default function ResearchClient() {
         </p>
       </div>
 
+      {techData?.labNetwork && techData.labNetwork.networkLevel > 0 && (
+        <p
+          className="rounded-2xl border border-sky-500/30 bg-sky-500/5 px-4 py-3 text-sm text-sky-200"
+          data-testid="lab-network"
+        >
+          {t('research.labNetwork', {
+            effective: techData.labNetwork.effectiveLab,
+            own: techData.labNetwork.ownLab,
+            linked: techData.labNetwork.linked,
+            level: techData.labNetwork.networkLevel,
+          })}
+        </p>
+      )}
+
       <ContextHelp topic="research" />
 
       <div className="rounded-3xl border border-slate-800/80 bg-slate-950/60 p-6">
