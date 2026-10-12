@@ -1,3 +1,19 @@
+# Audit Performance — 12 octobre 2026 (PERF-MOBILE)
+
+**Mesure** : `node scripts/perf/lighthouse.mjs http://127.0.0.1:3000 3` (Lighthouse 12.8.2, médiane de 3 passages, build de production, Chromium headless, émulation mobile standard). Résultats : [docs/audits/lighthouse-2026-10-12.json](audits/lighthouse-2026-10-12.json).
+
+| Page | Mobile (avant → après) | Bureau |
+|---|---|---|
+| Accueil `/fr` | **67 → 96** (LCP 5,1 s → 2,7 s, TBT 556 ms → 0) | 100 |
+| Connexion | 95 → 100 | 100 |
+| Inscription | 97 → 99 | 100 |
+
+**Cause** : le SDK Sentry navigateur était initialisé de façon statique (`instrumentation-client.ts`) et pesait ~120 Ko de JavaScript sur toutes les pages, même sans DSN (~0,5 s de calcul sur mobile). Il n'est plus chargé que si `NEXT_PUBLIC_SENTRY_DSN` est compilé, ou à l'exécution si l'administrateur active Sentry (`lib/monitoring/sentry-loader.ts`). Les images des cartes de l'accueil partagent désormais la même requête que l'image principale (même qualité), au lieu d'un second téléchargement.
+
+Mesures hors accueil (pages de jeu, authentifiées) : non faites ; la variance d'un passage à l'autre est importante (71 à 91 sur le même build avant correction), d'où la médiane.
+
+---
+
 # Audit Performance - Initial
 
 **Date :** 2026-01-21

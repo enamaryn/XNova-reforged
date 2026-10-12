@@ -172,7 +172,7 @@ export default async function HomePage({
                   fill
                   loading="lazy"
                   sizes="(max-width: 768px) 100vw, 33vw"
-                  quality={60}
+                  quality={70}
                   className="-z-20 object-cover transition duration-500 group-hover:scale-105"
                   style={{ objectPosition: feature.imagePosition }}
                 />
