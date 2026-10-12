@@ -98,7 +98,7 @@ export const DEFENSES: Record<number, Defense> = {
     description: 'Missile d\'attaque à longue portée',
     cost: { metal: 12500, crystal: 2500, deuterium: 10000 },
     stats: { hull: 15000, shield: 0, weapon: 12000 },
-    requirements: { 44: 1, 117: 1 }, // Silo 1, Impulse 1
+    requirements: { 44: 4, 117: 1 }, // Silo 4, Impulse 1
   },
   503: {
     id: 503,
@@ -106,7 +106,7 @@ export const DEFENSES: Record<number, Defense> = {
     description: 'Missile anti-missile',
     cost: { metal: 8000, crystal: 0, deuterium: 2000 },
     stats: { hull: 8000, shield: 0, weapon: 1 },
-    requirements: { 44: 1, 117: 1 }, // Silo 1, Impulse 1
+    requirements: { 44: 1 }, // Silo 1
   },
 }
 

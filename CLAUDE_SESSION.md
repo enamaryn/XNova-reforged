@@ -5,6 +5,19 @@
 
 ---
 
+## Session — missiles interplanétaires
+
+**Date :** 13 octobre 2026. Demande du propriétaire : « passe à une fonction de jeu manquante ». Choix : les missiles (fonction autonome, le silo était construisible mais masqué).
+
+- [x] Règles communes `packages/game-config/src/missiles.ts` (capacité, portée, durée) et calcul pur `packages/game-engine/src/missiles.ts` (`resolveMissileStrike`).
+- [x] Schéma : table `MissileStrike` (migration `20261013100000_missile_strikes`).
+- [x] API `apps/api/src/missiles/` : `GET /missiles/:planetId`, `POST /missiles/launch`, résolution atomique (une seule fois) par la tâche `missiles` toutes les 10 s ; capacité du silo contrôlée à la fabrication ; les missiles stockés sont exclus du combat.
+- [x] Silo (44) et missiles (502, 503) proposés ; prérequis du missile interplanétaire : silo 4 + Réacteur à impulsion 1.
+- [x] Interface : panneau « Missiles interplanétaires » dans la page Défense (silo, stock, portée, lancement, historique, avertissement d'attaque), textes fr/en/es/de/it ; FAQ des 5 langues mise à jour.
+- [x] Tests : `missiles.spec.ts` (8), `missiles.integration.spec.ts` (7), E2E `missiles.spec.ts` (2) ; tests existants du silo masqué adaptés.
+- Hors périmètre : lunes, dépôt d'alliance, expéditions ; équilibrage des coûts non revu (coûts d'origine).
+
+
 ## Session — performance mobile, uptime, couverture
 
 **Date :** 12 octobre 2026. Demande du propriétaire : « performance mobile, mesure d'uptime, puis couverture de tests ».

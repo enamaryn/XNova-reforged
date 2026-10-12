@@ -96,7 +96,8 @@ export class CombatService {
     }, {} as Record<number, number>);
     // Les défenses de la planète combattent avec la flotte stationnée (SCOPE-01)
     const defenderDefenseRows = await this.database.defense.findMany({
-      where: { planetId: target.id, amount: { gt: 0 } },
+      // Les missiles du silo (502, 503) ne combattent pas : ils se règlent par leur propre frappe
+      where: { planetId: target.id, amount: { gt: 0 }, defenseId: { lt: 500 } },
       select: { defenseId: true, amount: true },
     });
     const defenderDefenses = defenderDefenseRows.reduce((acc, row) => {

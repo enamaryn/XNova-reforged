@@ -49,6 +49,15 @@ L’interface envoie l’en-tête `X-Locale` (`fr`, `en`, `es`, `de`, `it`) à c
 | POST | `/fleet/send` | Envoi de flotte (`SendFleetDto`). |
 | DELETE | `/fleet/:fleetId` | Rappel d’une flotte avant arrivée. |
 
+## Missiles interplanétaires (`/missiles`)
+
+| Méthode | Endpoint | Description |
+|---------|----------|-------------|
+| GET | `/missiles/:planetId` | Silo (niveau, capacité, stock, fabrications), portée, frappes lancées et subies (20 dernières). |
+| POST | `/missiles/launch` | Lance des missiles interplanétaires (`LaunchMissilesDto` : `planetId`, `toGalaxy`, `toSystem`, `toPosition`, `amount`, `primaryTarget?`). Même galaxie, portée 5 × niveau de Réacteur à impulsion − 1 systèmes. |
+
+Les missiles se fabriquent par `/defense/build` (502, 503) dans la limite de 10 par niveau de silo. La résolution est faite par la tâche planifiée `missiles` (toutes les 10 s).
+
 ## Chantier spatial (`/shipyard`)
 
 | Méthode | Endpoint | Description |
