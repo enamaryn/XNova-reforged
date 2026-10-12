@@ -92,9 +92,10 @@ jobs:
         run: npx prisma migrate deploy
         working-directory: packages/database
 
-      - name: Tests d'intégration
-        # Les suites partagent la même base et l'état global setup.completedAt.
-        run: npm run test:integration -- --runInBand
+      # Les suites d'intégration (une seule base, en série) tournent avec la couverture : les seuils fixés dans
+      # scripts/coverage/api-coverage.mjs (lignes et instructions 85 %, fonctions 80 %, branches 70 %) font échouer le job.
+      - name: Tests d'intégration et couverture de l'API
+        run: npm run test:coverage
 
   database:
     name: Migrations, sauvegarde et restauration
