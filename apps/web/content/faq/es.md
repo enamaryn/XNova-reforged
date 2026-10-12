@@ -215,6 +215,9 @@ En *Informes*.
 **¿Qué lleva la misión de ataque?**
 También puede llevar carga, pero el botín solo ocupa el **espacio libre** que queda en las naves supervivientes.
 
+**¿Cómo funciona el ataque en grupo?**
+La misión **Ataque en grupo** es para miembros de la **misma alianza** (objetivo: un jugador fuera de la alianza). El primer envío **crea un grupo** y fija la hora de llegada; los demás miembros se **unen** desde la página Flota (lista «Grupo» para las mismas coordenadas) y llegan a esa misma hora, siempre que su flota llegue a tiempo (si no, «Flota demasiado lenta»). Un grupo admite **5 flotas como máximo**. A la llegada, **un solo combate** reúne todas las flotas llegadas, cada una con **sus tecnologías y su comandante**; las pérdidas se cuentan por flota. El botín (como en un ataque simple, como máximo la mitad de las reservas) se **reparte en proporción a la capacidad libre de cada flota**. Cada participante recibe su informe, con la lista de participantes. Una flota retirada abandona el grupo.
+
 ---
 
 ## 7. Combate
@@ -318,6 +321,6 @@ Hasta **3 personajes** reclutados (250 000 deuterio, página Comandantes) y asig
 
 ## 11. Lo que aún no existe
 
-Mercado, eventos, ataques en grupo. La hoja de ruta del proyecto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) sigue estas discrepancias.
+Mercado, eventos. La hoja de ruta del proyecto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) sigue estas discrepancias.
 
 *Esta FAQ se ha comprobado con el código (`packages/game-config`, `packages/game-engine`, API) y, para los satélites solares, con una prueba de integración automatizada (`solar-satellites.integration.spec.ts`).*

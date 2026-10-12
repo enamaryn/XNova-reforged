@@ -41,6 +41,11 @@ export class SendFleetDto {
   @IsString()
   planetId: string;
 
+  // Attaque groupée (mission 2) : groupe existant à rejoindre ; absent = la flotte crée un nouveau groupe
+  @IsOptional()
+  @IsString()
+  groupId?: string;
+
   // Commandant de flotte assigné à cette flotte (libre, appartenant au joueur)
   @IsOptional()
   @IsString()

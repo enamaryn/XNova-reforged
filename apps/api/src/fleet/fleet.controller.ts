@@ -17,6 +17,11 @@ export class FleetController {
     return this.fleetService.getAvailableShips(planetId, userId);
   }
 
+  @Get('attack-groups')
+  getAttackGroups(@CurrentUser('id') userId: string) {
+    return this.fleetService.getOpenAttackGroups(userId);
+  }
+
   @Get('active')
   getActiveFleets(@CurrentUser('id') userId: string) {
     return this.fleetService.getActiveFleets(userId);

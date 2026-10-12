@@ -56,7 +56,8 @@
       "recycle": "Riciclaggio",
       "deploy": "Schieramento",
       "expedition": "Spedizione",
-      "hold": "Mantenimento della posizione"
+      "hold": "Mantenimento della posizione",
+      "acs": "Attacco di gruppo"
     },
     "summary": "Riepilogo della missione",
     "distance": "Distanza",
@@ -71,7 +72,11 @@
     "targetMoon": "Mira alla luna (stesse coordinate)",
     "expeditionHelp": "Invia la flotta nello spazio profondo (posizione 16 del sistema): a volte trova risorse o navi, ma può anche essere ritardata, attaccata dai pirati o inghiottita da un buco nero. Richiede la tecnologia Spedizione; il rapporto arriva all'atterraggio nella pagina Rapporti.",
     "holdHelp": "Mantenimento della posizione presso un alleato: la flotta resta in orbita attorno al suo pianeta o alla sua luna (fino a 32 h), lo difende se attaccato e poi rientra. Il carburante di mantenimento (un decimo del consumo all'ora) è pagato in anticipo; il deposito dell'alleanza dell'ospite può rimborsarlo. Bersaglio: un membro della tua alleanza.",
-    "holdHours": "Durata (ore, da 1 a 32)"
+    "holdHours": "Durata (ore, da 1 a 32)",
+    "acsHelp": "Colpisci un bersaglio nello stesso istante dei membri della tua alleanza: scegli un gruppo già annunciato per queste coordinate (arriverai con esso, se la tua flotta è abbastanza veloce) o creane uno nuovo.",
+    "acsGroup": "Gruppo",
+    "acsNew": "Nuovo gruppo (parto per primo)",
+    "acsEntry": "{creator} · {count}/{max} flotte · arrivo {time}"
   },
   "movement": {
     "kicker": "Centro traffico",
@@ -766,7 +771,10 @@
     "defenseLine": "{count} (distrutte {destroyed}, riparate {repaired})",
     "timeline": "Cronologia",
     "round": "Round {round}",
-    "moonCreated": "Lo scontro ha lasciato una luna!"
+    "moonCreated": "Lo scontro ha lasciato una luna!",
+    "participants": "Partecipanti all'attacco di gruppo",
+    "participantLine": "{ships} navi, {losses} perse",
+    "participantsNote": "Il bottino indicato è quello del gruppo; ogni flotta ne riporta una parte proporzionale al suo spazio libero."
   },
   "reports": {
     "kicker": "Combattimento",

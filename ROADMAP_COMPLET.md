@@ -563,7 +563,7 @@ Cette roadmap étend le MVP avec des fonctionnalités avancées pour créer un M
   - Trésorerie commune (taxes auto)
   - Diplomatie (guerre, NAP, alliance)
   - Quartier général (bâtiments alliance)
-- [ ] ACS (Alliance Combat System)
+- [x] ACS (Alliance Combat System) — livré le 19 octobre 2026 (voir ROADMAP_MVP.md ; sans chat ni coordination temps réel)
   - Attaques groupées synchronisées
   - Partage loot proportionnel
   - Rapport combat unifié
@@ -585,7 +585,7 @@ Cette roadmap étend le MVP avec des fonctionnalités avancées pour créer un M
   - Forum interne
   - Chat temps réel (Socket.io)
   - Calendrier événements
-- [ ] Interface ACS
+- [x] Interface ACS (liste des groupes sur la page Flotte ; sans compte à rebours dédié ni invitations nominatives)
   - Création attaque groupée
   - Invitation membres alliance
   - Synchronisation flottes

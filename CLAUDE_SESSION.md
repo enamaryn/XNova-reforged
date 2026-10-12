@@ -5,6 +5,19 @@
 
 ---
 
+## Session — attaques groupées (Phase 7)
+
+**Date :** 19 octobre 2026. Demande du propriétaire : « passe aux attaques groupées ». Vérification préalable : seule la valeur d'énumération `ACS_ATTACK = 2` existait ; aucune logique de groupe.
+
+- [x] Moteur : `simulateCombat` accepte des `attackerGroups` (technologies propres à chaque flotte, survivants par flotte), `mergeShipMaps`, `splitLoot` (partage du butin au prorata de la place libre, borné).
+- [x] Table `AttackGroup`, `Fleet.groupId`, `CombatReport.participants`, migration `20261019100000_attack_groups`.
+- [x] `CombatService` généralisé à plusieurs flottes (`resolveGroupAttack`) : combat unique, prise en charge atomique de toutes les flottes (rien n'est écrit si l'une a changé), butin partagé, un rapport par joueur, expérience de chaque commandant, groupe supprimé après le combat.
+- [x] Envoi : mission 2 (alliance obligatoire, cible hors alliance), création ou adhésion à un groupe (arrivée commune, flotte assez rapide, 5 flottes au maximum, verrou du groupe) ; `GET /fleet/attack-groups` ; nettoyage des groupes abandonnés.
+- [x] Interface : mission « Attaque groupée » et liste des groupes sur la page Flotte, participants dans le rapport, mouvements, textes fr/en/es/de/it, FAQ (5 langues), `API_ENDPOINTS.md`.
+- [x] Tests : unitaires (9), intégration (7), E2E (1).
+- Restent absents : marché, événements et quêtes.
+
+
 ## Session — commandants de flotte (Phase 6, suite)
 
 **Date :** 18 octobre 2026. Demande du propriétaire : « passe aux commandants de flotte ». Vérification préalable : aucun commandant de flotte n'existait (le « commandant » du code est le niveau de développement du joueur) ; les officiers passifs sont livrés (PR #69).

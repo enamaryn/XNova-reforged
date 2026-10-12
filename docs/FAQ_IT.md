@@ -215,6 +215,9 @@ Nei *Rapporti*.
 **Cosa trasporta la missione di attacco?**
 Può portare anche del carico, ma il bottino occupa solo lo **spazio libero** rimasto nelle navi sopravvissute.
 
+**Come funziona l'attacco di gruppo?**
+La missione **Attacco di gruppo** è per i membri della **stessa alleanza** (bersaglio: un giocatore fuori dall'alleanza). Il primo invio **crea un gruppo** e fissa l'ora di arrivo; gli altri membri vi **si uniscono** dalla pagina Flotta (elenco «Gruppo» per le stesse coordinate) e arrivano alla stessa ora, purché la loro flotta ci arrivi in tempo (altrimenti «Flotta troppo lenta»). Un gruppo conta **al massimo 5 flotte**. All'arrivo, **un solo combattimento** riunisce tutte le flotte arrivate, ciascuna con **le proprie tecnologie e il proprio comandante**; le perdite sono contate per flotta. Il bottino (come per un attacco semplice, al massimo la metà delle scorte) è **ripartito in proporzione allo spazio libero di ogni flotta**. Ogni partecipante riceve il proprio rapporto, con l'elenco dei partecipanti. Una flotta richiamata lascia il gruppo.
+
 ---
 
 ## 7. Combattimento
@@ -318,6 +321,6 @@ Fino a **3 personaggi** reclutati (250 000 deuterio, pagina Comandanti) e assegn
 
 ## 11. Ciò che non esiste ancora
 
-Mercato, eventi, attacchi di gruppo. La roadmap del progetto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tiene traccia di questi scarti.
+Mercato, eventi. La roadmap del progetto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tiene traccia di questi scarti.
 
 *Questa FAQ è stata verificata sul codice (`packages/game-config`, `packages/game-engine`, API) e, per i satelliti solari, con un test di integrazione automatizzato (`solar-satellites.integration.spec.ts`).*

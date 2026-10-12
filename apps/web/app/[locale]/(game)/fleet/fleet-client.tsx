@@ -13,7 +13,7 @@ import {
 import { useSearchParams } from 'next/navigation';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { usePlanetStore } from '@/lib/stores/planet-store';
-import { getActiveFleets, getAvailableShips, sendFleet } from '@/lib/api/fleet';
+import { getActiveFleets, getAttackGroups, getAvailableShips, sendFleet } from '@/lib/api/fleet';
 import { fleetCommandersApi } from '@/lib/api/fleet-commanders';
 import { researchApi } from '@/lib/api/research';
 import { useI18n } from '@/lib/i18n';
@@ -43,6 +43,7 @@ function formatNumber(value: number) {
 /** Identifiants de mission du serveur (MissionType) par option du formulaire. */
 const MISSION_IDS: Record<string, number> = {
   attaque: 1,
+  acs: 2,
   transport: 3,
   espionnage: 6,
   colonisation: 7,
@@ -63,6 +64,7 @@ export default function FleetClient() {
   const [toMoon, setToMoon] = useState(false);
   const [holdHours, setHoldHours] = useState(1);
   const [commanderId, setCommanderId] = useState('');
+  const [groupId, setGroupId] = useState('');
   const [nowMs, setNowMs] = useState(Date.now());
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
@@ -90,6 +92,7 @@ export default function FleetClient() {
       if (missionParam === 'recycle') setMission('recyclage');
       if (missionParam === 'expedition') setMission('expedition');
       if (missionParam === 'hold') setMission('maintien');
+      if (missionParam === 'acs') setMission('acs');
     }
 
     const galaxyValue = galaxyParam ? Number(galaxyParam) : null;
@@ -241,6 +244,22 @@ export default function FleetClient() {
   });
   const freeCommanders = (commandersData?.commanders ?? []).filter((c) => !c.busy);
 
+  const { data: groupsData } = useQuery({
+    queryKey: ['attack-groups'],
+    queryFn: getAttackGroups,
+    enabled: mission === 'acs',
+    refetchInterval: 10000,
+  });
+  // Groupes de mon alliance qui visent exactement ces coordonnées
+  const matchingGroups = (groupsData?.groups ?? []).filter(
+    (g) =>
+      g.target.galaxy === destination.galaxy &&
+      g.target.system === destination.system &&
+      g.target.position === destination.position &&
+      g.target.moon === toMoon,
+  );
+  const selectedGroupId = matchingGroups.some((g) => g.id === groupId) ? groupId : '';
+
   const sendMutation = useMutation({
     mutationFn: () =>
       sendFleet({
@@ -251,6 +270,7 @@ export default function FleetClient() {
         ...(toMoon ? { toMoon: true } : {}),
         ...(mission === 'maintien' ? { holdHours } : {}),
         ...(commanderId ? { commanderId } : {}),
+        ...(mission === 'acs' && selectedGroupId ? { groupId: selectedGroupId } : {}),
         // Seules les missions traitées par le serveur sont proposées (IMPLEMENTED_MISSIONS)
         mission: MISSION_IDS[mission] ?? 3,
         speedPercent,
@@ -263,6 +283,8 @@ export default function FleetClient() {
       setShipSelection({});
       setCargo({ metal: 0, crystal: 0, deuterium: 0 });
       setCommanderId('');
+      setGroupId('');
+      queryClient.invalidateQueries({ queryKey: ['attack-groups'] });
       queryClient.invalidateQueries({ queryKey: ['fleet-commanders'] });
       queryClient.invalidateQueries({ queryKey: ['fleet-active'] });
       // Vaisseaux restants et emplacements de flottes en vol
@@ -350,6 +372,7 @@ export default function FleetClient() {
                 {[
                   { id: 'transport', label: t('fleet.missions.transport') },
                   { id: 'attaque', label: t('fleet.missions.attack') },
+                  { id: 'acs', label: t('fleet.missions.acs') },
                   { id: 'espionnage', label: t('fleet.missions.spy') },
                   { id: 'colonisation', label: t('fleet.missions.colonize') },
                   { id: 'recyclage', label: t('fleet.missions.recycle') },
@@ -383,6 +406,32 @@ export default function FleetClient() {
                 <p className="mt-3 text-xs text-slate-400">
                   Envoyez uniquement des sondes d&apos;espionnage vers la planète d&apos;un autre joueur ; le rapport arrive à l&apos;atterrissage dans la page Rapports.
                 </p>
+              )}
+              {mission === 'acs' && (
+                <div className="mt-3 space-y-2" data-testid="acs-options">
+                  <p className="text-xs text-slate-400">{t('fleet.acsHelp')}</p>
+                  <label className="block text-xs uppercase tracking-[0.2em] text-slate-500">
+                    {t('fleet.acsGroup')}
+                    <select
+                      value={selectedGroupId}
+                      onChange={(event) => setGroupId(event.target.value)}
+                      data-testid="acs-group"
+                      className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm normal-case tracking-normal text-white outline-hidden focus:border-blue-400/60"
+                    >
+                      <option value="">{t('fleet.acsNew')}</option>
+                      {matchingGroups.map((g) => (
+                        <option key={g.id} value={g.id}>
+                          {t('fleet.acsEntry', {
+                            creator: g.creator,
+                            count: g.fleets,
+                            max: groupsData?.max ?? 5,
+                            time: new Date(g.arrivalTime).toLocaleTimeString(),
+                          })}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
               )}
               {mission === 'maintien' && (
                 <div className="mt-3 space-y-2" data-testid="hold-options">

@@ -213,6 +213,9 @@ Dans *Rapports* (combat) et *Messages* (espionnage, etc.).
 **Que transporte la mission d'attaque ?**
 Elle peut aussi emporter de la cargaison, mais le butin n'occupe que la **place libre** restante dans les vaisseaux survivants.
 
+**Comment fonctionne l'attaque groupée ?**
+Mission **Attaque groupée**, réservée aux membres d'une **même alliance** (cible : un joueur hors de l'alliance). Le premier envoi **crée un groupe** et fixe l'heure d'arrivée ; les autres membres le **rejoignent** depuis la page Flotte (liste « Groupe » pour les mêmes coordonnées) et arrivent à cette même heure, à condition que leur flotte puisse y être à temps (sinon « Flotte trop lente »). Un groupe compte **5 flottes au maximum**. À l'arrivée, un **seul combat** réunit toutes les flottes arrivées, chacune avec **ses technologies et son commandant** ; les pertes sont comptées par flotte. Le butin (comme pour une attaque simple, la moitié des stocks au plus) est **partagé au prorata de la place libre de chaque flotte**. Chaque participant reçoit son rapport, avec la liste des participants. Une flotte rappelée quitte le groupe.
+
 ---
 
 ## 7. Combat
@@ -316,6 +319,6 @@ Jusqu'à **3 personnages** recrutés (250 000 deutérium, page Commandants) et a
 
 ## 11. Ce qui n'existe pas encore
 
-Marché, événements, attaques groupées. La feuille de route du projet ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) suit ces écarts.
+Marché, événements. La feuille de route du projet ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) suit ces écarts.
 
 *Cette FAQ a été vérifiée contre le code (`packages/game-config`, `packages/game-engine`, API) et, pour les satellites solaires, par un test automatisé d'intégration (`solar-satellites.integration.spec.ts`).*

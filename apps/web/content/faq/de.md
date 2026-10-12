@@ -215,6 +215,9 @@ In den *Berichten*.
 **Was transportiert die Angriffsmission?**
 Sie kann auch Fracht mitführen, aber die Beute nutzt nur den **freien Platz**, der in den überlebenden Schiffen bleibt.
 
+**Wie funktioniert der Verbandsangriff?**
+Die Mission **Verbandsangriff** ist für Mitglieder **derselben Allianz** (Ziel: ein Spieler außerhalb der Allianz). Die erste gesendete Flotte **erstellt eine Gruppe** und legt die Ankunftszeit fest; andere Mitglieder **treten bei** über die Flottenseite (Liste „Gruppe“ für dieselben Koordinaten) und kommen zur selben Zeit an, sofern ihre Flotte rechtzeitig dort sein kann (sonst „Flotte zu langsam“). Eine Gruppe hat **höchstens 5 Flotten**. Bei der Ankunft vereint **ein einziger Kampf** alle angekommenen Flotten, jede mit **ihren eigenen Technologien und ihrem Kommandanten**; Verluste werden pro Flotte gezählt. Die Beute (wie beim einfachen Angriff höchstens die Hälfte der Vorräte) wird **im Verhältnis zur freien Kapazität jeder Flotte aufgeteilt**. Jeder Teilnehmer erhält seinen Bericht mit der Teilnehmerliste. Eine zurückgerufene Flotte verlässt die Gruppe.
+
 ---
 
 ## 7. Kampf
@@ -318,6 +321,6 @@ Bis zu **3 Charaktere**, rekrutiert (250 000 Deuterium, Seite Kommandanten) und 
 
 ## 11. Was es noch nicht gibt
 
-Markt, Ereignisse, Verbandsangriffe. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
+Markt, Ereignisse. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
 
 *Diese FAQ wurde gegen den Code (`packages/game-config`, `packages/game-engine`, API) und, für die Solarsatelliten, durch einen automatisierten Integrationstest (`solar-satellites.integration.spec.ts`) geprüft.*

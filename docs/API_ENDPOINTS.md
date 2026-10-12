@@ -74,6 +74,15 @@ Les missiles se fabriquent par `/defense/build` (502, 503) dans la limite de 10 
 | GET | `/officers` | Les cinq officiers (`intendant`, `admiral`, `engineer`, `geologist`, `technocrat`) avec bonus, état d'embauche, prix et bonus cumulés actifs. |
 | POST | `/officers/:type/hire` | Embauche définitive (`planetId` : planète du joueur qui paie 500 000 deutérium). 404 type inconnu ou planète étrangère, 409 déjà embauché, 400 deutérium insuffisant. Règle d'abord la production de toutes les planètes avec les anciens bonus. |
 
+## Attaques groupées (mission 2)
+
+| Méthode | Chemin | Description |
+| ------- | ------ | ----------- |
+| POST | `/fleet/send` (`mission: 2`) | Sans `groupId` : crée un groupe (le joueur doit être dans une alliance, la cible est hors de l'alliance et d'un autre joueur) et fixe l'arrivée. Avec `groupId` : rejoint le groupe de son alliance (404 groupe étranger ou inconnu, 400 autre cible, groupe déjà parti, flotte trop lente pour arriver à l'heure du groupe, groupe complet : 5 flottes). La réponse contient `groupId`. |
+| GET | `/fleet/attack-groups` | Groupes de l'alliance du joueur encore en route : `id`, `creator`, `target`, `arrivalTime`, `fleets`. |
+
+À l'arrivée, un seul combat réunit les flottes du groupe (technologies et commandant de chacune) ; butin partagé au prorata de la place libre ; un rapport par participant (`participants` dans le détail du rapport) ; le groupe est supprimé après le combat.
+
 ## Commandants de flotte (`/fleet-commanders`)
 
 | Méthode | Chemin | Description |
