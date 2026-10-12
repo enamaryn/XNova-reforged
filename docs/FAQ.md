@@ -69,8 +69,11 @@ C'est le même bâtiment (identifiant 21) : le « Hangar » des listes est le ch
 **Le terraformeur sert-il à quelque chose ?**
 Oui : chaque niveau ajoute **5 cases** à la planète et le terraformeur **n'occupe aucune case** lui-même (il exige *Technologie Énergie* 12, ce qui le réserve à la fin de partie).
 
-**Pourquoi ne vois-je pas le dépôt d'alliance ni les bâtiments lunaires ?**
-Parce qu'ils dépendent de fonctions qui n'existent pas encore (maintien de position, lunes) : ils ne sont plus proposés ni acceptés, pour que personne n'investisse dans un bâtiment sans effet.
+**Pourquoi ne vois-je pas le dépôt d'alliance, la phalange ni la porte de saut ?**
+Le dépôt d'alliance dépend du maintien de position, qui n'existe pas encore ; la phalange et la porte de saut ne sont pas encore livrées : ils ne sont ni proposés ni acceptés, pour que personne n'investisse dans un bâtiment sans effet.
+
+**Comment obtenir une lune, et à quoi sert-elle ?**
+Un combat contre une *planète* peut laisser une lune aux mêmes coordonnées : la chance est de 1 % par 100 000 unités de débris (métal + cristal) produites, plafonnée à 20 %. La lune appartient au propriétaire de la planète attaquée ; un combat contre une lune n'en crée pas. Elle apparaît dans la Galaxie (🌙) et dans le sélecteur de planète. Une lune **ne produit rien**, pas même le revenu de base : il faut y envoyer des ressources par transport. Elle naît avec 1 case ; la **Base lunaire** (qui ne se construit que sur une lune) ajoute 3 cases par niveau et en occupe une. On y construit aussi la robotique et le chantier spatial, pour y stationner vaisseaux et défenses. Les flottes peuvent partir d'une lune et la viser (case « Cibler la lune » de la page Flotte, boutons 🌙 de la Galaxie) pour transporter, déployer, espionner ou attaquer ; les missiles ne visent que les planètes.
 
 ---
 
@@ -301,6 +304,6 @@ Il est établi sur la **puissance** ; votre rang apparaît dans l'en-tête et la
 
 ## 11. Ce qui n'existe pas encore
 
-Officiers, marché, événements, lunes, expéditions, attaques groupées, maintien de position. Les bâtiments et technologies qui en dépendent (dépôt d'alliance, bâtiments lunaires, réseau de recherche, expédition) ne sont pas proposés. La feuille de route du projet ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) suit ces écarts.
+Officiers, marché, événements, expéditions, attaques groupées, maintien de position. Les bâtiments et technologies qui en dépendent (dépôt d'alliance, phalange, porte de saut, réseau de recherche, expédition) ne sont pas proposés. La feuille de route du projet ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) suit ces écarts.
 
 *Cette FAQ a été vérifiée contre le code (`packages/game-config`, `packages/game-engine`, API) et, pour les satellites solaires, par un test automatisé d'intégration (`solar-satellites.integration.spec.ts`).*

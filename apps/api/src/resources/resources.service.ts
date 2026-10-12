@@ -158,6 +158,7 @@ export class ResourcesService {
     metalStorage: number;
     crystalStorage: number;
     deuteriumStorage: number;
+    isMoon?: boolean;
     ships?: Array<{ amount: number }>;
     user?: { technologies?: Array<{ level: number }> } | null;
   }): ResourceLevels {
@@ -170,6 +171,7 @@ export class ResourcesService {
       metalStorage: planet.metalStorage,
       crystalStorage: planet.crystalStorage,
       deuteriumStorage: planet.deuteriumStorage,
+      isMoon: planet.isMoon,
       ...energySourcesOf(planet),
     };
   }

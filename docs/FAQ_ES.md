@@ -71,8 +71,11 @@ Es el mismo edificio (id 21): el «Hangar» de las listas es el astillero donde 
 **¿Sirve de algo el terraformador?**
 Sí: cada nivel añade **5 campos** al planeta y el terraformador **no ocupa ningún campo** (exige *Tecnología de energía* 12, lo que lo reserva para el final de la partida).
 
-**¿Por qué no veo el depósito de la alianza ni los edificios lunares?**
-Porque dependen de funciones que aún no existen (mantener posición, misiles, lunas): ya no se ofrecen ni se aceptan, para que nadie invierta en un edificio sin efecto.
+**¿Por qué no veo el depósito de la alianza, la falange ni el salto cuántico?**
+El depósito de la alianza depende de mantener posición, que aún no existe; la falange de sensores y la puerta de salto aún no están entregadas: no se ofrecen ni se aceptan, para que nadie invierta en un edificio sin efecto.
+
+**¿Cómo se obtiene una luna y para qué sirve?**
+Un combate contra un *planeta* puede dejar una luna en las mismas coordenadas: la probabilidad es del 1 % por cada 100 000 unidades de escombros (metal + cristal) producidas, con un máximo del 20 %. La luna pertenece al dueño del planeta atacado; un combate contra una luna no crea otra. Aparece en la Galaxia (🌙) y en el selector de planeta. Una luna **no produce nada**, ni siquiera los ingresos básicos: hay que enviarle recursos por transporte. Nace con 1 casilla; la **Base lunar** (solo en una luna) añade 3 casillas por nivel y ocupa una. También se construyen allí la fábrica de robots y el astillero, para estacionar naves y defensas. Las flotas pueden salir de una luna y apuntar a una (casilla «Apuntar a la luna» de la página Flota, botones 🌙 de la Galaxia) para transportar, desplegar, espiar o atacar; los misiles solo apuntan a planetas.
 
 ---
 
@@ -303,6 +306,6 @@ Se basa en el **poder**; su rango aparece en la cabecera y en la vista general. 
 
 ## 11. Lo que aún no existe
 
-Oficiales, mercado, eventos, lunas, expediciones, ataques en grupo, mantener posición. Los edificios y tecnologías que dependen de ello (depósito de la alianza, edificios lunares, red de investigación, expedición) no se ofrecen. La hoja de ruta del proyecto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) sigue estas discrepancias.
+Oficiales, mercado, eventos, expediciones, ataques en grupo, mantener posición. Los edificios y tecnologías que dependen de ello (depósito de la alianza, falange, puerta de salto, red de investigación, expedición) no se ofrecen. La hoja de ruta del proyecto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) sigue estas discrepancias.
 
 *Esta FAQ se ha comprobado con el código (`packages/game-config`, `packages/game-engine`, API) y, para los satélites solares, con una prueba de integración automatizada (`solar-satellites.integration.spec.ts`).*

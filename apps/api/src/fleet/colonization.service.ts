@@ -45,7 +45,7 @@ export class ColonizationService {
       const colonizers = Number(ships[COLONY_SHIP_ID] ?? 0);
       if (colonizers < 1) return { founded: null };
 
-      const owned = await tx.planet.count({ where: { userId: fleet.userId } });
+      const owned = await tx.planet.count({ where: { userId: fleet.userId, isMoon: false } });
       if (owned >= GAME_CONSTANTS.MAX_PLAYER_PLANETS) return { founded: null };
 
       // createMany + skipDuplicates : une position prise entre-temps ne fait pas echouer la transaction
@@ -85,10 +85,11 @@ export class ColonizationService {
 
       const planet = await tx.planet.findUniqueOrThrow({
         where: {
-          galaxy_system_position: {
+          galaxy_system_position_isMoon: {
             galaxy: fleet.toGalaxy,
             system: fleet.toSystem,
             position: fleet.toPosition,
+            isMoon: false,
           },
         },
         select: { id: true },

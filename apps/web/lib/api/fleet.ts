@@ -20,6 +20,8 @@ export interface ActiveFleet {
   toGalaxy: number;
   toSystem: number;
   toPosition: number;
+  fromMoon?: boolean;
+  toMoon?: boolean;
   mission: number;
   ships: Record<string, number>;
   cargo: Record<string, number>;
@@ -42,6 +44,7 @@ export interface SendFleetPayload {
   toGalaxy: number;
   toSystem: number;
   toPosition: number;
+  toMoon?: boolean;
   mission: number;
   speedPercent: number;
   ships: Record<string, number>;

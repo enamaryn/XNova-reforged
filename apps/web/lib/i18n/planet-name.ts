@@ -2,6 +2,7 @@
 const DEFAULT_NAMES: Record<string, string> = {
   "Planète Mère": "planet.homeworld",
   "Nouvelle colonie": "planet.newColony",
+  "Lune": "planet.moon",
 };
 
 /** Un nom choisi par le joueur est affiché tel quel ; seuls les noms par défaut sont traduits. */

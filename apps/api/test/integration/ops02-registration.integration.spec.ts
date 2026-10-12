@@ -24,7 +24,7 @@ describe('API integration - Inscription atomique (OPS-02)', () => {
   const findFreePosition = async (galaxy: number, system: number) => {
     for (let position = 1; position <= 15; position += 1) {
       const taken = await database.planet.findUnique({
-        where: { galaxy_system_position: { galaxy, system, position } },
+        where: { galaxy_system_position_isMoon: { galaxy, system, position, isMoon: false } },
       });
       if (!taken) return { galaxy, system, position };
     }

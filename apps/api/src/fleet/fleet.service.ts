@@ -98,6 +98,8 @@ export class FleetService {
         toGalaxy: true,
         toSystem: true,
         toPosition: true,
+        fromMoon: true,
+        toMoon: true,
         mission: true,
         ships: true,
         cargo: true,
@@ -142,27 +144,34 @@ export class FleetService {
 
     const shipsToSend = this.parseShips(dto.ships);
 
+    const toMoon = dto.toMoon === true;
     if (
       planet.galaxy === dto.toGalaxy &&
       planet.system === dto.toSystem &&
-      planet.position === dto.toPosition
+      planet.position === dto.toPosition &&
+      planet.isMoon === toMoon
     ) {
       throw new BadRequestException('La destination ne peut pas etre la planete d\'origine');
     }
 
     const target = await this.database.planet.findUnique({
       where: {
-        galaxy_system_position: {
+        galaxy_system_position_isMoon: {
           galaxy: dto.toGalaxy,
           system: dto.toSystem,
           position: dto.toPosition,
+          isMoon: toMoon,
         },
       },
       select: { userId: true },
     });
 
+    if (toMoon && (dto.mission === MissionType.COLONIZE || dto.mission === MissionType.RECYCLE)) {
+      throw new BadRequestException('Cette mission ne peut pas viser une lune');
+    }
+
     if (dto.mission === MissionType.ATTACK) {
-      if (!target) throw new BadRequestException('Aucune planete a cette position');
+      if (!target) throw new BadRequestException(toMoon ? 'Aucune lune a cette position' : 'Aucune planete a cette position');
       if (target.userId === userId) {
         throw new BadRequestException('Vous ne pouvez pas attaquer votre propre planete');
       }
@@ -185,7 +194,7 @@ export class FleetService {
         throw new BadRequestException('Une mission de colonisation exige un vaisseau de colonisation');
       }
       if (target) throw new BadRequestException('Cette position est deja occupee');
-      const owned = await this.database.planet.count({ where: { userId } });
+      const owned = await this.database.planet.count({ where: { userId, isMoon: false } });
       if (owned >= GAME_CONSTANTS.MAX_PLAYER_PLANETS) {
         throw new BadRequestException('Nombre maximal de planetes atteint');
       }
@@ -361,6 +370,8 @@ export class FleetService {
           toGalaxy: dto.toGalaxy,
           toSystem: dto.toSystem,
           toPosition: dto.toPosition,
+          fromMoon: planet.isMoon,
+          toMoon,
           mission: dto.mission,
           ships: shipsPayload,
           cargo,

@@ -10,8 +10,11 @@ import { ServerConfigService } from "../server-config/server-config.service";
 import {
   BUILDINGS,
   IMPLEMENTED_BUILDINGS,
+  MOON_BASE_FIELDS_PER_LEVEL,
+  MOON_BASE_ID,
   TERRAFORMER_FIELDS_PER_LEVEL,
   TERRAFORMER_ID,
+  buildingsAvailableFor,
   getBuildingCost,
   getBuildingTime,
   checkBuildingRequirements,
@@ -92,7 +95,7 @@ export class BuildingsService {
 
     const progression = await this.progression.get(userId);
     const capacityFull = queue.length >= progression.buildingCapacity;
-    const buildingsInfo = IMPLEMENTED_BUILDINGS.map((id) => BUILDINGS[id]).map((building) => {
+    const buildingsInfo = buildingsAvailableFor(planet.isMoon, IMPLEMENTED_BUILDINGS).map((id) => BUILDINGS[id]).map((building) => {
       const currentLevel = planetBuildings[building.id] || 0;
       const rawCost = getBuildingCost(building.id, currentLevel);
       const cost = this.applyCostMultiplier(rawCost, costFactor);
@@ -190,6 +193,13 @@ export class BuildingsService {
     }
     if (!IMPLEMENTED_BUILDINGS.includes(buildingId)) {
       throw new BadRequestException(`${itemName(building)} n'est pas disponible dans cette version`);
+    }
+    if (!buildingsAvailableFor(planet.isMoon, IMPLEMENTED_BUILDINGS).includes(buildingId)) {
+      throw new BadRequestException(
+        planet.isMoon
+          ? `${itemName(building)} ne se construit pas sur une lune`
+          : `${itemName(building)} ne se construit que sur une lune`,
+      );
     }
 
     // Verifier qu'il n'y a pas deja une construction en cours pour ce batiment
@@ -467,6 +477,11 @@ export class BuildingsService {
     // Chaque niveau de terraformeur ajoute des cases à la planète
     if (queueEntry.buildingId === TERRAFORMER_ID) {
       updateData.fieldsMax = { increment: TERRAFORMER_FIELDS_PER_LEVEL };
+    }
+
+    // Chaque niveau de base lunaire ajoute des cases à la lune
+    if (queueEntry.buildingId === MOON_BASE_ID) {
+      updateData.fieldsMax = { increment: MOON_BASE_FIELDS_PER_LEVEL };
     }
 
     const resourceConfig = await this.serverConfig.getResourceConfig();

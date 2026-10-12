@@ -7,6 +7,7 @@ export interface Planet {
   galaxy: number;
   system: number;
   position: number;
+  isMoon?: boolean;
 }
 
 export interface AuthUser {

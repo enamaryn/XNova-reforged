@@ -62,7 +62,8 @@
     "noShips": "Nessuna nave disponibile.",
     "colonyName": "Nome della colonia",
     "sending": "Invio...",
-    "send": "Invia la flotta"
+    "send": "Invia la flotta",
+    "targetMoon": "Mira alla luna (stesse coordinate)"
   },
   "movement": {
     "kicker": "Centro traffico",
@@ -724,7 +725,8 @@
     "homeworld": "Pianeta madre",
     "newColony": "Nuova colonia",
     "none": "Nessun pianeta",
-    "yours": "I tuoi pianeti ({count})"
+    "yours": "I tuoi pianeti ({count})",
+    "moon": "Luna"
   },
   "planetScene": {
     "active": "Pianeta attivo",
@@ -749,7 +751,8 @@
     "defenseFallback": "Difesa {id}",
     "defenseLine": "{count} (distrutte {destroyed}, riparate {repaired})",
     "timeline": "Cronologia",
-    "round": "Round {round}"
+    "round": "Round {round}",
+    "moonCreated": "Lo scontro ha lasciato una luna!"
   },
   "reports": {
     "kicker": "Combattimento",

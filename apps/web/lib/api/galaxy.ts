@@ -16,6 +16,7 @@ export interface GalaxyPosition {
   allianceTag?: string | null;
   activityMinutes?: number | null;
   hasMoon?: boolean;
+  moon?: { id: string; name: string } | null;
   isOwn?: boolean;
 }
 

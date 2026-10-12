@@ -38,13 +38,12 @@ export class GalaxyService implements OnModuleInit {
     }
 
     const planets = await this.database.planet.findMany({
-      where: { galaxy, system },
+      where: { galaxy, system, isMoon: false },
       select: {
         id: true,
         name: true,
         position: true,
         userId: true,
-        moonBase: true,
         user: {
           select: {
             id: true,
@@ -63,6 +62,13 @@ export class GalaxyService implements OnModuleInit {
         },
       },
     });
+
+    // Lunes du système : elles partagent les coordonnées de leur planète
+    const moons = await this.database.planet.findMany({
+      where: { galaxy, system, isMoon: true },
+      select: { id: true, name: true, position: true },
+    });
+    const moonMap = new Map(moons.map((moon) => [moon.position, moon]));
 
     const debrisFields = await this.database.debrisField.findMany({
       where: { galaxy, system, OR: [{ metal: { gte: 1 } }, { crystal: { gte: 1 } }] },
@@ -105,7 +111,8 @@ export class GalaxyService implements OnModuleInit {
         ownerId: planet.user?.id ?? null,
         allianceTag: planet.user?.allianceMember?.alliance?.tag ?? null,
         activityMinutes: isAbandoned ? null : activityMinutes,
-        hasMoon: planet.moonBase > 0,
+        hasMoon: moonMap.has(position),
+        moon: moonMap.get(position) ?? null,
         isOwn: planet.userId === userId,
         debris,
       };

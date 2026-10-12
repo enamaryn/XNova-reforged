@@ -133,7 +133,7 @@ export default function GalaxyClient() {
                       {slot.name} · {slot.owner}
                       {slot.allianceTag && ` · [${slot.allianceTag}]`}
                       {activityLabel && ` · ${t('galaxy.activity')} ${activityLabel}`}
-                      {slot.hasMoon && ` · ${t('galaxy.moon')}`}
+                      {slot.hasMoon && ` · 🌙 ${slot.moon?.name ?? t('galaxy.moon')}`}
                     </span>
                   ) : (
                     <span className="text-slate-400">{t('galaxy.freeSlot')}</span>
@@ -152,7 +152,18 @@ export default function GalaxyClient() {
                   {slot.occupied ? (
                     <>
                       {slot.isOwn ? (
-                        <span>{t('common.you')}</span>
+                        <>
+                          <span>{t('common.you')}</span>
+                          {slot.hasMoon && (
+                            <Link
+                              href={`/fleet?mission=transport&moon=1&galaxy=${galaxy}&system=${system}&position=${slot.position}`}
+                              data-testid="moon-transport-link"
+                              className="w-full rounded-full border border-sky-500/60 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-sky-200 hover:bg-sky-500/10 sm:w-auto"
+                            >
+                              🌙 {t('galaxy.transport')}
+                            </Link>
+                          )}
+                        </>
                       ) : (
                         <>
                           <Link
@@ -173,6 +184,24 @@ export default function GalaxyClient() {
                           >
                             {t('galaxy.transport')}
                           </Link>
+                          {slot.hasMoon && (
+                            <>
+                              <Link
+                                href={`/fleet?mission=spy&moon=1&galaxy=${galaxy}&system=${system}&position=${slot.position}`}
+                                data-testid="moon-spy-link"
+                                className="w-full rounded-full border border-sky-500/60 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-sky-200 hover:bg-sky-500/10 sm:w-auto"
+                              >
+                                🌙 {t('galaxy.spy')}
+                              </Link>
+                              <Link
+                                href={`/fleet?mission=attack&moon=1&galaxy=${galaxy}&system=${system}&position=${slot.position}`}
+                                data-testid="moon-attack-link"
+                                className="w-full rounded-full border border-sky-500/60 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-sky-200 hover:bg-sky-500/10 sm:w-auto"
+                              >
+                                🌙 {t('galaxy.attack')}
+                              </Link>
+                            </>
+                          )}
                         </>
                       )}
                     </>

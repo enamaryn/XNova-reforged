@@ -71,8 +71,11 @@ They are the same building (id 21): the "Hangar" in the lists is the yard where 
 **Is the terraformer useful?**
 Yes: each level adds **5 fields** to the planet and the terraformer **uses no field** itself (it requires *Energy technology* 12, which reserves it for the late game).
 
-**Why can't I see the alliance depot or the moon buildings?**
-Because they depend on features that do not exist yet (hold position, moons): they are no longer offered or accepted, so nobody invests in a building with no effect.
+**Why can't I see the alliance depot, the sensor phalanx or the jump gate?**
+The alliance depot depends on hold position, which does not exist yet; the sensor phalanx and the jump gate are not delivered yet: they are not offered or accepted, so nobody invests in a building with no effect.
+
+**How do I get a moon, and what is it for?**
+A battle against a *planet* can leave a moon at the same coordinates: the chance is 1% per 100,000 units of debris (metal + crystal) produced, capped at 20%. The moon belongs to the owner of the attacked planet; a battle against a moon never creates another. It shows in the Galaxy (🌙) and in the planet selector. A moon **produces nothing**, not even the base income: send it resources by transport. It starts with 1 field; the **Lunar base** (buildable only on a moon) adds 3 fields per level and uses one. You can also build the robotics factory and the shipyard there, to station ships and defences. Fleets can leave from a moon and target one (the "Target the moon" box on the Fleet page, the 🌙 buttons in the Galaxy) to transport, deploy, spy or attack; missiles only target planets.
 
 ---
 
@@ -303,6 +306,6 @@ It is based on **power**; your rank appears in the header and the overview. Losi
 
 ## 11. What does not exist yet
 
-Officers, market, events, moons, expeditions, group attacks, hold position. Buildings and technologies that depend on them (alliance depot, moon buildings, research network, expedition) are not offered. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
+Officers, market, events, expeditions, group attacks, hold position. Buildings and technologies that depend on them (alliance depot, sensor phalanx, jump gate, research network, expedition) are not offered. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
 
 *This FAQ was checked against the code (`packages/game-config`, `packages/game-engine`, API) and, for solar satellites, by an automated integration test (`solar-satellites.integration.spec.ts`).*

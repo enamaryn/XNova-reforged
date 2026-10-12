@@ -6,6 +6,8 @@ import {
   IMPLEMENTED_BUILDINGS,
   IMPLEMENTED_DEFENSES,
   IMPLEMENTED_TECHNOLOGIES,
+  MOON_BASE_FIELDS_PER_LEVEL,
+  MOON_BASE_ID,
   TERRAFORMER_FIELDS_PER_LEVEL,
   TERRAFORMER_ID,
 } from "@xnova/game-config";
@@ -37,7 +39,7 @@ export interface BuildingUpgradeEffect {
   compact: boolean;
 }
 
-const resourceFields: Record<number, keyof ResourceLevels> = {
+const resourceFields: Record<number, Exclude<keyof ResourceLevels, 'isMoon'>> = {
   1: "metalMine",
   2: "crystalMine",
   3: "deuteriumMine",
@@ -266,6 +268,15 @@ export function getBuildingUpgradeEffects(
       "fields",
       planet.fieldsMax - planet.fieldsUsed,
       planet.fieldsMax - planet.fieldsUsed + TERRAFORMER_FIELDS_PER_LEVEL,
+    );
+  } else if (buildingId === MOON_BASE_ID) {
+    // Un niveau de base lunaire ajoute 3 cases et en occupe une
+    add(
+      "fields",
+      texts().fields,
+      "fields",
+      planet.fieldsMax - planet.fieldsUsed,
+      planet.fieldsMax - planet.fieldsUsed + MOON_BASE_FIELDS_PER_LEVEL - 1,
     );
   } else if (!storageResource) {
     add(

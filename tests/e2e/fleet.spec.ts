@@ -18,7 +18,7 @@ async function seedTarget(username: string) {
     const system = 400 + Math.floor(Math.random() * 90);
     const position = 1 + Math.floor(Math.random() * 15);
     const taken = await prisma.planet.findUnique({
-      where: { galaxy_system_position: { galaxy: 8, system, position } },
+      where: { galaxy_system_position_isMoon: { galaxy: 8, system, position, isMoon: false } },
       select: { id: true },
     });
     if (taken) continue;

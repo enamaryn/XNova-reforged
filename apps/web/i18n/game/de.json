@@ -62,7 +62,8 @@
     "noShips": "Keine Schiffe verfügbar.",
     "colonyName": "Name der Kolonie",
     "sending": "Wird gesendet...",
-    "send": "Flotte entsenden"
+    "send": "Flotte entsenden",
+    "targetMoon": "Den Mond anvisieren (gleiche Koordinaten)"
   },
   "movement": {
     "kicker": "Verkehrszentrale",
@@ -724,7 +725,8 @@
     "homeworld": "Heimatplanet",
     "newColony": "Neue Kolonie",
     "none": "Kein Planet",
-    "yours": "Deine Planeten ({count})"
+    "yours": "Deine Planeten ({count})",
+    "moon": "Mond"
   },
   "planetScene": {
     "active": "Aktiver Planet",
@@ -749,7 +751,8 @@
     "defenseFallback": "Verteidigung {id}",
     "defenseLine": "{count} (zerstört {destroyed}, repariert {repaired})",
     "timeline": "Zeitverlauf",
-    "round": "Runde {round}"
+    "round": "Runde {round}",
+    "moonCreated": "Der Kampf hat einen Mond hinterlassen!"
   },
   "reports": {
     "kicker": "Kampf",

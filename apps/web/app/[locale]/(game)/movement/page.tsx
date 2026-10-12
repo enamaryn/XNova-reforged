@@ -133,8 +133,10 @@ export default function MovementPage() {
                         {label}
                       </div>
                       <div className="mt-2 text-sm text-slate-300">
-                        {fleet.fromGalaxy}:{fleet.fromSystem}:{fleet.fromPosition} →{' '}
+                        {fleet.fromGalaxy}:{fleet.fromSystem}:{fleet.fromPosition}
+                        {fleet.fromMoon ? ' 🌙' : ''} →{' '}
                         {fleet.toGalaxy}:{fleet.toSystem}:{fleet.toPosition}
+                        {fleet.toMoon ? ' 🌙' : ''}
                       </div>
                     </div>
                     <div className="text-right text-xs text-slate-500">

@@ -341,6 +341,7 @@ export class AuthService {
             galaxy: true,
             system: true,
             position: true,
+            isMoon: true,
           },
           orderBy: {
             createdAt: 'asc', // Planète principale en premier

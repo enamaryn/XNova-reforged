@@ -76,7 +76,7 @@ describe('API integration - Espionnage et colonisation (SCOPE-01)', () => {
   const freePosition = async (galaxy: number, system: number) => {
     for (let position = 1; position <= 15; position += 1) {
       const taken = await database.planet.findUnique({
-        where: { galaxy_system_position: { galaxy, system, position } },
+        where: { galaxy_system_position_isMoon: { galaxy, system, position, isMoon: false } },
       });
       if (!taken) return { galaxy, system, position };
     }
@@ -313,7 +313,7 @@ describe('API integration - Espionnage et colonisation (SCOPE-01)', () => {
       await cron.processArrivals();
 
       const colony = await database.planet.findUniqueOrThrow({
-        where: { galaxy_system_position: spot },
+        where: { galaxy_system_position_isMoon: { ...spot, isMoon: false } },
       });
       expect(colony).toMatchObject({ userId: spy.userId, name: 'Nouvelle Terre', metal: 500, crystal: 500 });
 
@@ -353,10 +353,10 @@ describe('API integration - Espionnage et colonisation (SCOPE-01)', () => {
       const fleet = await database.fleet.findUniqueOrThrow({ where: { id: res.body.fleetId } });
       expect(fleet.status).toBe('returning');
       expect(fleet.ships).toEqual({ '208': 1 });
-      expect((await database.planet.findUniqueOrThrow({ where: { galaxy_system_position: spot } })).userId).toBe(stranger.userId);
+      expect((await database.planet.findUniqueOrThrow({ where: { galaxy_system_position_isMoon: { ...spot, isMoon: false } } })).userId).toBe(stranger.userId);
       await cron.processReturns();
       expect(await shipsOn(spy.planetId, 208)).toBe(3);
-      await database.planet.delete({ where: { galaxy_system_position: spot } });
+      await database.planet.delete({ where: { galaxy_system_position_isMoon: { ...spot, isMoon: false } } });
     });
 
     it('deux flottes vers la même position : une planète, l\'autre flotte rentre intacte', async () => {

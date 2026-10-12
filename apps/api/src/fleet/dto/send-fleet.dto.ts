@@ -1,6 +1,7 @@
 import { IMPLEMENTED_MISSIONS } from '@xnova/game-config';
 import { Type } from 'class-transformer';
 import {
+  IsBoolean,
   IsIn,
   IsInt,
   IsObject,
@@ -54,6 +55,11 @@ export class SendFleetDto {
   @Min(1)
   @Max(15) // GAME_CONSTANTS.MAX_POSITIONS
   toPosition: number;
+
+  // Vise la lune des coordonnées plutôt que la planète
+  @IsOptional()
+  @IsBoolean()
+  toMoon?: boolean;
 
   @IsIn([...IMPLEMENTED_MISSIONS], { message: 'Mission non disponible' })
   mission: number;

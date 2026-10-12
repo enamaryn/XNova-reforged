@@ -36,7 +36,7 @@ export function PlanetSelector() {
         onClick={() => setIsOpen(!isOpen)}
         className="flex max-w-[160px] min-w-0 items-center gap-2 overflow-hidden rounded-full border border-slate-800 bg-slate-950/60 px-3 py-1.5 text-sm transition-colors hover:border-slate-600 sm:max-w-none"
       >
-        <span className="text-lg">🌍</span>
+        <span className="text-lg">{currentPlanet?.isMoon ? "🌙" : "🌍"}</span>
         <div className="text-left hidden sm:block">
           <div className="font-medium text-white">{planetDisplayName(currentPlanet?.name, t)}</div>
           <div className="text-[10px] text-slate-500">
@@ -76,7 +76,7 @@ export function PlanetSelector() {
                     : 'text-slate-300 hover:bg-slate-900'
                 }`}
               >
-                <span className="text-xl">🌍</span>
+                <span className="text-xl">{planet.isMoon ? "🌙" : "🌍"}</span>
                 <div>
                   <div className="font-medium">{planetDisplayName(planet.name, t)}</div>
                   <div className="text-xs text-slate-500">
