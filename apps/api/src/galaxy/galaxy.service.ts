@@ -51,6 +51,7 @@ export class GalaxyService implements OnModuleInit {
             lastActive: true,
             allianceMember: {
               select: {
+                allianceId: true,
                 alliance: {
                   select: {
                     tag: true,
@@ -61,6 +62,12 @@ export class GalaxyService implements OnModuleInit {
           },
         },
       },
+    });
+
+    // Mon alliance : permet de proposer le maintien de position chez les alliés
+    const myMembership = await this.database.allianceMember.findUnique({
+      where: { userId },
+      select: { allianceId: true },
     });
 
     // Lunes du système : elles partagent les coordonnées de leur planète
@@ -114,6 +121,10 @@ export class GalaxyService implements OnModuleInit {
         hasMoon: moonMap.has(position),
         moon: moonMap.get(position) ?? null,
         isOwn: planet.userId === userId,
+        isAllied:
+          planet.userId !== userId &&
+          !!myMembership &&
+          planet.user?.allianceMember?.allianceId === myMembership.allianceId,
         debris,
       };
     });

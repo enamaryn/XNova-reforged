@@ -56,6 +56,13 @@ export class SendFleetDto {
   @Max(16) // GAME_CONSTANTS.MAX_POSITIONS (15), 16 réservé aux expéditions
   toPosition: number;
 
+  // Durée du maintien de position chez un allié, en heures (1 à 32)
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Max(32)
+  holdHours?: number;
+
   // Vise la lune des coordonnées plutôt que la planète
   @IsOptional()
   @IsBoolean()

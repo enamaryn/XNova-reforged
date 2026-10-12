@@ -14,6 +14,7 @@ import {
 } from '@xnova/game-config';
 import {
   computeCargoCapacity,
+  distributeShipLosses,
   distributeLoot,
   fitCargo,
   simulateCombat,
@@ -115,12 +116,34 @@ export class CombatService {
       return acc;
     }, {} as Record<number, number>);
 
+    // Flottes alliées en maintien de position sur la cible : elles défendent avec elle (technologies de l'hôte)
+    const holders = (
+      await this.database.fleet.findMany({
+        where: {
+          status: 'holding',
+          mission: MissionType.HOLD_POSITION,
+          toGalaxy: fleet.toGalaxy,
+          toSystem: fleet.toSystem,
+          toPosition: fleet.toPosition,
+          toMoon: target.isMoon,
+        },
+        select: { id: true, ships: true },
+        orderBy: { id: 'asc' },
+      })
+    ).map((holder) => ({ id: holder.id, ships: this.normalizeShipMap(holder.ships) }));
+    const defendingShips: Record<number, number> = { ...defenderShips };
+    for (const holder of holders) {
+      for (const [id, amount] of Object.entries(holder.ships)) {
+        defendingShips[Number(id)] = (defendingShips[Number(id)] ?? 0) + Number(amount);
+      }
+    }
+
     const attackerTech = await this.getCombatTechLevels(fleet.userId);
     const defenderTech = await this.getCombatTechLevels(target.userId);
 
     const combat = simulateCombat({
       attackerShips,
-      defenderShips: { ...defenderShips, ...defenderDefenses },
+      defenderShips: { ...defendingShips, ...defenderDefenses },
       attackerTech: {
         weapon: attackerTech.weapon,
         shield: attackerTech.shield,
@@ -134,9 +157,15 @@ export class CombatService {
     });
 
     const attackerSurvivors = combat.attackerRemaining;
-    const { shipLosses: defenderShipLosses, defenseLosses } = this.splitDefenderLosses(
+    const { shipLosses: totalShipLosses, defenseLosses } = this.splitDefenderLosses(
       combat.defenderLosses ?? {},
     );
+    // Pertes réparties entre la planète hôte et les flottes alliées en maintien, au prorata de leurs vaisseaux
+    const lossShares = distributeShipLosses(totalShipLosses, [
+      { key: 'host', ships: defenderShips },
+      ...holders.map((holder) => ({ key: holder.id, ships: holder.ships })),
+    ]);
+    const defenderShipLosses = lossShares.host ?? {};
     // Réparation : chaque défense détruite revient avec la probabilité DEFENSE_REPAIR_FACTOR
     const defenderRepaired = this.repairDefenses(defenseLosses);
     const attackerTotal = this.countShips(attackerSurvivors);
@@ -233,7 +262,7 @@ export class CombatService {
           attackerId: fleet.userId,
           defenderId: target.userId,
           attackerShips,
-          defenderShips,
+          defenderShips: defendingShips,
           defenderDefenses,
           defenderRepaired,
           combat,
@@ -314,6 +343,29 @@ export class CombatService {
             data: { amount: 0 },
           });
         }
+      }
+
+      // Flottes en maintien : leurs pertes sortent de leur propre cargaison de vaisseaux
+      for (const holder of holders) {
+        const share = lossShares[holder.id] ?? {};
+        if (Object.keys(share).length === 0) continue;
+        const current = await tx.fleet.findUnique({
+          where: { id: holder.id },
+          select: { status: true, ships: true },
+        });
+        if (!current || current.status !== 'holding') continue;
+        const remaining = this.normalizeShipMap(current.ships);
+        for (const [id, lost] of Object.entries(share)) {
+          remaining[Number(id)] = Math.max(0, (remaining[Number(id)] ?? 0) - Number(lost));
+          if (remaining[Number(id)] === 0) delete remaining[Number(id)];
+        }
+        const alive = Object.values(remaining).some((n) => n > 0);
+        await tx.fleet.update({
+          where: { id: holder.id },
+          data: alive
+            ? { ships: remaining }
+            : { status: 'completed', ships: {}, cargo: {}, returnTime: null, holdUntil: null },
+        });
       }
 
       // Défenses perdues pour de bon = détruites moins réparées

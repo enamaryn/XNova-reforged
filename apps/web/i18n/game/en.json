@@ -53,7 +53,8 @@
       "colonize": "Colonization",
       "recycle": "Recycling",
       "deploy": "Deploy",
-      "expedition": "Expedition"
+      "expedition": "Expedition",
+      "hold": "Hold position"
     },
     "summary": "Mission summary",
     "distance": "Distance",
@@ -66,7 +67,9 @@
     "sending": "Sending...",
     "send": "Send fleet",
     "targetMoon": "Target the moon (same coordinates)",
-    "expeditionHelp": "Sends the fleet into deep space (position 16 of the system): it sometimes finds resources or ships, but may also be delayed, attacked by pirates or swallowed by a black hole. Expedition technology required; the report arrives on landing in the Reports page."
+    "expeditionHelp": "Sends the fleet into deep space (position 16 of the system): it sometimes finds resources or ships, but may also be delayed, attacked by pirates or swallowed by a black hole. Expedition technology required; the report arrives on landing in the Reports page.",
+    "holdHelp": "Hold position at an ally: the fleet stays in orbit of their planet or moon (up to 32 h), defends it if attacked, then returns. Holding fuel (a tenth of consumption per hour) is paid up front; the host's alliance depot can refund it. Target: a member of your alliance.",
+    "holdHours": "Hold time (hours, 1 to 32)"
   },
   "movement": {
     "kicker": "Traffic control",
@@ -85,8 +88,10 @@
       "traveling": "En route",
       "returning": "Returning",
       "arrived": "Arrived",
-      "completed": "Completed"
-    }
+      "completed": "Completed",
+      "holding": "Holding"
+    },
+    "holdEndsIn": "Hold ends in"
   },
   "galaxy": {
     "title": "Galaxy",
@@ -104,7 +109,8 @@
     "colonize": "Colonize",
     "recycle": "Recycle",
     "debris": "Debris",
-    "expedition": "Expedition"
+    "expedition": "Expedition",
+    "hold": "Hold position"
   },
   "messages": {
     "kicker": "Communication",

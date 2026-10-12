@@ -71,8 +71,8 @@ Ogni pianeta iniziale ha **163 campi**. Ogni livello costruito di un edificio (e
 **Il terraformatore serve a qualcosa?**
 Sì: ogni livello aggiunge **5 campi** al pianeta e il terraformatore **non occupa alcun campo** (richiede *Tecnologia energetica* 12, il che lo riserva alla fine della partita).
 
-**Perché non vedo il deposito dell'alleanza?**
-Dipende dal mantenimento della posizione, che non esiste ancora: non viene proposto né accettato, perché nessuno investa in un edificio senza effetto.
+**Come funzionano il mantenimento della posizione e il deposito dell'alleanza?**
+La missione **Mantenimento della posizione** invia una flotta presso un **membro della tua alleanza** (pianeta o luna; pulsanti «Mantenimento» della Galassia) per 1-32 ore. Il carburante di mantenimento (un decimo del consumo della flotta all'ora) è pagato in anticipo. Durante il mantenimento la flotta resta in orbita e **difende l'ospite**: se attaccato, combatte al suo fianco (con le tecnologie dell'ospite) e le perdite sono ripartite in proporzione alle navi. Il **deposito dell'alleanza** dell'ospite (edificio di pianeta) rimborsa quel carburante alla flotta, fino a 10.000 deuterio per livello e per ora di mantenimento e al deuterio di cui l'ospite dispone. Alla fine, o se richiami la flotta (pagina Movimenti), rientra.
 
 **Cosa fanno la falange di sensori e il portale di salto?**
 La **falange** (luna, base lunare 1) mostra i movimenti di flotta che partono da, o arrivano verso, un pianeta di un altro giocatore della stessa galassia, fino a (livello² − 1) sistemi dalla luna; ogni scansione costa 5.000 deuterio della luna. Il **portale di salto** (luna, base lunare 1 e Iperspazio 7) sposta all'istante navi da una tua luna a un'altra luna con portale (niente risorse, niente satelliti solari); poi i due portali si ricaricano per 1 h (divisa per la velocità del server). Entrambi sono nella pagina **Luna**.
@@ -195,7 +195,7 @@ Missione *Colonizzazione* con una colonizzatrice verso una **posizione libera**:
 ## 6. Flotte e missioni
 
 **Quali missioni esistono?**
-**Trasporto** (consegna il carico, poi la flotta rientra), **Schieramento** (installa flotta e carico su *un tuo altro* pianeta, senza ritorno), **Attacco**, **Spionaggio**, **Colonizzazione**, **Riciclaggio** (solo riciclatrici, verso un campo di detriti). La **Spedizione** ha una voce a parte più sotto; attacco di gruppo, mantenimento della posizione e distruzione sono rifiutati dal gioco senza addebitare nulla.
+**Trasporto** (consegna il carico, poi la flotta rientra), **Schieramento** (installa flotta e carico su *un tuo altro* pianeta, senza ritorno), **Attacco**, **Spionaggio**, **Colonizzazione**, **Riciclaggio** (solo riciclatrici, verso un campo di detriti). La **Spedizione** e il **Mantenimento** hanno una voce propria; attacco di gruppo e distruzione sono rifiutati dal gioco senza addebitare nulla.
 
 **Come funzionano le spedizioni?**
 Serve la tecnologia **Spedizione** (laboratorio 3, Iperspazio 1, Propulsore iperspaziale 5). Invia una flotta (con carico, se vuoi) alla **posizione 16** di un sistema qualsiasi, dalla pagina Flotta o dal link «Spedizione» della Galassia. All'arrivo viene estratto un esito: niente (30 %), risorse trovate (30 %, una quota della capacità della flotta), navi trovate (9 %), ritorno in ritardo (10 %), ritorno più rapido (5 %), pirati (15 %, perso dal 10 % al 30 % di ogni tipo di nave) o buco nero (1 %, flotta e carico persi). Il rapporto è nella pagina Rapporti. Spedizioni simultanee: radice intera del livello della tecnologia (livello 4: 2).
@@ -312,6 +312,6 @@ Si basa sulla **potenza**; il tuo rango appare nell'intestazione e nella panoram
 
 ## 11. Ciò che non esiste ancora
 
-Ufficiali, mercato, eventi, attacchi di gruppo, mantenimento della posizione. Gli edifici e le tecnologie che ne dipendono (deposito dell'alleanza) non vengono proposti. La roadmap del progetto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tiene traccia di questi scarti.
+Ufficiali, mercato, eventi, attacchi di gruppo. La roadmap del progetto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tiene traccia di questi scarti.
 
 *Questa FAQ è stata verificata sul codice (`packages/game-config`, `packages/game-engine`, API) e, per i satelliti solari, con un test di integrazione automatizzato (`solar-satellites.integration.spec.ts`).*

@@ -5,6 +5,17 @@
 
 ---
 
+## Session — dépôt d'alliance et maintien de position
+
+**Date :** 16 octobre 2026. Suite de « expéditions et dépôt d'alliance ensuite ».
+
+- [x] Règles communes `packages/game-config/src/hold.ts` et répartition des pertes `packages/game-engine/src/hold.ts`.
+- [x] Mission 5 : validation (même alliance, 1 à 32 h, carburant prépayé), arrivée avec ravitaillement par le dépôt, fin de maintien par tâche planifiée, rappel, emplacement de flotte.
+- [x] Défense alliée dans `CombatService` (flottes `holding` sur la cible, pertes réparties).
+- [x] Dépôt d'alliance (34) proposé sur les planètes ; Galaxie : `isAllied` et liens ; page Flotte, Mouvements, textes fr/en/es/de/it, FAQ.
+- [x] Tests : unitaires (4), intégration (9), E2E (1) ; test des éléments masqués adapté.
+- Toutes les technologies et bâtiments existants sont désormais proposés.
+
 ## Session — réseau de recherche intergalactique
 
 **Date :** 16 octobre 2026. Demande du propriétaire : « passe au réseau de recherche intergalactique ensuite ».
@@ -13,7 +24,6 @@
 - [x] Technologie 123 proposée ; `ResearchService` l'applique au temps annoncé et au temps réel ; `GET /technologies` renvoie `labNetwork`.
 - [x] Page Recherche : ligne « laboratoire effectif » (5 langues) ; FAQ des 5 langues.
 - [x] Tests : unitaires (4), intégration (4), E2E (1) ; test des éléments masqués adapté.
-- Toutes les technologies existantes sont désormais proposées.
 
 
 ## Session — coûts de recherche visibles dans la liste

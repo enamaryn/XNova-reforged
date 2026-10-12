@@ -173,6 +173,24 @@ export default function GalaxyClient() {
                         </>
                       ) : (
                         <>
+                          {slot.isAllied && (
+                            <Link
+                              href={`/fleet?mission=hold&galaxy=${galaxy}&system=${system}&position=${slot.position}`}
+                              data-testid="hold-link"
+                              className="w-full rounded-full border border-emerald-500/60 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-emerald-200 hover:bg-emerald-500/10 sm:w-auto"
+                            >
+                              {t('galaxy.hold')}
+                            </Link>
+                          )}
+                          {slot.isAllied && slot.hasMoon && (
+                            <Link
+                              href={`/fleet?mission=hold&moon=1&galaxy=${galaxy}&system=${system}&position=${slot.position}`}
+                              data-testid="hold-moon-link"
+                              className="w-full rounded-full border border-emerald-500/60 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-emerald-200 hover:bg-emerald-500/10 sm:w-auto"
+                            >
+                              🌙 {t('galaxy.hold')}
+                            </Link>
+                          )}
                           <Link
                             href={`/fleet?mission=spy&galaxy=${galaxy}&system=${system}&position=${slot.position}`}
                             className="w-full rounded-full border border-slate-700 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-slate-300 hover:border-slate-500 sm:w-auto"

@@ -53,6 +53,7 @@ L’interface envoie l’en-tête `X-Locale` (`fr`, `en`, `es`, `de`, `it`) à c
 
 | Méthode | Endpoint | Description |
 |---------|----------|-------------|
+| POST | `/fleet/send` | Avec `mission: 5` (maintien de position) : `holdHours` (1 à 32) obligatoire, cible = planète ou lune (`toMoon`) d'un membre de la même alliance ; carburant de maintien payé d'avance (réponse : `holdFuel`). Le rappel (`DELETE /fleet/:id`) fonctionne aussi pendant le maintien. |
 | POST | `/fleet/send` | Avec `mission: 15` et `toPosition: 16` (position réservée aux expéditions) : technologie Expédition (124) requise, expéditions simultanées limitées à la racine entière du niveau. |
 | GET | `/expedition-reports` | 50 derniers rapports d'expédition du joueur. |
 | GET | `/expedition-reports/:reportId` | Un rapport (404 si ce n'est pas le sien). |

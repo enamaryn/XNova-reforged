@@ -22,6 +22,8 @@ export interface ActiveFleet {
   toPosition: number;
   fromMoon?: boolean;
   toMoon?: boolean;
+  holdHours?: number | null;
+  holdUntil?: string | null;
   mission: number;
   ships: Record<string, number>;
   cargo: Record<string, number>;
@@ -45,6 +47,7 @@ export interface SendFleetPayload {
   toSystem: number;
   toPosition: number;
   toMoon?: boolean;
+  holdHours?: number;
   mission: number;
   speedPercent: number;
   ships: Record<string, number>;

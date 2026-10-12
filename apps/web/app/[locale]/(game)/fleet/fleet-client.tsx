@@ -46,6 +46,7 @@ const MISSION_IDS: Record<string, number> = {
   espionnage: 6,
   colonisation: 7,
   recyclage: 8,
+  maintien: 5,
   expedition: 15,
 };
 
@@ -59,6 +60,7 @@ export default function FleetClient() {
   const [cargo, setCargo] = useState({ metal: 0, crystal: 0, deuterium: 0 });
   const [destination, setDestination] = useState({ galaxy: 1, system: 1, position: 1 });
   const [toMoon, setToMoon] = useState(false);
+  const [holdHours, setHoldHours] = useState(1);
   const [nowMs, setNowMs] = useState(Date.now());
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
@@ -85,6 +87,7 @@ export default function FleetClient() {
       if (missionParam === 'colonize') setMission('colonisation');
       if (missionParam === 'recycle') setMission('recyclage');
       if (missionParam === 'expedition') setMission('expedition');
+      if (missionParam === 'hold') setMission('maintien');
     }
 
     const galaxyValue = galaxyParam ? Number(galaxyParam) : null;
@@ -238,6 +241,7 @@ export default function FleetClient() {
         toSystem: destination.system,
         toPosition: destination.position,
         ...(toMoon ? { toMoon: true } : {}),
+        ...(mission === 'maintien' ? { holdHours } : {}),
         // Seules les missions traitées par le serveur sont proposées (IMPLEMENTED_MISSIONS)
         mission: MISSION_IDS[mission] ?? 3,
         speedPercent,
@@ -338,6 +342,7 @@ export default function FleetClient() {
                   { id: 'espionnage', label: t('fleet.missions.spy') },
                   { id: 'colonisation', label: t('fleet.missions.colonize') },
                   { id: 'recyclage', label: t('fleet.missions.recycle') },
+                  { id: 'maintien', label: t('fleet.missions.hold') },
                   { id: 'expedition', label: t('fleet.missions.expedition') },
                 ].map((item) => (
                   <button
@@ -367,6 +372,25 @@ export default function FleetClient() {
                 <p className="mt-3 text-xs text-slate-400">
                   Envoyez uniquement des sondes d&apos;espionnage vers la planète d&apos;un autre joueur ; le rapport arrive à l&apos;atterrissage dans la page Rapports.
                 </p>
+              )}
+              {mission === 'maintien' && (
+                <div className="mt-3 space-y-2" data-testid="hold-options">
+                  <p className="text-xs text-slate-400">{t('fleet.holdHelp')}</p>
+                  <label className="block text-xs uppercase tracking-[0.2em] text-slate-500">
+                    {t('fleet.holdHours')}
+                    <input
+                      type="number"
+                      min={1}
+                      max={32}
+                      value={holdHours}
+                      data-testid="hold-hours"
+                      onChange={(event) =>
+                        setHoldHours(Math.min(32, Math.max(1, Math.floor(Number(event.target.value)) || 1)))
+                      }
+                      className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60 sm:w-40"
+                    />
+                  </label>
+                </div>
               )}
               {mission === 'expedition' && (
                 <p className="mt-3 text-xs text-slate-400" data-testid="expedition-help">

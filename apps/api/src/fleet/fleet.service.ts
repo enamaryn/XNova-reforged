@@ -14,11 +14,13 @@ import {
   ESPIONAGE_PROBE_ID,
   RECYCLER_ID,
   GAME_CONSTANTS,
+  HOLD_MAX_HOURS,
   IMPLEMENTED_MISSIONS,
   MissionType,
   SHIPS,
   SOLAR_SATELLITE_ID,
   getShipSpeed,
+  holdFuelPerHour,
   maxExpeditions,
   maxFleetSlots,
 } from '@xnova/game-config';
@@ -90,7 +92,7 @@ export class FleetService {
     const fleets = await this.database.fleet.findMany({
       where: {
         userId,
-        status: { in: ['traveling', 'arrived', 'returning'] },
+        status: { in: ['traveling', 'arrived', 'holding', 'returning'] },
       },
       orderBy: { arrivalTime: 'asc' },
       select: {
@@ -109,6 +111,8 @@ export class FleetService {
         startTime: true,
         arrivalTime: true,
         returnTime: true,
+        holdHours: true,
+        holdUntil: true,
         status: true,
       },
     });
@@ -153,6 +157,20 @@ export class FleetService {
 
     const shipsToSend = this.parseShips(dto.ships);
 
+    // Durée du maintien (heures) : obligatoire pour le maintien de position, interdite sinon
+    if (dto.mission === MissionType.HOLD_POSITION) {
+      if (
+        typeof dto.holdHours !== 'number' ||
+        !Number.isInteger(dto.holdHours) ||
+        dto.holdHours < 1 ||
+        dto.holdHours > HOLD_MAX_HOURS
+      ) {
+        throw new BadRequestException(`La duree du maintien doit etre de 1 a ${HOLD_MAX_HOURS} heures`);
+      }
+    } else if (dto.holdHours !== undefined) {
+      throw new BadRequestException("La duree de maintien ne concerne que le maintien de position");
+    }
+
     const toMoon = dto.toMoon === true;
     if (
       planet.galaxy === dto.toGalaxy &&
@@ -187,6 +205,19 @@ export class FleetService {
     } else if (dto.mission === MissionType.DEPLOY) {
       if (!target || target.userId !== userId) {
         throw new BadRequestException('Le deploiement exige une de vos planetes');
+      }
+    } else if (dto.mission === MissionType.HOLD_POSITION) {
+      // Maintien de position : planète ou lune d'un autre membre de votre alliance, pour une durée choisie
+      if (!target) throw new BadRequestException(toMoon ? 'Aucune lune a cette position' : 'Aucune planete a cette position');
+      if (target.userId === userId) {
+        throw new BadRequestException("Le maintien de position vise la planete d'un allie, pas la votre");
+      }
+      const [mine, theirs] = await Promise.all([
+        this.database.allianceMember.findUnique({ where: { userId }, select: { allianceId: true } }),
+        this.database.allianceMember.findUnique({ where: { userId: target.userId }, select: { allianceId: true } }),
+      ]);
+      if (!mine || !theirs || mine.allianceId !== theirs.allianceId) {
+        throw new BadRequestException("Le maintien de position exige la planete d'un membre de votre alliance");
       }
     } else if (dto.mission === MissionType.SPY) {
       // Espionnage : uniquement des sondes, vers la planete d'un autre joueur
@@ -343,10 +374,18 @@ export class FleetService {
       })),
     });
 
+    // Carburant du maintien, payé d'avance pour toute la durée (le dépôt d'alliance de l'hôte peut le rembourser)
+    const holdFuel =
+      dto.mission === MissionType.HOLD_POSITION
+        ? holdFuelPerHour(
+            Object.fromEntries(shipsToSend.map((ship) => [ship.shipId, ship.amount])),
+          ) * (dto.holdHours ?? 0)
+        : 0;
+
     if (
       planet.metal < cargo.metal ||
       planet.crystal < cargo.crystal ||
-      planet.deuterium < cargo.deuterium + fuelConsumption
+      planet.deuterium < cargo.deuterium + fuelConsumption + holdFuel
     ) {
       throw new BadRequestException('Ressources insuffisantes');
     }
@@ -376,7 +415,7 @@ export class FleetService {
       await debitResources(tx, dto.planetId, {
         metal: cargo.metal,
         crystal: cargo.crystal,
-        deuterium: cargo.deuterium + fuelConsumption,
+        deuterium: cargo.deuterium + fuelConsumption + holdFuel,
       });
 
       for (const ship of shipsToSend) {
@@ -407,6 +446,7 @@ export class FleetService {
           startTime: now,
           arrivalTime,
           returnTime,
+          holdHours: dto.mission === MissionType.HOLD_POSITION ? dto.holdHours : null,
           status: 'traveling',
         },
       });
@@ -417,6 +457,7 @@ export class FleetService {
       fleetId: fleet.id,
       durationSeconds: adjustedDuration,
       fuelConsumption,
+      holdFuel,
       mission: dto.mission,
       arrivalTime,
     };
@@ -428,7 +469,7 @@ export class FleetService {
     userId: string,
   ) {
     const [inFlight, computer] = await Promise.all([
-      tx.fleet.count({ where: { userId, status: { in: ['traveling', 'returning'] } } }),
+      tx.fleet.count({ where: { userId, status: { in: ['traveling', 'holding', 'returning'] } } }),
       tx.technology.findUnique({
         where: { userId_techId: { userId, techId: COMPUTER_TECH_ID } },
         select: { level: true },
@@ -496,6 +537,23 @@ export class FleetService {
 
     if (fleet.userId !== userId) {
       throw new ForbiddenException('Acces refuse');
+    }
+
+    if (fleet.status === 'holding') {
+      // Rappel d'une flotte en maintien de position : retour immédiat, sur la durée du trajet aller
+      const flightSeconds = Math.max(
+        1,
+        Math.floor((fleet.arrivalTime.getTime() - fleet.startTime.getTime()) / 1000),
+      );
+      const holdReturn = new Date(Date.now() + flightSeconds * 1000);
+      const ended = await this.database.fleet.updateMany({
+        where: { id: fleet.id, status: 'holding' },
+        data: { status: 'returning', returnTime: holdReturn, holdUntil: null },
+      });
+      if (ended.count !== 1) {
+        throw new BadRequestException('La flotte ne peut pas etre rappelee');
+      }
+      return { success: true, fleetId: fleet.id, returnTime: holdReturn };
     }
 
     if (fleet.status !== 'traveling') {

@@ -71,8 +71,8 @@ Es ist dasselbe Gebäude (ID 21): Der „Hangar“ in den Listen ist die Werft, 
 **Ist der Terraformer nützlich?**
 Ja: Jede Stufe fügt dem Planeten **5 Felder** hinzu, und der Terraformer **belegt selbst kein Feld** (er erfordert *Energietechnik* 12, was ihn dem Spätspiel vorbehält).
 
-**Warum sehe ich das Allianzdepot nicht?**
-Es hängt vom Halten ab, das es noch nicht gibt: Es wird nicht angeboten oder akzeptiert, damit niemand in ein Gebäude ohne Wirkung investiert.
+**Wie funktionieren Halten und das Allianzdepot?**
+Die Mission **Halten** schickt eine Flotte zu einem **Mitglied deiner Allianz** (Planet oder Mond; Schaltflächen „Halten“ in der Galaxie) für 1 bis 32 Stunden. Der Haltetreibstoff (ein Zehntel des Flottenverbrauchs pro Stunde) wird im Voraus bezahlt. Während des Haltens bleibt die Flotte im Orbit und **verteidigt den Gastgeber**: Bei einem Angriff kämpft sie an seiner Seite (mit den Technologien des Gastgebers), die Verluste werden im Verhältnis der Schiffe aufgeteilt. Das **Allianzdepot** des Gastgebers (Planetengebäude) erstattet der Flotte diesen Treibstoff, bis zu 10 000 Deuterium je Stufe und Haltestunde und dem Deuterium, das der Gastgeber hat. Am Ende, oder wenn du die Flotte zurückrufst (Seite Bewegungen), kehrt sie zurück.
 
 **Was machen Sensorphalanx und Sprungtor?**
 Die **Phalanx** (Mond, Mondbasis 1) zeigt die Flottenbewegungen, die von einem Planeten eines anderen Spielers derselben Galaxie ausgehen oder dorthin führen, bis zu (Stufe² − 1) Systeme vom Mond entfernt; jeder Scan kostet 5 000 Deuterium vom Mond. Das **Sprungtor** (Mond, Mondbasis 1 und Hyperraumtechnik 7) verlegt Schiffe sofort von einem deiner Monde zu einem anderen Mond mit Tor (keine Rohstoffe, keine Solarsatelliten); danach laden beide Tore 1 h (geteilt durch die Serverspeed) auf. Beides findest du auf der Seite **Mond**.
@@ -195,7 +195,7 @@ Mission *Kolonisierung* mit einem Kolonieschiff zu einer **freien Position**: Di
 ## 6. Flotten und Missionen
 
 **Welche Missionen gibt es?**
-**Transport** (liefert die Fracht, danach kehrt die Flotte zurück), **Stationieren** (setzt Flotte und Fracht auf *Ihren* anderen Planeten, ohne Rückkehr), **Angriff**, **Spionage**, **Kolonisierung**, **Recycling** (nur Recycler, zu einem Trümmerfeld). Die **Expedition** hat unten einen eigenen Eintrag; Verbandsangriff, Halten und Zerstören lehnt das Spiel ab, ohne etwas abzubuchen.
+**Transport** (liefert die Fracht, danach kehrt die Flotte zurück), **Stationieren** (setzt Flotte und Fracht auf *Ihren* anderen Planeten, ohne Rückkehr), **Angriff**, **Spionage**, **Kolonisierung**, **Recycling** (nur Recycler, zu einem Trümmerfeld). Die **Expedition** und das **Halten** haben eigene Einträge; Verbandsangriff und Zerstören lehnt das Spiel ab, ohne etwas abzubuchen.
 
 **Wie funktionieren Expeditionen?**
 Du brauchst die Technologie **Expedition** (Labor 3, Hyperraumtechnik 1, Hyperraumantrieb 5). Schicke eine Flotte (mit Fracht möglich) zu **Position 16** eines beliebigen Systems, von der Flottenseite oder über den Link „Expedition“ der Galaxie. Bei der Ankunft wird ein Ergebnis ausgelost: nichts (30 %), Rohstoffe gefunden (30 %, ein Anteil der Flottenkapazität), Schiffe gefunden (9 %), verspäteter Rückflug (10 %), schnellerer Rückflug (5 %), Piraten (15 %, 10 % bis 30 % jedes Schiffstyps verloren) oder Schwarzes Loch (1 %, Flotte und Fracht verloren). Der Bericht steht auf der Berichteseite. Gleichzeitige Expeditionen: ganzzahlige Wurzel der Technologiestufe (Stufe 4: 2).
@@ -312,6 +312,6 @@ Sie beruht auf der **Macht**; Ihr Rang erscheint in der Kopfzeile und in der Üb
 
 ## 11. Was es noch nicht gibt
 
-Offiziere, Markt, Ereignisse, Verbandsangriffe, Halten. Die davon abhängigen Gebäude und Technologien (Allianzdepot) werden nicht angeboten. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
+Offiziere, Markt, Ereignisse, Verbandsangriffe. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
 
 *Diese FAQ wurde gegen den Code (`packages/game-config`, `packages/game-engine`, API) und, für die Solarsatelliten, durch einen automatisierten Integrationstest (`solar-satellites.integration.spec.ts`) geprüft.*

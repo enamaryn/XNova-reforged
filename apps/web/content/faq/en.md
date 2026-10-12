@@ -71,8 +71,8 @@ They are the same building (id 21): the "Hangar" in the lists is the yard where 
 **Is the terraformer useful?**
 Yes: each level adds **5 fields** to the planet and the terraformer **uses no field** itself (it requires *Energy technology* 12, which reserves it for the late game).
 
-**Why can't I see the alliance depot?**
-It depends on hold position, which does not exist yet: it is not offered or accepted, so nobody invests in a building with no effect.
+**How do hold position and the alliance depot work?**
+The **Hold position** mission sends a fleet to a **member of your alliance** (planet or moon; "Hold position" buttons in the Galaxy) for 1 to 32 hours. Holding fuel (a tenth of the fleet's consumption per hour) is paid up front. While holding, the fleet stays in orbit and **defends the host**: if attacked it fights alongside them (with the host's technologies) and losses are shared in proportion to ships. The host's **alliance depot** (a planet building) refunds that fuel to the fleet, up to 10,000 deuterium per level and per hour of holding and the deuterium the host has. At the end, or if you recall the fleet (Movements page), it returns.
 
 **What do the sensor phalanx and the jump gate do?**
 The **phalanx** (moon, lunar base 1) shows the fleet movements leaving from, or heading to, another player's planet in the same galaxy, up to (level² − 1) systems from the moon; each scan costs 5,000 deuterium from the moon. The **jump gate** (moon, lunar base 1 and Hyperspace 7) instantly moves ships from one of your moons to another moon with a gate (no resources, no solar satellites); afterwards both gates recharge for 1 h (divided by the server speed). Both are on the **Moon** page.
@@ -195,7 +195,7 @@ Other ships (including the Death star, for now) have no rapid fire.
 ## 6. Fleets and missions
 
 **Which missions exist?**
-**Transport** (delivers cargo, then the fleet returns), **Deploy** (settles fleet and cargo on *your* other planet, no return), **Attack**, **Espionage**, **Colonization**, **Recycling** (recyclers only, towards a debris field). **Expedition** has its own entry below; group attack, hold position and destroy are refused by the game without charging anything.
+**Transport** (delivers cargo, then the fleet returns), **Deploy** (settles fleet and cargo on *your* other planet, no return), **Attack**, **Espionage**, **Colonization**, **Recycling** (recyclers only, towards a debris field). **Expedition** and **Hold position** have their own entries; group attack and destroy are refused by the game without charging anything.
 
 **How do expeditions work?**
 You need the **Expedition** technology (lab 3, Hyperspace 1, Hyperspace drive 5). Send a fleet (cargo allowed) to **position 16** of any system, from the Fleet page or the Galaxy "Expedition" link. On arrival an outcome is drawn: nothing (30%), resources found (30%, a share of the fleet's capacity), ships found (9%), delayed return (10%), faster return (5%), pirates (15%, 10% to 30% of each ship type lost) or black hole (1%, fleet and cargo lost). The report is in the Reports page. Simultaneous expeditions: integer square root of the technology level (level 4: 2).
@@ -312,6 +312,6 @@ It is based on **power**; your rank appears in the header and the overview. Losi
 
 ## 11. What does not exist yet
 
-Officers, market, events, group attacks, hold position. Buildings and technologies that depend on them (alliance depot) are not offered. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
+Officers, market, events, group attacks. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
 
 *This FAQ was checked against the code (`packages/game-config`, `packages/game-engine`, API) and, for solar satellites, by an automated integration test (`solar-satellites.integration.spec.ts`).*

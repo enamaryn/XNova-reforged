@@ -18,6 +18,7 @@ export interface GalaxyPosition {
   hasMoon?: boolean;
   moon?: { id: string; name: string } | null;
   isOwn?: boolean;
+  isAllied?: boolean;
 }
 
 export interface GalaxySystemResponse {
