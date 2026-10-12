@@ -3,6 +3,8 @@ import {
   MOON_BUILDINGS,
   buildingsAvailableFor,
   moonChancePercent,
+  phalanxRange,
+  jumpGateCooldownSeconds,
 } from '@xnova/game-config';
 import { updateResources } from '@xnova/game-engine';
 
@@ -41,5 +43,16 @@ describe('lunes : règles pures', () => {
     const moon = updateResources({ ...base, levels: { ...levels, isMoon: true } });
     expect(planet.resources.metal).toBeGreaterThan(0);
     expect(moon.resources).toEqual({ metal: 0, crystal: 0, deuterium: 0 });
+  });
+
+  it('portée de la phalange : niveau² − 1 systèmes', () => {
+    expect([0, 1, 2, 3, 5].map(phalanxRange)).toEqual([0, 0, 3, 8, 24]);
+  });
+
+  it('recharge de la porte : 1 h divisée par la vitesse, 10 s minimum', () => {
+    expect(jumpGateCooldownSeconds(1)).toBe(3600);
+    expect(jumpGateCooldownSeconds(50)).toBe(72);
+    expect(jumpGateCooldownSeconds(100000)).toBe(10);
+    expect(jumpGateCooldownSeconds(0)).toBe(3600);
   });
 });

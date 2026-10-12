@@ -71,8 +71,11 @@ Es ist dasselbe Gebäude (ID 21): Der „Hangar“ in den Listen ist die Werft, 
 **Ist der Terraformer nützlich?**
 Ja: Jede Stufe fügt dem Planeten **5 Felder** hinzu, und der Terraformer **belegt selbst kein Feld** (er erfordert *Energietechnik* 12, was ihn dem Spätspiel vorbehält).
 
-**Warum sehe ich Allianzdepot, Sensorphalanx und Sprungtor nicht?**
-Das Allianzdepot hängt vom Halten ab, das es noch nicht gibt; Sensorphalanx und Sprungtor sind noch nicht geliefert: Sie werden nicht angeboten oder akzeptiert, damit niemand in ein Gebäude ohne Wirkung investiert.
+**Warum sehe ich das Allianzdepot nicht?**
+Es hängt vom Halten ab, das es noch nicht gibt: Es wird nicht angeboten oder akzeptiert, damit niemand in ein Gebäude ohne Wirkung investiert.
+
+**Was machen Sensorphalanx und Sprungtor?**
+Die **Phalanx** (Mond, Mondbasis 1) zeigt die Flottenbewegungen, die von einem Planeten eines anderen Spielers derselben Galaxie ausgehen oder dorthin führen, bis zu (Stufe² − 1) Systeme vom Mond entfernt; jeder Scan kostet 5 000 Deuterium vom Mond. Das **Sprungtor** (Mond, Mondbasis 1 und Hyperraumtechnik 7) verlegt Schiffe sofort von einem deiner Monde zu einem anderen Mond mit Tor (keine Rohstoffe, keine Solarsatelliten); danach laden beide Tore 1 h (geteilt durch die Serverspeed) auf. Beides findest du auf der Seite **Mond**.
 
 **Wie bekomme ich einen Mond, und wozu dient er?**
 Ein Kampf gegen einen *Planeten* kann einen Mond an denselben Koordinaten hinterlassen: Die Chance beträgt 1 % je 100 000 erzeugter Trümmer (Metall + Kristall), höchstens 20 %. Der Mond gehört dem Besitzer des angegriffenen Planeten; ein Kampf gegen einen Mond erzeugt keinen weiteren. Er erscheint in der Galaxie (🌙) und in der Planetenauswahl. Ein Mond **produziert nichts**, nicht einmal das Grundeinkommen: Schicke ihm Rohstoffe per Transport. Er startet mit 1 Feld; die **Mondbasis** (nur auf einem Mond baubar) fügt je Stufe 3 Felder hinzu und belegt eines. Dort baust du auch Robotfabrik und Werft, um Schiffe und Verteidigung zu stationieren. Flotten können von einem Mond starten und ihn anvisieren (Kästchen „Den Mond anvisieren“ auf der Flottenseite, 🌙-Schaltflächen in der Galaxie), um zu transportieren, zu stationieren, zu spionieren oder anzugreifen; Raketen zielen nur auf Planeten.
@@ -306,6 +309,6 @@ Sie beruht auf der **Macht**; Ihr Rang erscheint in der Kopfzeile und in der Üb
 
 ## 11. Was es noch nicht gibt
 
-Offiziere, Markt, Ereignisse, Expeditionen, Verbandsangriffe, Halten. Die davon abhängigen Gebäude und Technologien (Allianzdepot, Sensorphalanx, Sprungtor, Forschungsnetzwerk, Expedition) werden nicht angeboten. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
+Offiziere, Markt, Ereignisse, Expeditionen, Verbandsangriffe, Halten. Die davon abhängigen Gebäude und Technologien (Allianzdepot, Forschungsnetzwerk, Expedition) werden nicht angeboten. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
 
 *Diese FAQ wurde gegen den Code (`packages/game-config`, `packages/game-engine`, API) und, für die Solarsatelliten, durch einen automatisierten Integrationstest (`solar-satellites.integration.spec.ts`) geprüft.*

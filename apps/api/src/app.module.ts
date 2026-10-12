@@ -10,6 +10,7 @@ import { BuildingsModule } from "./buildings/buildings.module";
 import { CombatModule } from "./combat/combat.module";
 import { FleetModule } from "./fleet/fleet.module";
 import { MissilesModule } from "./missiles/missiles.module";
+import { MoonsModule } from "./moons/moons.module";
 import { GalaxyModule } from "./galaxy/galaxy.module";
 import { ResearchModule } from "./research/research.module";
 import { ShipyardModule } from "./shipyard/shipyard.module";
@@ -72,6 +73,7 @@ import { validateEnv } from "./config/env.validation";
     // Module flotte
     FleetModule,
     MissilesModule,
+    MoonsModule,
 
     // Module galaxie
     GalaxyModule,

@@ -23,7 +23,8 @@
     "player": "Player",
     "settings": "Settings",
     "administration": "Administration",
-    "logout": "Log out"
+    "logout": "Log out",
+    "moon": "Moon"
   },
   "sidebar": {
     "principal": "Main",
@@ -1211,5 +1212,34 @@
     "nothingDestroyed": "No defence destroyed.",
     "lost": "Target gone: the missiles are lost.",
     "incomingWarning": "Missiles are approaching one of your planets!"
+  },
+  "moonOps": {
+    "kicker": "Lunar operations",
+    "title": "Moon",
+    "subtitle": "The sensor phalanx reveals fleet movements around a nearby planet; the jump gate moves ships from one moon to another instantly.",
+    "selectMoon": "Pick a moon in the planet selector to use the phalanx and the jump gate.",
+    "phalanxTitle": "Sensor phalanx",
+    "phalanxMissing": "Build a sensor phalanx (lunar base level 1 required).",
+    "phalanxRange": "Level {level}: range {range} systems around system {system} (galaxy {galaxy}). A scan costs {cost} deuterium from the moon.",
+    "scan": "Scan",
+    "scanning": "Scanning...",
+    "scanOf": "Movements around {coords}",
+    "noMovement": "No fleet movement detected.",
+    "direction": {
+      "outbound": "departing",
+      "inbound": "arriving",
+      "returning": "returning"
+    },
+    "shipsCount": "{count} ship(s)",
+    "gateTitle": "Jump gate",
+    "gateMissing": "Build a jump gate (lunar base 1 and Hyperspace technology 7).",
+    "gateNoDestination": "You need another moon equipped with a jump gate.",
+    "gateReady": "Gate ready. After a jump both gates recharge for {seconds} s.",
+    "gateCharging": "Gate recharging: {time}.",
+    "destination": "Destination moon",
+    "noShips": "No ships on this moon.",
+    "jump": "Jump",
+    "jumping": "Jumping...",
+    "jumped": "Jump complete."
   }
 }

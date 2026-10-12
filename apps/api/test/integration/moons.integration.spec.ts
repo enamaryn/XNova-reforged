@@ -227,7 +227,7 @@ describe('API integration - lunes', () => {
       expect(JSON.stringify(res.body)).toBeDefined();
     });
 
-    it('propose robotique, chantier et base lunaire seulement ; la base lunaire est refusée sur une planète', async () => {
+    it('propose robotique, chantier et bâtiments lunaires seulement ; la base lunaire est refusée sur une planète', async () => {
       const u = await player();
       const moon = await addMoon(u, { metal: 5_000_000, crystal: 5_000_000, deuterium: 5_000_000 });
       await database.planet.update({
@@ -236,7 +236,7 @@ describe('API integration - lunes', () => {
       });
       const onMoon = await request(app.getHttpServer())
         .get(`/planets/${moon.id}/buildings`).set(auth(u)).expect(200);
-      expect(onMoon.body.buildings.map((b: { id: number }) => b.id).sort((a: number, b: number) => a - b)).toEqual([14, 21, 41]);
+      expect(onMoon.body.buildings.map((b: { id: number }) => b.id).sort((a: number, b: number) => a - b)).toEqual([14, 21, 41, 42, 43]);
       const onPlanet = await request(app.getHttpServer())
         .get(`/planets/${u.planetId}/buildings`).set(auth(u)).expect(200);
       expect(onPlanet.body.buildings.map((b: { id: number }) => b.id)).not.toContain(41);

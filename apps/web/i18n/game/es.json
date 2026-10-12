@@ -23,7 +23,8 @@
     "player": "Jugador",
     "settings": "Ajustes",
     "administration": "Administración",
-    "logout": "Cerrar sesión"
+    "logout": "Cerrar sesión",
+    "moon": "Luna"
   },
   "sidebar": {
     "principal": "Principal",
@@ -1211,5 +1212,34 @@
     "nothingDestroyed": "Ninguna defensa destruida.",
     "lost": "Objetivo desaparecido: los misiles se pierden.",
     "incomingWarning": "¡Hay misiles aproximándose a uno de tus planetas!"
+  },
+  "moonOps": {
+    "kicker": "Operaciones lunares",
+    "title": "Luna",
+    "subtitle": "La falange de sensores revela los movimientos de flota alrededor de un planeta cercano; la puerta de salto traslada naves de una luna a otra al instante.",
+    "selectMoon": "Elige una luna en el selector de planeta para usar la falange y la puerta de salto.",
+    "phalanxTitle": "Falange de sensores",
+    "phalanxMissing": "Construye una falange de sensores (requiere base lunar nivel 1).",
+    "phalanxRange": "Nivel {level}: alcance de {range} sistemas alrededor del sistema {system} (galaxia {galaxy}). Cada escaneo cuesta {cost} de deuterio de la luna.",
+    "scan": "Escanear",
+    "scanning": "Escaneando...",
+    "scanOf": "Movimientos alrededor de {coords}",
+    "noMovement": "No se detecta ningún movimiento de flota.",
+    "direction": {
+      "outbound": "salida",
+      "inbound": "llegada",
+      "returning": "regreso"
+    },
+    "shipsCount": "{count} nave(s)",
+    "gateTitle": "Puerta de salto",
+    "gateMissing": "Construye una puerta de salto (base lunar 1 y tecnología Hiperespacio 7).",
+    "gateNoDestination": "Necesitas otra luna equipada con una puerta de salto.",
+    "gateReady": "Puerta lista. Tras un salto, ambas puertas se recargan durante {seconds} s.",
+    "gateCharging": "Puerta recargándose: {time}.",
+    "destination": "Luna de destino",
+    "noShips": "No hay naves en esta luna.",
+    "jump": "Saltar",
+    "jumping": "Saltando...",
+    "jumped": "Salto realizado."
   }
 }
