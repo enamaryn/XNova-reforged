@@ -5,6 +5,17 @@
 
 ---
 
+## Session — consolidation
+
+**Date :** 18 octobre 2026. Demande du propriétaire : « option 1 en premier » (consolidation avant le marché).
+
+- [x] Mobile : `tests/mobile-ui/new-pages.spec.ts` (Officiers, Commandants, Flotte avec commandants et groupes, Lune ; 390 px, 320 px, PC ; fr et de ; aucun débordement horizontal, boutons entiers hors zones qui défilent). Défaut réel trouvé et corrigé : en-tête à 320 px (`GameHeader`, `PlanetSelector`) et débordement de 6 px sur PC (raccourcis centraux à partir de 2xl). 126 tests mobiles Chromium verts ; WebKit non exécutable ici (vérifié par la CI).
+- [x] Équilibrage : `scripts/balance/extensions-prices.mjs` et section « Prix des extensions » de `docs/BALANCE.md` ; aucune modification de prix.
+- [x] Couverture : `npm run test:coverage` branché dans la CI (suites d'intégration en série avec les seuils) ; mesure locale lignes 92,7 %, instructions 91,3 %, branches 79,7 %, fonctions 90,1 %.
+- [ ] Uptime > 99 % : en attente du relevé du propriétaire en production.
+- Note de méthode : le marché (`claude/marche`) est prêt mais son PR n'est pas créé ; sa suite d'intégration complète doit être rejouée sur sa propre branche (la première exécution a été interrompue par un changement de branche pendant le test).
+
+
 ## Session — attaques groupées (Phase 7)
 
 **Date :** 19 octobre 2026. Demande du propriétaire : « passe aux attaques groupées ». Vérification préalable : seule la valeur d'énumération `ACS_ATTACK = 2` existait ; aucune logique de groupe.
