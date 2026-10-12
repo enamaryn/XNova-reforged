@@ -132,7 +132,7 @@ Una sola ricerca alla volta per giocatore, pagata all'avvio, che richiede un liv
 | **Produzione parallela** (*Production parallèle*, 126) | linee di produzione aggiuntive al cantiere |
 
 **E le altre?**
-Iperspazio (114), Laser (120), Ioni (121), Plasma (122) e Gravitone (199) sono puri **prerequisiti** per sbloccare edifici, navi e difese (le loro descrizioni dicono «nessun effetto diretto»). *Energia* aumenta anche il rendimento della fusione (vedi §3). La **rete di ricerca intergalattica** e la **spedizione** non vengono proposte finché le loro funzioni non esistono.
+Iperspazio (114), Laser (120), Ioni (121), Plasma (122) e Gravitone (199) sono puri **prerequisiti** per sbloccare edifici, navi e difese (le loro descrizioni dicono «nessun effetto diretto»). *Energia* aumenta anche il rendimento della fusione (vedi §3). La **rete di ricerca intergalattica** (123) collega i tuoi laboratori: una ricerca avviata su un pianeta conta come un laboratorio di livello *locale + gli N migliori laboratori degli altri pianeti* (N = livello della rete; le lune non contano), il che accorcia il tempo di ricerca (la pagina Ricerca mostra il laboratorio effettivo). Non cambia né i costi né i prerequisiti.
 
 **Quale ricerca per prima?**
 *Energia* (prerequisito della fusione e di varie difese), poi il propulsore a combustione per trasporti più veloci, quindi *Militare/Difesa/Scudi* secondo il tuo piano di combattimento.
@@ -312,6 +312,6 @@ Si basa sulla **potenza**; il tuo rango appare nell'intestazione e nella panoram
 
 ## 11. Ciò che non esiste ancora
 
-Ufficiali, mercato, eventi, attacchi di gruppo, mantenimento della posizione. Gli edifici e le tecnologie che ne dipendono (deposito dell'alleanza, rete di ricerca) non vengono proposti. La roadmap del progetto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tiene traccia di questi scarti.
+Ufficiali, mercato, eventi, attacchi di gruppo, mantenimento della posizione. Gli edifici e le tecnologie che ne dipendono (deposito dell'alleanza) non vengono proposti. La roadmap del progetto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tiene traccia di questi scarti.
 
 *Questa FAQ è stata verificata sul codice (`packages/game-config`, `packages/game-engine`, API) e, per i satelliti solari, con un test di integrazione automatizzato (`solar-satellites.integration.spec.ts`).*

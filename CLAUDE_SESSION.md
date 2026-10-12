@@ -5,6 +5,17 @@
 
 ---
 
+## Session — réseau de recherche intergalactique
+
+**Date :** 16 octobre 2026. Demande du propriétaire : « passe au réseau de recherche intergalactique ensuite ».
+
+- [x] `linkedLabLevel` (`packages/game-config/src/research-network.ts`) : laboratoire effectif = local + N meilleurs laboratoires des autres planètes (lunes exclues).
+- [x] Technologie 123 proposée ; `ResearchService` l'applique au temps annoncé et au temps réel ; `GET /technologies` renvoie `labNetwork`.
+- [x] Page Recherche : ligne « laboratoire effectif » (5 langues) ; FAQ des 5 langues.
+- [x] Tests : unitaires (4), intégration (4), E2E (1) ; test des éléments masqués adapté.
+- Toutes les technologies existantes sont désormais proposées.
+
+
 ## Session — coûts de recherche visibles dans la liste
 
 **Date :** 16 octobre 2026. **Retour du propriétaire** : les coûts de recherche n'étaient visibles que dans la page de détails.

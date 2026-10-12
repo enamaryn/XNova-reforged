@@ -177,7 +177,7 @@ describe('API integration - corrections des règles du jeu', () => {
     });
   });
 
-  describe('éléments non fonctionnels masqués', () => {
+  describe('éléments proposés ou réservés', () => {
     it('ni listés ni acceptés : dépôt d\'alliance (silo, base lunaire, phalange et porte existent)', async () => {
       const p = await player();
       await database.planet.update({ where: { id: p.planetId }, data: { metal: 10000000, crystal: 10000000, deuterium: 10000000 } });
@@ -201,7 +201,7 @@ describe('API integration - corrections des règles du jeu', () => {
       expect(all.body.map((b: { id: number }) => b.id)).not.toContain(34);
     });
 
-    it('ni listée ni acceptée : réseau de recherche intergalactique (l\'expédition existe)', async () => {
+    it('toutes les technologies sont proposées (expédition et réseau de recherche compris), les inconnues refusées', async () => {
       const p = await player();
       await database.planet.update({
         where: { id: p.planetId },
@@ -213,17 +213,13 @@ describe('API integration - corrections des règles du jeu', () => {
         .set(auth(p.token))
         .expect(200);
       const ids = (list.body.technologies ?? list.body).map((t: { id: number }) => t.id);
-      expect(ids).not.toContain(123);
-      expect(ids).toContain(124);
-      expect(ids).toContain(108);
-      for (const hidden of [123]) {
-        const res = await request(app.getHttpServer())
-          .post('/research')
-          .set(auth(p.token))
-          .send({ planetId: p.planetId, techId: hidden })
-          .expect(400);
-        expect(res.body.message).toContain('pas disponible');
-      }
+      expect(ids).toEqual(expect.arrayContaining([108, 123, 124]));
+      const res = await request(app.getHttpServer())
+        .post('/research')
+        .set(auth(p.token))
+        .send({ planetId: p.planetId, techId: 9999 })
+        .expect(400);
+      expect(res.body.message).toMatch(/inexistante/);
     });
   });
 

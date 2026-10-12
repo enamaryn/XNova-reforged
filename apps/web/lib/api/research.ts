@@ -31,6 +31,7 @@ export interface TechnologyInfo {
 export interface TechnologiesResponse {
   planetId: string;
   technologies: TechnologyInfo[];
+  labNetwork?: { networkLevel: number; ownLab: number; effectiveLab: number; linked: number };
   resources: {
     metal: number;
     crystal: number;

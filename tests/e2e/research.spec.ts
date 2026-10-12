@@ -130,3 +130,26 @@ test('les coûts du prochain niveau sont visibles dans la liste, sans ouvrir les
   await page.reload();
   await expect(page.getByTestId('research-cost-106').locator('[data-short="true"]').first()).toBeVisible();
 });
+
+test('réseau de recherche intergalactique : le laboratoire effectif est annoncé', async ({ page }) => {
+  const credentials = buildCredentials('e2e_irn');
+  await registerUser(page, credentials);
+  const user = await prisma.user.findUniqueOrThrow({
+    where: { username: credentials.username },
+    include: { planets: true },
+  });
+  await prisma.planet.update({ where: { id: user.planets[0].id }, data: { researchLab: 2, metal: 100000, crystal: 100000 } });
+  await prisma.planet.create({
+    data: {
+      userId: user.id, name: 'Colonie', galaxy: 7, system: 100 + Math.floor(Math.random() * 300), position: 6,
+      fieldsMax: 163, researchLab: 6,
+    },
+  });
+
+  await page.goto('/research');
+  await expect(page.getByTestId('lab-network')).toHaveCount(0);
+
+  await prisma.technology.create({ data: { userId: user.id, techId: 123, level: 1 } });
+  await page.reload();
+  await expect(page.getByTestId('lab-network')).toContainText('laboratoire effectif 8');
+});
