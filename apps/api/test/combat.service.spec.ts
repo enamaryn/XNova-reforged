@@ -33,6 +33,7 @@ type MockDb = {
   fleet: {
     update: jest.Mock;
     updateMany: jest.Mock;
+    findMany: jest.Mock;
   };
   $transaction: jest.Mock;
 };
@@ -61,6 +62,8 @@ const createService = () => {
     fleet: {
       update: jest.fn(),
       updateMany: jest.fn(),
+      // Aucune flotte alliée en maintien de position sur la cible
+      findMany: jest.fn().mockResolvedValue([]),
     },
     $transaction: jest.fn(),
   };
