@@ -105,11 +105,11 @@ export const IMPLEMENTED_DEFENSES: readonly number[] = [
 export const SINGLE_UNIT_DEFENSES: readonly number[] = [407, 408];
 
 /**
- * Bâtiments réellement fonctionnels : les autres (dépôt d'alliance, bâtiments lunaires) dépendent
+ * Bâtiments réellement fonctionnels : les autres (dépôt d'alliance, phalange, porte de saut) dépendent
  * de fonctions absentes (maintien de position, lunes) et ne sont ni proposés ni acceptés.
  */
 export const IMPLEMENTED_BUILDINGS: readonly number[] = [
-  1, 2, 3, 4, 12, 14, 15, 21, 22, 23, 24, 31, 33, 44,
+  1, 2, 3, 4, 12, 14, 15, 21, 22, 23, 24, 31, 33, 41, 44,
 ];
 
 /**
@@ -132,6 +132,7 @@ export function maxFleetSlots(computerTechnologyLevel: number): number {
 }
 
 export * from "./missiles";
+export * from "./moons";
 export * from "./production-queue";
 export * from "./item-texts";
 export * from "./shipyard-time";

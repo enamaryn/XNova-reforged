@@ -8,6 +8,7 @@ export interface Planet {
   system: number;
   position: number;
   planetType: string;
+  isMoon?: boolean;
   metal: number;
   crystal: number;
   deuterium: number;

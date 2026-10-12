@@ -38,6 +38,7 @@ export interface CombatReportDetail {
     metal: number;
     crystal: number;
   };
+  moonCreated?: boolean;
   createdAt: string;
 }
 

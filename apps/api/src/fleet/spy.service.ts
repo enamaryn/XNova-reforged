@@ -63,6 +63,7 @@ export class SpyService {
     toGalaxy: number;
     toSystem: number;
     toPosition: number;
+    toMoon?: boolean;
   }): Promise<boolean> {
     const resourceConfig = await this.serverConfig.getResourceConfig();
 
@@ -76,10 +77,11 @@ export class SpyService {
 
       const target = await tx.planet.findUnique({
         where: {
-          galaxy_system_position: {
+          galaxy_system_position_isMoon: {
             galaxy: fleet.toGalaxy,
             system: fleet.toSystem,
             position: fleet.toPosition,
+            isMoon: fleet.toMoon ?? false,
           },
         },
         include: ENERGY_SOURCES_INCLUDE,
@@ -112,6 +114,7 @@ export class SpyService {
         metalStorage: target.metalStorage,
         crystalStorage: target.crystalStorage,
         deuteriumStorage: target.deuteriumStorage,
+        isMoon: target.isMoon,
         ...energySourcesOf(target),
       };
       const current = updateResources({

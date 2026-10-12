@@ -57,6 +57,7 @@ export default function FleetClient() {
   const [shipSelection, setShipSelection] = useState<Record<number, number>>({});
   const [cargo, setCargo] = useState({ metal: 0, crystal: 0, deuterium: 0 });
   const [destination, setDestination] = useState({ galaxy: 1, system: 1, position: 1 });
+  const [toMoon, setToMoon] = useState(false);
   const [nowMs, setNowMs] = useState(Date.now());
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
@@ -74,6 +75,7 @@ export default function FleetClient() {
     const galaxyParam = searchParams.get('galaxy');
     const systemParam = searchParams.get('system');
     const positionParam = searchParams.get('position');
+    if (searchParams.get('moon') === '1') setToMoon(true);
 
     if (missionParam) {
       if (missionParam === 'attack') setMission('attaque');
@@ -233,6 +235,7 @@ export default function FleetClient() {
         toGalaxy: destination.galaxy,
         toSystem: destination.system,
         toPosition: destination.position,
+        ...(toMoon ? { toMoon: true } : {}),
         // Seules les missions traitées par le serveur sont proposées (IMPLEMENTED_MISSIONS)
         mission: MISSION_IDS[mission] ?? 3,
         speedPercent,
@@ -400,6 +403,16 @@ export default function FleetClient() {
               </div>
             </div>
 
+            <label className="flex items-center gap-3 rounded-2xl bg-slate-900/60 p-4 text-sm text-slate-300">
+              <input
+                type="checkbox"
+                checked={toMoon}
+                onChange={(event) => setToMoon(event.target.checked)}
+                data-testid="fleet-to-moon"
+              />
+              <span>🌙 {t('fleet.targetMoon')}</span>
+            </label>
+
             <div className="rounded-2xl bg-slate-900/60 p-4">
               <p className="text-sm text-slate-300">Cargaison</p>
               <div className="mt-3 grid gap-3 sm:grid-cols-3">
@@ -523,8 +536,10 @@ export default function FleetClient() {
                       <span className="text-xs text-slate-500">{fleet.status}</span>
                     </div>
                     <div className="mt-2 text-sm text-slate-300">
-                      {fleet.fromGalaxy}:{fleet.fromSystem}:{fleet.fromPosition} →{' '}
+                      {fleet.fromGalaxy}:{fleet.fromSystem}:{fleet.fromPosition}
+                      {fleet.fromMoon ? ' 🌙' : ''} →{' '}
                       {fleet.toGalaxy}:{fleet.toSystem}:{fleet.toPosition}
+                      {fleet.toMoon ? ' 🌙' : ''}
                     </div>
                     <div className="mt-2 text-xs text-slate-500">
                       {countdownLabel} {formatCountdown(targetTime, nowMs)}

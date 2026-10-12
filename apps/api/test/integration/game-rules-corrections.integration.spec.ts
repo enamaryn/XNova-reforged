@@ -178,7 +178,7 @@ describe('API integration - corrections des règles du jeu', () => {
   });
 
   describe('éléments non fonctionnels masqués', () => {
-    it('ni listés ni acceptés : dépôt d\'alliance, bâtiments lunaires (le silo de missiles est disponible)', async () => {
+    it('ni listés ni acceptés : dépôt d\'alliance, phalange, porte de saut (silo et base lunaire existent)', async () => {
       const p = await player();
       await database.planet.update({ where: { id: p.planetId }, data: { metal: 10000000, crystal: 10000000, deuterium: 10000000 } });
       const list = await request(app.getHttpServer())
@@ -188,7 +188,7 @@ describe('API integration - corrections des règles du jeu', () => {
       const ids = list.body.buildings.map((b: { id: number }) => b.id);
       for (const hidden of [34, 41, 42, 43]) expect(ids).not.toContain(hidden);
       expect(ids).toEqual(expect.arrayContaining([1, 2, 3, 4, 12, 14, 15, 21, 22, 23, 24, 31, 33, 44]));
-      for (const hidden of [34, 41]) {
+      for (const hidden of [34, 42]) {
         const res = await request(app.getHttpServer())
           .post(`/planets/${p.planetId}/build`)
           .set(auth(p.token))

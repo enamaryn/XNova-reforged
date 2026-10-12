@@ -149,10 +149,11 @@ export class MissilesService {
 
     const target = await this.database.planet.findUnique({
       where: {
-        galaxy_system_position: {
+        galaxy_system_position_isMoon: {
           galaxy: dto.toGalaxy,
           system: dto.toSystem,
           position: dto.toPosition,
+          isMoon: false,
         },
       },
       select: { userId: true },
@@ -236,10 +237,11 @@ export class MissilesService {
 
       const target = await tx.planet.findUnique({
         where: {
-          galaxy_system_position: {
+          galaxy_system_position_isMoon: {
             galaxy: strike.toGalaxy,
             system: strike.toSystem,
             position: strike.toPosition,
+            isMoon: false,
           },
         },
         select: { id: true, userId: true },

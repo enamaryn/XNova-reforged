@@ -81,6 +81,15 @@ export const CombatReportCard = memo(function CombatReportCard({
           </div>
         </div>
 
+        {report.moonCreated && (
+          <div
+            data-testid="report-moon-created"
+            className="rounded-2xl border border-sky-500/40 bg-sky-500/10 p-4 text-sm text-sky-200 md:col-span-2"
+          >
+            🌙 {t('report.moonCreated')}
+          </div>
+        )}
+
         <div className="rounded-2xl border border-slate-800/60 bg-slate-900/50 p-4">
           <h3 className="text-xs uppercase tracking-[0.2em] text-slate-500">{t('report.summary')}</h3>
           <div className="mt-3 grid gap-2 text-xs text-slate-300">

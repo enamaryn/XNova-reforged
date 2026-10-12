@@ -46,7 +46,7 @@ L’interface envoie l’en-tête `X-Locale` (`fr`, `en`, `es`, `de`, `it`) à c
 |---------|----------|-------------|
 | GET | `/fleet/available/:planetId` | Vaisseaux disponibles sur la planète. |
 | GET | `/fleet/active` | Missions en cours pour l’utilisateur. |
-| POST | `/fleet/send` | Envoi de flotte (`SendFleetDto`). |
+| POST | `/fleet/send` | Envoi de flotte (`SendFleetDto`) ; `toMoon: true` vise la lune des coordonnées (transport, déploiement, espionnage, attaque) ; une flotte partie d'une lune y revient. |
 | DELETE | `/fleet/:fleetId` | Rappel d’une flotte avant arrivée. |
 
 ## Missiles interplanétaires (`/missiles`)

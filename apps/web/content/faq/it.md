@@ -71,8 +71,11 @@ Ogni pianeta iniziale ha **163 campi**. Ogni livello costruito di un edificio (e
 **Il terraformatore serve a qualcosa?**
 Sì: ogni livello aggiunge **5 campi** al pianeta e il terraformatore **non occupa alcun campo** (richiede *Tecnologia energetica* 12, il che lo riserva alla fine della partita).
 
-**Perché non vedo il deposito dell'alleanza né gli edifici lunari?**
-Perché dipendono da funzioni che non esistono ancora (mantenimento della posizione, missili, lune): non vengono più proposti né accettati, perché nessuno investa in un edificio senza effetto.
+**Perché non vedo il deposito dell'alleanza, la falange né il portale di salto?**
+Il deposito dell'alleanza dipende dal mantenimento della posizione, che non esiste ancora; la falange di sensori e il portale di salto non sono ancora consegnati: non vengono proposti né accettati, perché nessuno investa in un edificio senza effetto.
+
+**Come si ottiene una luna e a cosa serve?**
+Uno scontro contro un *pianeta* può lasciare una luna alle stesse coordinate: la probabilità è dell'1 % ogni 100.000 unità di detriti (metallo + cristallo) prodotte, fino a un massimo del 20 %. La luna appartiene al proprietario del pianeta attaccato; uno scontro contro una luna non ne crea un'altra. Compare nella Galassia (🌙) e nel selettore di pianeta. Una luna **non produce nulla**, nemmeno il reddito di base: occorre inviarle risorse con un trasporto. Nasce con 1 campo; la **Base lunare** (solo su una luna) aggiunge 3 campi per livello e ne occupa uno. Lì si costruiscono anche la fabbrica di robot e il cantiere, per stazionare navi e difese. Le flotte possono partire da una luna e mirarla (casella «Mira alla luna» della pagina Flotta, pulsanti 🌙 della Galassia) per trasportare, schierare, spiare o attaccare; i missili mirano solo ai pianeti.
 
 ---
 
@@ -303,6 +306,6 @@ Si basa sulla **potenza**; il tuo rango appare nell'intestazione e nella panoram
 
 ## 11. Ciò che non esiste ancora
 
-Ufficiali, mercato, eventi, lune, spedizioni, attacchi di gruppo, mantenimento della posizione. Gli edifici e le tecnologie che ne dipendono (deposito dell'alleanza, edifici lunari, rete di ricerca, spedizione) non vengono proposti. La roadmap del progetto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tiene traccia di questi scarti.
+Ufficiali, mercato, eventi, spedizioni, attacchi di gruppo, mantenimento della posizione. Gli edifici e le tecnologie che ne dipendono (deposito dell'alleanza, falange, portale di salto, rete di ricerca, spedizione) non vengono proposti. La roadmap del progetto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tiene traccia di questi scarti.
 
 *Questa FAQ è stata verificata sul codice (`packages/game-config`, `packages/game-engine`, API) e, per i satelliti solari, con un test di integrazione automatizzato (`solar-satellites.integration.spec.ts`).*

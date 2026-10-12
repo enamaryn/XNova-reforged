@@ -3,7 +3,15 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CombatResult, GAME_CONSTANTS, MissionType, SOLAR_SATELLITE_ID } from '@xnova/game-config';
+import {
+  CombatResult,
+  GAME_CONSTANTS,
+  MOON_DEFAULT_NAME,
+  MOON_INITIAL_FIELDS,
+  MissionType,
+  SOLAR_SATELLITE_ID,
+  moonChancePercent,
+} from '@xnova/game-config';
 import {
   computeCargoCapacity,
   distributeLoot,
@@ -64,6 +72,7 @@ export class CombatService {
     toGalaxy: number;
     toSystem: number;
     toPosition: number;
+    toMoon?: boolean;
   }) {
     if (fleet.mission !== MissionType.ATTACK) {
       return null;
@@ -74,6 +83,7 @@ export class CombatService {
         galaxy: fleet.toGalaxy,
         system: fleet.toSystem,
         position: fleet.toPosition,
+        isMoon: fleet.toMoon ?? false,
       },
     });
 
@@ -189,8 +199,37 @@ export class CombatService {
         deuterium: Math.max(0, Math.min(loot.deuterium, Math.floor(current.deuterium))),
       };
 
+      // Lune : un combat sur une planète peut en laisser une, selon les débris produits
+      let moonCreated = false;
+      if (!target.isMoon) {
+        const chance = moonChancePercent(combat.debris.metal, combat.debris.crystal);
+        if (chance > 0 && this.rollMoon(chance)) {
+          const made = await tx.planet.createMany({
+            data: [
+              {
+                userId: target.userId,
+                name: MOON_DEFAULT_NAME,
+                galaxy: fleet.toGalaxy,
+                system: fleet.toSystem,
+                position: fleet.toPosition,
+                isMoon: true,
+                planetType: 'moon',
+                metal: 0,
+                crystal: 0,
+                deuterium: 0,
+                fieldsMax: MOON_INITIAL_FIELDS,
+                fieldsUsed: 0,
+              },
+            ],
+            skipDuplicates: true,
+          });
+          moonCreated = made.count === 1;
+        }
+      }
+
       const created = await tx.combatReport.create({
         data: this.buildReportData({
+          moonCreated,
           attackerId: fleet.userId,
           defenderId: target.userId,
           attackerShips,
@@ -313,6 +352,11 @@ export class CombatService {
     return report;
   }
 
+  /** Tirage de la lune (chance en %) ; isolé pour pouvoir le forcer dans les tests. */
+  protected rollMoon(chancePercent: number): boolean {
+    return Math.random() * 100 < chancePercent;
+  }
+
   async getReports(userId: string) {
     return this.database.combatReport.findMany({
       where: {
@@ -364,8 +408,10 @@ export class CombatService {
     combat: CombatResultSummary;
     loot: { metal: number; crystal: number; deuterium: number };
     location: { galaxy: number; system: number; position: number };
+    moonCreated: boolean;
   }): Prisma.CombatReportCreateInput {
     return {
+      moonCreated: params.moonCreated,
       attackerId: params.attackerId,
       defenderId: params.defenderId,
       attackerShips: params.attackerShips as Prisma.InputJsonValue,

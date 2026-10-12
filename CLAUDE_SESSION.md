@@ -5,6 +5,19 @@
 
 ---
 
+## Session — lunes (1re partie)
+
+**Date :** 13 octobre 2026. Demande du propriétaire : « passe aux lunes ». Livré en deux parties ; cette PR porte le cœur, la phalange et la porte de saut suivront.
+
+- [x] Schéma : `Planet.isMoon` (unicité étendue), `Fleet.fromMoon/toMoon`, `CombatReport.moonCreated` (migration `20261013200000_moons`) ; tous les accès par coordonnées adaptés (`galaxy_system_position_isMoon`).
+- [x] Règles communes `packages/game-config/src/moons.ts` ; le moteur de ressources ne donne aucun revenu de base à une lune.
+- [x] Création de lune après combat (tirage isolé dans `rollMoon` pour les tests), bâtiments de lune, Base lunaire (+3 cases/niveau).
+- [x] Flottes depuis et vers une lune (transport, déploiement, espionnage, attaque) ; galaxie avec lune ; compte de planètes (colonisation) hors lunes.
+- [x] Interface : sélecteur de planète, case « Cibler la lune », boutons de la Galaxie, annonce dans le rapport ; FAQ 5 langues.
+- [x] Tests : `moons.spec.ts` (3), `moons.integration.spec.ts` (10), E2E `moons.spec.ts` (2) ; tests existants adaptés à la nouvelle clé d'unicité.
+- Reste : phalange de capteur et porte de saut (2e partie).
+
+
 ## Session — missiles interplanétaires
 
 **Date :** 13 octobre 2026. Demande du propriétaire : « passe à une fonction de jeu manquante ». Choix : les missiles (fonction autonome, le silo était construisible mais masqué).

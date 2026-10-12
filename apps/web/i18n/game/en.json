@@ -62,7 +62,8 @@
     "noShips": "No ships available.",
     "colonyName": "Colony name",
     "sending": "Sending...",
-    "send": "Send fleet"
+    "send": "Send fleet",
+    "targetMoon": "Target the moon (same coordinates)"
   },
   "movement": {
     "kicker": "Traffic control",
@@ -724,7 +725,8 @@
     "homeworld": "Home Planet",
     "newColony": "New colony",
     "none": "No planet",
-    "yours": "Your planets ({count})"
+    "yours": "Your planets ({count})",
+    "moon": "Moon"
   },
   "planetScene": {
     "active": "Active planet",
@@ -749,7 +751,8 @@
     "defenseFallback": "Defense {id}",
     "defenseLine": "{count} (destroyed {destroyed}, repaired {repaired})",
     "timeline": "Timeline",
-    "round": "Round {round}"
+    "round": "Round {round}",
+    "moonCreated": "The battle left a moon behind!"
   },
   "reports": {
     "kicker": "Combat",

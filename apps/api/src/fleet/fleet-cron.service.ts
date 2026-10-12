@@ -75,6 +75,7 @@ export class FleetCronService {
                 galaxy: fleet.toGalaxy,
                 system: fleet.toSystem,
                 position: fleet.toPosition,
+                isMoon: fleet.toMoon,
                 userId: fleet.userId,
               },
               select: { id: true },
@@ -114,6 +115,7 @@ export class FleetCronService {
                 galaxy: fleet.toGalaxy,
                 system: fleet.toSystem,
                 position: fleet.toPosition,
+                isMoon: fleet.toMoon,
               },
             });
 
@@ -228,6 +230,7 @@ export class FleetCronService {
             galaxy: fleet.fromGalaxy,
             system: fleet.fromSystem,
             position: fleet.fromPosition,
+            isMoon: fleet.fromMoon,
           },
         });
 

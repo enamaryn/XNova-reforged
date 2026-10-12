@@ -28,6 +28,8 @@ export interface ResourceLevels {
   solarSatellites?: number;
   /** Niveau de la technologie Énergie du joueur : augmente le rendement de la centrale à fusion. */
   energyTechnology?: number;
+  /** Une lune ne produit rien, pas même le revenu de base d'une planète. */
+  isMoon?: boolean;
 }
 
 export interface ResourceState {
@@ -148,7 +150,9 @@ export function updateResources(input: ResourceUpdateInput): ResourceUpdateResul
   // La centrale à fusion brûle du deutérium en permanence (indépendamment du niveau de production)
   adjustedProduction.deuterium -=
     calculateFusionDeuteriumConsumption(input.levels.fusionPlant) * productionMultiplier;
-  const baseIncome = applyBaseIncome(config.baseIncome, productionMultiplier);
+  const baseIncome = input.levels.isMoon
+    ? { metal: 0, crystal: 0, deuterium: 0 }
+    : applyBaseIncome(config.baseIncome, productionMultiplier);
 
   const produced = calculateProducedResources(
     adjustedProduction,

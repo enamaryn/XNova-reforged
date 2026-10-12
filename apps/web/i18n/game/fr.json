@@ -62,7 +62,8 @@
     "noShips": "Aucun vaisseau disponible.",
     "colonyName": "Nom de la colonie",
     "sending": "Envoi...",
-    "send": "Envoyer la flotte"
+    "send": "Envoyer la flotte",
+    "targetMoon": "Cibler la lune (même coordonnées)"
   },
   "movement": {
     "kicker": "Centre de trafic",
@@ -724,7 +725,8 @@
     "homeworld": "Planète Mère",
     "newColony": "Nouvelle colonie",
     "none": "Aucune planète",
-    "yours": "Vos planètes ({count})"
+    "yours": "Vos planètes ({count})",
+    "moon": "Lune"
   },
   "planetScene": {
     "active": "Planète active",
@@ -749,7 +751,8 @@
     "defenseFallback": "Défense {id}",
     "defenseLine": "{count} (détruites {destroyed}, réparées {repaired})",
     "timeline": "Chronologie",
-    "round": "Tour {round}"
+    "round": "Tour {round}",
+    "moonCreated": "Un combat sur la planète a laissé une lune !"
   },
   "reports": {
     "kicker": "Combat",
