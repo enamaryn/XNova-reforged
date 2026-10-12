@@ -132,7 +132,7 @@ Una sola investigación a la vez por jugador, pagada al iniciar, que exige un ni
 | **Producción paralela** (*Production parallèle*, 126) | líneas de producción adicionales en el astillero |
 
 **¿Y las demás?**
-Hiperespacio (114), Láser (120), Iones (121), Plasma (122) y Gravitón (199) son puros **requisitos** para desbloquear edificios, naves y defensas (sus descripciones dicen «sin efecto directo»). *Energía* también aumenta el rendimiento de la fusión (véase §3). La **red de investigación intergaláctica** y la **expedición** no se ofrecen mientras no existan sus funciones.
+Hiperespacio (114), Láser (120), Iones (121), Plasma (122) y Gravitón (199) son puros **requisitos** para desbloquear edificios, naves y defensas (sus descripciones dicen «sin efecto directo»). *Energía* también aumenta el rendimiento de la fusión (véase §3). La **red de investigación intergaláctica** (123) enlaza tus laboratorios: una investigación lanzada en un planeta cuenta como un laboratorio de nivel *local + los N mejores laboratorios de tus otros planetas* (N = nivel de la red; las lunas no cuentan), lo que acorta el tiempo de investigación (la página Investigación muestra el laboratorio efectivo). No cambia ni los costes ni los requisitos.
 
 **¿Qué investigar primero?**
 *Energía* (requisito de la fusión y de varias defensas), luego el motor de combustión para transportes más rápidos, después *Militar/Defensa/Escudo* según su plan de combate.
@@ -312,6 +312,6 @@ Se basa en el **poder**; su rango aparece en la cabecera y en la vista general. 
 
 ## 11. Lo que aún no existe
 
-Oficiales, mercado, eventos, ataques en grupo. Las tecnologías que dependen de ello (red de investigación) no se ofrecen. La hoja de ruta del proyecto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) sigue estas discrepancias.
+Oficiales, mercado, eventos, ataques en grupo. La hoja de ruta del proyecto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) sigue estas discrepancias.
 
 *Esta FAQ se ha comprobado con el código (`packages/game-config`, `packages/game-engine`, API) y, para los satélites solares, con una prueba de integración automatizada (`solar-satellites.integration.spec.ts`).*

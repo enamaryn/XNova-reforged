@@ -132,7 +132,7 @@ One research at a time per player, paid at launch, requiring a laboratory level 
 | **Parallel production** (*Production parallèle*, 126) | extra production lines at the shipyard |
 
 **And the others?**
-Hyperspace (114), Laser (120), Ion (121), Plasma (122) and Graviton (199) are pure **requirements** to unlock buildings, ships and defenses (their descriptions say "no direct effect"). *Energy* also raises the fusion plant's output (see §3). The **intergalactic research network** and **expedition** are not offered until their features exist.
+Hyperspace (114), Laser (120), Ion (121), Plasma (122) and Graviton (199) are pure **requirements** to unlock buildings, ships and defenses (their descriptions say "no direct effect"). *Energy* also raises the fusion plant's output (see §3). The **intergalactic research network** (123) links your labs: a research started on a planet counts as a lab of level *local + the N best labs of your other planets* (N = network level; moons do not count), which shortens research time (the Research page shows the effective lab). It changes neither costs nor requirements.
 
 **Which research first?**
 *Energy* (requirement for fusion and several defenses), then the combustion drive for faster transports, then *Military/Defense/Shield* depending on your combat plans.
@@ -312,6 +312,6 @@ It is based on **power**; your rank appears in the header and the overview. Losi
 
 ## 11. What does not exist yet
 
-Officers, market, events, group attacks. Technologies that depend on them (research network) are not offered. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
+Officers, market, events, group attacks. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
 
 *This FAQ was checked against the code (`packages/game-config`, `packages/game-engine`, API) and, for solar satellites, by an automated integration test (`solar-satellites.integration.spec.ts`).*

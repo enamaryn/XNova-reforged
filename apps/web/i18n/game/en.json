@@ -698,7 +698,8 @@
     "cannotStart": "Unable to start the research.",
     "completedToast": "Research completed: {name}{level}",
     "fallbackName": "Research",
-    "costNextLevel": "Cost of the next level"
+    "costNextLevel": "Cost of the next level",
+    "labNetwork": "Research network (level {level}): effective lab {effective} = local lab {own} + {linked} linked lab(s) from your other planets. Research times take it into account."
   },
   "energy": {
     "deficitBadge": "DEFICIT",

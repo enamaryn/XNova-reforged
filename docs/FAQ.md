@@ -130,7 +130,7 @@ Une seule recherche à la fois par joueur, payée au lancement, qui exige un niv
 | **Production parallèle** (126) | lignes de production supplémentaires au chantier |
 
 **Et les autres ?**
-Hyperespace (114), Laser (120), Ions (121), Plasma (122) et Graviton (199) sont de purs **prérequis** pour débloquer des bâtiments, vaisseaux et défenses (leurs descriptions l'indiquent : « aucun effet direct »). *Énergie* relève aussi le rendement de la fusion (voir §3). Le **réseau de recherche intergalactique** et l'**expédition** ne sont pas proposés tant que leurs fonctions n'existent pas.
+Hyperespace (114), Laser (120), Ions (121), Plasma (122) et Graviton (199) sont de purs **prérequis** pour débloquer des bâtiments, vaisseaux et défenses (leurs descriptions l'indiquent : « aucun effet direct »). *Énergie* relève aussi le rendement de la fusion (voir §3). Le **réseau de recherche intergalactique** (123) relie vos laboratoires : une recherche lancée sur une planète compte comme un laboratoire de niveau *local + les N meilleurs laboratoires de vos autres planètes* (N = niveau du réseau ; les lunes ne comptent pas), ce qui raccourcit le temps de recherche (la page Recherche affiche le laboratoire effectif). Il ne change ni les coûts ni les prérequis.
 
 **Quelle est la première recherche conseillée ?**
 *Énergie* (prérequis de la fusion et de plusieurs défenses), puis le réacteur à combustion pour des transporteurs plus rapides, puis *Militaire/Défense/Bouclier* selon votre projet de combat.
@@ -310,6 +310,6 @@ Il est établi sur la **puissance** ; votre rang apparaît dans l'en-tête et la
 
 ## 11. Ce qui n'existe pas encore
 
-Officiers, marché, événements, attaques groupées. Les technologies qui en dépendent (réseau de recherche) ne sont pas proposées. La feuille de route du projet ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) suit ces écarts.
+Officiers, marché, événements, attaques groupées. La feuille de route du projet ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) suit ces écarts.
 
 *Cette FAQ a été vérifiée contre le code (`packages/game-config`, `packages/game-engine`, API) et, pour les satellites solaires, par un test automatisé d'intégration (`solar-satellites.integration.spec.ts`).*

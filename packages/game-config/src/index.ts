@@ -113,12 +113,9 @@ export const IMPLEMENTED_BUILDINGS: readonly number[] = [
   1, 2, 3, 4, 12, 14, 15, 21, 22, 23, 24, 31, 33, 34, 41, 42, 43, 44,
 ];
 
-/**
- * Technologies réellement fonctionnelles : le réseau de recherche intergalactique (123) dépend d'une fonction
- * absente et n'est ni proposé ni accepté.
- */
+/** Technologies réellement fonctionnelles (toutes les technologies du jeu sont désormais proposées). */
 export const IMPLEMENTED_TECHNOLOGIES: readonly number[] = [
-  106, 108, 109, 110, 111, 113, 114, 115, 117, 118, 120, 121, 122, 124, 125, 126, 199,
+  106, 108, 109, 110, 111, 113, 114, 115, 117, 118, 120, 121, 122, 123, 124, 125, 126, 199,
 ];
 
 /** Cases ajoutées par niveau de terraformeur (le terraformeur lui-même n'occupe pas de case). */
@@ -136,6 +133,7 @@ export * from "./missiles";
 export * from "./expeditions";
 export * from "./hold";
 export * from "./moons";
+export * from "./research-network";
 export * from "./production-queue";
 export * from "./item-texts";
 export * from "./shipyard-time";

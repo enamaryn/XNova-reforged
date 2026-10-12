@@ -698,7 +698,8 @@
     "cannotStart": "Impossible de lancer la recherche.",
     "completedToast": "Recherche terminée : {name}{level}",
     "fallbackName": "Recherche",
-    "costNextLevel": "Coût du prochain niveau"
+    "costNextLevel": "Coût du prochain niveau",
+    "labNetwork": "Réseau de recherche (niveau {level}) : laboratoire effectif {effective} = laboratoire local {own} + {linked} laboratoire(s) relié(s) des autres planètes. Les temps de recherche en tiennent compte."
   },
   "energy": {
     "deficitBadge": "DÉFICIT",

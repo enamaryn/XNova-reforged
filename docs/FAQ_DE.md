@@ -132,7 +132,7 @@ Eine Forschung gleichzeitig pro Spieler, beim Start bezahlt, mit einer Laborstuf
 | **Parallelproduktion** (*Production parallèle*, 126) | zusätzliche Produktionslinien in der Werft |
 
 **Und die übrigen?**
-Hyperraum (114), Laser (120), Ionen (121), Plasma (122) und Graviton (199) sind reine **Voraussetzungen**, um Gebäude, Schiffe und Verteidigungen freizuschalten (ihre Beschreibungen sagen „keine direkte Wirkung“). *Energie* erhöht außerdem den Ertrag der Fusion (siehe §3). Das **Intergalaktische Forschungsnetzwerk** und die **Expedition** werden nicht angeboten, solange ihre Funktionen fehlen.
+Hyperraum (114), Laser (120), Ionen (121), Plasma (122) und Graviton (199) sind reine **Voraussetzungen**, um Gebäude, Schiffe und Verteidigungen freizuschalten (ihre Beschreibungen sagen „keine direkte Wirkung“). *Energie* erhöht außerdem den Ertrag der Fusion (siehe §3). Das **Intergalaktische Forschungsnetzwerk** (123) verbindet deine Labore: Eine auf einem Planeten gestartete Forschung zählt wie ein Labor der Stufe *lokal + die N besten Labore deiner anderen Planeten* (N = Netzwerkstufe; Monde zählen nicht), was die Forschungszeit verkürzt (die Forschungsseite zeigt das wirksame Labor). Kosten und Voraussetzungen bleiben unverändert.
 
 **Was zuerst erforschen?**
 *Energie* (Voraussetzung für Fusion und mehrere Verteidigungen), dann das Verbrennungstriebwerk für schnellere Transporter, danach *Militär/Verteidigung/Schild* je nach Kampfplan.
@@ -312,6 +312,6 @@ Sie beruht auf der **Macht**; Ihr Rang erscheint in der Kopfzeile und in der Üb
 
 ## 11. Was es noch nicht gibt
 
-Offiziere, Markt, Ereignisse, Verbandsangriffe. Die davon abhängigen Technologien (Forschungsnetzwerk) werden nicht angeboten. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
+Offiziere, Markt, Ereignisse, Verbandsangriffe. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
 
 *Diese FAQ wurde gegen den Code (`packages/game-config`, `packages/game-engine`, API) und, für die Solarsatelliten, durch einen automatisierten Integrationstest (`solar-satellites.integration.spec.ts`) geprüft.*

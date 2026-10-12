@@ -698,7 +698,8 @@
     "cannotStart": "No se puede iniciar la investigación.",
     "completedToast": "Investigación terminada: {name}{level}",
     "fallbackName": "Investigación",
-    "costNextLevel": "Coste del siguiente nivel"
+    "costNextLevel": "Coste del siguiente nivel",
+    "labNetwork": "Red de investigación (nivel {level}): laboratorio efectivo {effective} = laboratorio local {own} + {linked} laboratorio(s) enlazado(s) de tus otros planetas. Los tiempos de investigación lo tienen en cuenta."
   },
   "energy": {
     "deficitBadge": "DÉFICIT",
