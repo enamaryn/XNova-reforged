@@ -49,6 +49,14 @@ L’interface envoie l’en-tête `X-Locale` (`fr`, `en`, `es`, `de`, `it`) à c
 | POST | `/fleet/send` | Envoi de flotte (`SendFleetDto`) ; `toMoon: true` vise la lune des coordonnées (transport, déploiement, espionnage, attaque) ; une flotte partie d'une lune y revient. |
 | DELETE | `/fleet/:fleetId` | Rappel d’une flotte avant arrivée. |
 
+## Expéditions
+
+| Méthode | Endpoint | Description |
+|---------|----------|-------------|
+| POST | `/fleet/send` | Avec `mission: 15` et `toPosition: 16` (position réservée aux expéditions) : technologie Expédition (124) requise, expéditions simultanées limitées à la racine entière du niveau. |
+| GET | `/expedition-reports` | 50 derniers rapports d'expédition du joueur. |
+| GET | `/expedition-reports/:reportId` | Un rapport (404 si ce n'est pas le sien). |
+
 ## Missiles interplanétaires (`/missiles`)
 
 | Méthode | Endpoint | Description |

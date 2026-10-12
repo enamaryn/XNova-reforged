@@ -193,7 +193,10 @@ Mission *Colonisation* avec un vaisseau de colonisation vers une **position libr
 ## 6. Flottes et missions
 
 **Quelles missions existent ?**
-**Transport** (livre la cargaison puis la flotte rentre), **Déploiement** (installe flotte et cargaison sur *votre* autre planète, sans retour), **Attaque**, **Espionnage**, **Colonisation**, **Recyclage** (recycleurs seuls, vers un champ de débris). Expédition, attaque groupée, maintien de position et destruction sont refusés par le jeu sans rien débiter.
+**Transport** (livre la cargaison puis la flotte rentre), **Déploiement** (installe flotte et cargaison sur *votre* autre planète, sans retour), **Attaque**, **Espionnage**, **Colonisation**, **Recyclage** (recycleurs seuls, vers un champ de débris). L'**Expédition** a sa propre rubrique ci-dessous ; attaque groupée, maintien de position et destruction sont refusés par le jeu sans rien débiter.
+
+**Comment fonctionnent les expéditions ?**
+Il faut la technologie **Expédition** (laboratoire 3, Hyperespace 1, Propulsion hyperespace 5). Envoyez une flotte (cargaison possible) vers la **position 16** de n'importe quel système, depuis la page Flotte ou le lien « Expédition » de la Galaxie. À l'arrivée, une issue est tirée au sort : rien (30 %), ressources trouvées (30 %, une part de la capacité de la flotte), vaisseaux trouvés (9 %), retard du retour (10 %), retour plus rapide (5 %), pirates (15 %, 10 % à 30 % de chaque type de vaisseau perdu) ou trou noir (1 %, flotte et cargaison perdues). Le rapport est dans la page Rapports. Expéditions simultanées : racine entière du niveau de la technologie (niveau 4 : 2).
 
 **Comment sont calculés la durée et le carburant d'un vol ?**
 Distance : `√(Δgalaxie² × 20 000 + Δsystème² × 95 + Δposition² × 5)`. Vitesse de la flotte : celle de son **vaisseau le plus lent** (avec les bonus de réacteurs). Durée : `(35 000 / % de vitesse) × √(distance × 10 / vitesse) + 10` secondes, divisée par la vitesse de flotte du serveur. Carburant (deutérium, débité au **départ**) : `Σ nombre × consommation × (distance / 35 000) × (vitesse / 1 000 + 1)²`. Exemple avec 10 petits transporteurs : même système (4 positions) 0 deutérium ; 10 systèmes plus loin 10 ; autre galaxie 14. Le choix d'une vitesse plus basse allonge le vol (de 10 % à 100 %).
@@ -307,6 +310,6 @@ Il est établi sur la **puissance** ; votre rang apparaît dans l'en-tête et la
 
 ## 11. Ce qui n'existe pas encore
 
-Officiers, marché, événements, expéditions, attaques groupées, maintien de position. Les bâtiments et technologies qui en dépendent (dépôt d'alliance, réseau de recherche, expédition) ne sont pas proposés. La feuille de route du projet ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) suit ces écarts.
+Officiers, marché, événements, attaques groupées, maintien de position. Les bâtiments et technologies qui en dépendent (dépôt d'alliance, réseau de recherche) ne sont pas proposés. La feuille de route du projet ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) suit ces écarts.
 
 *Cette FAQ a été vérifiée contre le code (`packages/game-config`, `packages/game-engine`, API) et, pour les satellites solaires, par un test automatisé d'intégration (`solar-satellites.integration.spec.ts`).*

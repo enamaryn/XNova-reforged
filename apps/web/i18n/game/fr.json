@@ -52,7 +52,8 @@
       "spy": "Espionnage",
       "colonize": "Colonisation",
       "recycle": "Recyclage",
-      "deploy": "Déploiement"
+      "deploy": "Déploiement",
+      "expedition": "Expédition"
     },
     "summary": "Résumé de mission",
     "distance": "Distance",
@@ -64,7 +65,8 @@
     "colonyName": "Nom de la colonie",
     "sending": "Envoi...",
     "send": "Envoyer la flotte",
-    "targetMoon": "Cibler la lune (même coordonnées)"
+    "targetMoon": "Cibler la lune (même coordonnées)",
+    "expeditionHelp": "Envoie la flotte dans l'espace profond (position 16 du système) : elle y trouve parfois des ressources ou des vaisseaux, mais peut aussi être retardée, attaquée par des pirates ou engloutie par un trou noir. Technologie Expédition requise ; le rapport arrive à l'arrivée dans la page Rapports."
   },
   "movement": {
     "kicker": "Centre de trafic",
@@ -101,7 +103,8 @@
     "transport": "Transporter",
     "colonize": "Coloniser",
     "recycle": "Recycler",
-    "debris": "Débris"
+    "debris": "Débris",
+    "expedition": "Expédition"
   },
   "messages": {
     "kicker": "Communication",
@@ -775,7 +778,17 @@
     "spyKicker": "Espionnage",
     "spyTitle": "Rapports d'espionnage",
     "spyEmpty": "Aucun rapport d'espionnage. Envoyez des sondes depuis la page Flotte.",
-    "spyLine": "{probes} sonde(s) · niveau d'information {level}/4"
+    "spyLine": "{probes} sonde(s) · niveau d'information {level}/4",
+    "expKicker": "Expéditions",
+    "expTitle": "Rapports d'expédition",
+    "expEmpty": "Aucune expédition terminée. Envoyez une flotte en position 16 depuis la page Flotte.",
+    "exp_nothing": "Rien d'intéressant n'a été trouvé ; la flotte rentre.",
+    "expResources": "Ressources trouvées : {amount} {resource}.",
+    "expShips": "{amount} vaisseau(x) ont rejoint la flotte.",
+    "exp_delay": "Un contretemps allonge le retour (×{factor}).",
+    "exp_speedup": "Un courant favorable raccourcit le retour (×{factor}).",
+    "expPirates": "Attaque de pirates : {lost} vaisseau(x) perdu(s).",
+    "exp_blackhole": "Un trou noir a englouti toute la flotte."
   },
   "spy": {
     "building": {

@@ -52,7 +52,8 @@
       "spy": "Espionage",
       "colonize": "Colonization",
       "recycle": "Recycling",
-      "deploy": "Deploy"
+      "deploy": "Deploy",
+      "expedition": "Expedition"
     },
     "summary": "Mission summary",
     "distance": "Distance",
@@ -64,7 +65,8 @@
     "colonyName": "Colony name",
     "sending": "Sending...",
     "send": "Send fleet",
-    "targetMoon": "Target the moon (same coordinates)"
+    "targetMoon": "Target the moon (same coordinates)",
+    "expeditionHelp": "Sends the fleet into deep space (position 16 of the system): it sometimes finds resources or ships, but may also be delayed, attacked by pirates or swallowed by a black hole. Expedition technology required; the report arrives on landing in the Reports page."
   },
   "movement": {
     "kicker": "Traffic control",
@@ -101,7 +103,8 @@
     "transport": "Transport",
     "colonize": "Colonize",
     "recycle": "Recycle",
-    "debris": "Debris"
+    "debris": "Debris",
+    "expedition": "Expedition"
   },
   "messages": {
     "kicker": "Communication",
@@ -775,7 +778,17 @@
     "spyKicker": "Espionage",
     "spyTitle": "Espionage reports",
     "spyEmpty": "No espionage report. Send probes from the Fleet page.",
-    "spyLine": "{probes} probe(s) · information level {level}/4"
+    "spyLine": "{probes} probe(s) · information level {level}/4",
+    "expKicker": "Expeditions",
+    "expTitle": "Expedition reports",
+    "expEmpty": "No finished expedition. Send a fleet to position 16 from the Fleet page.",
+    "exp_nothing": "Nothing of interest was found; the fleet returns.",
+    "expResources": "Resources found: {amount} {resource}.",
+    "expShips": "{amount} ship(s) joined the fleet.",
+    "exp_delay": "A setback lengthens the return (×{factor}).",
+    "exp_speedup": "A favourable current shortens the return (×{factor}).",
+    "expPirates": "Pirate attack: {lost} ship(s) lost.",
+    "exp_blackhole": "A black hole swallowed the whole fleet."
   },
   "spy": {
     "building": {

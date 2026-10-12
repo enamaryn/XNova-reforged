@@ -9,6 +9,8 @@ import { ServerConfigService } from '../server-config/server-config.service';
 import {
   COLONY_SHIP_ID,
   COMPUTER_TECH_ID,
+  EXPEDITION_POSITION,
+  EXPEDITION_TECH_ID,
   ESPIONAGE_PROBE_ID,
   RECYCLER_ID,
   GAME_CONSTANTS,
@@ -17,6 +19,7 @@ import {
   SHIPS,
   SOLAR_SATELLITE_ID,
   getShipSpeed,
+  maxExpeditions,
   maxFleetSlots,
 } from '@xnova/game-config';
 import {
@@ -131,15 +134,21 @@ export class FleetService {
       throw new BadRequestException('Mission non disponible');
     }
 
+    // Seule une expédition vise la position 16 de l'espace profond, et elle ne vise que celle-ci
+    const isExpedition = dto.mission === MissionType.EXPEDITION;
+    const maxPosition = isExpedition ? EXPEDITION_POSITION : GAME_CONSTANTS.MAX_POSITIONS;
     if (
       dto.toGalaxy < 1 ||
       dto.toGalaxy > GAME_CONSTANTS.MAX_GALAXIES ||
       dto.toSystem < 1 ||
       dto.toSystem > GAME_CONSTANTS.MAX_SYSTEMS ||
       dto.toPosition < 1 ||
-      dto.toPosition > GAME_CONSTANTS.MAX_POSITIONS
+      dto.toPosition > maxPosition
     ) {
       throw new BadRequestException('Coordonnees invalides');
+    }
+    if (isExpedition && dto.toPosition !== EXPEDITION_POSITION) {
+      throw new BadRequestException("Une expedition vise la position 16 de l'espace profond");
     }
 
     const shipsToSend = this.parseShips(dto.ships);
@@ -215,6 +224,25 @@ export class FleetService {
       });
       if (!debris || debris.metal + debris.crystal < 1) {
         throw new BadRequestException('Aucun champ de débris à ces coordonnées');
+      }
+    } else if (dto.mission === MissionType.EXPEDITION) {
+      // Expédition : technologie requise, nombre d'expéditions simultanées limité, aucune cible à vérifier
+      if (toMoon) throw new BadRequestException('Une expedition ne vise pas une lune');
+      const tech = await this.database.technology.findUnique({
+        where: { userId_techId: { userId, techId: EXPEDITION_TECH_ID } },
+        select: { level: true },
+      });
+      const level = tech?.level ?? 0;
+      if (level < 1) {
+        throw new BadRequestException('La technologie Expedition est requise');
+      }
+      const running = await this.database.fleet.count({
+        where: { userId, mission: MissionType.EXPEDITION, status: { in: ['traveling', 'returning'] } },
+      });
+      if (running >= maxExpeditions(level)) {
+        throw new BadRequestException(
+          `Nombre maximal d'expeditions atteint (${running}/${maxExpeditions(level)})`,
+        );
       }
     } else if (!target) {
       // TRANSPORT : la cible doit exister

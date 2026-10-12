@@ -195,7 +195,10 @@ Misión *Colonización* con un colonizador hacia una **posición libre**: se fun
 ## 6. Flotas y misiones
 
 **¿Qué misiones existen?**
-**Transporte** (entrega la carga y la flota regresa), **Despliegue** (instala flota y carga en *otro planeta suyo*, sin regreso), **Ataque**, **Espionaje**, **Colonización**, **Reciclaje** (solo recicladores, hacia un campo de escombros). Expedición, ataque en grupo, mantener posición y destruir son rechazados por el juego sin descontar nada.
+**Transporte** (entrega la carga y la flota regresa), **Despliegue** (instala flota y carga en *otro planeta suyo*, sin regreso), **Ataque**, **Espionaje**, **Colonización**, **Reciclaje** (solo recicladores, hacia un campo de escombros). La **Expedición** tiene su propio apartado más abajo; ataque en grupo, mantener posición y destruir son rechazados por el juego sin descontar nada.
+
+**¿Cómo funcionan las expediciones?**
+Hace falta la tecnología **Expedición** (laboratorio 3, Hiperespacio 1, Propulsor hiperespacial 5). Envía una flota (con carga si quieres) a la **posición 16** de cualquier sistema, desde la página Flota o el enlace «Expedición» de la Galaxia. Al llegar se sortea un resultado: nada (30 %), recursos encontrados (30 %, una parte de la capacidad de la flota), naves encontradas (9 %), regreso retrasado (10 %), regreso más rápido (5 %), piratas (15 %, se pierde entre el 10 % y el 30 % de cada tipo de nave) o agujero negro (1 %, se pierden flota y carga). El informe está en la página Informes. Expediciones simultáneas: raíz entera del nivel de la tecnología (nivel 4: 2).
 
 **¿Cómo se calculan la duración y el combustible de un vuelo?**
 Distancia: `√(Δgalaxia² × 20 000 + Δsistema² × 95 + Δposición² × 5)`. Velocidad de la flota: la de su **nave más lenta** (con las bonificaciones de motores). Duración: `(35 000 / % de velocidad) × √(distancia × 10 / velocidad) + 10` segundos, divididos por la velocidad de flota del servidor. Combustible (deuterio, descontado a la **salida**): `Σ número × consumo × (distancia / 35 000) × (velocidad / 1 000 + 1)²`. Ejemplo con 10 cargueros pequeños: mismo sistema (4 posiciones) 0 de deuterio; 10 sistemas más allá 10; otra galaxia 14. Una velocidad menor alarga el vuelo (del 10 % al 100 %).
@@ -309,6 +312,6 @@ Se basa en el **poder**; su rango aparece en la cabecera y en la vista general. 
 
 ## 11. Lo que aún no existe
 
-Oficiales, mercado, eventos, expediciones, ataques en grupo, mantener posición. Los edificios y tecnologías que dependen de ello (depósito de la alianza, red de investigación, expedición) no se ofrecen. La hoja de ruta del proyecto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) sigue estas discrepancias.
+Oficiales, mercado, eventos, ataques en grupo, mantener posición. Los edificios y tecnologías que dependen de ello (depósito de la alianza, red de investigación) no se ofrecen. La hoja de ruta del proyecto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) sigue estas discrepancias.
 
 *Esta FAQ se ha comprobado con el código (`packages/game-config`, `packages/game-engine`, API) y, para los satélites solares, con una prueba de integración automatizada (`solar-satellites.integration.spec.ts`).*

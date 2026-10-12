@@ -6,9 +6,74 @@ import { useQuery } from '@tanstack/react-query';
 import { motion, useReducedMotion, type MotionProps } from 'framer-motion';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { reportsApi } from '@/lib/api/reports';
-import { getSpyReports } from '@/lib/api/fleet';
+import { getExpeditionReports, getSpyReports } from '@/lib/api/fleet';
 import { designTokens } from '@/lib/design-tokens';
 import { useI18n } from '@/lib/i18n';
+
+/** Rapports d'expédition : une issue par expédition arrivée en position 16. */
+function ExpeditionReportsSection() {
+  const { t, locale } = useI18n();
+  const { data, isLoading } = useQuery({
+    queryKey: ['expedition-reports'],
+    queryFn: () => getExpeditionReports(),
+    refetchInterval: 30000,
+  });
+  const reports = data ?? [];
+
+  const describe = (report: (typeof reports)[number]) => {
+    const d = report.details as Record<string, number | string | Record<string, number>>;
+    const sum = (lost: unknown) =>
+      Object.values((lost ?? {}) as Record<string, number>).reduce((a, b) => a + Number(b || 0), 0);
+    switch (report.outcome) {
+      case 'resources':
+        return t('reports.expResources', { amount: Number(d.amount ?? 0), resource: t(`resources.${String(d.resource ?? 'metal')}`) });
+      case 'ships':
+        return t('reports.expShips', { amount: Number(d.amount ?? 0) });
+      case 'delay':
+      case 'speedup':
+        return t(`reports.exp_${report.outcome}`, { factor: Number(d.factor ?? 1) });
+      case 'pirates':
+        return t('reports.expPirates', { lost: sum(d.lost) });
+      default:
+        return t(`reports.exp_${report.outcome}`);
+    }
+  };
+
+  return (
+    <section className="space-y-3" data-testid="expedition-reports">
+      <div>
+        <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">{t('reports.expKicker')}</p>
+        <h2 className="mt-1 text-lg font-semibold text-white">{t('reports.expTitle')}</h2>
+      </div>
+      {isLoading ? (
+        <p className="text-sm text-slate-400">{t('common.loading')}</p>
+      ) : reports.length === 0 ? (
+        <div className="rounded-2xl border border-slate-800/80 bg-slate-900/40 p-4 text-sm text-slate-400">
+          {t('reports.expEmpty')}
+        </div>
+      ) : (
+        <div className="grid gap-3 lg:grid-cols-2">
+          {reports.map((report) => (
+            <div
+              key={report.id}
+              data-testid="expedition-report"
+              data-outcome={report.outcome}
+              className="rounded-2xl border border-slate-800/80 bg-slate-950/60 p-4 text-sm text-slate-300"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-slate-100">
+                  [{report.galaxy}:{report.system}:16]
+                </span>
+                <span className="text-xs text-slate-500">{new Date(report.createdAt).toLocaleString(locale)}</span>
+              </div>
+              <div className="mt-2 text-xs text-slate-400">{describe(report)}</div>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
 
 function resultKey(result: string) {
   return result === 'attacker_win' || result === 'defender_win' ? result : 'draw';
@@ -212,6 +277,7 @@ export default function ReportsPage() {
       )}
 
       <SpyReportsSection />
+      <ExpeditionReportsSection />
     </motion.div>
   );
 }

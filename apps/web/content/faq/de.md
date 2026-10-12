@@ -195,7 +195,10 @@ Mission *Kolonisierung* mit einem Kolonieschiff zu einer **freien Position**: Di
 ## 6. Flotten und Missionen
 
 **Welche Missionen gibt es?**
-**Transport** (liefert die Fracht, danach kehrt die Flotte zurück), **Stationieren** (setzt Flotte und Fracht auf *Ihren* anderen Planeten, ohne Rückkehr), **Angriff**, **Spionage**, **Kolonisierung**, **Recycling** (nur Recycler, zu einem Trümmerfeld). Expedition, Verbandsangriff, Halten und Zerstören lehnt das Spiel ab, ohne etwas abzubuchen.
+**Transport** (liefert die Fracht, danach kehrt die Flotte zurück), **Stationieren** (setzt Flotte und Fracht auf *Ihren* anderen Planeten, ohne Rückkehr), **Angriff**, **Spionage**, **Kolonisierung**, **Recycling** (nur Recycler, zu einem Trümmerfeld). Die **Expedition** hat unten einen eigenen Eintrag; Verbandsangriff, Halten und Zerstören lehnt das Spiel ab, ohne etwas abzubuchen.
+
+**Wie funktionieren Expeditionen?**
+Du brauchst die Technologie **Expedition** (Labor 3, Hyperraumtechnik 1, Hyperraumantrieb 5). Schicke eine Flotte (mit Fracht möglich) zu **Position 16** eines beliebigen Systems, von der Flottenseite oder über den Link „Expedition“ der Galaxie. Bei der Ankunft wird ein Ergebnis ausgelost: nichts (30 %), Rohstoffe gefunden (30 %, ein Anteil der Flottenkapazität), Schiffe gefunden (9 %), verspäteter Rückflug (10 %), schnellerer Rückflug (5 %), Piraten (15 %, 10 % bis 30 % jedes Schiffstyps verloren) oder Schwarzes Loch (1 %, Flotte und Fracht verloren). Der Bericht steht auf der Berichteseite. Gleichzeitige Expeditionen: ganzzahlige Wurzel der Technologiestufe (Stufe 4: 2).
 
 **Wie werden Flugdauer und Treibstoff berechnet?**
 Entfernung: `√(Δgalaxie² × 20 000 + Δsystem² × 95 + Δposition² × 5)`. Flottengeschwindigkeit: die ihres **langsamsten Schiffs** (mit Triebwerksboni). Dauer: `(35 000 / Geschwindigkeits-%) × √(Entfernung × 10 / Geschwindigkeit) + 10` Sekunden, geteilt durch die Flottengeschwindigkeit des Servers. Treibstoff (Deuterium, beim **Start** abgebucht): `Σ Anzahl × Verbrauch × (Entfernung / 35 000) × (Geschwindigkeit / 1 000 + 1)²`. Beispiel mit 10 kleinen Transportern: gleiches System (4 Positionen) 0 Deuterium; 10 Systeme weiter 10; andere Galaxie 14. Eine niedrigere Geschwindigkeit verlängert den Flug (10 % bis 100 %).
@@ -309,6 +312,6 @@ Sie beruht auf der **Macht**; Ihr Rang erscheint in der Kopfzeile und in der Üb
 
 ## 11. Was es noch nicht gibt
 
-Offiziere, Markt, Ereignisse, Expeditionen, Verbandsangriffe, Halten. Die davon abhängigen Gebäude und Technologien (Allianzdepot, Forschungsnetzwerk, Expedition) werden nicht angeboten. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
+Offiziere, Markt, Ereignisse, Verbandsangriffe, Halten. Die davon abhängigen Gebäude und Technologien (Allianzdepot, Forschungsnetzwerk) werden nicht angeboten. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
 
 *Diese FAQ wurde gegen den Code (`packages/game-config`, `packages/game-engine`, API) und, für die Solarsatelliten, durch einen automatisierten Integrationstest (`solar-satellites.integration.spec.ts`) geprüft.*

@@ -52,7 +52,8 @@
       "spy": "Spionage",
       "colonize": "Kolonisierung",
       "recycle": "Recycling",
-      "deploy": "Stationierung"
+      "deploy": "Stationierung",
+      "expedition": "Expedition"
     },
     "summary": "Missionsübersicht",
     "distance": "Entfernung",
@@ -64,7 +65,8 @@
     "colonyName": "Name der Kolonie",
     "sending": "Wird gesendet...",
     "send": "Flotte entsenden",
-    "targetMoon": "Den Mond anvisieren (gleiche Koordinaten)"
+    "targetMoon": "Den Mond anvisieren (gleiche Koordinaten)",
+    "expeditionHelp": "Schickt die Flotte in den Weltraum (Position 16 des Systems): Manchmal findet sie Rohstoffe oder Schiffe, kann aber auch aufgehalten, von Piraten angegriffen oder von einem Schwarzen Loch verschluckt werden. Erfordert die Expeditionstechnik; der Bericht kommt bei der Ankunft auf der Berichteseite."
   },
   "movement": {
     "kicker": "Verkehrszentrale",
@@ -101,7 +103,8 @@
     "transport": "Transportieren",
     "colonize": "Kolonisieren",
     "recycle": "Recyceln",
-    "debris": "Trümmerfeld"
+    "debris": "Trümmerfeld",
+    "expedition": "Expedition"
   },
   "messages": {
     "kicker": "Kommunikation",
@@ -775,7 +778,17 @@
     "spyKicker": "Spionage",
     "spyTitle": "Spionageberichte",
     "spyEmpty": "Kein Spionagebericht. Sende Sonden von der Flottenseite.",
-    "spyLine": "{probes} Sonde(n) · Informationsstufe {level}/4"
+    "spyLine": "{probes} Sonde(n) · Informationsstufe {level}/4",
+    "expKicker": "Expeditionen",
+    "expTitle": "Expeditionsberichte",
+    "expEmpty": "Keine beendete Expedition. Schicke eine Flotte von der Flottenseite zu Position 16.",
+    "exp_nothing": "Nichts Interessantes gefunden; die Flotte kehrt zurück.",
+    "expResources": "Rohstoffe gefunden: {amount} {resource}.",
+    "expShips": "{amount} Schiff(e) haben sich der Flotte angeschlossen.",
+    "exp_delay": "Ein Rückschlag verlängert den Rückflug (×{factor}).",
+    "exp_speedup": "Eine günstige Strömung verkürzt den Rückflug (×{factor}).",
+    "expPirates": "Piratenangriff: {lost} Schiff(e) verloren.",
+    "exp_blackhole": "Ein Schwarzes Loch hat die ganze Flotte verschluckt."
   },
   "spy": {
     "building": {
