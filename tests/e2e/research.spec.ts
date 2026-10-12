@@ -108,3 +108,25 @@ test('page détail : une technologie sans énergie suffisante ne peut pas être 
   await expect(page.getByText(/Énergie produite/)).toBeVisible();
   await expect(page.getByRole('button', { name: 'Lancer la recherche' })).toBeDisabled();
 });
+
+test('les coûts du prochain niveau sont visibles dans la liste, sans ouvrir les détails', async ({ page }) => {
+  const credentials = buildCredentials('e2e_rcost');
+  await registerUser(page, credentials);
+  await seedResearchLab(credentials.username);
+
+  await page.goto('/research');
+  const cost = page.getByTestId('research-cost-106');
+  await expect(cost).toBeVisible();
+  await expect(cost).toContainText('Métal');
+  await expect(cost).toContainText('Cristal');
+  await expect(cost.locator('[data-short]')).toHaveCount(0);
+
+  // Stock insuffisant : le poste manquant est signalé
+  const user = await prisma.user.findUniqueOrThrow({
+    where: { username: credentials.username },
+    include: { planets: true },
+  });
+  await prisma.planet.update({ where: { id: user.planets[0].id }, data: { crystal: 0 } });
+  await page.reload();
+  await expect(page.getByTestId('research-cost-106').locator('[data-short="true"]').first()).toBeVisible();
+});

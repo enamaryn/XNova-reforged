@@ -697,7 +697,8 @@
     "started": "Research started.",
     "cannotStart": "Unable to start the research.",
     "completedToast": "Research completed: {name}{level}",
-    "fallbackName": "Research"
+    "fallbackName": "Research",
+    "costNextLevel": "Cost of the next level"
   },
   "energy": {
     "deficitBadge": "DEFICIT",

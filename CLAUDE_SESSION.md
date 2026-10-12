@@ -17,6 +17,14 @@
 - Restent absents : réseau de recherche intergalactique.
 
 
+## Session — coûts de recherche visibles dans la liste
+
+**Date :** 16 octobre 2026. **Retour du propriétaire** : les coûts de recherche n'étaient visibles que dans la page de détails.
+
+- [x] Les cartes de la page Recherche affichent le coût du prochain niveau (métal, cristal, deutérium, énergie), avec en rouge ce qui dépasse le stock de la planète ; niveau maximal : pas de coût.
+- [x] Clé `research.costNextLevel` en fr/en/es/de/it ; test E2E (coûts visibles sans ouvrir les détails, stock insuffisant signalé).
+
+
 ## Session — expéditions
 
 **Date :** 15 octobre 2026. Demande du propriétaire : « passe aux expéditions et dépôt d'alliance ensuite ». Cette session livre les expéditions ; le dépôt d'alliance suit dans une PR distincte.

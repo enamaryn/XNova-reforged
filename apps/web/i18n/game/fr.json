@@ -697,7 +697,8 @@
     "started": "Recherche lancée.",
     "cannotStart": "Impossible de lancer la recherche.",
     "completedToast": "Recherche terminée : {name}{level}",
-    "fallbackName": "Recherche"
+    "fallbackName": "Recherche",
+    "costNextLevel": "Coût du prochain niveau"
   },
   "energy": {
     "deficitBadge": "DÉFICIT",
