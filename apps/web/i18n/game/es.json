@@ -688,7 +688,8 @@
     "started": "Investigación iniciada.",
     "cannotStart": "No se puede iniciar la investigación.",
     "completedToast": "Investigación terminada: {name}{level}",
-    "fallbackName": "Investigación"
+    "fallbackName": "Investigación",
+    "costNextLevel": "Coste del siguiente nivel"
   },
   "energy": {
     "deficitBadge": "DÉFICIT",
