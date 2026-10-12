@@ -201,7 +201,7 @@ describe('API integration - corrections des règles du jeu', () => {
       expect(all.body.map((b: { id: number }) => b.id)).not.toContain(34);
     });
 
-    it('ni listées ni acceptées : réseau de recherche intergalactique et expédition', async () => {
+    it('ni listée ni acceptée : réseau de recherche intergalactique (l\'expédition existe)', async () => {
       const p = await player();
       await database.planet.update({
         where: { id: p.planetId },
@@ -214,9 +214,9 @@ describe('API integration - corrections des règles du jeu', () => {
         .expect(200);
       const ids = (list.body.technologies ?? list.body).map((t: { id: number }) => t.id);
       expect(ids).not.toContain(123);
-      expect(ids).not.toContain(124);
+      expect(ids).toContain(124);
       expect(ids).toContain(108);
-      for (const hidden of [123, 124]) {
+      for (const hidden of [123]) {
         const res = await request(app.getHttpServer())
           .post('/research')
           .set(auth(p.token))

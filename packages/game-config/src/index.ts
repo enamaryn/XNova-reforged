@@ -59,7 +59,7 @@ export enum MissionType {
 }
 
 // Missions réellement traitées à l'arrivée (liste commune API/UI, GAME-01).
-// Les autres missions (expédition...) restent refusées par l'API sans débit.
+// Les autres missions (maintien de position...) restent refusées par l'API sans débit.
 export const IMPLEMENTED_MISSIONS: readonly MissionType[] = [
   MissionType.ATTACK,
   MissionType.TRANSPORT,
@@ -67,6 +67,7 @@ export const IMPLEMENTED_MISSIONS: readonly MissionType[] = [
   MissionType.SPY,
   MissionType.COLONIZE,
   MissionType.RECYCLE,
+  MissionType.EXPEDITION,
 ];
 
 /** Identifiants des vaisseaux imposés par certaines missions. */
@@ -113,11 +114,11 @@ export const IMPLEMENTED_BUILDINGS: readonly number[] = [
 ];
 
 /**
- * Technologies réellement fonctionnelles : le réseau de recherche intergalactique (123) et l'expédition (124)
- * dépendent de fonctions absentes et ne sont ni proposés ni acceptés.
+ * Technologies réellement fonctionnelles : le réseau de recherche intergalactique (123) dépend d'une fonction
+ * absente et n'est ni proposé ni accepté.
  */
 export const IMPLEMENTED_TECHNOLOGIES: readonly number[] = [
-  106, 108, 109, 110, 111, 113, 114, 115, 117, 118, 120, 121, 122, 125, 126, 199,
+  106, 108, 109, 110, 111, 113, 114, 115, 117, 118, 120, 121, 122, 124, 125, 126, 199,
 ];
 
 /** Cases ajoutées par niveau de terraformeur (le terraformeur lui-même n'occupe pas de case). */
@@ -132,6 +133,7 @@ export function maxFleetSlots(computerTechnologyLevel: number): number {
 }
 
 export * from "./missiles";
+export * from "./expeditions";
 export * from "./moons";
 export * from "./production-queue";
 export * from "./item-texts";

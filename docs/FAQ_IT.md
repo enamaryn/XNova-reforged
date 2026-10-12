@@ -195,7 +195,10 @@ Missione *Colonizzazione* con una colonizzatrice verso una **posizione libera**:
 ## 6. Flotte e missioni
 
 **Quali missioni esistono?**
-**Trasporto** (consegna il carico, poi la flotta rientra), **Schieramento** (installa flotta e carico su *un tuo altro* pianeta, senza ritorno), **Attacco**, **Spionaggio**, **Colonizzazione**, **Riciclaggio** (solo riciclatrici, verso un campo di detriti). Spedizione, attacco di gruppo, mantenimento della posizione e distruzione sono rifiutati dal gioco senza addebitare nulla.
+**Trasporto** (consegna il carico, poi la flotta rientra), **Schieramento** (installa flotta e carico su *un tuo altro* pianeta, senza ritorno), **Attacco**, **Spionaggio**, **Colonizzazione**, **Riciclaggio** (solo riciclatrici, verso un campo di detriti). La **Spedizione** ha una voce a parte più sotto; attacco di gruppo, mantenimento della posizione e distruzione sono rifiutati dal gioco senza addebitare nulla.
+
+**Come funzionano le spedizioni?**
+Serve la tecnologia **Spedizione** (laboratorio 3, Iperspazio 1, Propulsore iperspaziale 5). Invia una flotta (con carico, se vuoi) alla **posizione 16** di un sistema qualsiasi, dalla pagina Flotta o dal link «Spedizione» della Galassia. All'arrivo viene estratto un esito: niente (30 %), risorse trovate (30 %, una quota della capacità della flotta), navi trovate (9 %), ritorno in ritardo (10 %), ritorno più rapido (5 %), pirati (15 %, perso dal 10 % al 30 % di ogni tipo di nave) o buco nero (1 %, flotta e carico persi). Il rapporto è nella pagina Rapporti. Spedizioni simultanee: radice intera del livello della tecnologia (livello 4: 2).
 
 **Come si calcolano durata e carburante di un volo?**
 Distanza: `√(Δgalassia² × 20 000 + Δsistema² × 95 + Δposizione² × 5)`. Velocità della flotta: quella della sua **nave più lenta** (con i bonus dei propulsori). Durata: `(35 000 / % di velocità) × √(distanza × 10 / velocità) + 10` secondi, divisi per la velocità di flotta del server. Carburante (deuterio, addebitato alla **partenza**): `Σ numero × consumo × (distanza / 35 000) × (velocità / 1 000 + 1)²`. Esempio con 10 cargo piccoli: stesso sistema (4 posizioni) 0 di deuterio; 10 sistemi più in là 10; altra galassia 14. Una velocità più bassa allunga il volo (dal 10 % al 100 %).
@@ -309,6 +312,6 @@ Si basa sulla **potenza**; il tuo rango appare nell'intestazione e nella panoram
 
 ## 11. Ciò che non esiste ancora
 
-Ufficiali, mercato, eventi, spedizioni, attacchi di gruppo, mantenimento della posizione. Gli edifici e le tecnologie che ne dipendono (deposito dell'alleanza, rete di ricerca, spedizione) non vengono proposti. La roadmap del progetto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tiene traccia di questi scarti.
+Ufficiali, mercato, eventi, attacchi di gruppo, mantenimento della posizione. Gli edifici e le tecnologie che ne dipendono (deposito dell'alleanza, rete di ricerca) non vengono proposti. La roadmap del progetto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tiene traccia di questi scarti.
 
 *Questa FAQ è stata verificata sul codice (`packages/game-config`, `packages/game-engine`, API) e, per i satelliti solari, con un test di integrazione automatizzato (`solar-satellites.integration.spec.ts`).*

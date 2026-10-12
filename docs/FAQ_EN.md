@@ -195,7 +195,10 @@ Other ships (including the Death star, for now) have no rapid fire.
 ## 6. Fleets and missions
 
 **Which missions exist?**
-**Transport** (delivers cargo, then the fleet returns), **Deploy** (settles fleet and cargo on *your* other planet, no return), **Attack**, **Espionage**, **Colonization**, **Recycling** (recyclers only, towards a debris field). Expedition, group attack, hold position and destroy are refused by the game without charging anything.
+**Transport** (delivers cargo, then the fleet returns), **Deploy** (settles fleet and cargo on *your* other planet, no return), **Attack**, **Espionage**, **Colonization**, **Recycling** (recyclers only, towards a debris field). **Expedition** has its own entry below; group attack, hold position and destroy are refused by the game without charging anything.
+
+**How do expeditions work?**
+You need the **Expedition** technology (lab 3, Hyperspace 1, Hyperspace drive 5). Send a fleet (cargo allowed) to **position 16** of any system, from the Fleet page or the Galaxy "Expedition" link. On arrival an outcome is drawn: nothing (30%), resources found (30%, a share of the fleet's capacity), ships found (9%), delayed return (10%), faster return (5%), pirates (15%, 10% to 30% of each ship type lost) or black hole (1%, fleet and cargo lost). The report is in the Reports page. Simultaneous expeditions: integer square root of the technology level (level 4: 2).
 
 **How are flight time and fuel computed?**
 Distance: `√(Δgalaxy² × 20,000 + Δsystem² × 95 + Δposition² × 5)`. Fleet speed: that of its **slowest ship** (with drive bonuses). Duration: `(35,000 / speed %) × √(distance × 10 / speed) + 10` seconds, divided by the server fleet speed. Fuel (deuterium, charged at **departure**): `Σ count × consumption × (distance / 35,000) × (speed / 1,000 + 1)²`. Example with 10 small cargos: same system (4 positions) 0 deuterium; 10 systems away 10; another galaxy 14. A lower speed lengthens the flight (10 % to 100 %).
@@ -309,6 +312,6 @@ It is based on **power**; your rank appears in the header and the overview. Losi
 
 ## 11. What does not exist yet
 
-Officers, market, events, expeditions, group attacks, hold position. Buildings and technologies that depend on them (alliance depot, research network, expedition) are not offered. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
+Officers, market, events, group attacks, hold position. Buildings and technologies that depend on them (alliance depot, research network) are not offered. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
 
 *This FAQ was checked against the code (`packages/game-config`, `packages/game-engine`, API) and, for solar satellites, by an automated integration test (`solar-satellites.integration.spec.ts`).*

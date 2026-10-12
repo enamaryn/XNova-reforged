@@ -98,6 +98,13 @@ export default function GalaxyClient() {
               className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60 sm:w-28"
             />
           </label>
+          <Link
+            href={`/fleet?mission=expedition&galaxy=${galaxy}&system=${system}&position=16`}
+            data-testid="expedition-link"
+            className="rounded-full border border-violet-500/60 px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-violet-200 hover:bg-violet-500/10"
+          >
+            🚀 {t('galaxy.expedition')}
+          </Link>
         </div>
 
         <div className="mt-6 grid gap-2">

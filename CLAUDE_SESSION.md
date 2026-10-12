@@ -5,6 +5,18 @@
 
 ---
 
+## Session — expéditions
+
+**Date :** 15 octobre 2026. Demande du propriétaire : « passe aux expéditions et dépôt d'alliance ensuite ». Cette session livre les expéditions ; le dépôt d'alliance suit dans une PR distincte.
+
+- [x] Règles et tirage communs `packages/game-config/src/expeditions.ts` ; mission 15 et technologie 124 ouvertes (`IMPLEMENTED_MISSIONS`, `IMPLEMENTED_TECHNOLOGIES`).
+- [x] Validation d'envoi : position 16 réservée aux expéditions, technologie requise, limite d'expéditions simultanées.
+- [x] `ExpeditionService` (résolution atomique à l'arrivée, sept issues), table `ExpeditionReport` (migration), `GET /expedition-reports`.
+- [x] Interface : mission « Expédition » sur la page Flotte, lien dans la Galaxie, section « Rapports d'expédition », textes fr/en/es/de/it ; FAQ des 5 langues.
+- [x] Tests : unitaires (6), intégration (11), E2E (1) ; anciens tests adaptés.
+- Prochaine étape : dépôt d'alliance (mission Maintien de position).
+
+
 ## Session — lunes (2e partie) : phalange et porte de saut
 
 **Date :** 14 octobre 2026. Suite de « passe aux lunes » après la fusion de la PR #63.

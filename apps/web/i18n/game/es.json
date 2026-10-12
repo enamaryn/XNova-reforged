@@ -52,7 +52,8 @@
       "spy": "Espionaje",
       "colonize": "Colonización",
       "recycle": "Reciclaje",
-      "deploy": "Despliegue"
+      "deploy": "Despliegue",
+      "expedition": "Expedición"
     },
     "summary": "Resumen de misión",
     "distance": "Distancia",
@@ -64,7 +65,8 @@
     "colonyName": "Nombre de la colonia",
     "sending": "Enviando...",
     "send": "Enviar la flota",
-    "targetMoon": "Apuntar a la luna (mismas coordenadas)"
+    "targetMoon": "Apuntar a la luna (mismas coordenadas)",
+    "expeditionHelp": "Envía la flota al espacio profundo (posición 16 del sistema): a veces encuentra recursos o naves, pero también puede retrasarse, ser atacada por piratas o ser engullida por un agujero negro. Requiere la tecnología Expedición; el informe llega al aterrizar en la página Informes."
   },
   "movement": {
     "kicker": "Control de tráfico",
@@ -101,7 +103,8 @@
     "transport": "Transportar",
     "colonize": "Colonizar",
     "recycle": "Reciclar",
-    "debris": "Escombros"
+    "debris": "Escombros",
+    "expedition": "Expedición"
   },
   "messages": {
     "kicker": "Comunicacion",
@@ -774,7 +777,17 @@
     "spyKicker": "Espionaje",
     "spyTitle": "Informes de espionaje",
     "spyEmpty": "Ningún informe de espionaje. Envía sondas desde la página de Flota.",
-    "spyLine": "{probes} sonda(s) · nivel de información {level}/4"
+    "spyLine": "{probes} sonda(s) · nivel de información {level}/4",
+    "expKicker": "Expediciones",
+    "expTitle": "Informes de expedición",
+    "expEmpty": "Ninguna expedición terminada. Envía una flota a la posición 16 desde la página Flota.",
+    "exp_nothing": "No se encontró nada de interés; la flota regresa.",
+    "expResources": "Recursos encontrados: {amount} {resource}.",
+    "expShips": "{amount} nave(s) se unieron a la flota.",
+    "exp_delay": "Un contratiempo alarga el regreso (×{factor}).",
+    "exp_speedup": "Una corriente favorable acorta el regreso (×{factor}).",
+    "expPirates": "Ataque pirata: {lost} nave(s) perdida(s).",
+    "exp_blackhole": "Un agujero negro engulló toda la flota."
   },
   "spy": {
     "building": {

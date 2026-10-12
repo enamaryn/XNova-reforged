@@ -52,7 +52,8 @@
       "spy": "Spionaggio",
       "colonize": "Colonizzazione",
       "recycle": "Riciclaggio",
-      "deploy": "Schieramento"
+      "deploy": "Schieramento",
+      "expedition": "Spedizione"
     },
     "summary": "Riepilogo della missione",
     "distance": "Distanza",
@@ -64,7 +65,8 @@
     "colonyName": "Nome della colonia",
     "sending": "Invio...",
     "send": "Invia la flotta",
-    "targetMoon": "Mira alla luna (stesse coordinate)"
+    "targetMoon": "Mira alla luna (stesse coordinate)",
+    "expeditionHelp": "Invia la flotta nello spazio profondo (posizione 16 del sistema): a volte trova risorse o navi, ma può anche essere ritardata, attaccata dai pirati o inghiottita da un buco nero. Richiede la tecnologia Spedizione; il rapporto arriva all'atterraggio nella pagina Rapporti."
   },
   "movement": {
     "kicker": "Centro traffico",
@@ -101,7 +103,8 @@
     "transport": "Trasportare",
     "colonize": "Colonizzare",
     "recycle": "Ricicla",
-    "debris": "Detriti"
+    "debris": "Detriti",
+    "expedition": "Spedizione"
   },
   "messages": {
     "kicker": "Comunicazione",
@@ -774,7 +777,17 @@
     "spyKicker": "Spionaggio",
     "spyTitle": "Rapporti di spionaggio",
     "spyEmpty": "Nessun rapporto di spionaggio. Invia sonde dalla pagina Flotta.",
-    "spyLine": "{probes} sonda/e · livello di informazione {level}/4"
+    "spyLine": "{probes} sonda/e · livello di informazione {level}/4",
+    "expKicker": "Spedizioni",
+    "expTitle": "Rapporti di spedizione",
+    "expEmpty": "Nessuna spedizione conclusa. Invia una flotta alla posizione 16 dalla pagina Flotta.",
+    "exp_nothing": "Non è stato trovato nulla di interessante; la flotta rientra.",
+    "expResources": "Risorse trovate: {amount} {resource}.",
+    "expShips": "{amount} nave/i si sono unite alla flotta.",
+    "exp_delay": "Un contrattempo allunga il ritorno (×{factor}).",
+    "exp_speedup": "Una corrente favorevole accorcia il ritorno (×{factor}).",
+    "expPirates": "Attacco di pirati: {lost} nave/i perduta/e.",
+    "exp_blackhole": "Un buco nero ha inghiottito l'intera flotta."
   },
   "spy": {
     "building": {

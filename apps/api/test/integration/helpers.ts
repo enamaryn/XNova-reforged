@@ -10,6 +10,7 @@ import { SchedulerRegistry } from '@nestjs/schedule';
 import request from 'supertest';
 import { AppModule } from '../../src/app.module';
 import { configureApp } from '../../src/app.setup';
+import { RedisService } from '../../src/redis/redis.service';
 import { DatabaseService } from '../../src/database/database.service';
 
 export interface IntegrationApp {
@@ -79,6 +80,10 @@ export async function createIntegrationApp(options: { setupCompleted?: boolean }
   app.get(SchedulerRegistry)
     .getCronJobs()
     .forEach((job) => job.stop());
+
+  // La configuration serveur est mise en cache 30 s dans Redis : une suite précédente (vitesse ×50) ne doit pas
+  // fausser la suivante
+  await app.get(RedisService).del('xnova:server-config');
 
   const database = app.get(DatabaseService);
   return { app, database };

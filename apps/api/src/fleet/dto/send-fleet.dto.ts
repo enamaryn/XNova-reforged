@@ -53,7 +53,7 @@ export class SendFleetDto {
 
   @IsInt()
   @Min(1)
-  @Max(15) // GAME_CONSTANTS.MAX_POSITIONS
+  @Max(16) // GAME_CONSTANTS.MAX_POSITIONS (15), 16 réservé aux expéditions
   toPosition: number;
 
   // Vise la lune des coordonnées plutôt que la planète

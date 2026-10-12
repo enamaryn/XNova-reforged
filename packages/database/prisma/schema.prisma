@@ -53,6 +53,7 @@ model User {
   fleets        Fleet[]
   missileStrikes         MissileStrike[] @relation("MissileAttacker")
   missileStrikesReceived MissileStrike[] @relation("MissileTarget")
+  expeditionReports      ExpeditionReport[]
   technologies  Technology[]
   messages      Message[]      @relation("ReceivedMessages")
   sentMessages  Message[]      @relation("SentMessages")
@@ -631,4 +632,29 @@ model MissileStrike {
   @@index([status, arrivalTime])
   @@index([userId, createdAt])
   @@index([targetUserId, createdAt])
+}
+
+// ============================================
+// EXPEDITIONS
+// ============================================
+
+model ExpeditionReport {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Destination (position 16 du systeme)
+  galaxy    Int
+  system    Int
+
+  // nothing, resources, ships, delay, speedup, pirates, blackhole
+  outcome   String
+  // Details selon l'issue : ressource trouvee, vaisseaux trouves ou perdus, facteur de duree...
+  details   Json
+  // Vaisseaux envoyes
+  ships     Json
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
 }
