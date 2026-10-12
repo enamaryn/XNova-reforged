@@ -691,7 +691,8 @@
     "started": "Forschung gestartet.",
     "cannotStart": "Forschung konnte nicht gestartet werden.",
     "completedToast": "Forschung abgeschlossen: {name}{level}",
-    "fallbackName": "Forschung"
+    "fallbackName": "Forschung",
+    "costNextLevel": "Kosten der nächsten Stufe"
   },
   "energy": {
     "deficitBadge": "DEFIZIT",

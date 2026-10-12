@@ -295,6 +295,49 @@ export default function ResearchClient() {
               <span>{Math.max(1, Math.floor(tech.buildTime))}s</span>
             </div>
 
+            {!tech.isMaxLevel && (
+              <dl
+                className="mt-3 grid gap-1 rounded-xl bg-slate-950/50 p-3 text-xs"
+                data-testid={`research-cost-${tech.id}`}
+                aria-label={t('research.costNextLevel')}
+              >
+                {(
+                  [
+                    ['metal', tech.cost.metal, 'text-amber-300'],
+                    ['crystal', tech.cost.crystal, 'text-sky-300'],
+                    ['deuterium', tech.cost.deuterium, 'text-blue-300'],
+                  ] as const
+                )
+                  .filter(([, amount]) => amount > 0)
+                  .map(([resource, amount, color]) => {
+                    const stock = techData?.resources?.[resource] ?? Infinity;
+                    const short = stock < amount;
+                    return (
+                      <div key={resource} className="flex items-center justify-between">
+                        <dt className="text-slate-400">{t(`resources.${resource}`)}</dt>
+                        <dd
+                          className={`font-mono ${short ? 'text-red-300' : color}`}
+                          data-short={short ? 'true' : undefined}
+                        >
+                          {new Intl.NumberFormat().format(Math.floor(amount))}
+                        </dd>
+                      </div>
+                    );
+                  })}
+                {typeof tech.energyRequired === 'number' && tech.energyRequired > 0 && (
+                  <div className="flex items-center justify-between">
+                    <dt className="text-slate-400">{t('resources.energy')}</dt>
+                    <dd
+                      className={`font-mono ${tech.hasEnoughEnergy === false ? 'text-red-300' : 'text-amber-200'}`}
+                    >
+                      {new Intl.NumberFormat().format(Math.floor(tech.energyAvailable ?? 0))} /{' '}
+                      {new Intl.NumberFormat().format(Math.floor(tech.energyRequired))}
+                    </dd>
+                  </div>
+                )}
+              </dl>
+            )}
+
             {tech.missingRequirements.length > 0 && (
               <div className="mt-3 rounded-xl bg-red-500/10 p-2 text-xs text-red-300">
                 <div className="font-semibold mb-1">{t('research.missingTitle')}</div>
