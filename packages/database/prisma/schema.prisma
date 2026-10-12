@@ -54,6 +54,7 @@ model User {
   missileStrikes         MissileStrike[] @relation("MissileAttacker")
   missileStrikesReceived MissileStrike[] @relation("MissileTarget")
   expeditionReports      ExpeditionReport[]
+  officers               Officer[]
   technologies  Technology[]
   messages      Message[]      @relation("ReceivedMessages")
   sentMessages  Message[]      @relation("SentMessages")
@@ -661,4 +662,20 @@ model ExpeditionReport {
   createdAt DateTime @default(now())
 
   @@index([userId, createdAt])
+}
+
+// ============================================
+// OFFICIERS
+// ============================================
+
+model Officer {
+  id       String   @id @default(uuid())
+  userId   String
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // intendant, admiral, engineer, geologist, technocrat
+  type     String
+  hiredAt  DateTime @default(now())
+
+  @@unique([userId, type])
 }

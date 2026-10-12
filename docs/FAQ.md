@@ -288,6 +288,9 @@ Un niveau de 1 à 100 calculé **uniquement** à partir des points de bâtiments
 **Comment fonctionne le classement ?**
 Il est établi sur la **puissance** ; votre rang apparaît dans l'en-tête et la vue d'ensemble. Perdre des vaisseaux fait baisser votre puissance ; construire des défenses l'augmente.
 
+**Que font les officiers ?**
+Cinq personnages **embauchés une seule fois** (500 000 deutérium, prélevés sur la planète choisie, page Officiers) dont les bonus valent pour tout votre compte : **Intendant** (+10 % d'énergie, +1 place de construction par planète), **Amiral** (+10 % de vitesse des flottes, +2 expéditions simultanées), **Ingénieur** (−10 % de durée de construction), **Géologue** (+10 % de production des mines et de capacité de stockage), **Technocrate** (−10 % de durée de recherche, +2 niveaux d'espionnage). Ne pas confondre avec le *niveau de commandant* ci-dessus, qui mesure votre développement. Les bonus de production ne s'appliquent qu'à partir de l'embauche.
+
 ---
 
 ## 10. « Pourquoi je ne peux pas… ? »
@@ -310,6 +313,6 @@ Il est établi sur la **puissance** ; votre rang apparaît dans l'en-tête et la
 
 ## 11. Ce qui n'existe pas encore
 
-Officiers, marché, événements, attaques groupées. La feuille de route du projet ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) suit ces écarts.
+Marché, événements, attaques groupées. La feuille de route du projet ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) suit ces écarts.
 
 *Cette FAQ a été vérifiée contre le code (`packages/game-config`, `packages/game-engine`, API) et, pour les satellites solaires, par un test automatisé d'intégration (`solar-satellites.integration.spec.ts`).*

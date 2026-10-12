@@ -238,7 +238,6 @@ export interface BuildTimeParams {
   currentLevel: number
   roboticsLevel: number
   naniteLevel?: number
-  engineerLevel?: number // Officer bonus (-5% per level)
 }
 
 export function getBuildingTime(params: BuildTimeParams): number {
@@ -247,19 +246,13 @@ export function getBuildingTime(params: BuildTimeParams): number {
     currentLevel,
     roboticsLevel,
     naniteLevel = 0,
-    engineerLevel = 0,
   } = params
 
   const cost = getBuildingCost(buildingId, currentLevel)
 
   // Base time calculation (in seconds)
   const baseDivisor = 75 * (1 + roboticsLevel) * Math.pow(2, naniteLevel)
-  let buildTime = 30 * (cost.metal + cost.crystal) / baseDivisor
-
-  // Apply engineer bonus (-5% per level)
-  if (engineerLevel > 0) {
-    buildTime *= (1 - engineerLevel * 0.05)
-  }
+  const buildTime = 30 * (cost.metal + cost.crystal) / baseDivisor
 
   // Ensure minimum 1 second
   return Math.max(1, Math.floor(buildTime))

@@ -290,6 +290,9 @@ A level from 1 to 100 computed **only** from building and research points (not s
 **How does the ranking work?**
 It is based on **power**; your rank appears in the header and the overview. Losing ships lowers your power; building defenses raises it.
 
+**What do officers do?**
+Five characters **hired once** (500,000 deuterium, taken from the planet you choose, Officers page) whose bonuses apply to your whole account: **Quartermaster** (+10 % energy, +1 construction slot per planet), **Admiral** (+10 % fleet speed, +2 simultaneous expeditions), **Engineer** (−10 % construction time), **Geologist** (+10 % mine production and storage capacity), **Technocrat** (−10 % research time, +2 espionage levels). Not to be confused with the *commander level* above, which measures your development. Production bonuses only apply from the moment of hiring.
+
 ---
 
 ## 10. "Why can't I…?"
@@ -312,6 +315,6 @@ It is based on **power**; your rank appears in the header and the overview. Losi
 
 ## 11. What does not exist yet
 
-Officers, market, events, group attacks. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
+Market, events, group attacks. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
 
 *This FAQ was checked against the code (`packages/game-config`, `packages/game-engine`, API) and, for solar satellites, by an automated integration test (`solar-satellites.integration.spec.ts`).*

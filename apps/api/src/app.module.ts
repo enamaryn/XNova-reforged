@@ -11,6 +11,7 @@ import { CombatModule } from "./combat/combat.module";
 import { FleetModule } from "./fleet/fleet.module";
 import { MissilesModule } from "./missiles/missiles.module";
 import { MoonsModule } from "./moons/moons.module";
+import { OfficersModule } from "./officers/officers.module";
 import { GalaxyModule } from "./galaxy/galaxy.module";
 import { ResearchModule } from "./research/research.module";
 import { ShipyardModule } from "./shipyard/shipyard.module";
@@ -74,6 +75,7 @@ import { validateEnv } from "./config/env.validation";
     FleetModule,
     MissilesModule,
     MoonsModule,
+    OfficersModule,
 
     // Module galaxie
     GalaxyModule,

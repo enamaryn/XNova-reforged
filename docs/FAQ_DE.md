@@ -290,6 +290,9 @@ Eine Stufe von 1 bis 100, **nur** aus den Punkten für Gebäude und Forschung be
 **Wie funktioniert die Rangliste?**
 Sie beruht auf der **Macht**; Ihr Rang erscheint in der Kopfzeile und in der Übersicht. Schiffsverluste senken Ihre Macht; der Bau von Verteidigung erhöht sie.
 
+**Was tun Offiziere?**
+Fünf Charaktere, die **einmalig eingestellt** werden (500 000 Deuterium, vom gewählten Planeten abgezogen, Seite Offiziere) und deren Boni für dein ganzes Konto gelten: **Intendant** (+10 % Energie, +1 Bauplatz pro Planet), **Admiral** (+10 % Flottengeschwindigkeit, +2 gleichzeitige Expeditionen), **Ingenieur** (−10 % Bauzeit), **Geologe** (+10 % Minenproduktion und Lagerkapazität), **Technokrat** (−10 % Forschungszeit, +2 Spionagestufen). Nicht zu verwechseln mit der *Kommandantenstufe* oben, die deine Entwicklung misst. Produktionsboni gelten erst ab der Einstellung.
+
 ---
 
 ## 10. „Warum kann ich nicht …?“
@@ -312,6 +315,6 @@ Sie beruht auf der **Macht**; Ihr Rang erscheint in der Kopfzeile und in der Üb
 
 ## 11. Was es noch nicht gibt
 
-Offiziere, Markt, Ereignisse, Verbandsangriffe. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
+Markt, Ereignisse, Verbandsangriffe. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
 
 *Diese FAQ wurde gegen den Code (`packages/game-config`, `packages/game-engine`, API) und, für die Solarsatelliten, durch einen automatisierten Integrationstest (`solar-satellites.integration.spec.ts`) geprüft.*

@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { SOLAR_SATELLITE_ID } from '@xnova/game-config';
+import { SOLAR_SATELLITE_ID, officerBonuses } from '@xnova/game-config';
 import { updateResources, type ResourceConfig } from '@xnova/game-engine';
 
 /** Technologie Énergie : relève le rendement de la centrale à fusion de toutes les planètes du joueur. */
@@ -12,23 +12,36 @@ export const ENERGY_TECH_ID = 113;
 export const ENERGY_SOURCES_INCLUDE = {
   ships: { where: { shipId: SOLAR_SATELLITE_ID }, select: { amount: true } },
   user: {
-    select: { technologies: { where: { techId: ENERGY_TECH_ID }, select: { level: true } } },
+    select: {
+      technologies: { where: { techId: ENERGY_TECH_ID }, select: { level: true } },
+      officers: { select: { type: true } },
+    },
   },
 } as const;
 
 type WithEnergySources = {
   ships?: Array<{ amount: number }>;
-  user?: { technologies?: Array<{ level: number }> } | null;
+  user?: { technologies?: Array<{ level: number }>; officers?: Array<{ type: string }> } | null;
 };
+
+/** Bonus des officiers qui touchent la production : énergie, mines, stockage. */
+function productionBonusesOf(officers: Array<{ type: string }> | undefined) {
+  const bonus = officerBonuses((officers ?? []).map((o) => o.type));
+  return { energyBonus: bonus.energy, mineBonus: bonus.mineProduction, storageBonus: bonus.storage };
+}
 
 /** Valeurs à ajouter aux niveaux de bâtiments d'une planète chargée avec ENERGY_SOURCES_INCLUDE. */
 export function energySourcesOf(planet: WithEnergySources): {
   solarSatellites: number;
   energyTechnology: number;
+  energyBonus: number;
+  mineBonus: number;
+  storageBonus: number;
 } {
   return {
     solarSatellites: (planet.ships ?? []).reduce((sum, row) => sum + row.amount, 0),
     energyTechnology: planet.user?.technologies?.[0]?.level ?? 0,
+    ...productionBonusesOf(planet.user?.officers),
   };
 }
 
@@ -42,7 +55,7 @@ export async function settleBeforeEnergyChange(
   tx: Prisma.TransactionClient,
   planetId: string,
   config: ResourceConfig,
-  change: { satellitesDelta?: number; energyTechnology?: number },
+  change: { satellitesDelta?: number; energyTechnology?: number; officers?: string[] },
 ) {
   const planet = await tx.planet.findUniqueOrThrow({
     where: { id: planetId },
@@ -52,6 +65,10 @@ export async function settleBeforeEnergyChange(
   const after = {
     solarSatellites: Math.max(0, before.solarSatellites + (change.satellitesDelta ?? 0)),
     energyTechnology: change.energyTechnology ?? before.energyTechnology,
+    energyBonus: before.energyBonus,
+    mineBonus: before.mineBonus,
+    storageBonus: before.storageBonus,
+    ...(change.officers ? productionBonusesOf(change.officers.map((type) => ({ type }))) : {}),
   };
   const now = new Date(Math.max(Date.now(), planet.lastUpdate.getTime()));
   const settled = updateResources({

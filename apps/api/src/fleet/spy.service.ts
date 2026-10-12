@@ -1,3 +1,4 @@
+import { OfficersService } from '../officers/officers.service';
 import { ENERGY_SOURCES_INCLUDE, energySourcesOf } from '../common/energy';
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { ESPIONAGE_PROBE_ID, ESPIONAGE_TECH_ID } from '@xnova/game-config';
@@ -53,6 +54,7 @@ export class SpyService {
     private readonly database: DatabaseService,
     private readonly serverConfig: ServerConfigService,
     private readonly gameEvents: GameEventsGateway,
+    private readonly officers: OfficersService,
   ) {}
 
   /** @returns true si cette exécution a pris la flotte en charge (sinon un autre worker l'a traitée). */
@@ -98,9 +100,14 @@ export class SpyService {
           where: { userId_techId: { userId: target.userId, techId: ESPIONAGE_TECH_ID } },
         }),
       ]);
+      // Le technocrate ajoute des niveaux d'espionnage (attaquant comme défenseur)
+      const [attackerOfficers, defenderOfficers] = await Promise.all([
+        this.officers.bonusesOf(fleet.userId, tx),
+        this.officers.bonusesOf(target.userId, tx),
+      ]);
       const infoLevel = computeSpyInfoLevel(
-        attackerTechRow?.level ?? 0,
-        defenderTechRow?.level ?? 0,
+        (attackerTechRow?.level ?? 0) + attackerOfficers.espionageLevels,
+        (defenderTechRow?.level ?? 0) + defenderOfficers.espionageLevels,
         probes,
       );
 

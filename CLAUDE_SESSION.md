@@ -5,6 +5,19 @@
 
 ---
 
+## Session — officiers (Phase 6)
+
+**Date :** 17 octobre 2026. Demande du propriétaire : « attaque la phase 6 : Officiers ». Retour en cours de session : ne pas recréer ce qui existe déjà → les ébauches mortes `OfficerBonuses` (`production.ts`) et `engineerLevel` (`buildings.ts`), jamais branchées, ont été retirées au profit d'un seul système.
+
+- [x] `packages/game-config/src/officers.ts` : 5 officiers, `officerBonuses`, `reducedSeconds`, prix 500 000 deutérium.
+- [x] Moteur : `energyBonus`, `mineBonus`, `storageBonus` dans `ResourceLevels` ; `energy.ts` charge les officiers et règle la production de toutes les planètes avant l'embauche (pas d'effet rétroactif).
+- [x] API `/officers` (liste, embauche sous verrous utilisateur et planètes) ; bonus appliqués : durée de construction, places de construction, durée de recherche, vitesse des flottes, expéditions simultanées, niveaux d'espionnage.
+- [x] Table `Officer` + migration `20261017100000_officers`.
+- [x] Page `/officers`, entrée de menu, textes fr/en/es/de/it, FAQ (5 langues), guides, `API_ENDPOINTS.md`.
+- [x] Tests : unitaires (6), intégration (7), E2E (1).
+- Restent absents : commandants de flotte (compétences, XP), marché, événements, attaques groupées.
+
+
 ## Session — dépôt d'alliance et maintien de position
 
 **Date :** 16 octobre 2026. Suite de « expéditions et dépôt d'alliance ensuite ».

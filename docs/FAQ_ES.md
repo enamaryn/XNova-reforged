@@ -290,6 +290,9 @@ Un nivel de 1 a 100 calculado **solo** a partir de los puntos de edificios e inv
 **¿Cómo funciona la clasificación?**
 Se basa en el **poder**; su rango aparece en la cabecera y en la vista general. Perder naves reduce su poder; construir defensas lo aumenta.
 
+**¿Qué hacen los oficiales?**
+Cinco personajes **contratados una sola vez** (500 000 deuterio, descontados del planeta elegido, página Oficiales) cuyas bonificaciones valen para toda tu cuenta: **Intendente** (+10 % de energía, +1 plaza de construcción por planeta), **Almirante** (+10 % de velocidad de las flotas, +2 expediciones simultáneas), **Ingeniero** (−10 % de duración de construcción), **Geólogo** (+10 % de producción de las minas y de capacidad de almacenamiento), **Tecnócrata** (−10 % de duración de investigación, +2 niveles de espionaje). No confundir con el *nivel de comandante* de arriba, que mide tu desarrollo. Las bonificaciones de producción solo se aplican desde la contratación.
+
 ---
 
 ## 10. «¿Por qué no puedo…?»
@@ -312,6 +315,6 @@ Se basa en el **poder**; su rango aparece en la cabecera y en la vista general. 
 
 ## 11. Lo que aún no existe
 
-Oficiales, mercado, eventos, ataques en grupo. La hoja de ruta del proyecto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) sigue estas discrepancias.
+Mercado, eventos, ataques en grupo. La hoja de ruta del proyecto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) sigue estas discrepancias.
 
 *Esta FAQ se ha comprobado con el código (`packages/game-config`, `packages/game-engine`, API) y, para los satélites solares, con una prueba de integración automatizada (`solar-satellites.integration.spec.ts`).*

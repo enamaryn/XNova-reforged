@@ -24,7 +24,8 @@
     "settings": "Ajustes",
     "administration": "Administración",
     "logout": "Cerrar sesión",
-    "moon": "Luna"
+    "moon": "Luna",
+    "officers": "Oficiales"
   },
   "sidebar": {
     "principal": "Principal",
@@ -1262,5 +1263,38 @@
     "jump": "Saltar",
     "jumping": "Saltando...",
     "jumped": "Salto realizado."
+  },
+  "officers": {
+    "kicker": "Oficiales",
+    "title": "Oficiales",
+    "subtitle": "Contrata un oficial una sola vez ({cost} deuterio): sus bonificaciones valen para toda tu cuenta.",
+    "paidOn": "El precio se descuenta del planeta seleccionado: {planet}.",
+    "hired": "Contratado",
+    "hire": "Contratar ({cost} deuterio)",
+    "names": {
+      "intendant": "Intendente",
+      "admiral": "Almirante",
+      "engineer": "Ingeniero",
+      "geologist": "Geólogo",
+      "technocrat": "Tecnócrata"
+    },
+    "descriptions": {
+      "intendant": "Gestiona la energía y las obras de tu imperio.",
+      "admiral": "Dirige tus flotas y envía más expediciones.",
+      "engineer": "Acelera todas tus construcciones.",
+      "geologist": "Optimiza tus minas y almacenes.",
+      "technocrat": "Acelera la investigación y refuerza el espionaje."
+    },
+    "bonus": {
+      "energy": "+{value} de energía producida",
+      "mineProduction": "+{value} de producción de las minas",
+      "storage": "+{value} de capacidad de almacenamiento",
+      "buildTimeReduction": "−{value} de duración de construcción",
+      "researchTimeReduction": "−{value} de duración de investigación",
+      "fleetSpeed": "+{value} de velocidad de las flotas",
+      "extraBuildSlots": "+{value} plaza de construcción por planeta",
+      "extraExpeditions": "+{value} expediciones simultáneas",
+      "espionageLevels": "+{value} niveles de espionaje"
+    }
   }
 }

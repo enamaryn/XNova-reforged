@@ -24,7 +24,8 @@
     "settings": "Einstellungen",
     "administration": "Administration",
     "logout": "Abmelden",
-    "moon": "Mond"
+    "moon": "Mond",
+    "officers": "Offiziere"
   },
   "sidebar": {
     "principal": "Hauptmenü",
@@ -1262,5 +1263,38 @@
     "jump": "Springen",
     "jumping": "Sprung...",
     "jumped": "Sprung ausgeführt."
+  },
+  "officers": {
+    "kicker": "Offiziere",
+    "title": "Offiziere",
+    "subtitle": "Stelle einen Offizier einmalig ein ({cost} Deuterium): Seine Boni gelten für dein ganzes Konto.",
+    "paidOn": "Der Preis wird vom gewählten Planeten abgezogen: {planet}.",
+    "hired": "Eingestellt",
+    "hire": "Einstellen ({cost} Deuterium)",
+    "names": {
+      "intendant": "Intendant",
+      "admiral": "Admiral",
+      "engineer": "Ingenieur",
+      "geologist": "Geologe",
+      "technocrat": "Technokrat"
+    },
+    "descriptions": {
+      "intendant": "Verwaltet Energie und Baustellen deines Imperiums.",
+      "admiral": "Befehligt deine Flotten und schickt mehr Expeditionen.",
+      "engineer": "Beschleunigt alle deine Bauten.",
+      "geologist": "Optimiert deine Minen und Lager.",
+      "technocrat": "Beschleunigt die Forschung und stärkt die Spionage."
+    },
+    "bonus": {
+      "energy": "+{value} erzeugte Energie",
+      "mineProduction": "+{value} Minenproduktion",
+      "storage": "+{value} Lagerkapazität",
+      "buildTimeReduction": "−{value} Bauzeit",
+      "researchTimeReduction": "−{value} Forschungszeit",
+      "fleetSpeed": "+{value} Flottengeschwindigkeit",
+      "extraBuildSlots": "+{value} Bauplatz pro Planet",
+      "extraExpeditions": "+{value} gleichzeitige Expeditionen",
+      "espionageLevels": "+{value} Spionagestufen"
+    }
   }
 }

@@ -1,3 +1,4 @@
+import { OfficersService } from '../officers/officers.service';
 import {
   BadRequestException,
   ForbiddenException,
@@ -40,6 +41,7 @@ export class FleetService {
   constructor(
     private readonly database: DatabaseService,
     private readonly serverConfig: ServerConfigService,
+    private readonly officers: OfficersService,
   ) {}
 
   async getAvailableShips(planetId: string, userId: string) {
@@ -270,9 +272,10 @@ export class FleetService {
       const running = await this.database.fleet.count({
         where: { userId, mission: MissionType.EXPEDITION, status: { in: ['traveling', 'returning'] } },
       });
-      if (running >= maxExpeditions(level)) {
+      const maxSlots = maxExpeditions(level) + (await this.officers.bonusesOf(userId)).extraExpeditions;
+      if (running >= maxSlots) {
         throw new BadRequestException(
-          `Nombre maximal d'expeditions atteint (${running}/${maxExpeditions(level)})`,
+          `Nombre maximal d'expeditions atteint (${running}/${maxSlots})`,
         );
       }
     } else if (!target) {
@@ -340,7 +343,11 @@ export class FleetService {
       getShipSpeed(ship.shipId, combustion, impulse, hyperspace),
     );
 
-    const fleetSpeed = calculateFleetSpeed(shipSpeeds);
+    const baseFleetSpeed = calculateFleetSpeed(shipSpeeds);
+    // L'amiral accélère toutes les flottes du joueur
+    const fleetSpeed = baseFleetSpeed
+      ? Math.floor(baseFleetSpeed * (1 + (await this.officers.bonusesOf(userId)).fleetSpeed))
+      : baseFleetSpeed;
     if (!fleetSpeed) {
       throw new BadRequestException('Vitesse flotte invalide');
     }

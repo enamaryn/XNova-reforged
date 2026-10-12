@@ -285,11 +285,7 @@ DEUTERIUM_BASIC_INCOME = 0  // 0 deut/h (unchanged)
 
 ### Fonctionnalités à ajouter
 
-1. **Officiers et bonus**
-   - Géologue : +5% production par niveau
-   - Ingénieur : -5% temps construction
-   - Technocrate : -5% temps recherche
-   - Stockeur : +50% capacité stockage
+1. ~~**Officiers et bonus**~~ — livrés (voir `packages/game-config/src/officers.ts`) : intendant, amiral, ingénieur, géologue, technocrate, embauche définitive à 500 000 deutérium ; les anciennes ébauches par niveaux (+5 %/niveau) ont été retirées.
 
 2. **Rapidfire avancé**
    - Ajuster rapidfire entre tous les vaisseaux

@@ -67,6 +67,13 @@ L’interface envoie l’en-tête `X-Locale` (`fr`, `en`, `es`, `de`, `it`) à c
 
 Les missiles se fabriquent par `/defense/build` (502, 503) dans la limite de 10 par niveau de silo. La résolution est faite par la tâche planifiée `missiles` (toutes les 10 s).
 
+## Officiers (`/officers`)
+
+| Méthode | Chemin | Description |
+| ------- | ------ | ----------- |
+| GET | `/officers` | Les cinq officiers (`intendant`, `admiral`, `engineer`, `geologist`, `technocrat`) avec bonus, état d'embauche, prix et bonus cumulés actifs. |
+| POST | `/officers/:type/hire` | Embauche définitive (`planetId` : planète du joueur qui paie 500 000 deutérium). 404 type inconnu ou planète étrangère, 409 déjà embauché, 400 deutérium insuffisant. Règle d'abord la production de toutes les planètes avec les anciens bonus. |
+
 ## Lunes (`/moons`)
 
 | Méthode | Endpoint | Description |
