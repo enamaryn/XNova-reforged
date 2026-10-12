@@ -1,3 +1,4 @@
+import { OfficersService } from '../officers/officers.service';
 import {
   ENERGY_SOURCES_INCLUDE,
   ENERGY_TECH_ID,
@@ -18,6 +19,7 @@ import {
   TECHNOLOGIES,
   getTechnologyCost,
   linkedLabLevel,
+  reducedSeconds,
 } from '@xnova/game-config';
 import { calculateEnergyBalance } from '@xnova/game-engine';
 import { DatabaseService } from '../database/database.service';
@@ -31,6 +33,7 @@ export class ResearchService {
     private readonly database: DatabaseService,
     private readonly serverConfig: ServerConfigService,
     private readonly gameEvents: GameEventsGateway,
+    private readonly officers: OfficersService,
   ) {}
 
   async getAvailableTechnologies(planetId: string, userId: string) {
@@ -57,6 +60,7 @@ export class ResearchService {
     const { maxTechnologyLevel, researchCostMultiplier, gameSpeed } =
       await this.serverConfig.getConfig();
     const lab = await this.labNetwork(userId, planet, techLevels[RESEARCH_NETWORK_TECH_ID] ?? 0);
+    const researchReduction = (await this.officers.bonusesOf(userId)).researchTimeReduction;
 
     const technologies = IMPLEMENTED_TECHNOLOGIES.map((id) => TECHNOLOGIES[id]).map((tech) => {
       const currentLevel = techLevels[tech.id] || 0;
@@ -66,7 +70,7 @@ export class ResearchService {
         cost,
         labLevel: lab.effectiveLab,
       });
-      const buildTime = Math.max(1, Math.floor(baseBuildTime / gameSpeed));
+      const buildTime = reducedSeconds(Math.max(1, Math.floor(baseBuildTime / gameSpeed)), researchReduction);
       const requirements = this.checkTechRequirements(
         tech.id,
         this.extractBuildingLevels(planet),
@@ -200,7 +204,10 @@ export class ResearchService {
       cost,
       labLevel: lab.effectiveLab,
     });
-    const adjustedTime = Math.max(1, Math.floor(buildTimeSeconds / gameSpeed));
+    const adjustedTime = reducedSeconds(
+      Math.max(1, Math.floor(buildTimeSeconds / gameSpeed)),
+      (await this.officers.bonusesOf(userId)).researchTimeReduction,
+    );
 
     const now = new Date();
     const endTime = new Date(now.getTime() + adjustedTime * 1000);

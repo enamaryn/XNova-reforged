@@ -35,6 +35,7 @@ const navItems: NavItem[] = [
   { href: '/movement', label: 'nav.movement', icon: '🛰️', category: 'flotte' },
   { href: '/galaxy', label: 'nav.galaxy', icon: '🌌', category: 'flotte' },
   { href: '/moon', label: 'nav.moon', icon: '🌙', category: 'flotte' },
+  { href: '/officers', label: 'nav.officers', icon: '🎖️', category: 'principal' },
 
   // Social
   { href: '/alliance', label: 'nav.alliance', icon: '🤝', category: 'social' },

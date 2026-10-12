@@ -128,15 +128,6 @@ export function getStorageCapacity(level: number): number {
 }
 
 /**
- * Officer bonuses interface
- */
-export interface OfficerBonuses {
-  geologueLevel?: number // +5% production per level
-  ingenieurLevel?: number // +5% energy per level
-  stockeurLevel?: number // +50% storage per level
-}
-
-/**
  * Calculate total hourly production with all bonuses
  */
 export interface ProductionParams {
@@ -147,7 +138,6 @@ export interface ProductionParams {
   fusionPlantLevel: number
   solarSatellites: number
   energyTechLevel?: number
-  officerBonuses?: OfficerBonuses
   gameSpeed?: number
 }
 
@@ -184,21 +174,15 @@ export function calculateProduction(params: ProductionParams): ProductionResult 
     fusionPlantLevel,
     solarSatellites,
     energyTechLevel = 0,
-    officerBonuses = {},
     gameSpeed = 1,
   } = params
-
-  const geologueBonus = 1 + (officerBonuses.geologueLevel || 0) * 0.05
-  const ingenieurBonus = 1 + (officerBonuses.ingenieurLevel || 0) * 0.05
 
   // Energy production
   const solarEnergy = getSolarPlantProduction(solarPlantLevel)
   const fusionEnergy = getFusionPlantProduction(fusionPlantLevel, energyTechLevel)
   const satelliteEnergy = solarSatellites * PRODUCTION_CONSTANTS.SOLAR_SATELLITE_ENERGY
 
-  const energyProduced = Math.floor(
-    (solarEnergy + fusionEnergy + satelliteEnergy) * ingenieurBonus
-  )
+  const energyProduced = Math.floor(solarEnergy + fusionEnergy + satelliteEnergy)
 
   // Energy consumption
   const metalEnergy = getMetalEnergyConsumption(metalMineLevel)
@@ -218,34 +202,34 @@ export function calculateProduction(params: ProductionParams): ProductionResult 
 
   // Apply bonuses and production level
   const metalTotal =
-    (metalProduction * geologueBonus * productionFactor +
+    (metalProduction * productionFactor +
       PRODUCTION_CONSTANTS.METAL_BASIC_INCOME) *
     gameSpeed
 
   const crystalTotal =
-    (crystalProduction * geologueBonus * productionFactor +
+    (crystalProduction * productionFactor +
       PRODUCTION_CONSTANTS.CRYSTAL_BASIC_INCOME) *
     gameSpeed
 
   const deuteriumTotal =
-    (deuteriumProduction * geologueBonus * productionFactor +
+    (deuteriumProduction * productionFactor +
       PRODUCTION_CONSTANTS.DEUTERIUM_BASIC_INCOME -
       getFusionPlantConsumption(fusionPlantLevel)) *
     gameSpeed
 
   return {
     metal: {
-      production: Math.floor(metalProduction * geologueBonus * productionFactor * gameSpeed),
+      production: Math.floor(metalProduction * productionFactor * gameSpeed),
       basicIncome: Math.floor(PRODUCTION_CONSTANTS.METAL_BASIC_INCOME * gameSpeed),
       total: Math.floor(metalTotal),
     },
     crystal: {
-      production: Math.floor(crystalProduction * geologueBonus * productionFactor * gameSpeed),
+      production: Math.floor(crystalProduction * productionFactor * gameSpeed),
       basicIncome: Math.floor(PRODUCTION_CONSTANTS.CRYSTAL_BASIC_INCOME * gameSpeed),
       total: Math.floor(crystalTotal),
     },
     deuterium: {
-      production: Math.floor(deuteriumProduction * geologueBonus * productionFactor * gameSpeed),
+      production: Math.floor(deuteriumProduction * productionFactor * gameSpeed),
       basicIncome: Math.floor(PRODUCTION_CONSTANTS.DEUTERIUM_BASIC_INCOME * gameSpeed),
       total: Math.floor(deuteriumTotal),
     },

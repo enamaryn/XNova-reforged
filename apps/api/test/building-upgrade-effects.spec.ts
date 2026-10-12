@@ -194,6 +194,7 @@ describe("Durées de construction des bâtiments", () => {
       serverConfig as never,
       { get: jest.fn().mockResolvedValue({ buildingCapacity: 1 }) } as never,
       {} as never,
+      { bonusesOf: jest.fn().mockResolvedValue({ extraBuildSlots: 0, buildTimeReduction: 0 }) } as never,
     );
     const list = await service.getAvailableBuildings("planet", "user");
     expect(

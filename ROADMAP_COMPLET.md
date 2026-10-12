@@ -453,7 +453,7 @@ Cette roadmap étend le MVP avec des fonctionnalités avancées pour créer un M
     skills   Json   // { "attack": 5, "defense": 3, "speed": 2 }
   }
   ```
-- [ ] Types d'officiers (passifs)
+- [x] Types d'officiers (passifs) — livrés le 17 octobre 2026 (voir ROADMAP_MVP.md pour les écarts : Commandant → Intendant, +1 construction, sans +10 champs)
   - **Commandant** : +10% production énergie, +2 constructions simultanées
   - **Amiral** : +10% vitesse flottes, +2 expéditions
   - **Ingénieur** : -10% durée constructions, +10 champs
@@ -477,7 +477,7 @@ Cette roadmap étend le MVP avec des fonctionnalités avancées pour créer un M
   ```
 
 #### Frontend - UI Officers
-- [ ] Page `/officers`
+- [x] Page `/officers` (liste, embauche, bonus ; sans progression XP)
   - Liste officiers disponibles
   - Achat/activation officier
   - Progression XP

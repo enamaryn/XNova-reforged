@@ -81,4 +81,4 @@ Una flotta in volo può essere **richiamata** da *Movimenti*. I risultati arriva
 
 ## 11. Limiti noti dell'alpha
 
-Niente ufficiali, mercato o eventi; i nomi e le descrizioni del gioco e alcuni messaggi di errore restano in francese qualunque sia la lingua scelta; le email sono inviate in francese.
+Niente mercato o eventi; i nomi e le descrizioni del gioco e alcuni messaggi di errore restano in francese qualunque sia la lingua scelta; le email sono inviate in francese.

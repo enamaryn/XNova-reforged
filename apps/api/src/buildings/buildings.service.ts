@@ -1,3 +1,5 @@
+import { OfficersService } from "../officers/officers.service";
+import { reducedSeconds } from "@xnova/game-config";
 import { ENERGY_SOURCES_INCLUDE, energySourcesOf } from '../common/energy';
 import {
   BadRequestException,
@@ -59,6 +61,7 @@ export class BuildingsService {
     private readonly serverConfig: ServerConfigService,
     private readonly progression: ProgressionService,
     private readonly gameEvents: GameEventsGateway,
+    private readonly officers: OfficersService,
   ) {}
 
   /**
@@ -94,7 +97,9 @@ export class BuildingsService {
     const resourceConfig = await this.serverConfig.getResourceConfig();
 
     const progression = await this.progression.get(userId);
-    const capacityFull = queue.length >= progression.buildingCapacity;
+    const officerBonus = await this.officers.bonusesOf(userId);
+    const buildingCapacity = progression.buildingCapacity + officerBonus.extraBuildSlots;
+    const capacityFull = queue.length >= buildingCapacity;
     const buildingsInfo = buildingsAvailableFor(planet.isMoon, IMPLEMENTED_BUILDINGS).map((id) => BUILDINGS[id]).map((building) => {
       const currentLevel = planetBuildings[building.id] || 0;
       const rawCost = getBuildingCost(building.id, currentLevel);
@@ -106,7 +111,10 @@ export class BuildingsService {
         naniteLevel: planet.naniteFactory,
       });
       const scaledTime = Math.max(1, Math.floor(baseTime * costFactor));
-      const time = Math.max(1, Math.floor(scaledTime / gameSpeed));
+      const time = reducedSeconds(
+        Math.max(1, Math.floor(scaledTime / gameSpeed)),
+        officerBonus.buildTimeReduction,
+      );
 
       // Verifier les prerequis
       const requirements = checkBuildingRequirements(
@@ -142,7 +150,7 @@ export class BuildingsService {
           !isMaxLevel &&
           !capacityFull,
         capacityFull,
-        buildingCapacity: progression.buildingCapacity,
+        buildingCapacity,
         canAfford,
         inQueue: !!inQueue,
         queueEndTime: inQueue?.endTime,
@@ -276,7 +284,11 @@ export class BuildingsService {
       Math.floor(baseBuildTimeSeconds * costFactor),
     );
 
-    const adjustedTime = Math.max(1, Math.floor(buildTimeSeconds / gameSpeed));
+    const officerBonus = await this.officers.bonusesOf(userId);
+    const adjustedTime = reducedSeconds(
+      Math.max(1, Math.floor(buildTimeSeconds / gameSpeed)),
+      officerBonus.buildTimeReduction,
+    );
 
     const now = new Date();
     const endTime = new Date(now.getTime() + adjustedTime * 1000);
@@ -287,12 +299,13 @@ export class BuildingsService {
         await lockPlanet(tx, planetId);
 
         const progression = await this.progression.get(userId, tx);
+        const capacity = progression.buildingCapacity + officerBonus.extraBuildSlots;
         const active = await tx.buildQueue.count({
           where: { planetId, completed: false },
         });
-        if (active >= progression.buildingCapacity) {
+        if (active >= capacity) {
           throw new BadRequestException(
-            `Capacité de construction atteinte (${active}/${progression.buildingCapacity}). Gestion des chantiers débloque 2 places, puis 3 au niveau 50 du commandant.`,
+            `Capacité de construction atteinte (${active}/${capacity}). Gestion des chantiers débloque 2 places, puis 3 au niveau 50 du commandant.`,
           );
         }
         const duplicate = await tx.buildQueue.findFirst({

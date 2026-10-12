@@ -81,4 +81,4 @@ Eine Flotte im Flug kann unter *Bewegungen* **zurückgerufen** werden. Die Ergeb
 
 ## 11. Bekannte Grenzen der Alpha
 
-Keine Offiziere, kein Markt, keine Ereignisse; Namen und Beschreibungen des Spiels und einige Fehlermeldungen bleiben unabhängig von der gewählten Sprache auf Französisch; E-Mails werden auf Französisch gesendet.
+Kein Markt, keine Ereignisse; Namen und Beschreibungen des Spiels und einige Fehlermeldungen bleiben unabhängig von der gewählten Sprache auf Französisch; E-Mails werden auf Französisch gesendet.

@@ -134,6 +134,7 @@ export * from "./expeditions";
 export * from "./hold";
 export * from "./moons";
 export * from "./research-network";
+export * from "./officers";
 export * from "./production-queue";
 export * from "./item-texts";
 export * from "./shipyard-time";

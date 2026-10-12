@@ -24,7 +24,8 @@
     "settings": "Settings",
     "administration": "Administration",
     "logout": "Log out",
-    "moon": "Moon"
+    "moon": "Moon",
+    "officers": "Officers"
   },
   "sidebar": {
     "principal": "Main",
@@ -1262,5 +1263,38 @@
     "jump": "Jump",
     "jumping": "Jumping...",
     "jumped": "Jump complete."
+  },
+  "officers": {
+    "kicker": "Officers",
+    "title": "Officers",
+    "subtitle": "Hire an officer once and for all ({cost} deuterium): its bonuses apply to your whole account.",
+    "paidOn": "The price is taken from the selected planet: {planet}.",
+    "hired": "Hired",
+    "hire": "Hire ({cost} deuterium)",
+    "names": {
+      "intendant": "Quartermaster",
+      "admiral": "Admiral",
+      "engineer": "Engineer",
+      "geologist": "Geologist",
+      "technocrat": "Technocrat"
+    },
+    "descriptions": {
+      "intendant": "Runs your empire's energy and construction sites.",
+      "admiral": "Commands your fleets and sends more expeditions.",
+      "engineer": "Speeds up all your constructions.",
+      "geologist": "Optimises your mines and warehouses.",
+      "technocrat": "Speeds up research and strengthens espionage."
+    },
+    "bonus": {
+      "energy": "+{value} energy produced",
+      "mineProduction": "+{value} mine production",
+      "storage": "+{value} storage capacity",
+      "buildTimeReduction": "−{value} construction time",
+      "researchTimeReduction": "−{value} research time",
+      "fleetSpeed": "+{value} fleet speed",
+      "extraBuildSlots": "+{value} construction slot per planet",
+      "extraExpeditions": "+{value} simultaneous expeditions",
+      "espionageLevels": "+{value} espionage levels"
+    }
   }
 }

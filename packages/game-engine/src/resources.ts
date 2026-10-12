@@ -30,6 +30,10 @@ export interface ResourceLevels {
   energyTechnology?: number;
   /** Une lune ne produit rien, pas même le revenu de base d'une planète. */
   isMoon?: boolean;
+  /** Bonus d'officiers (fractions, 0,1 = +10 %) : énergie produite, production des mines, capacité de stockage. */
+  energyBonus?: number;
+  mineBonus?: number;
+  storageBonus?: number;
 }
 
 export interface ResourceState {
@@ -76,10 +80,11 @@ const DEFAULT_CONFIG: ResourceConfig = {
 };
 
 export function calculateMineProduction(levels: ResourceLevels): ProductionRates {
+  const bonus = 1 + (levels.mineBonus ?? 0);
   return {
-    metal: calculateMineOutput(30, levels.metalMine),
-    crystal: calculateMineOutput(20, levels.crystalMine),
-    deuterium: calculateMineOutput(10, levels.deuteriumMine),
+    metal: calculateMineOutput(30, levels.metalMine) * bonus,
+    crystal: calculateMineOutput(20, levels.crystalMine) * bonus,
+    deuterium: calculateMineOutput(10, levels.deuteriumMine) * bonus,
   };
 }
 
@@ -95,9 +100,10 @@ export function calculateEnergyBalance(levels: ResourceLevels) {
     calculateMineOutput(20, levels.deuteriumMine);
 
   const available =
-    calculateMineOutput(20, levels.solarPlant) +
-    calculateFusionOutput(levels.fusionPlant, levels.energyTechnology ?? 0) +
-    calculateSatelliteEnergy(levels.solarSatellites ?? 0);
+    (calculateMineOutput(20, levels.solarPlant) +
+      calculateFusionOutput(levels.fusionPlant, levels.energyTechnology ?? 0) +
+      calculateSatelliteEnergy(levels.solarSatellites ?? 0)) *
+    (1 + (levels.energyBonus ?? 0));
 
   return {
     used: Math.floor(used),
@@ -116,9 +122,10 @@ export function calculateStorageCapacity(
   levels: ResourceLevels,
   config: ResourceConfig = DEFAULT_CONFIG
 ): StorageCapacity {
-  const metal = calculateStorage(levels.metalStorage, config);
-  const crystal = calculateStorage(levels.crystalStorage, config);
-  const deuterium = calculateStorage(levels.deuteriumStorage, config);
+  const bonus = 1 + (levels.storageBonus ?? 0);
+  const metal = calculateStorage(levels.metalStorage, config) * bonus;
+  const crystal = calculateStorage(levels.crystalStorage, config) * bonus;
+  const deuterium = calculateStorage(levels.deuteriumStorage, config) * bonus;
 
   return {
     metal: Math.floor(metal),
