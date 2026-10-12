@@ -297,6 +297,9 @@ Cinq personnages **embauchés une seule fois** (500 000 deutérium, prélevés s
 **Que sont les commandants de flotte ?**
 Jusqu'à **3 personnages** recrutés (250 000 deutérium, page Commandants) et assignés à **une flotte au moment de l'envoi** (liste « Commandant » de la page Flotte). Tant que la flotte n'est pas terminée, le commandant est en mission. Il gagne de l'**expérience à chaque combat d'attaque** (100 + 1 par 1 000 de métal et cristal détruits chez l'adversaire) ; le niveau suit `1000 × 1,5^(niveau − 1)` XP par palier (niveau 20 maximum) et chaque niveau donne **1 point de compétence** à placer dans *Attaque* (dégâts), *Défense* (bouclier et coque), *Vitesse* ou *Cargaison* : +1 % par niveau de compétence, 10 niveaux au plus. Si **toute la flotte est détruite**, il meurt avec 10 % de chances. Les bonus valent pour les flottes qu'il accompagne (vitesse et capacité dès l'envoi, combat en attaque) ; ils ne s'appliquent pas à une flotte en maintien qui défend un allié.
 
+**Comment fonctionne le marché ?**
+Page **Marché** : vous proposez une quantité d'une ressource contre une autre (« 1 000 deutérium contre du métal, au taux 3 »). Votre ressource est mise **en séquestre** (retirée de la planète choisie) jusqu'à la vente, au retrait ou à l'**expiration** de l'offre (24 h, le séquestre vous est alors rendu). Un acheteur peut en prendre tout ou une partie (achat minimal que vous fixez) ; il paie dans la ressource demandée et reçoit l'autre **immédiatement** ; vous recevez le paiement sur la planète d'origine de l'offre, **moins 5 % de taxe détruite**. Le taux doit rester entre la **moitié et le double** du taux de référence (valeurs de référence : métal 1, cristal 1,5, deutérium 3). **10 offres actives** au plus par joueur. Vous ne pouvez pas acheter votre propre offre. L'historique donne le dernier taux et le taux moyen récent de chaque paire.
+
 ---
 
 ## 10. « Pourquoi je ne peux pas… ? »
@@ -319,6 +322,6 @@ Jusqu'à **3 personnages** recrutés (250 000 deutérium, page Commandants) et a
 
 ## 11. Ce qui n'existe pas encore
 
-Marché, événements. La feuille de route du projet ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) suit ces écarts.
+Événements. La feuille de route du projet ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) suit ces écarts.
 
 *Cette FAQ a été vérifiée contre le code (`packages/game-config`, `packages/game-engine`, API) et, pour les satellites solaires, par un test automatisé d'intégration (`solar-satellites.integration.spec.ts`).*

@@ -26,7 +26,8 @@
     "logout": "Cerrar sesión",
     "moon": "Luna",
     "officers": "Oficiales",
-    "commanders": "Comandantes"
+    "commanders": "Comandantes",
+    "market": "Mercado"
   },
   "sidebar": {
     "principal": "Principal",
@@ -1331,5 +1332,40 @@
     "select": "Comandante",
     "none": "Ningún comandante",
     "selectHint": "Un comandante libre refuerza la flota (ataque, defensa, velocidad, carga)."
+  },
+  "market": {
+    "kicker": "Economía",
+    "title": "Mercado",
+    "subtitle": "Intercambia recursos con otros jugadores. El vendedor deposita el recurso en custodia; cada venta paga un {tax} % de impuesto (destruido); una oferta caduca a las {hours} h (se devuelve la custodia); como máximo {max} ofertas activas.",
+    "planet": "Los pagos y las compras usan el planeta seleccionado: {planet}.",
+    "createTitle": "Publicar una oferta",
+    "give": "Ofrezco",
+    "want": "Pido",
+    "amount": "Cantidad",
+    "rate": "Tasa (unidades pedidas por unidad ofrecida)",
+    "minAmount": "Compra mínima",
+    "rateHint": "Tasa permitida: de {min} a {max} {want} por {give}.",
+    "samePair": "Elige dos recursos distintos.",
+    "values": "Valores de referencia: {values}.",
+    "publish": "Publicar",
+    "offersTitle": "Ofertas en curso",
+    "all": "Todos",
+    "empty": "Ninguna oferta con este filtro.",
+    "noHistory": "Ninguna venta registrada para este par.",
+    "history": "Última tasa: {last} · tasa media reciente: {average}",
+    "offerLine": "{remaining} {give} por {want}",
+    "rateLine": "Tasa {rate} {want} por {give}",
+    "yours": "Tu oferta",
+    "seller": "Vendedor: {name}",
+    "expires": "caduca el {time}",
+    "quantity": "Cantidad",
+    "buy": "Comprar ({cost} {want})",
+    "cancel": "Retirar",
+    "bought": "Compra realizada: {received} {give} recibidos por {paid} {want}.",
+    "mineTitle": "Mis ofertas",
+    "mineEmpty": "Ninguna oferta activa.",
+    "tradesTitle": "Últimas ventas",
+    "tradeSold": "Vendidos {amount} {give} → {received} {want} recibidos (tras impuestos)",
+    "tradeBought": "Comprados {amount} {give} por {paid} {want}"
   }
 }

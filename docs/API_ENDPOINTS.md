@@ -74,6 +74,19 @@ Les missiles se fabriquent par `/defense/build` (502, 503) dans la limite de 10 
 | GET | `/officers` | Les cinq officiers (`intendant`, `admiral`, `engineer`, `geologist`, `technocrat`) avec bonus, état d'embauche, prix et bonus cumulés actifs. |
 | POST | `/officers/:type/hire` | Embauche définitive (`planetId` : planète du joueur qui paie 500 000 deutérium). 404 type inconnu ou planète étrangère, 409 déjà embauché, 400 deutérium insuffisant. Règle d'abord la production de toutes les planètes avec les anciens bonus. |
 
+## Marché (`/market`)
+
+| Méthode | Chemin | Description |
+| ------- | ------ | ----------- |
+| GET | `/market/offers` | Offres en cours, les moins chères d'abord (`give`, `want`, `limit` optionnels) ; `rules` : taxe, durée, limite d'offres. |
+| GET | `/market/mine` | Mes offres actives et mes 20 dernières ventes (rôle vendeur ou acheteur). |
+| GET | `/market/history?give=&want=` | Dernières ventes d'une paire, dernier taux, taux moyen pondéré des 10 dernières, bornes autorisées. |
+| POST | `/market/offers` | Publie une offre (`planetId`, `give`, `want`, `amount` entier, `rate`, `minAmount` optionnel) : la ressource proposée est débitée en séquestre. 400 taux hors bornes (moitié à double du taux de référence), même ressource, quantité invalide, stock insuffisant ou 10 offres actives ; 404 planète étrangère. |
+| POST | `/market/offers/:id/buy` | Achète tout ou partie (`planetId` de l'acheteur, `amount` entier ≥ minimum de l'offre ou le reliquat) : paiement débité, ressource livrée, vendeur crédité du paiement moins 5 % de taxe détruite. 400 quantité, fonds ou offre propre ; 409 offre fermée ou expirée ; 404 offre ou planète inconnue. |
+| DELETE | `/market/offers/:id` | Retire une offre active du vendeur et rend le séquestre restant (409 si elle n'est plus active, 404 si elle n'est pas au joueur). |
+
+Les offres expirées (24 h) sont fermées chaque minute par la tâche `market`, qui rend le séquestre à la planète d'origine ou, à défaut, à une autre planète du vendeur. Tous les mouvements d'une vente se font dans une transaction qui verrouille l'offre puis les deux planètes (ordre des identifiants).
+
 ## Attaques groupées (mission 2)
 
 | Méthode | Chemin | Description |

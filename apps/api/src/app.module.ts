@@ -12,6 +12,7 @@ import { FleetModule } from "./fleet/fleet.module";
 import { MissilesModule } from "./missiles/missiles.module";
 import { MoonsModule } from "./moons/moons.module";
 import { OfficersModule } from "./officers/officers.module";
+import { MarketModule } from "./market/market.module";
 import { FleetCommandersModule } from "./fleet-commanders/fleet-commanders.module";
 import { GalaxyModule } from "./galaxy/galaxy.module";
 import { ResearchModule } from "./research/research.module";
@@ -77,6 +78,7 @@ import { validateEnv } from "./config/env.validation";
     MissilesModule,
     MoonsModule,
     OfficersModule,
+    MarketModule,
     FleetCommandersModule,
 
     // Module galaxie

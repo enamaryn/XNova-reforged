@@ -299,6 +299,9 @@ Fünf Charaktere, die **einmalig eingestellt** werden (500 000 Deuterium, vom ge
 **Was sind Flottenkommandanten?**
 Bis zu **3 Charaktere**, rekrutiert (250 000 Deuterium, Seite Kommandanten) und **beim Senden einer Flotte zugewiesen** (Liste „Kommandant“ auf der Flottenseite). Solange die Flotte nicht beendet ist, ist der Kommandant auf Mission. Er sammelt **Erfahrung bei jedem Angriffskampf** (100 + 1 pro 1 000 beim Gegner zerstörtem Metall und Kristall); jede Stufe braucht `1000 × 1,5^(Stufe − 1)` EP (Höchststufe 20) und gibt **1 Fertigkeitspunkt** für *Angriff* (Schaden), *Verteidigung* (Schild und Hülle), *Geschwindigkeit* oder *Fracht*: +1 % pro Fertigkeitsstufe, höchstens 10 Stufen. Wird die **ganze Flotte zerstört**, stirbt er mit 10 % Wahrscheinlichkeit. Die Boni gelten für die begleiteten Flotten (Geschwindigkeit und Kapazität beim Senden, Angriffskampf); nicht für eine haltende Flotte, die einen Verbündeten verteidigt.
 
+**Wie funktioniert der Markt?**
+Seite **Markt**: Du bietest eine Menge einer Ressource gegen eine andere an („1 000 Deuterium gegen Metall, zum Kurs 3“). Deine Ressource wird **hinterlegt** (vom gewählten Planeten abgezogen), bis sie verkauft ist, du sie zurückziehst oder das Angebot **abläuft** (24 h; die Hinterlegung wird dir zurückgegeben). Ein Käufer kann alles oder einen Teil nehmen (von dir festgelegter Mindestkauf); er zahlt in der verlangten Ressource und erhält die andere **sofort**; du erhältst die Zahlung auf dem ursprünglichen Planeten des Angebots, **abzüglich 5 % Steuer, die vernichtet werden**. Der Kurs muss zwischen der **Hälfte und dem Doppelten** des Referenzkurses liegen (Referenzwerte: Metall 1, Kristall 1,5, Deuterium 3). Höchstens **10 aktive Angebote** pro Spieler. Du kannst dein eigenes Angebot nicht kaufen. Der Verlauf zeigt den letzten und den jüngsten Durchschnittskurs jedes Paares.
+
 ---
 
 ## 10. „Warum kann ich nicht …?“
@@ -321,6 +324,6 @@ Bis zu **3 Charaktere**, rekrutiert (250 000 Deuterium, Seite Kommandanten) und 
 
 ## 11. Was es noch nicht gibt
 
-Markt, Ereignisse. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
+Ereignisse. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
 
 *Diese FAQ wurde gegen den Code (`packages/game-config`, `packages/game-engine`, API) und, für die Solarsatelliten, durch einen automatisierten Integrationstest (`solar-satellites.integration.spec.ts`) geprüft.*

@@ -5,6 +5,18 @@
 
 ---
 
+## Session — marché (Phase 5)
+
+**Date :** 20 octobre 2026. Demande du propriétaire : « attaque le marché ». Vérification préalable : aucun code de marché n'existait (la feuille de route ne contenait qu'un schéma indicatif).
+
+- [x] `packages/game-config/src/market.ts` : valeurs de référence 1 / 1,5 / 3, bornes de taux (moitié à double), `paymentFor`, `taxOf` (5 %), constantes (24 h, 10 offres).
+- [x] Tables `MarketOffer` et `MarketTrade`, migration `20261020100000_market`.
+- [x] `MarketService` : création avec séquestre, achat total ou partiel, annulation, expiration, historique ; une transaction par opération, offre verrouillée puis planètes dans l'ordre des identifiants ; tâche planifiée `market` (chaque minute).
+- [x] API `/market`, page `/market` (création avec taux pré-rempli, filtre par paire, achat avec coût calculé, mes offres, dernières ventes), menu, textes fr/en/es/de/it, FAQ (5 langues), guides, `API_ENDPOINTS.md`.
+- [x] Tests : unitaires (7), intégration (14 dont concurrence et conservation des stocks), E2E (1).
+- Restent absents : contrats, commerce PNJ, routes commerciales, événements et quêtes.
+
+
 ## Session — attaques groupées (Phase 7)
 
 **Date :** 19 octobre 2026. Demande du propriétaire : « passe aux attaques groupées ». Vérification préalable : seule la valeur d'énumération `ACS_ATTACK = 2` existait ; aucune logique de groupe.

@@ -138,6 +138,7 @@ export * from "./research-network";
 export * from "./officers";
 export * from "./fleet-commanders";
 export * from "./attack-groups";
+export * from "./market";
 export * from "./production-queue";
 export * from "./item-texts";
 export * from "./shipyard-time";

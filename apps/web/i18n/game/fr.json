@@ -26,7 +26,8 @@
     "logout": "Déconnexion",
     "moon": "Lune",
     "officers": "Officiers",
-    "commanders": "Commandants"
+    "commanders": "Commandants",
+    "market": "Marché"
   },
   "sidebar": {
     "principal": "Principal",
@@ -1331,5 +1332,40 @@
     "select": "Commandant",
     "none": "Aucun commandant",
     "selectHint": "Un commandant libre renforce la flotte (attaque, défense, vitesse, cargaison)."
+  },
+  "market": {
+    "kicker": "Économie",
+    "title": "Marché",
+    "subtitle": "Échangez des ressources avec les autres joueurs. Le vendeur met sa ressource en séquestre ; chaque vente est taxée de {tax} % (détruits) ; une offre expire au bout de {hours} h (séquestre rendu) ; {max} offres actives au plus.",
+    "planet": "Les paiements et les achats utilisent la planète sélectionnée : {planet}.",
+    "createTitle": "Publier une offre",
+    "give": "Je propose",
+    "want": "Je demande",
+    "amount": "Quantité",
+    "rate": "Taux (unités demandées par unité proposée)",
+    "minAmount": "Achat minimal",
+    "rateHint": "Taux autorisé : de {min} à {max} {want} par {give}.",
+    "samePair": "Choisissez deux ressources différentes.",
+    "values": "Valeurs de référence : {values}.",
+    "publish": "Publier",
+    "offersTitle": "Offres en cours",
+    "all": "Toutes",
+    "empty": "Aucune offre pour ce filtre.",
+    "noHistory": "Aucune vente enregistrée pour cette paire.",
+    "history": "Dernier taux : {last} · taux moyen récent : {average}",
+    "offerLine": "{remaining} {give} contre {want}",
+    "rateLine": "Taux {rate} {want} par {give}",
+    "yours": "Votre offre",
+    "seller": "Vendeur : {name}",
+    "expires": "expire le {time}",
+    "quantity": "Quantité",
+    "buy": "Acheter ({cost} {want})",
+    "cancel": "Retirer",
+    "bought": "Achat réussi : {received} {give} reçus pour {paid} {want}.",
+    "mineTitle": "Mes offres",
+    "mineEmpty": "Aucune offre active.",
+    "tradesTitle": "Dernières ventes",
+    "tradeSold": "Vendu {amount} {give} → {received} {want} reçus (taxe déduite)",
+    "tradeBought": "Acheté {amount} {give} pour {paid} {want}"
   }
 }
