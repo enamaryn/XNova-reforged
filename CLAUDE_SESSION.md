@@ -5,6 +5,16 @@
 
 ---
 
+## Session — performance mobile, uptime, couverture
+
+**Date :** 12 octobre 2026. Demande du propriétaire : « performance mobile, mesure d'uptime, puis couverture de tests ».
+
+- [x] **Performance** ([PR #59](https://github.com/enamaryn/XNova-reforged/pull/59)) : accueil mobile Lighthouse 67 → 96 (SDK Sentry navigateur chargé à la demande) ; script `scripts/perf/lighthouse.mjs`.
+- [x] **Uptime** ([PR #60](https://github.com/enamaryn/XNova-reforged/pull/60)) : échantillon de santé par minute, disponibilité 24 h/7 j/30 j dans la console admin.
+- [x] **Couverture** : API 91,8 % des lignes (unitaires + intégration), `npm run test:coverage` avec seuils ; tests Redis/métriques.
+- Reste pour clore le critère : laisser tourner l'uptime plusieurs jours en production puis juger le pourcentage.
+
+
 ## Session — clôture de la supervision et mise à jour de la documentation
 
 **Date :** 12 octobre 2026. Le propriétaire a mis à jour son serveur (PR #56 puis #57) : supervision, test d'envoi d'email et carte « Mémoire et charge » **validés**.

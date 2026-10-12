@@ -11,6 +11,14 @@ test.afterAll(async () => {
   await prisma.$disconnect();
 });
 
+
+/** Incident préparé directement en base : la route publique est limitée par adresse IP (20/min) et les autres parcours E2E y consomment déjà leur part. */
+async function seedIncident(message: string, source = 'frontend') {
+  await prisma.incident.create({
+    data: { fingerprint: `${TAG}-${message}`, level: 'error', source, message: `${TAG} ${message}`, errorType: 'TypeError', occurrences: 1 },
+  });
+}
+
 async function signIn(page: Page, prefix: string, role: 'ADMIN' | 'SUPER_ADMIN') {
   const credentials = buildCredentials(prefix);
   await registerUser(page, credentials);
@@ -18,8 +26,8 @@ async function signIn(page: Page, prefix: string, role: 'ADMIN' | 'SUPER_ADMIN')
   return credentials;
 }
 
-test('supervision : un admin simple consulte l’état et les incidents mais ne modifie rien', async ({ page, request }) => {
-  await request.post(`${API_URL}/monitoring/client-errors`, { data: { message: `${TAG} lecture seule`, kind: 'window' } });
+test('supervision : un admin simple consulte l’état et les incidents mais ne modifie rien', async ({ page }) => {
+  await seedIncident('lecture seule');
   await signIn(page, 'e2e_supa', 'ADMIN');
   await page.goto('/admin');
   await page.getByRole('tab', { name: 'Supervision', exact: true }).click();
@@ -40,8 +48,8 @@ test('supervision : un admin simple consulte l’état et les incidents mais ne 
   await expect(page.getByTestId('incident-resolve')).toHaveCount(0);
 });
 
-test('supervision : le super admin traite un incident et bascule local ↔ Sentry sans jamais voir le DSN', async ({ page, request }) => {
-  await request.post(`${API_URL}/monitoring/client-errors`, { data: { message: `${TAG} traitement`, kind: 'react', type: 'TypeError' } });
+test('supervision : le super admin traite un incident et bascule local ↔ Sentry sans jamais voir le DSN', async ({ page }) => {
+  await seedIncident('traitement');
   await signIn(page, 'e2e_sups', 'SUPER_ADMIN');
   await page.goto('/admin');
   await page.getByRole('tab', { name: 'Supervision', exact: true }).click();
@@ -95,7 +103,7 @@ test('supervision : le super admin traite un incident et bascule local ↔ Sentr
 });
 
 test('supervision : export CSV, interface en allemand et configuration publique du navigateur', async ({ page, request }) => {
-  await request.post(`${API_URL}/monitoring/client-errors`, { data: { message: `${TAG} export`, kind: 'promise' } });
+  await seedIncident('export');
   await signIn(page, 'e2e_supx', 'SUPER_ADMIN');
   await page.goto('/de/admin');
   await page.getByRole('tab', { name: 'Überwachung', exact: true }).click();

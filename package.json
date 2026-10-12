@@ -47,7 +47,8 @@
     "test:update": "node --test scripts/update/test/*.test.mjs",
     "sentry:test": "node scripts/sentry-test.mjs",
     "test:i18n": "node --test scripts/i18n/test/*.test.mjs scripts/faq/test/*.test.mjs",
-    "load": "node scripts/load/load-test.mjs"
+    "load": "node scripts/load/load-test.mjs",
+    "test:coverage": "node scripts/coverage/api-coverage.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",
