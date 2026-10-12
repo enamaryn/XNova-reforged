@@ -46,6 +46,7 @@ const MISSION_IDS: Record<string, number> = {
   espionnage: 6,
   colonisation: 7,
   recyclage: 8,
+  expedition: 15,
 };
 
 export default function FleetClient() {
@@ -83,6 +84,7 @@ export default function FleetClient() {
       if (missionParam === 'spy') setMission('espionnage');
       if (missionParam === 'colonize') setMission('colonisation');
       if (missionParam === 'recycle') setMission('recyclage');
+      if (missionParam === 'expedition') setMission('expedition');
     }
 
     const galaxyValue = galaxyParam ? Number(galaxyParam) : null;
@@ -336,10 +338,21 @@ export default function FleetClient() {
                   { id: 'espionnage', label: t('fleet.missions.spy') },
                   { id: 'colonisation', label: t('fleet.missions.colonize') },
                   { id: 'recyclage', label: t('fleet.missions.recycle') },
+                  { id: 'expedition', label: t('fleet.missions.expedition') },
                 ].map((item) => (
                   <button
                     key={item.id}
-                    onClick={() => setMission(item.id)}
+                    data-testid={`mission-${item.id}`}
+                    onClick={() => {
+                      setMission(item.id);
+                      // Une expédition vise toujours la position 16 de l'espace profond, sans lune
+                      if (item.id === 'expedition') {
+                        setToMoon(false);
+                        setDestination((prev) => ({ ...prev, position: 16 }));
+                      } else {
+                        setDestination((prev) => (prev.position === 16 ? { ...prev, position: 1 } : prev));
+                      }
+                    }}
                     className={`rounded-full border px-4 py-2 text-xs uppercase tracking-[0.2em] transition ${
                       mission === item.id
                         ? 'border-blue-400/60 bg-blue-500/10 text-blue-200'
@@ -353,6 +366,11 @@ export default function FleetClient() {
               {mission === 'espionnage' && (
                 <p className="mt-3 text-xs text-slate-400">
                   Envoyez uniquement des sondes d&apos;espionnage vers la planète d&apos;un autre joueur ; le rapport arrive à l&apos;atterrissage dans la page Rapports.
+                </p>
+              )}
+              {mission === 'expedition' && (
+                <p className="mt-3 text-xs text-slate-400" data-testid="expedition-help">
+                  {t('fleet.expeditionHelp')}
                 </p>
               )}
               {mission === 'colonisation' && (

@@ -109,3 +109,26 @@ export function getSpyReports() {
 export function getSpyReport(reportId: string) {
   return apiClient.get<SpyReportDetail>(`/spy-reports/${reportId}`);
 }
+
+export type ExpeditionOutcome =
+  | 'nothing'
+  | 'resources'
+  | 'ships'
+  | 'delay'
+  | 'speedup'
+  | 'pirates'
+  | 'blackhole';
+
+export interface ExpeditionReport {
+  id: string;
+  galaxy: number;
+  system: number;
+  outcome: ExpeditionOutcome;
+  details: Record<string, unknown>;
+  ships: Record<string, number>;
+  createdAt: string;
+}
+
+export function getExpeditionReports() {
+  return apiClient.get<ExpeditionReport[]>('/expedition-reports');
+}

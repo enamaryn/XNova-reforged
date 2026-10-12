@@ -5,6 +5,7 @@ import { ALREADY_PROCESSED, CombatService } from '../combat/combat.service';
 import { DatabaseService } from '../database/database.service';
 import { GameEventsGateway } from '../game-events/game-events.gateway';
 import { ColonizationService } from './colonization.service';
+import { ExpeditionService } from './expedition.service';
 import { SpyService } from './spy.service';
 import { MonitoredCron } from '../supervision/cron-registry';
 
@@ -18,6 +19,7 @@ export class FleetCronService {
     private readonly combatService: CombatService,
     private readonly spyService: SpyService,
     private readonly colonizationService: ColonizationService,
+    private readonly expeditionService: ExpeditionService,
   ) {}
 
   /**
@@ -53,6 +55,8 @@ export class FleetCronService {
         processed = await this.spyService.resolveSpyMission(fleet);
       } else if (fleet.mission === MissionType.COLONIZE) {
         processed = await this.colonizationService.resolveColonizeMission(fleet);
+      } else if (fleet.mission === MissionType.EXPEDITION) {
+        processed = await this.expeditionService.resolveExpedition(fleet);
       } else if (fleet.mission === MissionType.RECYCLE) {
         processed = await this.resolveRecycle(fleet);
       } else {
