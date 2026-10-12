@@ -87,3 +87,81 @@ test('rapport de combat : annonce la naissance d\'une lune', async ({ page }) =>
   await page.goto(`/reports/${report.id}`);
   await expect(page.getByTestId('report-moon-created')).toBeVisible();
 });
+
+test('page Lune : phalange (balayage) et porte de saut (transfert, recharge)', async ({ page, browser }) => {
+  const credentials = buildCredentials('e2e_gate');
+  await registerUser(page, credentials);
+  const user = await prisma.user.findUniqueOrThrow({
+    where: { username: credentials.username },
+    include: { planets: true },
+  });
+  const baseSystem = 100 + Math.floor(Math.random() * 300);
+  await prisma.planet.update({
+    where: { id: user.planets[0].id },
+    data: { galaxy: 6, system: baseSystem, position: 3 },
+  });
+
+  const otherContext = await browser.newContext();
+  const otherPage = await otherContext.newPage();
+  const otherCredentials = buildCredentials('e2e_watch');
+  await registerUser(otherPage, otherCredentials);
+  const other = await prisma.user.findUniqueOrThrow({
+    where: { username: otherCredentials.username },
+    include: { planets: true },
+  });
+  await prisma.planet.update({
+    where: { id: other.planets[0].id },
+    data: { galaxy: 6, system: baseSystem + 2, position: 9 },
+  });
+
+  const moon = await prisma.planet.create({
+    data: {
+      userId: user.id, name: 'Lune', galaxy: 6, system: baseSystem, position: 3, isMoon: true,
+      planetType: 'moon', deuterium: 20000, fieldsMax: 10, phalanx: 2, moonBase: 1, jumpGate: 1,
+    },
+  });
+  // Seconde lune du joueur, sur une colonie
+  await prisma.planet.create({
+    data: { userId: user.id, name: 'Colonie', galaxy: 6, system: baseSystem + 4, position: 5, fieldsMax: 163 },
+  });
+  const moon2 = await prisma.planet.create({
+    data: {
+      userId: user.id, name: 'Lune', galaxy: 6, system: baseSystem + 4, position: 5, isMoon: true,
+      planetType: 'moon', fieldsMax: 10, moonBase: 1, jumpGate: 1,
+    },
+  });
+  await prisma.ship.create({ data: { planetId: moon.id, shipId: 202, amount: 5 } });
+  // Un mouvement visible autour de la planète voisine
+  await prisma.fleet.create({
+    data: {
+      userId: other.id, fromGalaxy: 6, fromSystem: baseSystem + 2, fromPosition: 9,
+      toGalaxy: 6, toSystem: baseSystem + 50, toPosition: 2, mission: 3, ships: { '202': 4 }, cargo: {},
+      startTime: new Date(), arrivalTime: new Date(Date.now() + 900_000),
+      returnTime: new Date(Date.now() + 1_800_000), status: 'traveling',
+    },
+  });
+
+  await page.goto('/moon');
+  await expect(page.getByTestId('moon-select-hint')).toBeVisible();
+
+  await page.reload();
+  await page.getByRole('button', { name: /Planète Mère|Planete Mere/i }).first().click();
+  await page.getByRole('button', { name: /Lune/ }).first().click();
+
+  await expect(page.getByTestId('phalanx-range')).toContainText('3 systèmes');
+  await page.getByTestId('phalanx-system').fill(String(baseSystem + 2));
+  await page.getByTestId('phalanx-position').fill('9');
+  await page.getByTestId('phalanx-scan').click();
+  await expect(page.getByTestId('phalanx-movement')).toHaveCount(1);
+  await expect(page.getByTestId('phalanx-movement')).toContainText('4 vaisseau');
+
+  await page.getByTestId('gate-destination').selectOption(moon2.id);
+  await page.getByTestId('gate-ship-202').fill('3');
+  await page.getByTestId('gate-jump').click();
+  await expect(page.getByTestId('gate-done')).toBeVisible();
+  await expect(page.getByTestId('gate-jump')).toBeDisabled();
+  await expect(page.getByTestId('gate-state')).toContainText('recharge');
+  const moved = await prisma.ship.findFirstOrThrow({ where: { planetId: moon2.id, shipId: 202 } });
+  expect(moved.amount).toBe(3);
+  await otherContext.close();
+});

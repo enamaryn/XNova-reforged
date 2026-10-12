@@ -23,7 +23,8 @@
     "player": "Joueur",
     "settings": "Paramètres",
     "administration": "Administration",
-    "logout": "Déconnexion"
+    "logout": "Déconnexion",
+    "moon": "Lune"
   },
   "sidebar": {
     "principal": "Principal",
@@ -1211,5 +1212,34 @@
     "nothingDestroyed": "Aucune défense détruite.",
     "lost": "Cible disparue : les missiles sont perdus.",
     "incomingWarning": "Missiles en approche vers l'une de vos planètes !"
+  },
+  "moonOps": {
+    "kicker": "Opérations lunaires",
+    "title": "Lune",
+    "subtitle": "La phalange de capteur révèle les mouvements de flotte autour d'une planète voisine ; la porte de saut déplace des vaisseaux d'une lune à l'autre sans délai.",
+    "selectMoon": "Choisissez une lune dans le sélecteur de planète pour accéder à la phalange et à la porte de saut.",
+    "phalanxTitle": "Phalange de capteur",
+    "phalanxMissing": "Construisez une phalange de capteur (niveau 1 de base lunaire requis).",
+    "phalanxRange": "Niveau {level} : portée {range} systèmes autour du système {system} (galaxie {galaxy}). Un balayage coûte {cost} deutérium de la lune.",
+    "scan": "Balayer",
+    "scanning": "Balayage...",
+    "scanOf": "Mouvements autour de {coords}",
+    "noMovement": "Aucun mouvement de flotte détecté.",
+    "direction": {
+      "outbound": "départ",
+      "inbound": "arrivée",
+      "returning": "retour"
+    },
+    "shipsCount": "{count} vaisseau(x)",
+    "gateTitle": "Porte de saut spatial",
+    "gateMissing": "Construisez une porte de saut (base lunaire 1 et technologie Hyperespace 7).",
+    "gateNoDestination": "Il vous faut une autre lune équipée d'une porte de saut.",
+    "gateReady": "Porte prête. Après un saut, les deux portes se rechargent pendant {seconds} s.",
+    "gateCharging": "Porte en recharge : {time}.",
+    "destination": "Lune de destination",
+    "noShips": "Aucun vaisseau sur cette lune.",
+    "jump": "Sauter",
+    "jumping": "Saut...",
+    "jumped": "Saut effectué."
   }
 }

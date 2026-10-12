@@ -5,6 +5,17 @@
 
 ---
 
+## Session — lunes (2e partie) : phalange et porte de saut
+
+**Date :** 14 octobre 2026. Suite de « passe aux lunes » après la fusion de la PR #63.
+
+- [x] Règles communes (`phalanxRange`, `jumpGateCooldownSeconds`) ; phalange (42) et porte de saut (43) proposées sur les lunes.
+- [x] API `apps/api/src/moons/` : `GET /moons/:id`, `POST /moons/:id/phalanx`, `POST /moons/:id/jump` ; migration `20261014100000_jump_gate` (`Planet.jumpGateReadyAt`).
+- [x] Interface : page « Lune » (balayage, saut, recharge), entrée de menu, textes fr/en/es/de/it ; FAQ des 5 langues.
+- [x] Tests : unitaires (2), intégration `moons-ops` (5), E2E (1) ; anciens tests adaptés.
+- Les lunes sont désormais complètes ; restent absents : dépôt d'alliance (maintien de position) et expéditions.
+
+
 ## Session — lunes (1re partie)
 
 **Date :** 13 octobre 2026. Demande du propriétaire : « passe aux lunes ». Livré en deux parties ; cette PR porte le cœur, la phalange et la porte de saut suivront.

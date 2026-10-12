@@ -88,6 +88,8 @@ model Planet {
 
   // Une lune partage les coordonnees de sa planete (isMoon = true)
   isMoon   Boolean @default(false)
+  // Porte de saut : instant a partir duquel la lune peut de nouveau sauter
+  jumpGateReadyAt DateTime?
 
   // Planet type
   planetType String @default("normal") // normal, desert, jungle, ice, volcanic

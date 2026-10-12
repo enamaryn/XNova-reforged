@@ -58,6 +58,14 @@ L’interface envoie l’en-tête `X-Locale` (`fr`, `en`, `es`, `de`, `it`) à c
 
 Les missiles se fabriquent par `/defense/build` (502, 503) dans la limite de 10 par niveau de silo. La résolution est faite par la tâche planifiée `missiles` (toutes les 10 s).
 
+## Lunes (`/moons`)
+
+| Méthode | Endpoint | Description |
+|---------|----------|-------------|
+| GET | `/moons/:moonId` | Phalange (niveau, portée, coût), porte de saut (niveau, recharge, autres lunes équipées). |
+| POST | `/moons/:moonId/phalanx` | Balayage d'une planète d'un autre joueur à portée (`galaxy`, `system`, `position`) : mouvements de flotte (mission, sens, trajet, heure, nombre de vaisseaux) ; coûte 5 000 deutérium de la lune. |
+| POST | `/moons/:moonId/jump` | Saut instantané de vaisseaux (`toMoonId`, `ships`) vers une autre lune du joueur équipée d'une porte ; recharge des deux portes. |
+
 ## Chantier spatial (`/shipyard`)
 
 | Méthode | Endpoint | Description |

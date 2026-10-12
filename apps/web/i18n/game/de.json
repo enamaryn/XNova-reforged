@@ -23,7 +23,8 @@
     "player": "Spieler",
     "settings": "Einstellungen",
     "administration": "Administration",
-    "logout": "Abmelden"
+    "logout": "Abmelden",
+    "moon": "Mond"
   },
   "sidebar": {
     "principal": "Hauptmenü",
@@ -1211,5 +1212,34 @@
     "nothingDestroyed": "Keine Verteidigung zerstört.",
     "lost": "Ziel verschwunden: die Raketen sind verloren.",
     "incomingWarning": "Raketen nähern sich einem deiner Planeten!"
+  },
+  "moonOps": {
+    "kicker": "Mondoperationen",
+    "title": "Mond",
+    "subtitle": "Die Sensorphalanx zeigt Flottenbewegungen rund um einen nahen Planeten; das Sprungtor verlegt Schiffe sofort von einem Mond zum anderen.",
+    "selectMoon": "Wähle in der Planetenauswahl einen Mond, um Phalanx und Sprungtor zu nutzen.",
+    "phalanxTitle": "Sensorphalanx",
+    "phalanxMissing": "Baue eine Sensorphalanx (Mondbasis Stufe 1 nötig).",
+    "phalanxRange": "Stufe {level}: Reichweite {range} Systeme um System {system} (Galaxie {galaxy}). Ein Scan kostet {cost} Deuterium vom Mond.",
+    "scan": "Scannen",
+    "scanning": "Scan läuft...",
+    "scanOf": "Bewegungen um {coords}",
+    "noMovement": "Keine Flottenbewegung erkannt.",
+    "direction": {
+      "outbound": "Abflug",
+      "inbound": "Ankunft",
+      "returning": "Rückflug"
+    },
+    "shipsCount": "{count} Schiff(e)",
+    "gateTitle": "Sprungtor",
+    "gateMissing": "Baue ein Sprungtor (Mondbasis 1 und Hyperraumtechnik 7).",
+    "gateNoDestination": "Du brauchst einen weiteren Mond mit Sprungtor.",
+    "gateReady": "Tor bereit. Nach einem Sprung laden beide Tore {seconds} s lang auf.",
+    "gateCharging": "Tor lädt auf: {time}.",
+    "destination": "Zielmond",
+    "noShips": "Keine Schiffe auf diesem Mond.",
+    "jump": "Springen",
+    "jumping": "Sprung...",
+    "jumped": "Sprung ausgeführt."
   }
 }

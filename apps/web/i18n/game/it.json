@@ -23,7 +23,8 @@
     "player": "Giocatore",
     "settings": "Impostazioni",
     "administration": "Amministrazione",
-    "logout": "Disconnetti"
+    "logout": "Disconnetti",
+    "moon": "Luna"
   },
   "sidebar": {
     "principal": "Principale",
@@ -1211,5 +1212,34 @@
     "nothingDestroyed": "Nessuna difesa distrutta.",
     "lost": "Bersaglio scomparso: i missili sono persi.",
     "incomingWarning": "Dei missili si avvicinano a uno dei tuoi pianeti!"
+  },
+  "moonOps": {
+    "kicker": "Operazioni lunari",
+    "title": "Luna",
+    "subtitle": "La falange di sensori rivela i movimenti di flotta attorno a un pianeta vicino; il portale di salto sposta navi da una luna all'altra all'istante.",
+    "selectMoon": "Scegli una luna nel selettore di pianeta per usare la falange e il portale di salto.",
+    "phalanxTitle": "Falange di sensori",
+    "phalanxMissing": "Costruisci una falange di sensori (serve la base lunare di livello 1).",
+    "phalanxRange": "Livello {level}: raggio di {range} sistemi attorno al sistema {system} (galassia {galaxy}). Ogni scansione costa {cost} deuterio della luna.",
+    "scan": "Scansiona",
+    "scanning": "Scansione...",
+    "scanOf": "Movimenti attorno a {coords}",
+    "noMovement": "Nessun movimento di flotta rilevato.",
+    "direction": {
+      "outbound": "partenza",
+      "inbound": "arrivo",
+      "returning": "ritorno"
+    },
+    "shipsCount": "{count} nave/i",
+    "gateTitle": "Portale di salto",
+    "gateMissing": "Costruisci un portale di salto (base lunare 1 e tecnologia Iperspazio 7).",
+    "gateNoDestination": "Serve un'altra luna dotata di portale di salto.",
+    "gateReady": "Portale pronto. Dopo un salto entrambi i portali si ricaricano per {seconds} s.",
+    "gateCharging": "Portale in ricarica: {time}.",
+    "destination": "Luna di destinazione",
+    "noShips": "Nessuna nave su questa luna.",
+    "jump": "Salta",
+    "jumping": "Salto...",
+    "jumped": "Salto effettuato."
   }
 }
