@@ -5,6 +5,14 @@
 
 ---
 
+## Session — coûts de recherche visibles dans la liste
+
+**Date :** 16 octobre 2026. **Retour du propriétaire** : les coûts de recherche n'étaient visibles que dans la page de détails.
+
+- [x] Les cartes de la page Recherche affichent le coût du prochain niveau (métal, cristal, deutérium, énergie), avec en rouge ce qui dépasse le stock de la planète ; niveau maximal : pas de coût.
+- [x] Clé `research.costNextLevel` en fr/en/es/de/it ; test E2E (coûts visibles sans ouvrir les détails, stock insuffisant signalé).
+
+
 ## Session — lunes (2e partie) : phalange et porte de saut
 
 **Date :** 14 octobre 2026. Suite de « passe aux lunes » après la fusion de la PR #63.
