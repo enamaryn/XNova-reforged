@@ -10,6 +10,7 @@ import { usePlanetStore } from "@/lib/stores/planet-store";
 
 const MISSION_KEYS: Record<number, string> = {
   1: "attack",
+  2: "acs",
   3: "transport",
   4: "deploy",
   6: "spy",

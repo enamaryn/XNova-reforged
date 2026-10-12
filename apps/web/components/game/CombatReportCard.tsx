@@ -49,6 +49,26 @@ export const CombatReportCard = memo(function CombatReportCard({
       </div>
 
       <div className="mt-4 grid gap-3 text-sm text-slate-400">
+        {report.participants && report.participants.length > 1 && (
+          <div className="rounded-2xl border border-slate-800/60 bg-slate-900/50 p-4" data-testid="report-participants">
+            <h3 className="text-xs uppercase tracking-[0.2em] text-slate-500">{t('report.participants')}</h3>
+            <ul className="mt-3 space-y-1 text-xs text-slate-300">
+              {report.participants.map((participant) => (
+                <li key={participant.userId} className="flex items-center justify-between gap-2">
+                  <span>{participant.username}</span>
+                  <span>
+                    {t('report.participantLine', {
+                      ships: formatNumber(sumCounts(participant.ships)),
+                      losses: formatNumber(sumCounts(participant.losses)),
+                    })}
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-2 text-xs text-slate-500">{t('report.participantsNote')}</p>
+          </div>
+        )}
+
         <div className="rounded-2xl border border-slate-800/60 bg-slate-900/50 p-4">
           <h3 className="text-xs uppercase tracking-[0.2em] text-slate-500">{t('report.loot')}</h3>
           <div className="mt-3 grid gap-2 text-xs text-slate-300">

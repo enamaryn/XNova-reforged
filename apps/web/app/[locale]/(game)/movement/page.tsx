@@ -48,6 +48,7 @@ export default function MovementPage() {
   const missionLabels = useMemo<Record<number, string>>(
     () => ({
       1: t('fleet.missions.attack'),
+      2: t('fleet.missions.acs'),
       3: t('fleet.missions.transport'),
       4: t('fleet.missions.deploy'),
       6: t('fleet.missions.spy'),

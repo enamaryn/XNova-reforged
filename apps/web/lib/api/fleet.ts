@@ -58,11 +58,25 @@ export interface SendFleetPayload {
   };
   planetName?: string;
   commanderId?: string;
+  groupId?: string;
+}
+
+export interface AttackGroupSummary {
+  id: string;
+  creator: string;
+  target: { galaxy: number; system: number; position: number; moon: boolean };
+  arrivalTime: string;
+  fleets: number;
+}
+
+export function getAttackGroups() {
+  return apiClient.get<{ max?: number; groups: AttackGroupSummary[] }>('/fleet/attack-groups');
 }
 
 export interface SendFleetResponse {
   success: boolean;
   fleetId: string;
+  groupId?: string | null;
   durationSeconds: number;
   fuelConsumption: number;
   mission: number;

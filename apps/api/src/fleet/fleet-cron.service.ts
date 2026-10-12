@@ -41,6 +41,8 @@ export class FleetCronService {
   }
 
   private async processArrivals() {
+    // Groupes d'attaque abandonnés (toutes les flottes rappelées) : nettoyés une heure après l'arrivée prévue
+    await this.database.attackGroup.deleteMany({ where: { arrivalTime: { lt: new Date(Date.now() - 3_600_000) } } });
     const fleets = await this.database.fleet.findMany({
       where: {
         status: 'traveling',
@@ -50,11 +52,32 @@ export class FleetCronService {
 
     if (fleets.length === 0) return;
 
+    // Attaque groupée : un seul combat par groupe, avec toutes ses flottes arrivées
+    const resolvedGroups = new Set<string>();
     for (const fleet of fleets) {
       let processed = true;
       if (fleet.mission === MissionType.ATTACK) {
         const outcome = await this.combatService.resolveAttackMission(fleet);
         processed = outcome !== ALREADY_PROCESSED;
+      } else if (fleet.mission === MissionType.ACS_ATTACK) {
+        if (fleet.groupId && resolvedGroups.has(fleet.groupId)) continue;
+        if (fleet.groupId) resolvedGroups.add(fleet.groupId);
+        const group = fleet.groupId
+          ? fleets.filter((f) => f.groupId === fleet.groupId && f.mission === MissionType.ACS_ATTACK)
+          : [fleet];
+        const outcome = await this.combatService.resolveGroupAttack(group);
+        processed = outcome !== ALREADY_PROCESSED;
+        // Chaque joueur du groupe est prévenu de l'arrivée de sa flotte
+        if (processed) {
+          for (const member of group) {
+            this.gameEvents.emitFleetArrived(member.userId, {
+              fleetId: member.id,
+              mission: member.mission,
+              to: `${member.toGalaxy}:${member.toSystem}:${member.toPosition}`,
+            });
+          }
+        }
+        continue;
       } else if (fleet.mission === MissionType.SPY) {
         processed = await this.spyService.resolveSpyMission(fleet);
       } else if (fleet.mission === MissionType.COLONIZE) {

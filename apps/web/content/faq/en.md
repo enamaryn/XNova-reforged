@@ -215,6 +215,9 @@ In *Reports*.
 **What does an attack mission carry?**
 It can also carry cargo, but loot only uses the **free space** left in the surviving ships.
 
+**How does the group attack work?**
+The **Group attack** mission is for members of the **same alliance** (target: a player outside the alliance). The first fleet sent **creates a group** and sets the arrival time; other members **join** it from the Fleet page ("Group" list for the same coordinates) and arrive at that same time, provided their fleet can get there in time (otherwise "Fleet too slow"). A group holds **at most 5 fleets**. On arrival, **one single combat** brings together all the fleets that arrived, each with **its own technologies and commander**; losses are counted per fleet. The loot (as for a simple attack, at most half of the stocks) is **shared in proportion to each fleet's free capacity**. Each participant receives their report, with the list of participants. A recalled fleet leaves the group.
+
 ---
 
 ## 7. Combat
@@ -318,6 +321,6 @@ Up to **3 characters** recruited (250,000 deuterium, Commanders page) and assign
 
 ## 11. What does not exist yet
 
-Market, events, group attacks. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
+Market, events. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
 
 *This FAQ was checked against the code (`packages/game-config`, `packages/game-engine`, API) and, for solar satellites, by an automated integration test (`solar-satellites.integration.spec.ts`).*

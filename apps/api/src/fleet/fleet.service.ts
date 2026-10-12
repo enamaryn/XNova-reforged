@@ -17,6 +17,7 @@ import {
   RECYCLER_ID,
   GAME_CONSTANTS,
   HOLD_MAX_HOURS,
+  MAX_GROUP_FLEETS,
   IMPLEMENTED_MISSIONS,
   MissionType,
   SHIPS,
@@ -89,6 +90,33 @@ export class FleetService {
       ships: shipList,
       // Flottes en vol : 1 de base, plus 1 par niveau de la technologie Ordinateur
       fleetSlots: { inFlight, max: maxFleetSlots(computer?.level ?? 0) },
+    };
+  }
+
+  /** Groupes d'attaque de mon alliance encore en route (à rejoindre depuis la page Flotte). */
+  async getOpenAttackGroups(userId: string) {
+    const member = await this.database.allianceMember.findUnique({ where: { userId }, select: { allianceId: true } });
+    if (!member) return { groups: [] };
+    const groups = await this.database.attackGroup.findMany({
+      where: { allianceId: member.allianceId, arrivalTime: { gt: new Date() } },
+      orderBy: { arrivalTime: 'asc' },
+      take: 50,
+      include: {
+        creator: { select: { username: true } },
+        fleets: { where: { status: 'traveling' }, select: { id: true } },
+      },
+    });
+    return {
+      max: MAX_GROUP_FLEETS,
+      groups: groups
+        .filter((group) => group.fleets.length > 0)
+        .map((group) => ({
+          id: group.id,
+          creator: group.creator.username,
+          target: { galaxy: group.toGalaxy, system: group.toSystem, position: group.toPosition, moon: group.toMoon },
+          arrivalTime: group.arrivalTime,
+          fleets: group.fleets.length,
+        })),
     };
   }
 
@@ -201,11 +229,30 @@ export class FleetService {
       throw new BadRequestException('Cette mission ne peut pas viser une lune');
     }
 
+    let acsAllianceId: string | undefined;
+    if (dto.groupId && dto.mission !== MissionType.ACS_ATTACK) {
+      throw new BadRequestException("Un groupe d'attaque ne se rejoint qu'avec la mission d'attaque groupee");
+    }
     if (dto.mission === MissionType.ATTACK) {
       if (!target) throw new BadRequestException(toMoon ? 'Aucune lune a cette position' : 'Aucune planete a cette position');
       if (target.userId === userId) {
         throw new BadRequestException('Vous ne pouvez pas attaquer votre propre planete');
       }
+    } else if (dto.mission === MissionType.ACS_ATTACK) {
+      // Attaque groupée : membres d'une même alliance, cible d'un autre joueur hors de l'alliance
+      if (!target) throw new BadRequestException(toMoon ? 'Aucune lune a cette position' : 'Aucune planete a cette position');
+      if (target.userId === userId) {
+        throw new BadRequestException('Vous ne pouvez pas attaquer votre propre planete');
+      }
+      const [mine, theirs] = await Promise.all([
+        this.database.allianceMember.findUnique({ where: { userId }, select: { allianceId: true } }),
+        this.database.allianceMember.findUnique({ where: { userId: target.userId }, select: { allianceId: true } }),
+      ]);
+      if (!mine) throw new BadRequestException("L'attaque groupee exige d'appartenir a une alliance");
+      if (theirs && theirs.allianceId === mine.allianceId) {
+        throw new BadRequestException('Vous ne pouvez pas attaquer un membre de votre alliance');
+      }
+      acsAllianceId = mine.allianceId;
     } else if (dto.mission === MissionType.DEPLOY) {
       if (!target || target.userId !== userId) {
         throw new BadRequestException('Le deploiement exige une de vos planetes');
@@ -411,8 +458,31 @@ export class FleetService {
     );
 
     const now = new Date();
-    const arrivalTime = new Date(now.getTime() + adjustedDuration * 1000);
-    const returnTime = new Date(arrivalTime.getTime() + adjustedDuration * 1000);
+    let arrivalTime = new Date(now.getTime() + adjustedDuration * 1000);
+    let returnTime = new Date(arrivalTime.getTime() + adjustedDuration * 1000);
+
+    // Attaque groupée : rejoindre un groupe fixe l'arrivée à celle du groupe (la flotte doit pouvoir y être à temps)
+    if (dto.mission === MissionType.ACS_ATTACK && dto.groupId) {
+      const group = await this.database.attackGroup.findUnique({ where: { id: dto.groupId } });
+      if (!group || group.allianceId !== acsAllianceId) {
+        throw new NotFoundException("Groupe d'attaque introuvable");
+      }
+      if (
+        group.toGalaxy !== dto.toGalaxy ||
+        group.toSystem !== dto.toSystem ||
+        group.toPosition !== dto.toPosition ||
+        group.toMoon !== toMoon
+      ) {
+        throw new BadRequestException("Ce groupe vise une autre cible");
+      }
+      const remainingMs = group.arrivalTime.getTime() - now.getTime();
+      if (remainingMs <= 0) throw new BadRequestException('Ce groupe est deja parti');
+      if (adjustedDuration * 1000 > remainingMs) {
+        throw new BadRequestException("Flotte trop lente : elle n'arriverait pas avant le groupe");
+      }
+      arrivalTime = group.arrivalTime;
+      returnTime = new Date(arrivalTime.getTime() + adjustedDuration * 1000);
+    }
 
     const shipsPayload = shipsToSend.reduce((acc, ship) => {
       acc[ship.shipId] = ship.amount;
@@ -425,6 +495,31 @@ export class FleetService {
       await lockUser(tx, userId);
       await this.assertFleetSlot(tx, userId);
       if (dto.commanderId) await this.commanders.assertAssignable(tx, userId, dto.commanderId);
+      // Groupe d'attaque : rejoint (verrou du groupe, taille limitée) ou créé par cette flotte
+      let groupId: string | null = null;
+      if (dto.mission === MissionType.ACS_ATTACK) {
+        if (dto.groupId) {
+          await tx.$queryRaw`SELECT "id" FROM "AttackGroup" WHERE "id" = ${dto.groupId} FOR UPDATE`;
+          const size = await tx.fleet.count({ where: { groupId: dto.groupId, status: 'traveling' } });
+          if (size >= MAX_GROUP_FLEETS) {
+            throw new BadRequestException(`Groupe complet (${MAX_GROUP_FLEETS} flottes au maximum)`);
+          }
+          groupId = dto.groupId;
+        } else {
+          const created = await tx.attackGroup.create({
+            data: {
+              creatorId: userId,
+              allianceId: acsAllianceId!,
+              toGalaxy: dto.toGalaxy,
+              toSystem: dto.toSystem,
+              toPosition: dto.toPosition,
+              toMoon,
+              arrivalTime,
+            },
+          });
+          groupId = created.id;
+        }
+      }
       await lockPlanet(tx, dto.planetId);
 
       await debitResources(tx, dto.planetId, {
@@ -463,6 +558,7 @@ export class FleetService {
           returnTime,
           holdHours: dto.mission === MissionType.HOLD_POSITION ? dto.holdHours : null,
           commanderId: dto.commanderId ?? null,
+          groupId,
           status: 'traveling',
         },
       });
@@ -471,6 +567,7 @@ export class FleetService {
     return {
       success: true,
       fleetId: fleet.id,
+      groupId: fleet.groupId,
       durationSeconds: adjustedDuration,
       fuelConsumption,
       holdFuel,

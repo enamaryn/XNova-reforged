@@ -39,6 +39,8 @@ export interface CombatReportDetail {
     crystal: number;
   };
   moonCreated?: boolean;
+  /** Attaque groupée : un élément par joueur (vaisseaux engagés et pertes) ; absent pour une attaque simple. */
+  participants?: { userId: string; username: string; ships: Record<string, number>; losses: Record<string, number> }[] | null;
   createdAt: string;
 }
 

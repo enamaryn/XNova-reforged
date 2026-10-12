@@ -14,6 +14,8 @@ export interface CombatResultSummary {
   rounds: number;
   result: 'attacker_win' | 'defender_win' | 'draw';
   attackerRemaining: Record<number, number>;
+  /** Survivants de chaque flotte (attaque groupée seulement). */
+  attackerGroupsRemaining?: Record<string, Record<number, number>>;
   defenderRemaining: Record<number, number>;
   attackerLosses: Record<number, number>;
   defenderLosses: Record<number, number>;
@@ -33,6 +35,8 @@ export interface CombatRoundSummary {
 }
 
 interface CombatUnit {
+  /** Flotte d'origine (attaque groupée) : permet de rendre les survivants de chaque flotte. */
+  group?: string;
   shipId: number;
   hull: number;
   shield: number;
@@ -52,6 +56,7 @@ function applyTech(value: number, level: number, bonus = 0): number {
 function createUnits(
   ships: Record<number, number>,
   tech: CombatTechBonuses,
+  group?: string,
 ): CombatUnit[] {
   const units: CombatUnit[] = [];
 
@@ -68,6 +73,7 @@ function createUnits(
 
     for (let i = 0; i < count; i += 1) {
       units.push({
+        group,
         shipId,
         hull: baseHull,
         shield: baseShield,
@@ -183,16 +189,38 @@ function fireRound(shooters: CombatUnit[], targets: CombatUnit[]) {
   }
 }
 
+/** Flotte d'une attaque groupée : ses vaisseaux et SES technologies (celles de son propriétaire, commandant compris). */
+export interface AttackerGroup {
+  key: string;
+  ships: Record<number, number>;
+  tech: CombatTechBonuses;
+}
+
+/** Somme de plusieurs cartes de vaisseaux (flotte groupée). */
+export function mergeShipMaps(maps: ReadonlyArray<Record<number, number>>): Record<number, number> {
+  const total: Record<number, number> = {};
+  for (const map of maps) {
+    for (const [id, count] of Object.entries(map)) {
+      total[Number(id)] = (total[Number(id)] ?? 0) + Math.max(0, Math.floor(Number(count) || 0));
+    }
+  }
+  return total;
+}
+
 export function simulateCombat(params: {
   attackerShips: Record<number, number>;
   defenderShips: Record<number, number>;
   attackerTech: CombatTechBonuses;
   defenderTech: CombatTechBonuses;
+  /** Attaque groupée : chaque flotte combat avec ses propres technologies ; `attackerShips` en est la somme. */
+  attackerGroups?: AttackerGroup[];
   maxRounds?: number;
 }): CombatResultSummary {
   const maxRounds =
     params.maxRounds ?? GAME_CONSTANTS.MAX_COMBAT_ROUNDS ?? 6;
-  const attackerUnits = createUnits(params.attackerShips, params.attackerTech);
+  const attackerUnits = params.attackerGroups
+    ? params.attackerGroups.flatMap((group) => createUnits(group.ships, group.tech, group.key))
+    : createUnits(params.attackerShips, params.attackerTech);
   const defenderUnits = createUnits(params.defenderShips, params.defenderTech);
   const timeline: CombatRoundSummary[] = [];
 
@@ -251,9 +279,19 @@ export function simulateCombat(params: {
     result = 'defender_win';
   }
 
+  const attackerGroupsRemaining: Record<string, Record<number, number>> | undefined = params.attackerGroups
+    ? Object.fromEntries(
+        params.attackerGroups.map((group) => [
+          group.key,
+          countByShip(attackerUnits.filter((unit) => unit.group === group.key)),
+        ]),
+      )
+    : undefined;
+
   return {
     rounds,
     result,
+    attackerGroupsRemaining,
     attackerRemaining,
     defenderRemaining,
     attackerLosses,
@@ -357,4 +395,47 @@ export function computeCargoCapacity(
     if (!ship || count === 0) return sum;
     return sum + ship.cargo * bonus * count;
   }, 0);
+}
+
+
+/**
+ * Partage d'un butin entre les flottes d'une attaque groupée, au prorata de leur place libre.
+ * Aucune flotte ne dépasse sa place libre ; le reliquat des arrondis va aux flottes qui ont encore de la place.
+ * Le total distribué est celui du butin dans la limite de la place libre cumulée.
+ */
+export function splitLoot(
+  loot: { metal: number; crystal: number; deuterium: number },
+  freeCapacities: readonly number[],
+): Array<{ metal: number; crystal: number; deuterium: number }> {
+  const frees = freeCapacities.map((free) => Math.max(0, Math.floor(free)));
+  const totalFree = frees.reduce((sum, free) => sum + free, 0);
+  const shares = frees.map(() => ({ metal: 0, crystal: 0, deuterium: 0 }));
+  if (totalFree === 0) return shares;
+  const keys = ['metal', 'crystal', 'deuterium'] as const;
+  const remaining = { metal: 0, crystal: 0, deuterium: 0 };
+  // Un butin supérieur à la place libre cumulée est ramené proportionnellement (ne devrait pas arriver : le butin
+  // est déjà calculé pour cette capacité)
+  const wanted = keys.reduce((sum, key) => sum + Math.max(0, Math.floor(loot[key])), 0);
+  const scale = wanted > totalFree ? totalFree / wanted : 1;
+  for (const key of keys) {
+    const amount = Math.floor(Math.max(0, Math.floor(loot[key])) * scale);
+    let given = 0;
+    frees.forEach((free, i) => {
+      const part = Math.floor((amount * free) / totalFree);
+      shares[i][key] = part;
+      given += part;
+    });
+    remaining[key] = amount - given;
+  }
+  const room = (i: number) => frees[i] - keys.reduce((sum, key) => sum + shares[i][key], 0);
+  for (const key of keys) {
+    for (let i = 0; i < shares.length && remaining[key] > 0; i += 1) {
+      const add = Math.min(remaining[key], room(i));
+      if (add > 0) {
+        shares[i][key] += add;
+        remaining[key] -= add;
+      }
+    }
+  }
+  return shares;
 }

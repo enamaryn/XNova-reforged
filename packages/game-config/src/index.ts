@@ -59,9 +59,10 @@ export enum MissionType {
 }
 
 // Missions réellement traitées à l'arrivée (liste commune API/UI, GAME-01).
-// Les autres missions (attaque groupée, destruction...) restent refusées par l'API sans débit.
+// Les autres missions (destruction...) restent refusées par l'API sans débit.
 export const IMPLEMENTED_MISSIONS: readonly MissionType[] = [
   MissionType.ATTACK,
+  MissionType.ACS_ATTACK,
   MissionType.TRANSPORT,
   MissionType.DEPLOY,
   MissionType.SPY,
@@ -136,6 +137,7 @@ export * from "./moons";
 export * from "./research-network";
 export * from "./officers";
 export * from "./fleet-commanders";
+export * from "./attack-groups";
 export * from "./production-queue";
 export * from "./item-texts";
 export * from "./shipyard-time";

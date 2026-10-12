@@ -56,7 +56,8 @@
       "recycle": "Reciclaje",
       "deploy": "Despliegue",
       "expedition": "Expedición",
-      "hold": "Mantener posición"
+      "hold": "Mantener posición",
+      "acs": "Ataque en grupo"
     },
     "summary": "Resumen de misión",
     "distance": "Distancia",
@@ -71,7 +72,11 @@
     "targetMoon": "Apuntar a la luna (mismas coordenadas)",
     "expeditionHelp": "Envía la flota al espacio profundo (posición 16 del sistema): a veces encuentra recursos o naves, pero también puede retrasarse, ser atacada por piratas o ser engullida por un agujero negro. Requiere la tecnología Expedición; el informe llega al aterrizar en la página Informes.",
     "holdHelp": "Mantener posición junto a un aliado: la flota se queda en órbita de su planeta o luna (hasta 32 h), la defiende si es atacada y luego regresa. El combustible de mantenimiento (una décima parte del consumo por hora) se paga por adelantado; el depósito de la alianza del anfitrión puede reembolsarlo. Objetivo: un miembro de tu alianza.",
-    "holdHours": "Duración (horas, 1 a 32)"
+    "holdHours": "Duración (horas, 1 a 32)",
+    "acsHelp": "Ataca un objetivo al mismo tiempo que los miembros de tu alianza: elige un grupo ya anunciado para estas coordenadas (llegarás con él, si tu flota es lo bastante rápida) o crea uno nuevo.",
+    "acsGroup": "Grupo",
+    "acsNew": "Grupo nuevo (salgo primero)",
+    "acsEntry": "{creator} · {count}/{max} flotas · llegada {time}"
   },
   "movement": {
     "kicker": "Control de tráfico",
@@ -766,7 +771,10 @@
     "defenseLine": "{count} (destruidas {destroyed}, reparadas {repaired})",
     "timeline": "Cronología",
     "round": "Ronda {round}",
-    "moonCreated": "¡El combate ha dejado una luna!"
+    "moonCreated": "¡El combate ha dejado una luna!",
+    "participants": "Participantes del ataque en grupo",
+    "participantLine": "{ships} naves, {losses} perdidas",
+    "participantsNote": "El botín indicado es el del grupo; cada flota trae una parte proporcional a su capacidad libre."
   },
   "reports": {
     "kicker": "Combate",

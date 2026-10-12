@@ -19,7 +19,9 @@ import {
   distributeShipLosses,
   distributeLoot,
   fitCargo,
+  mergeShipMaps,
   simulateCombat,
+  splitLoot,
   type CombatResultSummary,
 } from '@xnova/game-engine';
 import { Prisma } from '@prisma/client';
@@ -32,6 +34,31 @@ import { GameEventsGateway } from '../game-events/game-events.gateway';
 
 /** Retourne par resolveAttackMission quand un autre traitement a deja pris en charge la flotte. */
 export const ALREADY_PROCESSED = Symbol('fleet-event-already-processed');
+
+/** Flotte attaquante telle que lue en base (une seule pour une attaque, plusieurs pour une attaque groupée). */
+/** Levée dans la transaction quand une flotte du combat a changé d'état entre-temps : rien n'est écrit. */
+class AttackFleetsChanged extends Error {}
+
+export interface AttackFleet {
+  id: string;
+  userId: string;
+  mission: number;
+  ships: unknown;
+  cargo: unknown;
+  startTime: Date;
+  arrivalTime: Date;
+  returnTime: Date | null;
+  status: string;
+  fromGalaxy: number;
+  fromSystem: number;
+  fromPosition: number;
+  toGalaxy: number;
+  toSystem: number;
+  toPosition: number;
+  toMoon?: boolean;
+  commanderId?: string | null;
+  groupId?: string | null;
+}
 
 interface CombatTechLevels {
   weapon: number;
@@ -60,28 +87,28 @@ export class CombatService {
    * @param fleet - Flotte attaquante avec position et chargement.
    * @returns Rapport de combat cree ou null si pas de cible.
    */
-  async resolveAttackMission(fleet: {
-    id: string;
-    userId: string;
-    mission: number;
-    ships: unknown;
-    cargo: unknown;
-    startTime: Date;
-    arrivalTime: Date;
-    returnTime: Date | null;
-    status: string;
-    fromGalaxy: number;
-    fromSystem: number;
-    fromPosition: number;
-    toGalaxy: number;
-    toSystem: number;
-    toPosition: number;
-    toMoon?: boolean;
-    commanderId?: string | null;
-  }) {
+  async resolveAttackMission(fleet: AttackFleet) {
     if (fleet.mission !== MissionType.ATTACK) {
       return null;
     }
+    return this.resolveAttackFleets([fleet]);
+  }
+
+  /**
+   * Attaque groupée (mission 2) : toutes les flottes du groupe qui arrivent ensemble combattent dans un seul
+   * combat (chacune avec ses technologies et son commandant) ; butin partagé au prorata de la place libre.
+   */
+  async resolveGroupAttack(fleets: AttackFleet[]) {
+    if (fleets.length === 0 || fleets.some((f) => f.mission !== MissionType.ACS_ATTACK)) {
+      return null;
+    }
+    return this.resolveAttackFleets(fleets);
+  }
+
+  private async resolveAttackFleets(fleets: AttackFleet[]) {
+    const fleet = fleets[0];
+    const fleetIds = fleets.map((f) => f.id);
+    const grouped = fleets.length > 1;
 
     const target = await this.database.planet.findFirst({
       where: {
@@ -93,14 +120,16 @@ export class CombatService {
     });
 
     if (!target) {
+      // Cible disparue : toutes les flottes rentrent (la prise en charge échoue si l'une est déjà traitée)
       const claimed = await this.database.fleet.updateMany({
-        where: { id: fleet.id, status: 'traveling' },
+        where: { id: grouped ? { in: fleetIds } : fleet.id, status: 'traveling' },
         data: { status: 'returning' },
       });
-      return claimed.count === 1 ? null : ALREADY_PROCESSED;
+      return claimed.count === fleets.length ? null : ALREADY_PROCESSED;
     }
 
-    const attackerShips = this.normalizeShipMap(fleet.ships);
+    const fleetShips = new Map(fleets.map((f) => [f.id, this.normalizeShipMap(f.ships)]));
+    const attackerShips = mergeShipMaps([...fleetShips.values()]);
     const defenderShipRows = await this.database.ship.findMany({
       where: { planetId: target.id },
       select: { shipId: true, amount: true },
@@ -142,22 +171,37 @@ export class CombatService {
       }
     }
 
-    const attackerTech = await this.getCombatTechLevels(fleet.userId);
     const defenderTech = await this.getCombatTechLevels(target.userId);
-    // Le commandant assigné à la flotte attaquante : dégâts (Attaque), bouclier et coque (Défense), cargaison
-    const commanderBonus = await commanderBonusesFor(this.database, fleet.commanderId);
+    // Technologies de chaque attaquant (une lecture par joueur) et commandant de chaque flotte :
+    // dégâts (Attaque), bouclier et coque (Défense), cargaison
+    const techByUser = new Map<string, CombatTechLevels>();
+    for (const f of fleets) {
+      if (!techByUser.has(f.userId)) techByUser.set(f.userId, await this.getCombatTechLevels(f.userId));
+    }
+    const commanderByFleet = new Map<string, Awaited<ReturnType<typeof commanderBonusesFor>>>();
+    for (const f of fleets) {
+      commanderByFleet.set(f.id, await commanderBonusesFor(this.database, f.commanderId));
+    }
+    const techOf = (f: AttackFleet) => {
+      const tech = techByUser.get(f.userId)!;
+      const bonus = commanderByFleet.get(f.id)!;
+      return {
+        weapon: tech.weapon,
+        shield: tech.shield,
+        armor: tech.armor,
+        weaponBonus: bonus.attack,
+        shieldBonus: bonus.defense,
+        armorBonus: bonus.defense,
+      };
+    };
 
     const combat = simulateCombat({
       attackerShips,
       defenderShips: { ...defendingShips, ...defenderDefenses },
-      attackerTech: {
-        weapon: attackerTech.weapon,
-        shield: attackerTech.shield,
-        armor: attackerTech.armor,
-        weaponBonus: commanderBonus.attack,
-        shieldBonus: commanderBonus.defense,
-        armorBonus: commanderBonus.defense,
-      },
+      attackerTech: techOf(fleet),
+      ...(grouped
+        ? { attackerGroups: fleets.map((f) => ({ key: f.id, ships: fleetShips.get(f.id)!, tech: techOf(f) })) }
+        : {}),
       defenderTech: {
         weapon: defenderTech.weapon,
         shield: defenderTech.shield,
@@ -165,7 +209,13 @@ export class CombatService {
       },
     });
 
-    const attackerSurvivors = combat.attackerRemaining;
+    // Survivants de chaque flotte (le combat les rend par flotte pour une attaque groupée)
+    const survivorsOf = new Map<string, Record<number, number>>(
+      fleets.map((f) => [
+        f.id,
+        grouped ? combat.attackerGroupsRemaining?.[f.id] ?? {} : combat.attackerRemaining,
+      ]),
+    );
     const { shipLosses: totalShipLosses, defenseLosses } = this.splitDefenderLosses(
       combat.defenderLosses ?? {},
     );
@@ -177,58 +227,84 @@ export class CombatService {
     const defenderShipLosses = lossShares.host ?? {};
     // Réparation : chaque défense détruite revient avec la probabilité DEFENSE_REPAIR_FACTOR
     const defenderRepaired = this.repairDefenses(defenseLosses);
-    const attackerTotal = this.countShips(attackerSurvivors);
-
     const maxLoot = {
       metal: Math.floor(target.metal * 0.5),
       crystal: Math.floor(target.crystal * 0.5),
       deuterium: Math.floor(target.deuterium * 0.5),
     };
 
-    // Cargaison embarquée (GAME-03) : conservée dans la limite de la capacité des survivants,
-    // le surplus est perdu avec les vaisseaux détruits ; le butin n'occupe que la place libre.
-    const boarded = this.normalizeCargo(fleet.cargo);
-    const capacity =
-      attackerTotal > 0
-        ? Math.floor(
-            computeCargoCapacity(attackerSurvivors, attackerTech.hyperspace) * (1 + commanderBonus.cargo),
-          )
-        : 0;
-    const { kept: keptCargo } = fitCargo(boarded, capacity);
-    const freeCapacity = Math.max(
-      0,
-      capacity - (keptCargo.metal + keptCargo.crystal + keptCargo.deuterium),
-    );
+    // Cargaison embarquée (GAME-03) : conservée dans la limite de la capacité des survivants de chaque flotte,
+    // le surplus est perdu avec les vaisseaux détruits ; le butin n'occupe que la place libre (cumulée pour
+    // une attaque groupée, puis partagée au prorata de la place libre de chaque flotte).
+    const plans = fleets.map((f) => {
+      const survivors = survivorsOf.get(f.id) ?? {};
+      const total = this.countShips(survivors);
+      const capacity =
+        total > 0
+          ? Math.floor(
+              computeCargoCapacity(survivors, techByUser.get(f.userId)!.hyperspace) *
+                (1 + commanderByFleet.get(f.id)!.cargo),
+            )
+          : 0;
+      const { kept } = fitCargo(this.normalizeCargo(f.cargo), capacity);
+      const free = Math.max(0, capacity - (kept.metal + kept.crystal + kept.deuterium));
+      return {
+        fleet: f,
+        survivors,
+        total,
+        kept,
+        free,
+        update:
+          total > 0
+            ? { status: 'returning', ships: survivors }
+            : { status: 'completed', ships: {}, cargo: {}, returnTime: null },
+      };
+    });
+    const attackerTotal = plans.reduce((sum, plan) => sum + plan.total, 0);
+    const freeCapacity = plans.reduce((sum, plan) => sum + plan.free, 0);
 
     const loot =
       combat.result === CombatResult.ATTACKER_WIN && attackerTotal > 0
         ? distributeLoot({ maxLoot, capacity: freeCapacity })
         : { metal: 0, crystal: 0, deuterium: 0 };
 
-    const fleetUpdate =
-      attackerTotal > 0
-        ? {
-            status: 'returning',
-            ships: attackerSurvivors,
-          }
-        : {
-            status: 'completed',
-            ships: {},
-            cargo: {},
-            returnTime: null,
-          };
-
     // Resolution unique (ECO-04) : verrou de la cible, prise en charge atomique de la flotte,
     // puis rapport, butin et pertes dans la meme transaction.
     const resourceConfig = await this.serverConfig.getResourceConfig();
+    // Participants d'une attaque groupée (une entrée par joueur) : vaisseaux engagés et pertes
+    const attackerIds = [...new Set(fleets.map((f) => f.userId))];
+    let participants: Prisma.InputJsonValue | undefined;
+    if (grouped) {
+      const users = await this.database.user.findMany({
+        where: { id: { in: attackerIds } },
+        select: { id: true, username: true },
+      });
+      participants = attackerIds.map((id) => {
+        const mine = plans.filter((plan) => plan.fleet.userId === id);
+        const ships = mergeShipMaps(mine.map((plan) => fleetShips.get(plan.fleet.id)!));
+        const left = mergeShipMaps(mine.map((plan) => plan.survivors));
+        const losses: Record<number, number> = {};
+        for (const [shipId, count] of Object.entries(ships)) {
+          const lost = Number(count) - (left[Number(shipId)] ?? 0);
+          if (lost > 0) losses[Number(shipId)] = lost;
+        }
+        return { userId: id, username: users.find((u) => u.id === id)?.username ?? '', ships, losses };
+      }) as Prisma.InputJsonValue;
+    }
     const report = await this.database.$transaction(async (tx) => {
       await lockPlanet(tx, target.id);
 
-      const claimed = await tx.fleet.updateMany({
-        where: { id: fleet.id, status: 'traveling' },
-        data: { status: fleetUpdate.status },
-      });
-      if (claimed.count !== 1) return null;
+      // Prise en charge de toutes les flottes : si l'une a changé entre-temps (rappel, autre worker), rien n'est écrit
+      for (const plan of plans) {
+        const claimed = await tx.fleet.updateMany({
+          where: { id: plan.fleet.id, status: 'traveling' },
+          data: { status: plan.update.status },
+        });
+        if (claimed.count !== 1) throw new AttackFleetsChanged();
+      }
+      // Le groupe d'attaque a fait son œuvre : on le supprime (les flottes gardent leur état, groupId repasse à null)
+      const groupIds = [...new Set(fleets.map((f) => f.groupId).filter((id): id is string => !!id))];
+      if (groupIds.length > 0) await tx.attackGroup.deleteMany({ where: { id: { in: groupIds } } });
 
       // Le butin ne peut pas depasser le stock reellement present au moment de l'ecriture
       const current = await tx.planet.findUniqueOrThrow({
@@ -269,24 +345,28 @@ export class CombatService {
         }
       }
 
-      const created = await tx.combatReport.create({
-        data: this.buildReportData({
-          moonCreated,
-          attackerId: fleet.userId,
-          defenderId: target.userId,
-          attackerShips,
-          defenderShips: defendingShips,
-          defenderDefenses,
-          defenderRepaired,
-          combat,
-          loot: finalLoot,
-          location: {
-            galaxy: fleet.toGalaxy,
-            system: fleet.toSystem,
-            position: fleet.toPosition,
-          },
-        }),
+      const reportData = this.buildReportData({
+        moonCreated,
+        attackerId: fleet.userId,
+        defenderId: target.userId,
+        attackerShips,
+        defenderShips: defendingShips,
+        defenderDefenses,
+        defenderRepaired,
+        combat,
+        loot: finalLoot,
+        location: {
+          galaxy: fleet.toGalaxy,
+          system: fleet.toSystem,
+          position: fleet.toPosition,
+        },
+        participants,
       });
+      const created = await tx.combatReport.create({ data: reportData });
+      // Attaque groupée : chaque autre participant reçoit sa propre copie du rapport unifié
+      for (const otherId of attackerIds.filter((id) => id !== fleet.userId)) {
+        await tx.combatReport.create({ data: { ...reportData, attackerId: otherId } });
+      }
 
       // Débris du combat : cumulés au champ de débris des coordonnées (recyclables)
       const debris = combat.debris;
@@ -319,28 +399,33 @@ export class CombatService {
         },
       });
 
-      await tx.fleet.update({
-        where: { id: fleet.id },
-        data:
-          attackerTotal > 0
-            ? {
-                ...fleetUpdate,
-                cargo: {
-                  metal: keptCargo.metal + finalLoot.metal,
-                  crystal: keptCargo.crystal + finalLoot.crystal,
-                  deuterium: keptCargo.deuterium + finalLoot.deuterium,
-                },
-              }
-            : fleetUpdate,
-      });
-
-      // Commandant de flotte : expérience du combat, ou mort si toute la flotte est détruite (10 %)
-      if (fleet.commanderId) {
-        await applyCombatToCommander(tx, fleet.commanderId, {
-          enemyLossValue: this.lossValue(combat.defenderLosses ?? {}),
-          fleetDestroyed: attackerTotal === 0,
-          died: attackerTotal === 0 && this.rollCommanderDeath(),
+      // Butin partagé au prorata de la place libre de chaque flotte (une seule flotte : tout lui revient)
+      const shares = splitLoot(finalLoot, plans.map((plan) => plan.free));
+      const enemyLossValue = this.lossValue(combat.defenderLosses ?? {});
+      for (const [index, plan] of plans.entries()) {
+        await tx.fleet.update({
+          where: { id: plan.fleet.id },
+          data:
+            plan.total > 0
+              ? {
+                  ...plan.update,
+                  cargo: {
+                    metal: plan.kept.metal + shares[index].metal,
+                    crystal: plan.kept.crystal + shares[index].crystal,
+                    deuterium: plan.kept.deuterium + shares[index].deuterium,
+                  },
+                }
+              : plan.update,
         });
+
+        // Commandant de flotte : expérience du combat, ou mort si toute la flotte est détruite (10 %)
+        if (plan.fleet.commanderId) {
+          await applyCombatToCommander(tx, plan.fleet.commanderId, {
+            enemyLossValue,
+            fleetDestroyed: plan.total === 0,
+            died: plan.total === 0 && this.rollCommanderDeath(),
+          });
+        }
       }
 
       // Satellites détruits : la production d'énergie baisse à partir de maintenant, pas rétroactivement
@@ -407,15 +492,20 @@ export class CombatService {
       }
 
       return created;
+    }).catch((error: unknown) => {
+      if (error instanceof AttackFleetsChanged) return null;
+      throw error;
     });
 
     if (!report) return ALREADY_PROCESSED;
 
-    this.gameEvents.emitToUser(fleet.userId, 'combat:report', {
-      reportId: report.id,
-      result: report.result,
-      opponentId: target.userId,
-    });
+    for (const attackerId of attackerIds) {
+      this.gameEvents.emitToUser(attackerId, 'combat:report', {
+        reportId: report.id,
+        result: report.result,
+        opponentId: target.userId,
+      });
+    }
 
     this.gameEvents.emitToUser(target.userId, 'combat:report', {
       reportId: report.id,
@@ -498,8 +588,10 @@ export class CombatService {
     loot: { metal: number; crystal: number; deuterium: number };
     location: { galaxy: number; system: number; position: number };
     moonCreated: boolean;
+    participants?: Prisma.InputJsonValue;
   }): Prisma.CombatReportCreateInput {
     return {
+      ...(params.participants ? { participants: params.participants } : {}),
       moonCreated: params.moonCreated,
       attackerId: params.attackerId,
       defenderId: params.defenderId,
