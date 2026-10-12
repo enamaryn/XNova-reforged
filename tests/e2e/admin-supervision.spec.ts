@@ -28,6 +28,7 @@ test('supervision : un admin simple consulte l’état et les incidents mais ne 
   await expect(page.getByTestId('overall-status')).toBeVisible();
   await expect(page.getByTestId('check-database')).toContainText('PostgreSQL');
   await expect(page.getByTestId('check-api')).toBeVisible();
+  await expect(page.getByTestId('uptime-section')).toBeVisible();
   await expect(page.getByText('Lecture seule : seul le super admin')).toBeVisible();
   await expect(page.getByTestId('supervision-save')).toHaveCount(0);
   await expect(page.getByTestId('purge-button')).toHaveCount(0);

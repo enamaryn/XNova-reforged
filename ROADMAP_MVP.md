@@ -107,6 +107,11 @@ Toutes les décisions listées dans la version précédente sont prises et appli
 
 À trancher : langue des emails (français seulement aujourd'hui) ; traduction des noms et descriptions du jeu servis par l'API.
 
+## Mesure d'uptime et performance (12 octobre 2026)
+
+- [x] **PERF-MOBILE** ([PR #59](https://github.com/enamaryn/XNova-reforged/pull/59)) : accueil mobile Lighthouse 67 → 96 (Sentry navigateur chargé à la demande), connexion 100, inscription 99.
+- [x] **UPTIME** : échantillon de santé chaque minute, disponibilité 24 h/7 j/30 j dans la console admin (migration `20261012200000_health_samples`). Le **résultat** (> 99 %) se mesurera sur plusieurs jours en production ; aucun pourcentage n'est supposé.
+
 ## Prérequis bloquants et dette technique avant l'ouverture publique
 
 - [x] **SMTP réel configuré et validé** par le propriétaire (déclaration du 10 octobre 2026) ; à reconfirmer avec un envoi réel (test, inscription, mot de passe oublié) lors de chaque mise en production : sans SMTP l'inscription répond 503. _(PRE-01 du registre)_

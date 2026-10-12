@@ -4,6 +4,7 @@ import { HealthService } from './health.service';
 import { IncidentQueryService } from './incident-query.service';
 import { isValidDsn, sendSentryTestEvent, type SentryTestResult } from './dsn';
 import { SentryRuntimeService } from './sentry-runtime.service';
+import { UptimeService } from './uptime.service';
 import { SupervisionConfigService, type SupervisionUpdate } from './supervision-config.service';
 
 /** Messages d'API pour chaque résultat de test Sentry (l'interface les traduit à partir du code). */
@@ -30,6 +31,7 @@ export class SupervisionService {
     private readonly sentry: SentryRuntimeService,
     private readonly health: HealthService,
     private readonly query: IncidentQueryService,
+    private readonly uptime: UptimeService,
   ) {}
 
   getConfig() {
@@ -100,11 +102,12 @@ export class SupervisionService {
 
   /** Vue d'ensemble : santé, statistiques des incidents, configuration (sans secret). */
   async overview() {
-    const [health, stats, config] = await Promise.all([
+    const [health, stats, config, uptime] = await Promise.all([
       this.health.checkAll(),
       this.query.stats().catch(() => null),
       this.config.getPublic(),
+      this.uptime.summary().catch(() => null),
     ]);
-    return { health, stats, config, localActive: true };
+    return { health, stats, config, uptime, localActive: true };
   }
 }

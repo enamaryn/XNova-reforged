@@ -1160,6 +1160,17 @@
     },
     "errors": {
       "dsnRequired": "Enter the API DSN (or choose local monitoring only)."
+    },
+    "uptime": {
+      "title": "Availability",
+      "since": "Measured since {date}",
+      "none": "No measurement yet: one sample is recorded every minute.",
+      "last24h": "24 hours",
+      "last7d": "7 days",
+      "last30d": "30 days",
+      "waiting": "Measuring",
+      "detail": "{down} min unavailable · {outages} outage(s)",
+      "hint": "A minute without a measurement (server stopped, database unreachable) counts as unavailable. “Degraded” still counts as available. Project goal: 99%."
     }
   }
 }

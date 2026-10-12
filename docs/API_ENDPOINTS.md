@@ -112,7 +112,7 @@ L’interface envoie l’en-tête `X-Locale` (`fr`, `en`, `es`, `de`, `it`) à c
 
 | Route | Accès | Rôle |
 |---|---|---|
-| `GET /admin/supervision/overview` | ADMIN, SUPER_ADMIN | santé, statistiques, configuration (sans secret) |
+| `GET /admin/supervision/overview` | ADMIN, SUPER_ADMIN | santé, statistiques, disponibilité (`uptime` 24 h/7 j/30 j), configuration (sans secret) |
 | `GET /admin/supervision/incidents` | ADMIN, SUPER_ADMIN | liste paginée côté serveur (`period`, `level`, `source`, `status`, `q`, `sort`, `page`, `pageSize` ≤ 50) |
 | `GET /admin/supervision/incidents/:id` | ADMIN, SUPER_ADMIN | détail (trace et contexte filtrés) |
 | `PATCH /admin/supervision/incidents/:id/status` | SUPER_ADMIN | `new`/`seen`/`resolved`/`ignored` (audit) |

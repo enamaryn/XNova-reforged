@@ -72,7 +72,17 @@ export interface SupervisionConfig {
   };
 }
 
+export interface UptimeWindow {
+  windowMinutes: number;
+  availablePercent: number | null;
+  healthyPercent: number | null;
+  downMinutes: number;
+  outages: number;
+  measuredSince: string | null;
+}
+
 export interface SupervisionOverview {
+  uptime?: { last24h: UptimeWindow; last7d: UptimeWindow; last30d: UptimeWindow } | null;
   localActive: true;
   health: { status: OverallStatus; checkedAt: string; checks: HealthCheck[] };
   stats: {

@@ -1160,6 +1160,17 @@
     },
     "errors": {
       "dsnRequired": "Geben Sie den API-DSN ein (oder wählen Sie nur lokale Überwachung)."
+    },
+    "uptime": {
+      "title": "Verfügbarkeit",
+      "since": "Gemessen seit {date}",
+      "none": "Noch keine Messung: jede Minute wird eine Stichprobe gespeichert.",
+      "last24h": "24 Stunden",
+      "last7d": "7 Tage",
+      "last30d": "30 Tage",
+      "waiting": "Messung läuft",
+      "detail": "{down} Min. nicht verfügbar · {outages} Ausfall/Ausfälle",
+      "hint": "Eine Minute ohne Messung (Server gestoppt, Datenbank nicht erreichbar) zählt als nicht verfügbar. „Eingeschränkt“ gilt als verfügbar. Projektziel: 99 %."
     }
   }
 }

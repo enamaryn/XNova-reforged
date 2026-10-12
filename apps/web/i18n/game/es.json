@@ -1160,6 +1160,17 @@
     },
     "errors": {
       "dsnRequired": "Introduzca el DSN de la API (o elija solo supervisión local)."
+    },
+    "uptime": {
+      "title": "Disponibilidad",
+      "since": "Medida desde el {date}",
+      "none": "Aún sin mediciones: se registra una muestra cada minuto.",
+      "last24h": "24 horas",
+      "last7d": "7 días",
+      "last30d": "30 días",
+      "waiting": "Midiendo",
+      "detail": "{down} min no disponible · {outages} caída(s)",
+      "hint": "Un minuto sin medición (servidor detenido, base inaccesible) cuenta como no disponible. «Degradado» sigue siendo disponible. Objetivo del proyecto: 99 %."
     }
   }
 }

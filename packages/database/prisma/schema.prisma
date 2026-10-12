@@ -399,6 +399,16 @@ model Incident {
   @@index([lastSeen])
 }
 
+// Mesure de disponibilité : un échantillon par minute écrit par l'API (supervision locale).
+// Une minute sans échantillon compte comme indisponible (processus arrêté ou base injoignable).
+model HealthSample {
+  // Début de la minute : unique, donc plusieurs instances n'écrivent qu'un échantillon par minute
+  at        DateTime @id
+  status    String   // healthy | degraded | unavailable
+  failing   String?  // identifiants des contrôles en panne ou dégradés, séparés par des virgules
+  version   String?
+}
+
 // ============================================
 // ALLIANCES
 // ============================================

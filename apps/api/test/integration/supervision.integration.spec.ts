@@ -6,6 +6,7 @@ import { DatabaseService } from '../../src/database/database.service';
 import { HealthService } from '../../src/supervision/health.service';
 import { IncidentService } from '../../src/supervision/incident.service';
 import { SupervisionConfigService } from '../../src/supervision/supervision-config.service';
+import { UptimeService } from '../../src/supervision/uptime.service';
 import { SupervisionPurgeCronService } from '../../src/supervision/purge-cron.service';
 import { reportIncident } from '../../src/supervision/incident-sink';
 import { acquireGlobalLock, buildTestUser, cleanupTestUser, createIntegrationApp, registerAndLogin } from './helpers';
@@ -495,6 +496,29 @@ describe('API integration - Supervision locale', () => {
       expect(await database.incident.count({ where: { fingerprint: `${TAG}-manuel-ouvert` } })).toBe(1);
       const audit = await database.adminAuditLog.findFirst({ where: { userId: superAdmin.userId, action: 'purge_incidents' } });
       expect(audit).not.toBeNull();
+    });
+  });
+
+  describe('mesure de disponibilité', () => {
+    it('écrit un échantillon par minute (idempotent) et expose le pourcentage dans la vue d\'ensemble', async () => {
+      const uptime = app.get(UptimeService);
+      await database.healthSample.deleteMany({});
+      // Historique synthétique : 2 h mesurées, dont 10 minutes de trou
+      const now = new Date();
+      const base = Math.floor(now.getTime() / 60_000) * 60_000;
+      const rows = Array.from({ length: 120 }, (_, i) => ({ at: new Date(base - (i + 1) * 60_000), status: 'healthy' })).filter((_, i) => i < 50 || i >= 60);
+      await database.healthSample.createMany({ data: rows });
+      await uptime.sample(now);
+      await uptime.sample(now); // même minute : pas de doublon
+      expect(await database.healthSample.count({ where: { at: new Date(base) } })).toBe(1);
+      const summary = await uptime.summary(new Date(base + 60_000));
+      expect(summary.last24h.measuredSince).not.toBeNull();
+      expect(summary.last24h.downMinutes).toBeGreaterThanOrEqual(10);
+      expect(summary.last24h.outages).toBeGreaterThanOrEqual(1);
+      const res = await get(admin, '/overview').expect(200);
+      expect(res.body.uptime.last24h.availablePercent).toBeGreaterThan(80);
+      expect(res.body.uptime.last30d.windowMinutes).toBeGreaterThan(100);
+      await database.healthSample.deleteMany({});
     });
   });
 

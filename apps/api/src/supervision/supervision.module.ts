@@ -12,6 +12,7 @@ import { SentryRuntimeService } from './sentry-runtime.service';
 import { SupervisionConfigService } from './supervision-config.service';
 import { SupervisionController } from './supervision.controller';
 import { SupervisionService } from './supervision.service';
+import { UptimeService } from './uptime.service';
 
 /** Supervision locale intégrée (toujours active) et Sentry externe optionnel. */
 @Global()
@@ -26,6 +27,7 @@ import { SupervisionService } from './supervision.service';
     SentryRuntimeService,
     SupervisionService,
     SupervisionPurgeCronService,
+    UptimeService,
     { provide: APP_FILTER, useClass: IncidentExceptionFilter },
   ],
   exports: [SupervisionConfigService, IncidentService, SupervisionService],
