@@ -25,7 +25,8 @@
     "administration": "Administration",
     "logout": "Log out",
     "moon": "Moon",
-    "officers": "Officers"
+    "officers": "Officers",
+    "commanders": "Commanders"
   },
   "sidebar": {
     "principal": "Main",
@@ -1296,5 +1297,31 @@
       "extraExpeditions": "+{value} simultaneous expeditions",
       "espionageLevels": "+{value} espionage levels"
     }
+  },
+  "fleetCommanders": {
+    "kicker": "Fleet commanders",
+    "title": "Fleet commanders",
+    "subtitle": "Recruit up to {max} commanders ({cost} deuterium each) and assign one to a fleet when sending it: it earns experience in combat and strengthens the fleet.",
+    "paidOn": "The price is taken from the selected planet: {planet}.",
+    "name": "Commander name",
+    "recruit": "Recruit ({cost} deuterium)",
+    "full": "Maximum reached",
+    "empty": "No commander yet. Recruit one, then pick it on the Fleet page before sending.",
+    "level": "Level {level}",
+    "xp": "{xp} / {next} XP",
+    "maxLevel": "Maximum level",
+    "busy": "On a mission",
+    "idle": "Available",
+    "points": "{points} skill point(s)",
+    "dismiss": "Dismiss",
+    "skills": {
+      "attack": "Attack",
+      "defense": "Defense",
+      "speed": "Speed",
+      "cargo": "Cargo"
+    },
+    "select": "Commander",
+    "none": "No commander",
+    "selectHint": "A free commander strengthens the fleet (attack, defense, speed, cargo)."
   }
 }

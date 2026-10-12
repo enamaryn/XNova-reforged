@@ -4,6 +4,10 @@ export interface CombatTechBonuses {
   weapon: number;
   shield: number;
   armor: number;
+  /** Bonus de commandant de flotte (fractions, 0,05 = +5 %) : dégâts, bouclier et coque. */
+  weaponBonus?: number;
+  shieldBonus?: number;
+  armorBonus?: number;
 }
 
 export interface CombatResultSummary {
@@ -39,8 +43,10 @@ interface CombatUnit {
   rapidfire?: Record<number, number>;
 }
 
-function applyTech(value: number, level: number): number {
-  return Math.floor(value * (1 + level * 0.1));
+function applyTech(value: number, level: number, bonus = 0): number {
+  // Bonus en millièmes entiers : pas d'erreur flottante sur 1 % × n
+  const permille = 1000 + Math.round(Math.max(0, bonus) * 1000);
+  return Math.floor((Math.floor(value * (1 + level * 0.1)) * permille) / 1000);
 }
 
 function createUnits(
@@ -56,9 +62,9 @@ function createUnits(
     const ship = SHIPS[shipId] ?? DEFENSES[shipId];
     if (!ship || count === 0) return;
 
-    const baseHull = applyTech(ship.stats.hull, tech.armor);
-    const baseShield = applyTech(ship.stats.shield, tech.shield);
-    const baseWeapon = applyTech(ship.stats.weapon, tech.weapon);
+    const baseHull = applyTech(ship.stats.hull, tech.armor, tech.armorBonus);
+    const baseShield = applyTech(ship.stats.shield, tech.shield, tech.shieldBonus);
+    const baseWeapon = applyTech(ship.stats.weapon, tech.weapon, tech.weaponBonus);
 
     for (let i = 0; i < count; i += 1) {
       units.push({

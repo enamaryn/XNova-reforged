@@ -25,7 +25,8 @@
     "administration": "Administration",
     "logout": "Déconnexion",
     "moon": "Lune",
-    "officers": "Officiers"
+    "officers": "Officiers",
+    "commanders": "Commandants"
   },
   "sidebar": {
     "principal": "Principal",
@@ -1296,5 +1297,31 @@
       "extraExpeditions": "+{value} expéditions simultanées",
       "espionageLevels": "+{value} niveaux d'espionnage"
     }
+  },
+  "fleetCommanders": {
+    "kicker": "Commandants de flotte",
+    "title": "Commandants de flotte",
+    "subtitle": "Recrutez jusqu'à {max} commandants ({cost} deutérium chacun), assignez-en un à une flotte à l'envoi : il gagne de l'expérience au combat et renforce la flotte.",
+    "paidOn": "Le prix est prélevé sur la planète sélectionnée : {planet}.",
+    "name": "Nom du commandant",
+    "recruit": "Recruter ({cost} deutérium)",
+    "full": "Nombre maximal atteint",
+    "empty": "Aucun commandant. Recrutez-en un, puis choisissez-le dans la page Flotte avant l'envoi.",
+    "level": "Niveau {level}",
+    "xp": "{xp} / {next} XP",
+    "maxLevel": "Niveau maximal",
+    "busy": "En mission",
+    "idle": "Disponible",
+    "points": "{points} point(s) de compétence",
+    "dismiss": "Renvoyer",
+    "skills": {
+      "attack": "Attaque",
+      "defense": "Défense",
+      "speed": "Vitesse",
+      "cargo": "Cargaison"
+    },
+    "select": "Commandant",
+    "none": "Aucun commandant",
+    "selectHint": "Un commandant libre renforce la flotte (attaque, défense, vitesse, cargaison)."
   }
 }

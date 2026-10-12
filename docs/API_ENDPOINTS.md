@@ -74,6 +74,17 @@ Les missiles se fabriquent par `/defense/build` (502, 503) dans la limite de 10 
 | GET | `/officers` | Les cinq officiers (`intendant`, `admiral`, `engineer`, `geologist`, `technocrat`) avec bonus, état d'embauche, prix et bonus cumulés actifs. |
 | POST | `/officers/:type/hire` | Embauche définitive (`planetId` : planète du joueur qui paie 500 000 deutérium). 404 type inconnu ou planète étrangère, 409 déjà embauché, 400 deutérium insuffisant. Règle d'abord la production de toutes les planètes avec les anciens bonus. |
 
+## Commandants de flotte (`/fleet-commanders`)
+
+| Méthode | Chemin | Description |
+| ------- | ------ | ----------- |
+| GET | `/fleet-commanders` | Commandants du joueur (niveau, expérience, points, compétences, bonus, `busy`), prix (250 000 deutérium), limite (3). |
+| POST | `/fleet-commanders` | Recrute (`name` 2–24 caractères, `planetId` qui paie). 400 limite atteinte ou deutérium insuffisant, 404 planète étrangère. |
+| POST | `/fleet-commanders/:id/skills/:skill` | Dépense un point (`attack`, `defense`, `speed`, `cargo` ; 10 niveaux au plus), atomique. 400 sans point ou au maximum, 404 commandant d'un autre joueur. |
+| DELETE | `/fleet-commanders/:id` | Renvoie un commandant libre (400 s'il est en mission). |
+
+L'assignation se fait à l'envoi : `POST /fleet/send` accepte `commanderId` (404 s'il n'est pas au joueur, 400 s'il est déjà en mission). Vitesse et capacité de cargaison en bénéficient dès l'envoi, attaque, défense et cargaison de butin à la résolution d'un combat d'attaque ; l'expérience est créditée à ce moment, et le commandant meurt avec 10 % de chances si toute la flotte est détruite.
+
 ## Lunes (`/moons`)
 
 | Méthode | Endpoint | Description |

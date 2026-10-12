@@ -293,6 +293,9 @@ Se basa en el **poder**; su rango aparece en la cabecera y en la vista general. 
 **¿Qué hacen los oficiales?**
 Cinco personajes **contratados una sola vez** (500 000 deuterio, descontados del planeta elegido, página Oficiales) cuyas bonificaciones valen para toda tu cuenta: **Intendente** (+10 % de energía, +1 plaza de construcción por planeta), **Almirante** (+10 % de velocidad de las flotas, +2 expediciones simultáneas), **Ingeniero** (−10 % de duración de construcción), **Geólogo** (+10 % de producción de las minas y de capacidad de almacenamiento), **Tecnócrata** (−10 % de duración de investigación, +2 niveles de espionaje). No confundir con el *nivel de comandante* de arriba, que mide tu desarrollo. Las bonificaciones de producción solo se aplican desde la contratación.
 
+**¿Qué son los comandantes de flota?**
+Hasta **3 personajes** reclutados (250 000 deuterio, página Comandantes) y asignados a **una flota al enviarla** (lista «Comandante» de la página Flota). Mientras la flota no termina, el comandante está en misión. Gana **experiencia en cada combate de ataque** (100 + 1 por cada 1 000 de metal y cristal destruidos en el bando contrario); cada nivel requiere `1000 × 1,5^(nivel − 1)` XP (nivel máximo 20) y cada nivel da **1 punto de habilidad** para *Ataque* (daño), *Defensa* (escudo y casco), *Velocidad* o *Carga*: +1 % por nivel de habilidad, 10 niveles como máximo. Si **toda la flota es destruida**, el comandante muere con un 10 % de probabilidad. Las bonificaciones valen para las flotas que acompaña (velocidad y capacidad al enviar, combate de ataque); no se aplican a una flota que mantiene posición defendiendo a un aliado.
+
 ---
 
 ## 10. «¿Por qué no puedo…?»

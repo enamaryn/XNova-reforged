@@ -5,10 +5,12 @@ import {
 } from '@nestjs/common';
 import {
   CombatResult,
+  DEFENSES,
   GAME_CONSTANTS,
   MOON_DEFAULT_NAME,
   MOON_INITIAL_FIELDS,
   MissionType,
+  SHIPS,
   SOLAR_SATELLITE_ID,
   moonChancePercent,
 } from '@xnova/game-config';
@@ -22,6 +24,7 @@ import {
 } from '@xnova/game-engine';
 import { Prisma } from '@prisma/client';
 import { lockPlanet } from '../common/atomic';
+import { applyCombatToCommander, commanderBonusesFor, COMMANDER_DEATH_CHANCE } from '../fleet-commanders/commander-progress';
 import { settleBeforeEnergyChange } from '../common/energy';
 import { ServerConfigService } from '../server-config/server-config.service';
 import { DatabaseService } from '../database/database.service';
@@ -74,6 +77,7 @@ export class CombatService {
     toSystem: number;
     toPosition: number;
     toMoon?: boolean;
+    commanderId?: string | null;
   }) {
     if (fleet.mission !== MissionType.ATTACK) {
       return null;
@@ -140,6 +144,8 @@ export class CombatService {
 
     const attackerTech = await this.getCombatTechLevels(fleet.userId);
     const defenderTech = await this.getCombatTechLevels(target.userId);
+    // Le commandant assigné à la flotte attaquante : dégâts (Attaque), bouclier et coque (Défense), cargaison
+    const commanderBonus = await commanderBonusesFor(this.database, fleet.commanderId);
 
     const combat = simulateCombat({
       attackerShips,
@@ -148,6 +154,9 @@ export class CombatService {
         weapon: attackerTech.weapon,
         shield: attackerTech.shield,
         armor: attackerTech.armor,
+        weaponBonus: commanderBonus.attack,
+        shieldBonus: commanderBonus.defense,
+        armorBonus: commanderBonus.defense,
       },
       defenderTech: {
         weapon: defenderTech.weapon,
@@ -180,7 +189,11 @@ export class CombatService {
     // le surplus est perdu avec les vaisseaux détruits ; le butin n'occupe que la place libre.
     const boarded = this.normalizeCargo(fleet.cargo);
     const capacity =
-      attackerTotal > 0 ? computeCargoCapacity(attackerSurvivors, attackerTech.hyperspace) : 0;
+      attackerTotal > 0
+        ? Math.floor(
+            computeCargoCapacity(attackerSurvivors, attackerTech.hyperspace) * (1 + commanderBonus.cargo),
+          )
+        : 0;
     const { kept: keptCargo } = fitCargo(boarded, capacity);
     const freeCapacity = Math.max(
       0,
@@ -321,6 +334,15 @@ export class CombatService {
             : fleetUpdate,
       });
 
+      // Commandant de flotte : expérience du combat, ou mort si toute la flotte est détruite (10 %)
+      if (fleet.commanderId) {
+        await applyCombatToCommander(tx, fleet.commanderId, {
+          enemyLossValue: this.lossValue(combat.defenderLosses ?? {}),
+          fleetDestroyed: attackerTotal === 0,
+          died: attackerTotal === 0 && this.rollCommanderDeath(),
+        });
+      }
+
       // Satellites détruits : la production d'énergie baisse à partir de maintenant, pas rétroactivement
       const satellitesLost = Number(defenderShipLosses[SOLAR_SATELLITE_ID] ?? 0);
       if (satellitesLost > 0) {
@@ -402,6 +424,21 @@ export class CombatService {
     });
 
     return report;
+  }
+
+  /** Tirage de la mort du commandant d'une flotte détruite ; isolé pour pouvoir le forcer dans les tests. */
+  protected rollCommanderDeath(): boolean {
+    return Math.random() < COMMANDER_DEATH_CHANCE;
+  }
+
+  /** Valeur en métal et cristal des unités perdues (vaisseaux et défenses). */
+  private lossValue(losses: Record<number, number>): number {
+    let total = 0;
+    for (const [id, count] of Object.entries(losses)) {
+      const unit = SHIPS[Number(id)] ?? DEFENSES[Number(id)];
+      if (unit) total += (unit.cost.metal + unit.cost.crystal) * Number(count || 0);
+    }
+    return total;
   }
 
   /** Tirage de la lune (chance en %) ; isolé pour pouvoir le forcer dans les tests. */

@@ -5,6 +5,20 @@
 
 ---
 
+## Session — commandants de flotte (Phase 6, suite)
+
+**Date :** 18 octobre 2026. Demande du propriétaire : « passe aux commandants de flotte ». Vérification préalable : aucun commandant de flotte n'existait (le « commandant » du code est le niveau de développement du joueur) ; les officiers passifs sont livrés (PR #69).
+
+- [x] `packages/game-config/src/fleet-commanders.ts` : compétences, niveaux, expérience (`experienceToLevel` = 1000 × 1,5^(niveau − 1)), bonus.
+- [x] Moteur de combat : `weaponBonus`, `shieldBonus`, `armorBonus` (arrondi en millièmes entiers).
+- [x] Table `FleetCommander`, `Fleet.commanderId` (SetNull), migration `20261018100000_fleet_commanders` ; « libre » = aucune flotte non terminée ne le porte, donc rien à nettoyer.
+- [x] API `/fleet-commanders` (liste, recrutement, point de compétence atomique, renvoi) ; `commanderId` à l'envoi (verrou du commandant dans la transaction d'envoi).
+- [x] Effets : vitesse et capacité à l'envoi ; attaque, défense et cargaison du butin au combat ; expérience, niveaux et points ; mort à 10 % si flotte détruite (`rollCommanderDeath`, isolé pour les tests).
+- [x] Page `/commanders`, liste « Commandant » dans Flotte, menu, textes fr/en/es/de/it, FAQ (5 langues), `API_ENDPOINTS.md`.
+- [x] Tests : unitaires (7), intégration (8), E2E (1).
+- Restent absents : marché, événements et quêtes, attaques groupées.
+
+
 ## Session — officiers (Phase 6)
 
 **Date :** 17 octobre 2026. Demande du propriétaire : « attaque la phase 6 : Officiers ». Retour en cours de session : ne pas recréer ce qui existe déjà → les ébauches mortes `OfficerBonuses` (`production.ts`) et `engineerLevel` (`buildings.ts`), jamais branchées, ont été retirées au profit d'un seul système.

@@ -291,6 +291,9 @@ Il est établi sur la **puissance** ; votre rang apparaît dans l'en-tête et la
 **Que font les officiers ?**
 Cinq personnages **embauchés une seule fois** (500 000 deutérium, prélevés sur la planète choisie, page Officiers) dont les bonus valent pour tout votre compte : **Intendant** (+10 % d'énergie, +1 place de construction par planète), **Amiral** (+10 % de vitesse des flottes, +2 expéditions simultanées), **Ingénieur** (−10 % de durée de construction), **Géologue** (+10 % de production des mines et de capacité de stockage), **Technocrate** (−10 % de durée de recherche, +2 niveaux d'espionnage). Ne pas confondre avec le *niveau de commandant* ci-dessus, qui mesure votre développement. Les bonus de production ne s'appliquent qu'à partir de l'embauche.
 
+**Que sont les commandants de flotte ?**
+Jusqu'à **3 personnages** recrutés (250 000 deutérium, page Commandants) et assignés à **une flotte au moment de l'envoi** (liste « Commandant » de la page Flotte). Tant que la flotte n'est pas terminée, le commandant est en mission. Il gagne de l'**expérience à chaque combat d'attaque** (100 + 1 par 1 000 de métal et cristal détruits chez l'adversaire) ; le niveau suit `1000 × 1,5^(niveau − 1)` XP par palier (niveau 20 maximum) et chaque niveau donne **1 point de compétence** à placer dans *Attaque* (dégâts), *Défense* (bouclier et coque), *Vitesse* ou *Cargaison* : +1 % par niveau de compétence, 10 niveaux au plus. Si **toute la flotte est détruite**, il meurt avec 10 % de chances. Les bonus valent pour les flottes qu'il accompagne (vitesse et capacité dès l'envoi, combat en attaque) ; ils ne s'appliquent pas à une flotte en maintien qui défend un allié.
+
 ---
 
 ## 10. « Pourquoi je ne peux pas… ? »

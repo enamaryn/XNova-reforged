@@ -57,6 +57,7 @@ export interface SendFleetPayload {
     deuterium?: number;
   };
   planetName?: string;
+  commanderId?: string;
 }
 
 export interface SendFleetResponse {

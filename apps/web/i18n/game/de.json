@@ -25,7 +25,8 @@
     "administration": "Administration",
     "logout": "Abmelden",
     "moon": "Mond",
-    "officers": "Offiziere"
+    "officers": "Offiziere",
+    "commanders": "Kommandanten"
   },
   "sidebar": {
     "principal": "Hauptmenü",
@@ -1296,5 +1297,31 @@
       "extraExpeditions": "+{value} gleichzeitige Expeditionen",
       "espionageLevels": "+{value} Spionagestufen"
     }
+  },
+  "fleetCommanders": {
+    "kicker": "Flottenkommandanten",
+    "title": "Flottenkommandanten",
+    "subtitle": "Rekrutiere bis zu {max} Kommandanten ({cost} Deuterium pro Stück) und weise beim Senden einen einer Flotte zu: Er sammelt Kampferfahrung und stärkt die Flotte.",
+    "paidOn": "Der Preis wird vom gewählten Planeten abgezogen: {planet}.",
+    "name": "Name des Kommandanten",
+    "recruit": "Rekrutieren ({cost} Deuterium)",
+    "full": "Maximum erreicht",
+    "empty": "Noch kein Kommandant. Rekrutiere einen und wähle ihn vor dem Senden auf der Flottenseite.",
+    "level": "Stufe {level}",
+    "xp": "{xp} / {next} EP",
+    "maxLevel": "Höchststufe",
+    "busy": "Auf Mission",
+    "idle": "Verfügbar",
+    "points": "{points} Fertigkeitspunkt(e)",
+    "dismiss": "Entlassen",
+    "skills": {
+      "attack": "Angriff",
+      "defense": "Verteidigung",
+      "speed": "Geschwindigkeit",
+      "cargo": "Fracht"
+    },
+    "select": "Kommandant",
+    "none": "Kein Kommandant",
+    "selectHint": "Ein freier Kommandant stärkt die Flotte (Angriff, Verteidigung, Geschwindigkeit, Fracht)."
   }
 }

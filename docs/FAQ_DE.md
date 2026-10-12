@@ -293,6 +293,9 @@ Sie beruht auf der **Macht**; Ihr Rang erscheint in der Kopfzeile und in der Üb
 **Was tun Offiziere?**
 Fünf Charaktere, die **einmalig eingestellt** werden (500 000 Deuterium, vom gewählten Planeten abgezogen, Seite Offiziere) und deren Boni für dein ganzes Konto gelten: **Intendant** (+10 % Energie, +1 Bauplatz pro Planet), **Admiral** (+10 % Flottengeschwindigkeit, +2 gleichzeitige Expeditionen), **Ingenieur** (−10 % Bauzeit), **Geologe** (+10 % Minenproduktion und Lagerkapazität), **Technokrat** (−10 % Forschungszeit, +2 Spionagestufen). Nicht zu verwechseln mit der *Kommandantenstufe* oben, die deine Entwicklung misst. Produktionsboni gelten erst ab der Einstellung.
 
+**Was sind Flottenkommandanten?**
+Bis zu **3 Charaktere**, rekrutiert (250 000 Deuterium, Seite Kommandanten) und **beim Senden einer Flotte zugewiesen** (Liste „Kommandant“ auf der Flottenseite). Solange die Flotte nicht beendet ist, ist der Kommandant auf Mission. Er sammelt **Erfahrung bei jedem Angriffskampf** (100 + 1 pro 1 000 beim Gegner zerstörtem Metall und Kristall); jede Stufe braucht `1000 × 1,5^(Stufe − 1)` EP (Höchststufe 20) und gibt **1 Fertigkeitspunkt** für *Angriff* (Schaden), *Verteidigung* (Schild und Hülle), *Geschwindigkeit* oder *Fracht*: +1 % pro Fertigkeitsstufe, höchstens 10 Stufen. Wird die **ganze Flotte zerstört**, stirbt er mit 10 % Wahrscheinlichkeit. Die Boni gelten für die begleiteten Flotten (Geschwindigkeit und Kapazität beim Senden, Angriffskampf); nicht für eine haltende Flotte, die einen Verbündeten verteidigt.
+
 ---
 
 ## 10. „Warum kann ich nicht …?“

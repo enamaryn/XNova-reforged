@@ -1,4 +1,5 @@
 import { OfficersService } from '../officers/officers.service';
+import { FleetCommandersService } from '../fleet-commanders/fleet-commanders.service';
 import {
   BadRequestException,
   ForbiddenException,
@@ -42,6 +43,7 @@ export class FleetService {
     private readonly database: DatabaseService,
     private readonly serverConfig: ServerConfigService,
     private readonly officers: OfficersService,
+    private readonly commanders: FleetCommandersService,
   ) {}
 
   async getAvailableShips(planetId: string, userId: string) {
@@ -320,9 +322,11 @@ export class FleetService {
     }
 
     const cargoTotal = cargo.metal + cargo.crystal + cargo.deuterium;
-    const cargoCapacity = shipsToSend.reduce(
-      (sum, ship) => sum + SHIPS[ship.shipId].cargo * ship.amount,
-      0,
+    // Le commandant assigné augmente la capacité de cargaison et la vitesse (compétences Cargaison et Vitesse)
+    const commanderBonus = await this.commanders.bonusesForSend(userId, dto.commanderId);
+    const cargoCapacity = Math.floor(
+      shipsToSend.reduce((sum, ship) => sum + SHIPS[ship.shipId].cargo * ship.amount, 0) *
+        (1 + commanderBonus.cargo),
     );
 
     if (cargoTotal > cargoCapacity) {
@@ -344,9 +348,12 @@ export class FleetService {
     );
 
     const baseFleetSpeed = calculateFleetSpeed(shipSpeeds);
-    // L'amiral accélère toutes les flottes du joueur
+    // L'amiral accélère toutes les flottes du joueur ; le commandant assigné ajoute sa compétence Vitesse
     const fleetSpeed = baseFleetSpeed
-      ? Math.floor(baseFleetSpeed * (1 + (await this.officers.bonusesOf(userId)).fleetSpeed))
+      ? Math.floor(
+          baseFleetSpeed *
+            (1 + (await this.officers.bonusesOf(userId)).fleetSpeed + commanderBonus.speed),
+        )
       : baseFleetSpeed;
     if (!fleetSpeed) {
       throw new BadRequestException('Vitesse flotte invalide');
@@ -417,6 +424,7 @@ export class FleetService {
       // pas de stock negatif ni de double usage de vaisseaux (ECO-03)
       await lockUser(tx, userId);
       await this.assertFleetSlot(tx, userId);
+      if (dto.commanderId) await this.commanders.assertAssignable(tx, userId, dto.commanderId);
       await lockPlanet(tx, dto.planetId);
 
       await debitResources(tx, dto.planetId, {
@@ -454,6 +462,7 @@ export class FleetService {
           arrivalTime,
           returnTime,
           holdHours: dto.mission === MissionType.HOLD_POSITION ? dto.holdHours : null,
+          commanderId: dto.commanderId ?? null,
           status: 'traveling',
         },
       });
