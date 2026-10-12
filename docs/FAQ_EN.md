@@ -293,6 +293,9 @@ It is based on **power**; your rank appears in the header and the overview. Losi
 **What do officers do?**
 Five characters **hired once** (500,000 deuterium, taken from the planet you choose, Officers page) whose bonuses apply to your whole account: **Quartermaster** (+10 % energy, +1 construction slot per planet), **Admiral** (+10 % fleet speed, +2 simultaneous expeditions), **Engineer** (−10 % construction time), **Geologist** (+10 % mine production and storage capacity), **Technocrat** (−10 % research time, +2 espionage levels). Not to be confused with the *commander level* above, which measures your development. Production bonuses only apply from the moment of hiring.
 
+**What are fleet commanders?**
+Up to **3 characters** recruited (250,000 deuterium, Commanders page) and assigned to **one fleet when sending it** (the "Commander" list on the Fleet page). Until the fleet is finished, the commander is on a mission. It earns **experience in every attack combat** (100 + 1 per 1,000 metal and crystal destroyed on the opponent's side); levels need `1000 × 1.5^(level − 1)` XP each (maximum level 20) and every level gives **1 skill point** to place in *Attack* (damage), *Defense* (shield and hull), *Speed* or *Cargo*: +1 % per skill level, 10 levels at most. If the **whole fleet is destroyed**, the commander dies with a 10 % chance. Bonuses apply to the fleets it accompanies (speed and capacity at sending, attack combat); they do not apply to a fleet holding position to defend an ally.
+
 ---
 
 ## 10. "Why can't I…?"

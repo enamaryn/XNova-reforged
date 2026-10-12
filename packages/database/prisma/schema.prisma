@@ -55,6 +55,7 @@ model User {
   missileStrikesReceived MissileStrike[] @relation("MissileTarget")
   expeditionReports      ExpeditionReport[]
   officers               Officer[]
+  fleetCommanders        FleetCommander[]
   technologies  Technology[]
   messages      Message[]      @relation("ReceivedMessages")
   sentMessages  Message[]      @relation("SentMessages")
@@ -314,6 +315,10 @@ model Fleet {
   // Nom de la colonie a creer (mission de colonisation)
   colonyName      String?
 
+  // Commandant de flotte assigne a l'envoi (libre des que la flotte est terminee)
+  commanderId     String?
+  commander       FleetCommander? @relation(fields: [commanderId], references: [id], onDelete: SetNull)
+
   // Status
   status          String   // traveling, arrived, returning, completed
 
@@ -325,6 +330,7 @@ model Fleet {
   @@index([status])
   @@index([userId, status])
   @@index([status, arrivalTime])
+  @@index([commanderId])
   @@index([status, returnTime])
 }
 
@@ -678,4 +684,30 @@ model Officer {
   hiredAt  DateTime @default(now())
 
   @@unique([userId, type])
+}
+
+// ============================================
+// COMMANDANTS DE FLOTTE
+// ============================================
+
+model FleetCommander {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name        String
+  level       Int      @default(1)
+  experience  Int      @default(0)
+  skillPoints Int      @default(0)
+
+  // Niveaux de competence 0-10 (+1 % par niveau)
+  attack      Int      @default(0)
+  defense     Int      @default(0)
+  speed       Int      @default(0)
+  cargo       Int      @default(0)
+
+  fleets      Fleet[]
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
 }

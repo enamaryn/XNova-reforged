@@ -25,7 +25,8 @@
     "administration": "Amministrazione",
     "logout": "Disconnetti",
     "moon": "Luna",
-    "officers": "Ufficiali"
+    "officers": "Ufficiali",
+    "commanders": "Comandanti"
   },
   "sidebar": {
     "principal": "Principale",
@@ -1296,5 +1297,31 @@
       "extraExpeditions": "+{value} spedizioni simultanee",
       "espionageLevels": "+{value} livelli di spionaggio"
     }
+  },
+  "fleetCommanders": {
+    "kicker": "Comandanti di flotta",
+    "title": "Comandanti di flotta",
+    "subtitle": "Recluta fino a {max} comandanti ({cost} deuterio ciascuno) e assegnane uno a una flotta all'invio: guadagna esperienza in combattimento e rafforza la flotta.",
+    "paidOn": "Il prezzo viene prelevato dal pianeta selezionato: {planet}.",
+    "name": "Nome del comandante",
+    "recruit": "Recluta ({cost} deuterio)",
+    "full": "Massimo raggiunto",
+    "empty": "Nessun comandante. Reclutane uno e sceglilo nella pagina Flotta prima dell'invio.",
+    "level": "Livello {level}",
+    "xp": "{xp} / {next} XP",
+    "maxLevel": "Livello massimo",
+    "busy": "In missione",
+    "idle": "Disponibile",
+    "points": "{points} punto/i abilità",
+    "dismiss": "Congeda",
+    "skills": {
+      "attack": "Attacco",
+      "defense": "Difesa",
+      "speed": "Velocità",
+      "cargo": "Carico"
+    },
+    "select": "Comandante",
+    "none": "Nessun comandante",
+    "selectHint": "Un comandante libero rafforza la flotta (attacco, difesa, velocità, carico)."
   }
 }

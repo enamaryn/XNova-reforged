@@ -14,6 +14,7 @@ import { useSearchParams } from 'next/navigation';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { usePlanetStore } from '@/lib/stores/planet-store';
 import { getActiveFleets, getAvailableShips, sendFleet } from '@/lib/api/fleet';
+import { fleetCommandersApi } from '@/lib/api/fleet-commanders';
 import { researchApi } from '@/lib/api/research';
 import { useI18n } from '@/lib/i18n';
 
@@ -61,6 +62,7 @@ export default function FleetClient() {
   const [destination, setDestination] = useState({ galaxy: 1, system: 1, position: 1 });
   const [toMoon, setToMoon] = useState(false);
   const [holdHours, setHoldHours] = useState(1);
+  const [commanderId, setCommanderId] = useState('');
   const [nowMs, setNowMs] = useState(Date.now());
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
@@ -233,6 +235,12 @@ export default function FleetClient() {
   const isOverCapacity =
     missionSummary ? missionSummary.cargoTotal > missionSummary.capacity : false;
 
+  const { data: commandersData } = useQuery({
+    queryKey: ['fleet-commanders'],
+    queryFn: fleetCommandersApi.list,
+  });
+  const freeCommanders = (commandersData?.commanders ?? []).filter((c) => !c.busy);
+
   const sendMutation = useMutation({
     mutationFn: () =>
       sendFleet({
@@ -242,6 +250,7 @@ export default function FleetClient() {
         toPosition: destination.position,
         ...(toMoon ? { toMoon: true } : {}),
         ...(mission === 'maintien' ? { holdHours } : {}),
+        ...(commanderId ? { commanderId } : {}),
         // Seules les missions traitées par le serveur sont proposées (IMPLEMENTED_MISSIONS)
         mission: MISSION_IDS[mission] ?? 3,
         speedPercent,
@@ -253,6 +262,8 @@ export default function FleetClient() {
     onSuccess: () => {
       setShipSelection({});
       setCargo({ metal: 0, crystal: 0, deuterium: 0 });
+      setCommanderId('');
+      queryClient.invalidateQueries({ queryKey: ['fleet-commanders'] });
       queryClient.invalidateQueries({ queryKey: ['fleet-active'] });
       // Vaisseaux restants et emplacements de flottes en vol
       queryClient.invalidateQueries({ queryKey: ['fleet-available'] });
@@ -474,6 +485,26 @@ export default function FleetClient() {
                 ))}
               </div>
             </div>
+
+            {freeCommanders.length > 0 && (
+              <div className="rounded-2xl bg-slate-900/60 p-4">
+                <p className="text-sm text-slate-300">{t('fleetCommanders.select')}</p>
+                <select
+                  value={commanderId}
+                  onChange={(event) => setCommanderId(event.target.value)}
+                  className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60"
+                  data-testid="fleet-commander-select"
+                >
+                  <option value="">{t('fleetCommanders.none')}</option>
+                  {freeCommanders.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name} · {t('fleetCommanders.level', { level: c.level })}
+                    </option>
+                  ))}
+                </select>
+                <p className="mt-1 text-xs text-slate-500">{t('fleetCommanders.selectHint')}</p>
+              </div>
+            )}
 
             <div className="rounded-2xl bg-slate-900/60 p-4">
               <p className="text-sm text-slate-300">Vitesse (%)</p>

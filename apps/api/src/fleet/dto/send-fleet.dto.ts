@@ -41,6 +41,11 @@ export class SendFleetDto {
   @IsString()
   planetId: string;
 
+  // Commandant de flotte assigné à cette flotte (libre, appartenant au joueur)
+  @IsOptional()
+  @IsString()
+  commanderId?: string;
+
   @IsInt()
   @Min(1)
   @Max(9) // GAME_CONSTANTS.MAX_GALAXIES

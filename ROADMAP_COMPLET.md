@@ -459,7 +459,7 @@ Cette roadmap étend le MVP avec des fonctionnalités avancées pour créer un M
   - **Ingénieur** : -10% durée constructions, +10 champs
   - **Géologue** : +10% production mines, +10% stockage
   - **Technocrate** : -10% durée recherches, +2 niveaux espionnage
-- [ ] Commandants de flottes (actifs)
+- [x] Commandants de flottes (actifs) — livrés le 18 octobre 2026 (limites dans ROADMAP_MVP.md ; le commandant est persistant et la flotte le référence, pas de `FleetCommander.fleetId` unique)
   - Assignables à une flotte
   - Compétences :
     - Attaque (+1-10% dégâts)
@@ -482,7 +482,7 @@ Cette roadmap étend le MVP avec des fonctionnalités avancées pour créer un M
   - Achat/activation officier
   - Progression XP
   - Bonus actifs affichés
-- [ ] Gestion commandants
+- [x] Gestion commandants (liste, recrutement, assignation à l'envoi, points de compétence ; sans arbre ni équipements)
   - Liste commandants
   - Assignation flotte
   - Arbre compétences

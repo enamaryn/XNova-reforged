@@ -25,7 +25,8 @@
     "administration": "Administración",
     "logout": "Cerrar sesión",
     "moon": "Luna",
-    "officers": "Oficiales"
+    "officers": "Oficiales",
+    "commanders": "Comandantes"
   },
   "sidebar": {
     "principal": "Principal",
@@ -1296,5 +1297,31 @@
       "extraExpeditions": "+{value} expediciones simultáneas",
       "espionageLevels": "+{value} niveles de espionaje"
     }
+  },
+  "fleetCommanders": {
+    "kicker": "Comandantes de flota",
+    "title": "Comandantes de flota",
+    "subtitle": "Recluta hasta {max} comandantes ({cost} deuterio cada uno) y asigna uno a una flota al enviarla: gana experiencia en combate y refuerza la flota.",
+    "paidOn": "El precio se descuenta del planeta seleccionado: {planet}.",
+    "name": "Nombre del comandante",
+    "recruit": "Reclutar ({cost} deuterio)",
+    "full": "Máximo alcanzado",
+    "empty": "Ningún comandante. Recluta uno y elígelo en la página Flota antes de enviar.",
+    "level": "Nivel {level}",
+    "xp": "{xp} / {next} XP",
+    "maxLevel": "Nivel máximo",
+    "busy": "En misión",
+    "idle": "Disponible",
+    "points": "{points} punto(s) de habilidad",
+    "dismiss": "Despedir",
+    "skills": {
+      "attack": "Ataque",
+      "defense": "Defensa",
+      "speed": "Velocidad",
+      "cargo": "Carga"
+    },
+    "select": "Comandante",
+    "none": "Ningún comandante",
+    "selectHint": "Un comandante libre refuerza la flota (ataque, defensa, velocidad, carga)."
   }
 }

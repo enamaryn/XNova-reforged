@@ -293,6 +293,9 @@ Si basa sulla **potenza**; il tuo rango appare nell'intestazione e nella panoram
 **Cosa fanno gli ufficiali?**
 Cinque personaggi **assunti una sola volta** (500 000 deuterio, prelevati dal pianeta scelto, pagina Ufficiali) i cui bonus valgono per tutto il tuo account: **Intendente** (+10 % di energia, +1 posto di costruzione per pianeta), **Ammiraglio** (+10 % di velocità delle flotte, +2 spedizioni simultanee), **Ingegnere** (−10 % di durata di costruzione), **Geologo** (+10 % di produzione delle miniere e di capacità di stoccaggio), **Tecnocrate** (−10 % di durata di ricerca, +2 livelli di spionaggio). Da non confondere con il *livello di comandante* qui sopra, che misura il tuo sviluppo. I bonus di produzione valgono solo dall'assunzione.
 
+**Cosa sono i comandanti di flotta?**
+Fino a **3 personaggi** reclutati (250 000 deuterio, pagina Comandanti) e assegnati a **una flotta all'invio** (elenco «Comandante» della pagina Flotta). Finché la flotta non è terminata, il comandante è in missione. Guadagna **esperienza a ogni combattimento d'attacco** (100 + 1 ogni 1 000 di metallo e cristallo distrutti sul lato avversario); ogni livello richiede `1000 × 1,5^(livello − 1)` XP (livello massimo 20) e dà **1 punto abilità** da assegnare ad *Attacco* (danni), *Difesa* (scudo e scafo), *Velocità* o *Carico*: +1 % per livello di abilità, al massimo 10 livelli. Se **l'intera flotta è distrutta**, il comandante muore con il 10 % di probabilità. I bonus valgono per le flotte che accompagna (velocità e capacità all'invio, combattimento d'attacco); non per una flotta in mantenimento che difende un alleato.
+
 ---
 
 ## 10. «Perché non posso…?»
