@@ -71,8 +71,8 @@ They are the same building (id 21): the "Hangar" in the lists is the yard where 
 **Is the terraformer useful?**
 Yes: each level adds **5 fields** to the planet and the terraformer **uses no field** itself (it requires *Energy technology* 12, which reserves it for the late game).
 
-**Why can't I see the alliance depot, the missile silo or the moon buildings?**
-Because they depend on features that do not exist yet (hold position, missiles, moons): they are no longer offered or accepted, so nobody invests in a building with no effect.
+**Why can't I see the alliance depot or the moon buildings?**
+Because they depend on features that do not exist yet (hold position, moons): they are no longer offered or accepted, so nobody invests in a building with no effect.
 
 ---
 
@@ -248,7 +248,7 @@ No. Deploy requires one of **your** planets, attack excludes yours.
 | **Small shield dome** (*Petit Bouclier*, 407) | 10,000 / 10,000 / 0 | 1 / 2,000 / 20,000 | shipyard 6, Shield 2 |
 | **Large shield dome** (*Grand Bouclier*, 408) | 50,000 / 50,000 / 0 | 1 / 10,000 / 100,000 | shipyard 8, Shield 6 |
 
-Missiles (interceptor and interplanetary) are **not available**: the missile silo is therefore useless for now.
+**Missiles.** The missile silo (shipyard 1) holds 10 missiles per level. The *anti-ballistic missile* (silo 1) shoots down one enemy missile on arrival; the *interplanetary missile* (silo 4, Impulse Drive 1) is launched from the Defence page against a planet in the same galaxy, up to 5 × Impulse Drive level − 1 systems away. Each missile that gets through deals 12,000 damage (+10% per Weapons level) to the target's defences, the chosen defence first, then rocket launchers, lasers, Gauss, ions, plasma and shields. Missiles never hit fleets or resources, and damage that cannot destroy a whole unit is lost.
 
 **Are planetary shields special?**
 Yes: **one of each per planet** (small, large). They have a huge shield and thick hull for almost no weapon: they are there to **absorb** shots.
@@ -303,6 +303,6 @@ It is based on **power**; your rank appears in the header and the overview. Losi
 
 ## 11. What does not exist yet
 
-Officers, market, events, moons, missiles, expeditions, group attacks, hold position. Buildings and technologies that depend on them (alliance depot, missile silo, moon buildings, research network, expedition) are not offered. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
+Officers, market, events, moons, expeditions, group attacks, hold position. Buildings and technologies that depend on them (alliance depot, moon buildings, research network, expedition) are not offered. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
 
 *This FAQ was checked against the code (`packages/game-config`, `packages/game-engine`, API) and, for solar satellites, by an automated integration test (`solar-satellites.integration.spec.ts`).*

@@ -71,7 +71,7 @@ Ogni pianeta iniziale ha **163 campi**. Ogni livello costruito di un edificio (e
 **Il terraformatore serve a qualcosa?**
 Sì: ogni livello aggiunge **5 campi** al pianeta e il terraformatore **non occupa alcun campo** (richiede *Tecnologia energetica* 12, il che lo riserva alla fine della partita).
 
-**Perché non vedo il deposito dell'alleanza, il silo missilistico né gli edifici lunari?**
+**Perché non vedo il deposito dell'alleanza né gli edifici lunari?**
 Perché dipendono da funzioni che non esistono ancora (mantenimento della posizione, missili, lune): non vengono più proposti né accettati, perché nessuno investa in un edificio senza effetto.
 
 ---
@@ -248,7 +248,7 @@ No. Lo schieramento richiede uno dei **tuoi** pianeti; l'attacco esclude i tuoi.
 | **Cupola scudo piccola** (*Petit Bouclier*, 407) | 10 000 / 10 000 / 0 | 1 / 2 000 / 20 000 | hangar 6, Scudi 2 |
 | **Cupola scudo grande** (*Grand Bouclier*, 408) | 50 000 / 50 000 / 0 | 1 / 10 000 / 100 000 | hangar 8, Scudi 6 |
 
-I missili (intercettori e interplanetari) **non sono disponibili**: il silo missilistico per ora non serve quindi a nulla.
+**Missili.** Il silo missilistico (cantiere 1) contiene 10 missili per livello. Il *missile intercettore* (silo 1) abbatte un missile nemico all'arrivo; il *missile interplanetario* (silo 4, Motore a impulso 1) si lancia dalla pagina Difesa contro un pianeta della stessa galassia, fino a 5 × livello di impulso − 1 sistemi. Ogni missile che passa infligge 12.000 danni (+10 % per livello di Armi) alle difese del bersaglio, prima quella scelta, poi lanciamissili, laser, Gauss, ioni, plasma e scudi. I missili non colpiscono né flotta né risorse, e i danni che non bastano a distruggere un'unità vanno persi.
 
 **Gli scudi planetari sono particolari?**
 Sì: **uno per tipo per pianeta** (piccolo, grande). Hanno uno scudo enorme e uno scafo spesso per un'arma quasi nulla: servono ad **assorbire** i colpi.
@@ -303,6 +303,6 @@ Si basa sulla **potenza**; il tuo rango appare nell'intestazione e nella panoram
 
 ## 11. Ciò che non esiste ancora
 
-Ufficiali, mercato, eventi, lune, missili, spedizioni, attacchi di gruppo, mantenimento della posizione. Gli edifici e le tecnologie che ne dipendono (deposito dell'alleanza, silo missilistico, edifici lunari, rete di ricerca, spedizione) non vengono proposti. La roadmap del progetto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tiene traccia di questi scarti.
+Ufficiali, mercato, eventi, lune, spedizioni, attacchi di gruppo, mantenimento della posizione. Gli edifici e le tecnologie che ne dipendono (deposito dell'alleanza, edifici lunari, rete di ricerca, spedizione) non vengono proposti. La roadmap del progetto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tiene traccia di questi scarti.
 
 *Questa FAQ è stata verificata sul codice (`packages/game-config`, `packages/game-engine`, API) e, per i satelliti solari, con un test di integrazione automatizzato (`solar-satellites.integration.spec.ts`).*

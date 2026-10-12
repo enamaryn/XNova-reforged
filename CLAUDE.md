@@ -1,8 +1,8 @@
 # CLAUDE.md
 
-## État courant — 12 octobre 2026
+## État courant — 13 octobre 2026
 
-Le projet est une alpha privée (`v0.2.0-alpha.1`), sans validation de sortie publique ; langues fr/en/es/de/it, rythme du premier cycle par profil serveur ×50 (voir `docs/PROGRESSION.md`). Supervision locale intégrée en service (console admin → Supervision ; Sentry optionnel, jamais requis ; code dans `apps/api/src/supervision/`). Commencer par [ROADMAP_MVP.md](ROADMAP_MVP.md) et [docs/DOUBLE_AUDIT_2026-10.md](docs/DOUBLE_AUDIT_2026-10.md). Les déclarations historiques de complétion ne clôturent pas les constats. Distinguer exécutions rapportées par Claude, revue/reproduction Codex et journaux LXC du propriétaire. 
+Le projet est une alpha privée (`v0.2.0-alpha.1`), sans validation de sortie publique ; langues fr/en/es/de/it, rythme du premier cycle par profil serveur ×50 (voir `docs/PROGRESSION.md`). Supervision locale intégrée en service (console admin → Supervision ; Sentry optionnel, jamais requis ; code dans `apps/api/src/supervision/`). Missiles interplanétaires disponibles (silo, interception, tir par la page Défense ; code dans `apps/api/src/missiles/`) ; lunes, dépôt d'alliance, expéditions restent absents. Commencer par [ROADMAP_MVP.md](ROADMAP_MVP.md) et [docs/DOUBLE_AUDIT_2026-10.md](docs/DOUBLE_AUDIT_2026-10.md). Les déclarations historiques de complétion ne clôturent pas les constats. Distinguer exécutions rapportées par Claude, revue/reproduction Codex et journaux LXC du propriétaire. 
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 

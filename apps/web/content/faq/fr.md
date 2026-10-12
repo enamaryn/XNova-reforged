@@ -69,8 +69,8 @@ C'est le même bâtiment (identifiant 21) : le « Hangar » des listes est le ch
 **Le terraformeur sert-il à quelque chose ?**
 Oui : chaque niveau ajoute **5 cases** à la planète et le terraformeur **n'occupe aucune case** lui-même (il exige *Technologie Énergie* 12, ce qui le réserve à la fin de partie).
 
-**Pourquoi ne vois-je pas le dépôt d'alliance, le silo de missiles ni les bâtiments lunaires ?**
-Parce qu'ils dépendent de fonctions qui n'existent pas encore (maintien de position, missiles, lunes) : ils ne sont plus proposés ni acceptés, pour que personne n'investisse dans un bâtiment sans effet.
+**Pourquoi ne vois-je pas le dépôt d'alliance ni les bâtiments lunaires ?**
+Parce qu'ils dépendent de fonctions qui n'existent pas encore (maintien de position, lunes) : ils ne sont plus proposés ni acceptés, pour que personne n'investisse dans un bâtiment sans effet.
 
 ---
 
@@ -246,7 +246,7 @@ Non. Le déploiement exige l'une de **vos** planètes, l'attaque exclut les vôt
 | **Petit bouclier** (407) | 10 000 / 10 000 / 0 | 1 / 2 000 / 20 000 | hangar 6, Bouclier 2 |
 | **Grand bouclier** (408) | 50 000 / 50 000 / 0 | 1 / 10 000 / 100 000 | hangar 8, Bouclier 6 |
 
-Les missiles (interception et interplanétaires) ne sont **pas disponibles** : le silo de missiles ne sert donc à rien pour le moment.
+**Missiles.** Le silo de missiles (hangar 1) range 10 missiles par niveau. Le *missile d'interception* (silo 1) abat un missile ennemi à son arrivée ; le *missile interplanétaire* (silo 4, Réacteur à impulsion 1) se lance depuis la page Défense contre une planète de la même galaxie, jusqu'à 5 × niveau d'impulsion − 1 systèmes. Chaque missile qui passe inflige 12 000 dégâts (+10 % par niveau d'Armes) aux défenses de la cible, la défense choisie d'abord, puis lanceur, lasers, Gauss, ions, plasma et boucliers. Les missiles ne touchent ni la flotte ni les ressources, et les dégâts qui ne suffisent pas à détruire une unité sont perdus.
 
 **Les boucliers planétaires sont-ils particuliers ?**
 Oui : **un seul exemplaire par planète** de chaque (petit, grand). Ils ont un énorme bouclier et une coque épaisse pour une arme quasi nulle : ils servent à **absorber** des tirs.
@@ -301,6 +301,6 @@ Il est établi sur la **puissance** ; votre rang apparaît dans l'en-tête et la
 
 ## 11. Ce qui n'existe pas encore
 
-Officiers, marché, événements, lunes, missiles, expéditions, attaques groupées, maintien de position. Les bâtiments et technologies qui en dépendent (dépôt d'alliance, silo de missiles, bâtiments lunaires, réseau de recherche, expédition) ne sont pas proposés. La feuille de route du projet ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) suit ces écarts.
+Officiers, marché, événements, lunes, expéditions, attaques groupées, maintien de position. Les bâtiments et technologies qui en dépendent (dépôt d'alliance, bâtiments lunaires, réseau de recherche, expédition) ne sont pas proposés. La feuille de route du projet ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) suit ces écarts.
 
 *Cette FAQ a été vérifiée contre le code (`packages/game-config`, `packages/game-engine`, API) et, pour les satellites solaires, par un test automatisé d'intégration (`solar-satellites.integration.spec.ts`).*

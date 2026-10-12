@@ -110,6 +110,7 @@ export interface DefenseItem {
 export interface DefenseResponse {
   planetId: string;
   defenses: DefenseItem[];
+  missileSilo?: { level: number; capacity: number; used: number };
   resources: ShipCost;
 }
 

@@ -71,7 +71,7 @@ Es ist dasselbe Gebäude (ID 21): Der „Hangar“ in den Listen ist die Werft, 
 **Ist der Terraformer nützlich?**
 Ja: Jede Stufe fügt dem Planeten **5 Felder** hinzu, und der Terraformer **belegt selbst kein Feld** (er erfordert *Energietechnik* 12, was ihn dem Spätspiel vorbehält).
 
-**Warum sehe ich Allianzdepot, Raketensilo und Mondgebäude nicht?**
+**Warum sehe ich Allianzdepot und Mondgebäude nicht?**
 Weil sie von Funktionen abhängen, die es noch nicht gibt (Halten, Raketen, Monde): Sie werden nicht mehr angeboten oder akzeptiert, damit niemand in ein Gebäude ohne Wirkung investiert.
 
 ---
@@ -248,7 +248,7 @@ Nein. Stationieren erfordert einen **Ihrer** Planeten, ein Angriff schließt Ihr
 | **Kleine Schildkuppel** (*Petit Bouclier*, 407) | 10 000 / 10 000 / 0 | 1 / 2 000 / 20 000 | Werft 6, Schild 2 |
 | **Große Schildkuppel** (*Grand Bouclier*, 408) | 50 000 / 50 000 / 0 | 1 / 10 000 / 100 000 | Werft 8, Schild 6 |
 
-Raketen (Abfang- und Interplanetarraketen) sind **nicht verfügbar**: Das Raketensilo ist daher vorerst nutzlos.
+**Raketen.** Das Raketensilo (Werft 1) fasst 10 Raketen pro Stufe. Die *Abfangrakete* (Silo 1) schießt bei der Ankunft eine feindliche Rakete ab; die *Interplanetarrakete* (Silo 4, Impulsantrieb 1) wird von der Verteidigungsseite aus auf einen Planeten derselben Galaxie gestartet, bis zu 5 × Impulsantriebsstufe − 1 Systeme weit. Jede durchkommende Rakete richtet 12 000 Schaden an (+10 % je Waffenstufe) und trifft die Verteidigung des Ziels, zuerst die gewählte, dann Raketenwerfer, Laser, Gauß, Ionen, Plasma und Schilde. Raketen treffen weder Flotte noch Rohstoffe; Schaden, der keine ganze Einheit zerstört, verfällt.
 
 **Sind Planetenschilde besonders?**
 Ja: **je eines pro Planet** (klein, groß). Sie haben einen riesigen Schild und eine dicke Hülle bei nahezu keiner Waffe: Sie dienen dazu, Schüsse zu **absorbieren**.
@@ -303,6 +303,6 @@ Sie beruht auf der **Macht**; Ihr Rang erscheint in der Kopfzeile und in der Üb
 
 ## 11. Was es noch nicht gibt
 
-Offiziere, Markt, Ereignisse, Monde, Raketen, Expeditionen, Verbandsangriffe, Halten. Die davon abhängigen Gebäude und Technologien (Allianzdepot, Raketensilo, Mondgebäude, Forschungsnetzwerk, Expedition) werden nicht angeboten. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
+Offiziere, Markt, Ereignisse, Monde, Expeditionen, Verbandsangriffe, Halten. Die davon abhängigen Gebäude und Technologien (Allianzdepot, Mondgebäude, Forschungsnetzwerk, Expedition) werden nicht angeboten. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
 
 *Diese FAQ wurde gegen den Code (`packages/game-config`, `packages/game-engine`, API) und, für die Solarsatelliten, durch einen automatisierten Integrationstest (`solar-satellites.integration.spec.ts`) geprüft.*

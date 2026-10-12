@@ -94,22 +94,22 @@ export enum CombatResult {
 }
 
 /**
- * Défenses constructibles (SCOPE-01). Les missiles (502, 503) dépendent du silo et des attaques
- * interplanétaires, hors périmètre : ils ne sont ni proposés ni acceptés.
+ * Défenses constructibles (SCOPE-01) et missiles (502 interplanétaire, 503 d'interception), qui se
+ * stockent dans le silo de missiles (44).
  */
 export const IMPLEMENTED_DEFENSES: readonly number[] = [
-  401, 402, 403, 404, 405, 406, 407, 408,
+  401, 402, 403, 404, 405, 406, 407, 408, 502, 503,
 ];
 
 /** Boucliers planétaires : une seule unité par planète. */
 export const SINGLE_UNIT_DEFENSES: readonly number[] = [407, 408];
 
 /**
- * Bâtiments réellement fonctionnels : les autres (dépôt d'alliance, silo de missiles, bâtiments lunaires) dépendent
- * de fonctions absentes (maintien de position, missiles, lunes) et ne sont ni proposés ni acceptés.
+ * Bâtiments réellement fonctionnels : les autres (dépôt d'alliance, bâtiments lunaires) dépendent
+ * de fonctions absentes (maintien de position, lunes) et ne sont ni proposés ni acceptés.
  */
 export const IMPLEMENTED_BUILDINGS: readonly number[] = [
-  1, 2, 3, 4, 12, 14, 15, 21, 22, 23, 24, 31, 33,
+  1, 2, 3, 4, 12, 14, 15, 21, 22, 23, 24, 31, 33, 44,
 ];
 
 /**
@@ -131,6 +131,7 @@ export function maxFleetSlots(computerTechnologyLevel: number): number {
   return BASE_FLEET_SLOTS + Math.max(0, Math.floor(computerTechnologyLevel || 0));
 }
 
+export * from "./missiles";
 export * from "./production-queue";
 export * from "./item-texts";
 export * from "./shipyard-time";

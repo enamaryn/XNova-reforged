@@ -12,6 +12,8 @@ import {
   BUILDINGS,
   DEFENSES,
   IMPLEMENTED_DEFENSES,
+  MISSILE_IDS,
+  missileCapacity,
   SHIPS,
   SOLAR_SATELLITE_ID,
   SINGLE_UNIT_DEFENSES,
@@ -195,9 +197,19 @@ export class ShipyardService {
       };
     });
 
+    const siloUsed = MISSILE_IDS.reduce(
+      (sum, id) => sum + (amounts.get(id) ?? 0) + (queued.get(id) ?? 0),
+      0,
+    );
+
     return {
       planetId,
       defenses,
+      missileSilo: {
+        level: planet.missileSilo,
+        capacity: missileCapacity(planet.missileSilo),
+        used: siloUsed,
+      },
       progression: await this.progression.get(userId),
       resources: {
         metal: planet.metal,
@@ -296,6 +308,26 @@ export class ShipyardService {
     const { updatedPlanet, queueEntry, startTime, endTime } =
       await this.database.$transaction(async (tx) => {
         await lockPlanet(tx, planetId);
+
+        if (isDefense && MISSILE_IDS.includes(shipId)) {
+          // Le silo range 10 missiles par niveau : stock, fabrications en cours et lot demandé
+          const [stored, pending] = await Promise.all([
+            tx.defense.aggregate({
+              where: { planetId, defenseId: { in: [...MISSILE_IDS] } },
+              _sum: { amount: true },
+            }),
+            tx.shipQueue.aggregate({
+              where: { planetId, completed: false, shipId: { in: [...MISSILE_IDS] } },
+              _sum: { amount: true },
+            }),
+          ]);
+          const used = (stored._sum.amount ?? 0) + (pending._sum.amount ?? 0);
+          if (used + safeAmount > missileCapacity(planet.missileSilo)) {
+            throw new BadRequestException(
+              "Capacite du silo de missiles insuffisante",
+            );
+          }
+        }
 
         if (isDefense && SINGLE_UNIT_DEFENSES.includes(shipId)) {
           const built = await tx.defense.findUnique({

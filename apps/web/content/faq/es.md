@@ -71,7 +71,7 @@ Es el mismo edificio (id 21): el «Hangar» de las listas es el astillero donde 
 **¿Sirve de algo el terraformador?**
 Sí: cada nivel añade **5 campos** al planeta y el terraformador **no ocupa ningún campo** (exige *Tecnología de energía* 12, lo que lo reserva para el final de la partida).
 
-**¿Por qué no veo el depósito de la alianza, el silo de misiles ni los edificios lunares?**
+**¿Por qué no veo el depósito de la alianza ni los edificios lunares?**
 Porque dependen de funciones que aún no existen (mantener posición, misiles, lunas): ya no se ofrecen ni se aceptan, para que nadie invierta en un edificio sin efecto.
 
 ---
@@ -248,7 +248,7 @@ No. El despliegue exige uno de **sus** planetas; el ataque excluye los suyos.
 | **Cúpula pequeña de protección** (*Petit Bouclier*, 407) | 10 000 / 10 000 / 0 | 1 / 2 000 / 20 000 | hangar 6, Escudo 2 |
 | **Cúpula grande de protección** (*Grand Bouclier*, 408) | 50 000 / 50 000 / 0 | 1 / 10 000 / 100 000 | hangar 8, Escudo 6 |
 
-Los misiles (de intercepción e interplanetarios) **no están disponibles**: el silo de misiles no sirve, pues, de nada por ahora.
+**Misiles.** El silo de misiles (hangar 1) almacena 10 misiles por nivel. El *misil de intercepción* (silo 1) derriba un misil enemigo al llegar; el *misil interplanetario* (silo 4, Motor de impulso 1) se lanza desde la página Defensa contra un planeta de la misma galaxia, hasta 5 × nivel de impulso − 1 sistemas. Cada misil que pasa causa 12 000 de daño (+10 % por nivel de Armas) a las defensas del objetivo, primero la defensa elegida y luego lanzamisiles, láseres, Gauss, iones, plasma y escudos. Los misiles no afectan ni a la flota ni a los recursos, y el daño que no basta para destruir una unidad se pierde.
 
 **¿Son especiales los escudos planetarios?**
 Sí: **uno de cada por planeta** (pequeño, grande). Tienen un escudo enorme y un casco grueso para un arma casi nula: están para **absorber** disparos.
@@ -303,6 +303,6 @@ Se basa en el **poder**; su rango aparece en la cabecera y en la vista general. 
 
 ## 11. Lo que aún no existe
 
-Oficiales, mercado, eventos, lunas, misiles, expediciones, ataques en grupo, mantener posición. Los edificios y tecnologías que dependen de ello (depósito de la alianza, silo de misiles, edificios lunares, red de investigación, expedición) no se ofrecen. La hoja de ruta del proyecto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) sigue estas discrepancias.
+Oficiales, mercado, eventos, lunas, expediciones, ataques en grupo, mantener posición. Los edificios y tecnologías que dependen de ello (depósito de la alianza, edificios lunares, red de investigación, expedición) no se ofrecen. La hoja de ruta del proyecto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) sigue estas discrepancias.
 
 *Esta FAQ se ha comprobado con el código (`packages/game-config`, `packages/game-engine`, API) y, para los satélites solares, con una prueba de integración automatizada (`solar-satellites.integration.spec.ts`).*

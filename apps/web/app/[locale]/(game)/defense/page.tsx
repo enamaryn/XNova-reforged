@@ -8,6 +8,7 @@ import { useI18n } from "@/lib/i18n";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { usePlanetStore } from "@/lib/stores/planet-store";
 import { ShipyardQueue } from "@/components/game/ShipyardQueue";
+import { MissilePanel } from "@/components/game/MissilePanel";
 
 function formatNumber(value: number) {
   return new Intl.NumberFormat().format(Math.floor(value));
@@ -248,6 +249,11 @@ export default function DefensePage() {
           );
         })}
       </div>
+
+      <MissilePanel
+        planetId={planetId}
+        defenseNames={Object.fromEntries(defenses.map((d) => [d.id, d.name]))}
+      />
 
       {(buildMutation.error || cancelMutation.error) && (
         <div className="fixed bottom-4 right-4 max-w-sm rounded-lg bg-red-500/90 px-4 py-3 text-white shadow-lg">

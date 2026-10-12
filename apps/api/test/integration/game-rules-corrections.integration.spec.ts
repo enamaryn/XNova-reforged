@@ -178,7 +178,7 @@ describe('API integration - corrections des règles du jeu', () => {
   });
 
   describe('éléments non fonctionnels masqués', () => {
-    it('ni listés ni acceptés : dépôt d\'alliance, silo de missiles, bâtiments lunaires', async () => {
+    it('ni listés ni acceptés : dépôt d\'alliance, bâtiments lunaires (le silo de missiles est disponible)', async () => {
       const p = await player();
       await database.planet.update({ where: { id: p.planetId }, data: { metal: 10000000, crystal: 10000000, deuterium: 10000000 } });
       const list = await request(app.getHttpServer())
@@ -186,9 +186,9 @@ describe('API integration - corrections des règles du jeu', () => {
         .set(auth(p.token))
         .expect(200);
       const ids = list.body.buildings.map((b: { id: number }) => b.id);
-      for (const hidden of [34, 41, 42, 43, 44]) expect(ids).not.toContain(hidden);
-      expect(ids).toEqual(expect.arrayContaining([1, 2, 3, 4, 12, 14, 15, 21, 22, 23, 24, 31, 33]));
-      for (const hidden of [34, 41, 44]) {
+      for (const hidden of [34, 41, 42, 43]) expect(ids).not.toContain(hidden);
+      expect(ids).toEqual(expect.arrayContaining([1, 2, 3, 4, 12, 14, 15, 21, 22, 23, 24, 31, 33, 44]));
+      for (const hidden of [34, 41]) {
         const res = await request(app.getHttpServer())
           .post(`/planets/${p.planetId}/build`)
           .set(auth(p.token))
@@ -197,7 +197,8 @@ describe('API integration - corrections des règles du jeu', () => {
         expect(res.body.message).toContain('pas disponible');
       }
       const all = await request(app.getHttpServer()).get('/buildings').set(auth(p.token)).expect(200);
-      expect(all.body.map((b: { id: number }) => b.id)).not.toContain(44);
+      expect(all.body.map((b: { id: number }) => b.id)).toContain(44);
+      expect(all.body.map((b: { id: number }) => b.id)).not.toContain(34);
     });
 
     it('ni listées ni acceptées : réseau de recherche intergalactique et expédition', async () => {

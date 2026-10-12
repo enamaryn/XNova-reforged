@@ -112,6 +112,11 @@ Toutes les décisions listées dans la version précédente sont prises et appli
 - [x] **PERF-MOBILE** ([PR #59](https://github.com/enamaryn/XNova-reforged/pull/59)) : accueil mobile Lighthouse 67 → 96 (Sentry navigateur chargé à la demande), connexion 100, inscription 99.
 - [x] **UPTIME** : échantillon de santé chaque minute, disponibilité 24 h/7 j/30 j dans la console admin (migration `20261012200000_health_samples`). Le **résultat** (> 99 %) se mesurera sur plusieurs jours en production ; aucun pourcentage n'est supposé.
 
+## Fonctions de jeu manquantes
+
+- [x] **Missiles interplanétaires** (13 octobre 2026) : silo de missiles constructible (10 missiles par niveau), *missile d'interception* (silo 1) et *missile interplanétaire* (silo 4, Réacteur à impulsion 1) fabriqués depuis la page Défense. Tir dans la même galaxie jusqu'à 5 × impulsion − 1 systèmes (30 s + 60 s par système, divisé par la vitesse du serveur) ; à l'arrivée chaque missile d'interception abat un missile, puis chaque missile restant inflige 12 000 dégâts (+10 % par niveau d'Armes) aux défenses (cible choisie d'abord, puis lanceur → lasers → Gauss → ions → plasma → boucliers ; Protection du défenseur +10 % de coque par niveau ; les dégâts insuffisants pour une unité entière sont perdus). Table `MissileStrike` (migration `20261013100000_missile_strikes`), tâche planifiée `missiles` (10 s) surveillée par la supervision, résultat visible des deux joueurs, avertissement au défenseur. Les missiles stockés ne combattent pas. Tests : 8 unitaires, 7 d'intégration, 2 E2E.
+- [ ] Toujours absents : lunes (et bâtiments lunaires), dépôt d'alliance / maintien de position, expéditions, réseau de recherche intergalactique.
+
 ## Prérequis bloquants et dette technique avant l'ouverture publique
 
 - [x] **SMTP réel configuré et validé** par le propriétaire (déclaration du 10 octobre 2026) ; à reconfirmer avec un envoi réel (test, inscription, mot de passe oublié) lors de chaque mise en production : sans SMTP l'inscription répond 503. _(PRE-01 du registre)_

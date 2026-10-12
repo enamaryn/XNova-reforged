@@ -51,6 +51,8 @@ model User {
   spyReportsSent     SpyReport[] @relation("SpyReportsSent")
   spyReportsReceived SpyReport[] @relation("SpyReportsReceived")
   fleets        Fleet[]
+  missileStrikes         MissileStrike[] @relation("MissileAttacker")
+  missileStrikesReceived MissileStrike[] @relation("MissileTarget")
   technologies  Technology[]
   messages      Message[]      @relation("ReceivedMessages")
   sentMessages  Message[]      @relation("SentMessages")
@@ -581,4 +583,41 @@ model SpyReport {
 
   @@index([attackerId, createdAt])
   @@index([defenderId])
+}
+
+// ============================================
+// MISSILES INTERPLANETAIRES
+// ============================================
+
+model MissileStrike {
+  id            String   @id @default(uuid())
+
+  userId        String
+  user          User     @relation("MissileAttacker", fields: [userId], references: [id], onDelete: Cascade)
+  targetUserId  String
+  targetUser    User     @relation("MissileTarget", fields: [targetUserId], references: [id], onDelete: Cascade)
+
+  fromGalaxy    Int
+  fromSystem    Int
+  fromPosition  Int
+  toGalaxy      Int
+  toSystem      Int
+  toPosition    Int
+
+  missiles      Int
+  // Defense visee en priorite (identifiant de defense) ; null = ordre par defaut
+  primaryTarget Int?
+
+  startTime     DateTime
+  arrivalTime   DateTime
+  // traveling, resolved
+  status        String   @default("traveling")
+  // { launched, intercepted, hits, destroyed: { "401": 12 } } une fois la frappe resolue
+  result        Json?
+
+  createdAt     DateTime @default(now())
+
+  @@index([status, arrivalTime])
+  @@index([userId, createdAt])
+  @@index([targetUserId, createdAt])
 }

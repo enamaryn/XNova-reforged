@@ -179,10 +179,10 @@ describe("API integration - Défense (SCOPE-01)", () => {
   });
 
   describe("catalogue et prérequis", () => {
-    it("liste les huit défenses, sans missiles, avec prérequis manquants", async () => {
+    it("liste les huit défenses et les deux missiles, avec prérequis manquants", async () => {
       const body = await catalog(builder);
       expect(body.defenses.map((d: any) => d.id)).toEqual([
-        401, 402, 403, 404, 405, 406, 407, 408,
+        401, 402, 403, 404, 405, 406, 407, 408, 502, 503,
       ]);
       const launcher = body.defenses.find((d: any) => d.id === 401);
       expect(launcher.canBuild).toBe(false); // chantier spatial niveau 0
@@ -210,12 +210,12 @@ describe("API integration - Défense (SCOPE-01)", () => {
       ).toBe(0);
     });
 
-    it("refuse les missiles, les identifiants inconnus et les vaisseaux sur la route défense", async () => {
+    it("refuse les identifiants inconnus et les vaisseaux sur la route défense", async () => {
       await database.planet.update({
         where: { id: builder.planetId },
         data: { shipyard: 8, missileSilo: 1 },
       });
-      for (const id of [502, 503, 999, 202]) {
+      for (const id of [999, 202]) {
         await buildDefense(builder, id, 1).expect(400);
       }
       expect(
