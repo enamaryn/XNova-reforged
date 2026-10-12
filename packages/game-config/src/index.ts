@@ -59,7 +59,7 @@ export enum MissionType {
 }
 
 // Missions réellement traitées à l'arrivée (liste commune API/UI, GAME-01).
-// Les autres missions (maintien de position...) restent refusées par l'API sans débit.
+// Les autres missions (attaque groupée, destruction...) restent refusées par l'API sans débit.
 export const IMPLEMENTED_MISSIONS: readonly MissionType[] = [
   MissionType.ATTACK,
   MissionType.TRANSPORT,
@@ -68,6 +68,7 @@ export const IMPLEMENTED_MISSIONS: readonly MissionType[] = [
   MissionType.COLONIZE,
   MissionType.RECYCLE,
   MissionType.EXPEDITION,
+  MissionType.HOLD_POSITION,
 ];
 
 /** Identifiants des vaisseaux imposés par certaines missions. */
@@ -106,11 +107,10 @@ export const IMPLEMENTED_DEFENSES: readonly number[] = [
 export const SINGLE_UNIT_DEFENSES: readonly number[] = [407, 408];
 
 /**
- * Bâtiments réellement fonctionnels : le dépôt d'alliance dépend d'une fonction absente
- * (maintien de position) et n'est ni proposé ni accepté.
+ * Bâtiments réellement fonctionnels (tous les bâtiments du jeu sont désormais proposés).
  */
 export const IMPLEMENTED_BUILDINGS: readonly number[] = [
-  1, 2, 3, 4, 12, 14, 15, 21, 22, 23, 24, 31, 33, 41, 42, 43, 44,
+  1, 2, 3, 4, 12, 14, 15, 21, 22, 23, 24, 31, 33, 34, 41, 42, 43, 44,
 ];
 
 /**
@@ -134,6 +134,7 @@ export function maxFleetSlots(computerTechnologyLevel: number): number {
 
 export * from "./missiles";
 export * from "./expeditions";
+export * from "./hold";
 export * from "./moons";
 export * from "./production-queue";
 export * from "./item-texts";

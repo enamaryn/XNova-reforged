@@ -53,7 +53,8 @@
       "colonize": "Kolonisierung",
       "recycle": "Recycling",
       "deploy": "Stationierung",
-      "expedition": "Expedition"
+      "expedition": "Expedition",
+      "hold": "Halten"
     },
     "summary": "Missionsübersicht",
     "distance": "Entfernung",
@@ -66,7 +67,9 @@
     "sending": "Wird gesendet...",
     "send": "Flotte entsenden",
     "targetMoon": "Den Mond anvisieren (gleiche Koordinaten)",
-    "expeditionHelp": "Schickt die Flotte in den Weltraum (Position 16 des Systems): Manchmal findet sie Rohstoffe oder Schiffe, kann aber auch aufgehalten, von Piraten angegriffen oder von einem Schwarzen Loch verschluckt werden. Erfordert die Expeditionstechnik; der Bericht kommt bei der Ankunft auf der Berichteseite."
+    "expeditionHelp": "Schickt die Flotte in den Weltraum (Position 16 des Systems): Manchmal findet sie Rohstoffe oder Schiffe, kann aber auch aufgehalten, von Piraten angegriffen oder von einem Schwarzen Loch verschluckt werden. Erfordert die Expeditionstechnik; der Bericht kommt bei der Ankunft auf der Berichteseite.",
+    "holdHelp": "Halten bei einem Verbündeten: Die Flotte bleibt im Orbit seines Planeten oder Mondes (bis zu 32 h), verteidigt ihn bei einem Angriff und kehrt dann zurück. Der Haltetreibstoff (ein Zehntel des Verbrauchs pro Stunde) wird im Voraus bezahlt; das Allianzdepot des Gastgebers kann ihn erstatten. Ziel: ein Mitglied deiner Allianz.",
+    "holdHours": "Haltedauer (Stunden, 1 bis 32)"
   },
   "movement": {
     "kicker": "Verkehrszentrale",
@@ -85,8 +88,10 @@
       "traveling": "Unterwegs",
       "returning": "Rückflug",
       "arrived": "Angekommen",
-      "completed": "Abgeschlossen"
-    }
+      "completed": "Abgeschlossen",
+      "holding": "Hält"
+    },
+    "holdEndsIn": "Halten endet in"
   },
   "galaxy": {
     "title": "Galaxie",
@@ -104,7 +109,8 @@
     "colonize": "Kolonisieren",
     "recycle": "Recyceln",
     "debris": "Trümmerfeld",
-    "expedition": "Expedition"
+    "expedition": "Expedition",
+    "hold": "Halten"
   },
   "messages": {
     "kicker": "Kommunikation",

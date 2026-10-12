@@ -5,6 +5,18 @@
 
 ---
 
+## Session — dépôt d'alliance et maintien de position
+
+**Date :** 16 octobre 2026. Suite de « expéditions et dépôt d'alliance ensuite ».
+
+- [x] Règles communes `packages/game-config/src/hold.ts` et répartition des pertes `packages/game-engine/src/hold.ts`.
+- [x] Mission 5 : validation (même alliance, 1 à 32 h, carburant prépayé), arrivée avec ravitaillement par le dépôt, fin de maintien par tâche planifiée, rappel, emplacement de flotte.
+- [x] Défense alliée dans `CombatService` (flottes `holding` sur la cible, pertes réparties).
+- [x] Dépôt d'alliance (34) proposé sur les planètes ; Galaxie : `isAllied` et liens ; page Flotte, Mouvements, textes fr/en/es/de/it, FAQ.
+- [x] Tests : unitaires (4), intégration (9), E2E (1) ; test des éléments masqués adapté.
+- Restent absents : réseau de recherche intergalactique.
+
+
 ## Session — expéditions
 
 **Date :** 15 octobre 2026. Demande du propriétaire : « passe aux expéditions et dépôt d'alliance ensuite ». Cette session livre les expéditions ; le dépôt d'alliance suit dans une PR distincte.

@@ -52,6 +52,7 @@ export default function MovementPage() {
       4: t('fleet.missions.deploy'),
       6: t('fleet.missions.spy'),
       7: t('fleet.missions.colonize'),
+      5: t('fleet.missions.hold'),
       8: t('fleet.missions.recycle'),
       15: t('fleet.missions.expedition'),
     }),
@@ -61,6 +62,7 @@ export default function MovementPage() {
   const statusLabels = useMemo<Record<string, string>>(
     () => ({
       traveling: t('movement.status.traveling'),
+      holding: t('movement.status.holding'),
       returning: t('movement.status.returning'),
       arrived: t('movement.status.arrived'),
       completed: t('movement.status.completed'),
@@ -117,7 +119,8 @@ export default function MovementPage() {
               const label = missionLabels[fleet.mission] || `Mission ${fleet.mission}`;
               const statusLabel = statusLabels[fleet.status] || fleet.status;
               const isReturning = fleet.status === 'returning';
-              const targetTime = isReturning ? fleet.returnTime : fleet.arrivalTime;
+              const isHolding = fleet.status === 'holding';
+              const targetTime = isHolding ? fleet.holdUntil : isReturning ? fleet.returnTime : fleet.arrivalTime;
               const fleetSize = Object.values(fleet.ships || {}).reduce(
                 (sum, value) => sum + Number(value || 0),
                 0,
@@ -143,7 +146,7 @@ export default function MovementPage() {
                     <div className="text-right text-xs text-slate-500">
                       <div>{statusLabel}</div>
                       <div className="mt-1">
-                        {isReturning ? t('movement.backIn') : t('movement.arrivalIn')} {' '}
+                        {isHolding ? t('movement.holdEndsIn') : isReturning ? t('movement.backIn') : t('movement.arrivalIn')} {' '}
                         {formatCountdown(targetTime, nowMs)}
                       </div>
                     </div>
@@ -153,7 +156,7 @@ export default function MovementPage() {
                     <div className="text-xs text-slate-500">
                       {t('movement.fleetSize')}: {fleetSize}
                     </div>
-                    {fleet.status === 'traveling' && (
+                    {(fleet.status === 'traveling' || fleet.status === 'holding') && (
                       <button
                         onClick={() => recallMutation.mutate(fleet.id)}
                         disabled={recallingId === fleet.id}

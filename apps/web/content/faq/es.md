@@ -71,8 +71,8 @@ Es el mismo edificio (id 21): el «Hangar» de las listas es el astillero donde 
 **¿Sirve de algo el terraformador?**
 Sí: cada nivel añade **5 campos** al planeta y el terraformador **no ocupa ningún campo** (exige *Tecnología de energía* 12, lo que lo reserva para el final de la partida).
 
-**¿Por qué no veo el depósito de la alianza?**
-Depende de mantener posición, que aún no existe: no se ofrece ni se acepta, para que nadie invierta en un edificio sin efecto.
+**¿Cómo funcionan mantener posición y el depósito de la alianza?**
+La misión **Mantener posición** envía una flota a un **miembro de tu alianza** (planeta o luna; botones «Mantener posición» de la Galaxia) durante 1 a 32 horas. El combustible de mantenimiento (una décima parte del consumo de la flota por hora) se paga por adelantado. Durante el mantenimiento la flota permanece en órbita y **defiende al anfitrión**: si es atacado, combate a su lado (con las tecnologías del anfitrión) y las pérdidas se reparten en proporción a las naves. El **depósito de la alianza** del anfitrión (edificio de planeta) reembolsa ese combustible a la flota, hasta 10 000 de deuterio por nivel y por hora de mantenimiento y el deuterio que tenga el anfitrión. Al terminar, o si recuerdas la flota (página Movimientos), regresa.
 
 **¿Qué hacen la falange de sensores y la puerta de salto?**
 La **falange** (luna, base lunar 1) muestra los movimientos de flota que salen de, o se dirigen a, un planeta de otro jugador de la misma galaxia, hasta (nivel² − 1) sistemas de la luna; cada escaneo cuesta 5 000 de deuterio de la luna. La **puerta de salto** (luna, base lunar 1 e Hiperespacio 7) traslada al instante naves de una de tus lunas a otra luna con puerta (sin recursos ni satélites solares); después ambas puertas se recargan 1 h (dividida por la velocidad del servidor). Ambas están en la página **Luna**.
@@ -195,7 +195,7 @@ Misión *Colonización* con un colonizador hacia una **posición libre**: se fun
 ## 6. Flotas y misiones
 
 **¿Qué misiones existen?**
-**Transporte** (entrega la carga y la flota regresa), **Despliegue** (instala flota y carga en *otro planeta suyo*, sin regreso), **Ataque**, **Espionaje**, **Colonización**, **Reciclaje** (solo recicladores, hacia un campo de escombros). La **Expedición** tiene su propio apartado más abajo; ataque en grupo, mantener posición y destruir son rechazados por el juego sin descontar nada.
+**Transporte** (entrega la carga y la flota regresa), **Despliegue** (instala flota y carga en *otro planeta suyo*, sin regreso), **Ataque**, **Espionaje**, **Colonización**, **Reciclaje** (solo recicladores, hacia un campo de escombros). La **Expedición** y **Mantener posición** tienen su propio apartado; ataque en grupo y destruir son rechazados por el juego sin descontar nada.
 
 **¿Cómo funcionan las expediciones?**
 Hace falta la tecnología **Expedición** (laboratorio 3, Hiperespacio 1, Propulsor hiperespacial 5). Envía una flota (con carga si quieres) a la **posición 16** de cualquier sistema, desde la página Flota o el enlace «Expedición» de la Galaxia. Al llegar se sortea un resultado: nada (30 %), recursos encontrados (30 %, una parte de la capacidad de la flota), naves encontradas (9 %), regreso retrasado (10 %), regreso más rápido (5 %), piratas (15 %, se pierde entre el 10 % y el 30 % de cada tipo de nave) o agujero negro (1 %, se pierden flota y carga). El informe está en la página Informes. Expediciones simultáneas: raíz entera del nivel de la tecnología (nivel 4: 2).
@@ -312,6 +312,6 @@ Se basa en el **poder**; su rango aparece en la cabecera y en la vista general. 
 
 ## 11. Lo que aún no existe
 
-Oficiales, mercado, eventos, ataques en grupo, mantener posición. Los edificios y tecnologías que dependen de ello (depósito de la alianza, red de investigación) no se ofrecen. La hoja de ruta del proyecto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) sigue estas discrepancias.
+Oficiales, mercado, eventos, ataques en grupo. Las tecnologías que dependen de ello (red de investigación) no se ofrecen. La hoja de ruta del proyecto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) sigue estas discrepancias.
 
 *Esta FAQ se ha comprobado con el código (`packages/game-config`, `packages/game-engine`, API) y, para los satélites solares, con una prueba de integración automatizada (`solar-satellites.integration.spec.ts`).*

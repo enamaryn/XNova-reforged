@@ -53,7 +53,8 @@
       "colonize": "Colonisation",
       "recycle": "Recyclage",
       "deploy": "Déploiement",
-      "expedition": "Expédition"
+      "expedition": "Expédition",
+      "hold": "Maintien de position"
     },
     "summary": "Résumé de mission",
     "distance": "Distance",
@@ -66,7 +67,9 @@
     "sending": "Envoi...",
     "send": "Envoyer la flotte",
     "targetMoon": "Cibler la lune (même coordonnées)",
-    "expeditionHelp": "Envoie la flotte dans l'espace profond (position 16 du système) : elle y trouve parfois des ressources ou des vaisseaux, mais peut aussi être retardée, attaquée par des pirates ou engloutie par un trou noir. Technologie Expédition requise ; le rapport arrive à l'arrivée dans la page Rapports."
+    "expeditionHelp": "Envoie la flotte dans l'espace profond (position 16 du système) : elle y trouve parfois des ressources ou des vaisseaux, mais peut aussi être retardée, attaquée par des pirates ou engloutie par un trou noir. Technologie Expédition requise ; le rapport arrive à l'arrivée dans la page Rapports.",
+    "holdHelp": "Maintien de position chez un allié : la flotte reste en orbite de sa planète ou de sa lune (jusqu'à 32 h), la défend si elle est attaquée et rentre ensuite. Le carburant de maintien (un dixième de la consommation par heure) est payé d'avance ; le dépôt d'alliance de l'hôte peut le rembourser. Cible : un membre de votre alliance.",
+    "holdHours": "Durée du maintien (heures, 1 à 32)"
   },
   "movement": {
     "kicker": "Centre de trafic",
@@ -85,8 +88,10 @@
       "traveling": "En route",
       "returning": "Retour",
       "arrived": "Arrivé",
-      "completed": "Terminé"
-    }
+      "completed": "Terminé",
+      "holding": "En maintien"
+    },
+    "holdEndsIn": "Fin du maintien dans"
   },
   "galaxy": {
     "title": "Galaxie",
@@ -104,7 +109,8 @@
     "colonize": "Coloniser",
     "recycle": "Recycler",
     "debris": "Débris",
-    "expedition": "Expédition"
+    "expedition": "Expédition",
+    "hold": "Maintien de position"
   },
   "messages": {
     "kicker": "Communication",

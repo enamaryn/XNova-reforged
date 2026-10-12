@@ -69,8 +69,8 @@ C'est le même bâtiment (identifiant 21) : le « Hangar » des listes est le ch
 **Le terraformeur sert-il à quelque chose ?**
 Oui : chaque niveau ajoute **5 cases** à la planète et le terraformeur **n'occupe aucune case** lui-même (il exige *Technologie Énergie* 12, ce qui le réserve à la fin de partie).
 
-**Pourquoi ne vois-je pas le dépôt d'alliance ?**
-Il dépend du maintien de position, qui n'existe pas encore : il n'est ni proposé ni accepté, pour que personne n'investisse dans un bâtiment sans effet.
+**Comment fonctionnent le maintien de position et le dépôt d'alliance ?**
+La mission **Maintien de position** envoie une flotte chez un **membre de votre alliance** (planète ou lune ; boutons « Maintien de position » de la Galaxie) pour 1 à 32 heures. Le carburant de maintien (un dixième de la consommation de la flotte par heure) est payé d'avance. Pendant le maintien la flotte reste en orbite et **défend l'hôte** : en cas d'attaque elle combat avec lui (avec les technologies de l'hôte) et les pertes sont réparties au prorata des vaisseaux. Le **dépôt d'alliance** de l'hôte (bâtiment de planète) rembourse ce carburant à la flotte, dans la limite de 10 000 deutérium par niveau et par heure de maintien et du deutérium dont l'hôte dispose. À la fin, ou si vous rappelez la flotte (page Mouvements), elle rentre.
 
 **Que font la phalange de capteur et la porte de saut ?**
 La **phalange** (lune, base lunaire 1) montre les mouvements de flotte qui partent de, ou arrivent vers, une planète d'un autre joueur de la même galaxie, jusqu'à (niveau² − 1) systèmes de la lune ; chaque balayage coûte 5 000 deutérium de la lune. La **porte de saut** (lune, base lunaire 1 et Hyperespace 7) déplace instantanément des vaisseaux d'une de vos lunes à une autre lune équipée d'une porte (pas de ressources, pas de satellites solaires) ; ensuite les deux portes se rechargent 1 h (divisée par la vitesse du serveur). Les deux se trouvent sur la page **Lune**.
@@ -193,7 +193,7 @@ Mission *Colonisation* avec un vaisseau de colonisation vers une **position libr
 ## 6. Flottes et missions
 
 **Quelles missions existent ?**
-**Transport** (livre la cargaison puis la flotte rentre), **Déploiement** (installe flotte et cargaison sur *votre* autre planète, sans retour), **Attaque**, **Espionnage**, **Colonisation**, **Recyclage** (recycleurs seuls, vers un champ de débris). L'**Expédition** a sa propre rubrique ci-dessous ; attaque groupée, maintien de position et destruction sont refusés par le jeu sans rien débiter.
+**Transport** (livre la cargaison puis la flotte rentre), **Déploiement** (installe flotte et cargaison sur *votre* autre planète, sans retour), **Attaque**, **Espionnage**, **Colonisation**, **Recyclage** (recycleurs seuls, vers un champ de débris). L'**Expédition** et le **Maintien de position** ont leur propre rubrique ; attaque groupée et destruction sont refusées par le jeu sans rien débiter.
 
 **Comment fonctionnent les expéditions ?**
 Il faut la technologie **Expédition** (laboratoire 3, Hyperespace 1, Propulsion hyperespace 5). Envoyez une flotte (cargaison possible) vers la **position 16** de n'importe quel système, depuis la page Flotte ou le lien « Expédition » de la Galaxie. À l'arrivée, une issue est tirée au sort : rien (30 %), ressources trouvées (30 %, une part de la capacité de la flotte), vaisseaux trouvés (9 %), retard du retour (10 %), retour plus rapide (5 %), pirates (15 %, 10 % à 30 % de chaque type de vaisseau perdu) ou trou noir (1 %, flotte et cargaison perdues). Le rapport est dans la page Rapports. Expéditions simultanées : racine entière du niveau de la technologie (niveau 4 : 2).
@@ -310,6 +310,6 @@ Il est établi sur la **puissance** ; votre rang apparaît dans l'en-tête et la
 
 ## 11. Ce qui n'existe pas encore
 
-Officiers, marché, événements, attaques groupées, maintien de position. Les bâtiments et technologies qui en dépendent (dépôt d'alliance, réseau de recherche) ne sont pas proposés. La feuille de route du projet ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) suit ces écarts.
+Officiers, marché, événements, attaques groupées. Les technologies qui en dépendent (réseau de recherche) ne sont pas proposées. La feuille de route du projet ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) suit ces écarts.
 
 *Cette FAQ a été vérifiée contre le code (`packages/game-config`, `packages/game-engine`, API) et, pour les satellites solaires, par un test automatisé d'intégration (`solar-satellites.integration.spec.ts`).*

@@ -53,7 +53,8 @@
       "colonize": "Colonización",
       "recycle": "Reciclaje",
       "deploy": "Despliegue",
-      "expedition": "Expedición"
+      "expedition": "Expedición",
+      "hold": "Mantener posición"
     },
     "summary": "Resumen de misión",
     "distance": "Distancia",
@@ -66,7 +67,9 @@
     "sending": "Enviando...",
     "send": "Enviar la flota",
     "targetMoon": "Apuntar a la luna (mismas coordenadas)",
-    "expeditionHelp": "Envía la flota al espacio profundo (posición 16 del sistema): a veces encuentra recursos o naves, pero también puede retrasarse, ser atacada por piratas o ser engullida por un agujero negro. Requiere la tecnología Expedición; el informe llega al aterrizar en la página Informes."
+    "expeditionHelp": "Envía la flota al espacio profundo (posición 16 del sistema): a veces encuentra recursos o naves, pero también puede retrasarse, ser atacada por piratas o ser engullida por un agujero negro. Requiere la tecnología Expedición; el informe llega al aterrizar en la página Informes.",
+    "holdHelp": "Mantener posición junto a un aliado: la flota se queda en órbita de su planeta o luna (hasta 32 h), la defiende si es atacada y luego regresa. El combustible de mantenimiento (una décima parte del consumo por hora) se paga por adelantado; el depósito de la alianza del anfitrión puede reembolsarlo. Objetivo: un miembro de tu alianza.",
+    "holdHours": "Duración (horas, 1 a 32)"
   },
   "movement": {
     "kicker": "Control de tráfico",
@@ -85,8 +88,10 @@
       "traveling": "En ruta",
       "returning": "Regresando",
       "arrived": "Llegó",
-      "completed": "Completado"
-    }
+      "completed": "Completado",
+      "holding": "En mantenimiento"
+    },
+    "holdEndsIn": "El mantenimiento termina en"
   },
   "galaxy": {
     "title": "Galaxia",
@@ -104,7 +109,8 @@
     "colonize": "Colonizar",
     "recycle": "Reciclar",
     "debris": "Escombros",
-    "expedition": "Expedición"
+    "expedition": "Expedición",
+    "hold": "Mantener posición"
   },
   "messages": {
     "kicker": "Comunicacion",

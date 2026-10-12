@@ -178,7 +178,7 @@ describe('API integration - corrections des règles du jeu', () => {
   });
 
   describe('éléments non fonctionnels masqués', () => {
-    it('ni listés ni acceptés : dépôt d\'alliance (silo, base lunaire, phalange et porte existent)', async () => {
+    it('bâtiments lunaires réservés aux lunes ; le dépôt d\'alliance est proposé sur les planètes', async () => {
       const p = await player();
       await database.planet.update({ where: { id: p.planetId }, data: { metal: 10000000, crystal: 10000000, deuterium: 10000000 } });
       const list = await request(app.getHttpServer())
@@ -186,19 +186,18 @@ describe('API integration - corrections des règles du jeu', () => {
         .set(auth(p.token))
         .expect(200);
       const ids = list.body.buildings.map((b: { id: number }) => b.id);
-      for (const hidden of [34, 41, 42, 43]) expect(ids).not.toContain(hidden);
-      expect(ids).toEqual(expect.arrayContaining([1, 2, 3, 4, 12, 14, 15, 21, 22, 23, 24, 31, 33, 44]));
-      for (const hidden of [34]) {
+      for (const moonOnly of [41, 42, 43]) expect(ids).not.toContain(moonOnly);
+      expect(ids).toEqual(expect.arrayContaining([1, 2, 3, 4, 12, 14, 15, 21, 22, 23, 24, 31, 33, 34, 44]));
+      for (const moonOnly of [41, 42, 43]) {
         const res = await request(app.getHttpServer())
           .post(`/planets/${p.planetId}/build`)
           .set(auth(p.token))
-          .send({ buildingId: hidden })
+          .send({ buildingId: moonOnly })
           .expect(400);
-        expect(res.body.message).toContain('pas disponible');
+        expect(res.body.message).toMatch(/lune/);
       }
       const all = await request(app.getHttpServer()).get('/buildings').set(auth(p.token)).expect(200);
-      expect(all.body.map((b: { id: number }) => b.id)).toContain(44);
-      expect(all.body.map((b: { id: number }) => b.id)).not.toContain(34);
+      expect(all.body.map((b: { id: number }) => b.id)).toEqual(expect.arrayContaining([34, 44]));
     });
 
     it('ni listée ni acceptée : réseau de recherche intergalactique (l\'expédition existe)', async () => {

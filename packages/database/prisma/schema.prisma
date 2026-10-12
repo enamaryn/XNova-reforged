@@ -306,6 +306,10 @@ model Fleet {
   fromMoon        Boolean  @default(false)
   toMoon          Boolean  @default(false)
 
+  // Maintien de position chez un allie : duree choisie (heures) et fin du maintien
+  holdHours       Int?
+  holdUntil       DateTime?
+
   // Nom de la colonie a creer (mission de colonisation)
   colonyName      String?
 

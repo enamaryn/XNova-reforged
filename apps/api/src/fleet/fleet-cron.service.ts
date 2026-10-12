@@ -1,6 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { MissionType, SHIPS } from '@xnova/game-config';
+import { MissionType, SHIPS, depotSupply, holdFuelPerHour, holdSeconds } from '@xnova/game-config';
+import { lockPlanet } from '../common/atomic';
+import { ServerConfigService } from '../server-config/server-config.service';
 import { ALREADY_PROCESSED, CombatService } from '../combat/combat.service';
 import { DatabaseService } from '../database/database.service';
 import { GameEventsGateway } from '../game-events/game-events.gateway';
@@ -20,6 +22,7 @@ export class FleetCronService {
     private readonly spyService: SpyService,
     private readonly colonizationService: ColonizationService,
     private readonly expeditionService: ExpeditionService,
+    private readonly serverConfig: ServerConfigService,
   ) {}
 
   /**
@@ -30,6 +33,7 @@ export class FleetCronService {
   async handleFleetStatus() {
     try {
       await this.processArrivals();
+      await this.processHolds();
       await this.processReturns();
     } catch (error) {
       this.logger.error('Error in fleet cron job:', error);
@@ -55,6 +59,8 @@ export class FleetCronService {
         processed = await this.spyService.resolveSpyMission(fleet);
       } else if (fleet.mission === MissionType.COLONIZE) {
         processed = await this.colonizationService.resolveColonizeMission(fleet);
+      } else if (fleet.mission === MissionType.HOLD_POSITION) {
+        processed = await this.resolveHold(fleet);
       } else if (fleet.mission === MissionType.EXPEDITION) {
         processed = await this.expeditionService.resolveExpedition(fleet);
       } else if (fleet.mission === MissionType.RECYCLE) {
@@ -207,6 +213,117 @@ export class FleetCronService {
       }
       return true;
     });
+  }
+
+  /**
+   * Arrivée d'un maintien de position : si l'hôte est toujours un allié, le dépôt d'alliance de sa planète
+   * prend en charge le carburant de maintien (dans la limite de son niveau et de son deutérium, remboursé en
+   * cargaison de retour), puis la flotte reste en orbite jusqu'à la fin de la durée choisie. Sinon elle rentre.
+   */
+  private async resolveHold(fleet: {
+    id: string;
+    userId: string;
+    ships: unknown;
+    cargo: unknown;
+    holdHours: number | null;
+    toGalaxy: number;
+    toSystem: number;
+    toPosition: number;
+    toMoon: boolean;
+  }): Promise<boolean> {
+    const { fleetSpeed } = await this.serverConfig.getConfig();
+    return this.database.$transaction(async (tx) => {
+      const claimed = await tx.fleet.updateMany({
+        where: { id: fleet.id, status: 'traveling' },
+        data: { status: 'returning' },
+      });
+      if (claimed.count !== 1) return false;
+
+      const host = await tx.planet.findFirst({
+        where: {
+          galaxy: fleet.toGalaxy,
+          system: fleet.toSystem,
+          position: fleet.toPosition,
+          isMoon: fleet.toMoon,
+        },
+        select: { id: true, userId: true },
+      });
+      const [mine, theirs] = host
+        ? await Promise.all([
+            tx.allianceMember.findUnique({ where: { userId: fleet.userId }, select: { allianceId: true } }),
+            tx.allianceMember.findUnique({ where: { userId: host.userId }, select: { allianceId: true } }),
+          ])
+        : [null, null];
+      const hours = fleet.holdHours ?? 0;
+      if (!host || host.userId === fleet.userId || !mine || !theirs || mine.allianceId !== theirs.allianceId || hours < 1) {
+        // Hôte disparu ou plus allié : la flotte rentre avec le retour déjà prévu
+        return true;
+      }
+
+      // Ravitaillement : le dépôt de l'hôte rembourse le carburant de maintien déjà payé par la flotte
+      let supply = 0;
+      const depotPlanet = await tx.planet.findFirst({
+        where: { galaxy: fleet.toGalaxy, system: fleet.toSystem, position: fleet.toPosition, isMoon: false, userId: host.userId },
+        select: { id: true, allianceDepot: true },
+      });
+      if (depotPlanet && depotPlanet.allianceDepot > 0) {
+        await lockPlanet(tx, depotPlanet.id);
+        const current = await tx.planet.findUniqueOrThrow({
+          where: { id: depotPlanet.id },
+          select: { deuterium: true, allianceDepot: true },
+        });
+        const prepaid = holdFuelPerHour(
+          Object.fromEntries(Object.entries(fleet.ships as Record<string, number>).map(([k, v]) => [Number(k), Number(v)])),
+        ) * hours;
+        supply = depotSupply({
+          prepaid,
+          hostDeuterium: current.deuterium,
+          depotLevel: current.allianceDepot,
+          hours,
+        });
+        if (supply > 0) {
+          const debited = await tx.planet.updateMany({
+            where: { id: depotPlanet.id, deuterium: { gte: supply } },
+            data: { deuterium: { decrement: supply } },
+          });
+          if (debited.count !== 1) supply = 0;
+        }
+      }
+
+      const cargo = (fleet.cargo ?? {}) as Record<string, number>;
+      await tx.fleet.update({
+        where: { id: fleet.id },
+        data: {
+          status: 'holding',
+          holdUntil: new Date(Date.now() + holdSeconds(hours, fleetSpeed) * 1000),
+          ...(supply > 0
+            ? { cargo: { ...cargo, deuterium: Number(cargo.deuterium || 0) + supply } }
+            : {}),
+        },
+      });
+      return true;
+    });
+  }
+
+  /** Fin des maintiens de position : la flotte rentre sur la durée de son trajet aller. */
+  async processHolds() {
+    const due = await this.database.fleet.findMany({
+      where: { status: 'holding', holdUntil: { lte: new Date() } },
+    });
+    for (const fleet of due) {
+      const flightSeconds = Math.max(
+        1,
+        Math.floor((fleet.arrivalTime.getTime() - fleet.startTime.getTime()) / 1000),
+      );
+      await this.database.fleet.updateMany({
+        where: { id: fleet.id, status: 'holding' },
+        data: {
+          status: 'returning',
+          returnTime: new Date(Date.now() + flightSeconds * 1000),
+          holdUntil: null,
+        },
+      });
+    }
   }
 
   private async processReturns() {

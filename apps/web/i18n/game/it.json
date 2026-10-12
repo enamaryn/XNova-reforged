@@ -53,7 +53,8 @@
       "colonize": "Colonizzazione",
       "recycle": "Riciclaggio",
       "deploy": "Schieramento",
-      "expedition": "Spedizione"
+      "expedition": "Spedizione",
+      "hold": "Mantenimento della posizione"
     },
     "summary": "Riepilogo della missione",
     "distance": "Distanza",
@@ -66,7 +67,9 @@
     "sending": "Invio...",
     "send": "Invia la flotta",
     "targetMoon": "Mira alla luna (stesse coordinate)",
-    "expeditionHelp": "Invia la flotta nello spazio profondo (posizione 16 del sistema): a volte trova risorse o navi, ma può anche essere ritardata, attaccata dai pirati o inghiottita da un buco nero. Richiede la tecnologia Spedizione; il rapporto arriva all'atterraggio nella pagina Rapporti."
+    "expeditionHelp": "Invia la flotta nello spazio profondo (posizione 16 del sistema): a volte trova risorse o navi, ma può anche essere ritardata, attaccata dai pirati o inghiottita da un buco nero. Richiede la tecnologia Spedizione; il rapporto arriva all'atterraggio nella pagina Rapporti.",
+    "holdHelp": "Mantenimento della posizione presso un alleato: la flotta resta in orbita attorno al suo pianeta o alla sua luna (fino a 32 h), lo difende se attaccato e poi rientra. Il carburante di mantenimento (un decimo del consumo all'ora) è pagato in anticipo; il deposito dell'alleanza dell'ospite può rimborsarlo. Bersaglio: un membro della tua alleanza.",
+    "holdHours": "Durata (ore, da 1 a 32)"
   },
   "movement": {
     "kicker": "Centro traffico",
@@ -85,8 +88,10 @@
       "traveling": "In viaggio",
       "returning": "Ritorno",
       "arrived": "Arrivata",
-      "completed": "Terminata"
-    }
+      "completed": "Terminata",
+      "holding": "In mantenimento"
+    },
+    "holdEndsIn": "Il mantenimento termina tra"
   },
   "galaxy": {
     "title": "Galassia",
@@ -104,7 +109,8 @@
     "colonize": "Colonizzare",
     "recycle": "Ricicla",
     "debris": "Detriti",
-    "expedition": "Spedizione"
+    "expedition": "Spedizione",
+    "hold": "Mantenimento"
   },
   "messages": {
     "kicker": "Comunicazione",
