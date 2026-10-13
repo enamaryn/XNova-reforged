@@ -406,7 +406,8 @@
       "testSending": "Invio...",
       "testSend": "Invia il test"
     },
-    "tabSupervision": "Supervisione"
+    "tabSupervision": "Supervisione",
+    "tabEvents": "Eventi"
   },
   "common": {
     "language": "Lingua",
@@ -1367,5 +1368,68 @@
     "tradesTitle": "Ultime vendite",
     "tradeSold": "Venduti {amount} {give} → {received} {want} ricevuti (al netto della tassa)",
     "tradeBought": "Acquistati {amount} {give} per {paid} {want}"
+  },
+  "worldEvents": {
+    "banner": {
+      "title": "Evento in corso",
+      "until": "fino al {date}",
+      "production": "Produzione +{percent} %",
+      "marketTax": "Tassa del mercato −{percent} %"
+    },
+    "names": {
+      "spring_festival": "Festa di primavera",
+      "summer_solstice": "Solstizio d'estate",
+      "harvest_moon": "Luna del raccolto",
+      "dark_nebula": "Nebulosa oscura",
+      "winter_festival": "Festa d'inverno"
+    },
+    "admin": {
+      "title": "Eventi del mondo",
+      "intro": "Un evento dà un bonus temporaneo a tutti i giocatori. Nulla parte da solo, a meno che tu non spunti «Automatico» su un modello: viene allora lanciato all'inizio del suo periodo, una volta all'anno.",
+      "loading": "Caricamento degli eventi…",
+      "loadError": "Impossibile caricare gli eventi.",
+      "remindersTitle": "Promemoria",
+      "remindersNone": "Nessun evento da lanciare per ora.",
+      "remindersCount": "{count} evento/i da lanciare o programmare",
+      "calendarTitle": "Calendario dei modelli",
+      "phase": {
+        "active": "Periodo in corso",
+        "reminder": "A breve",
+        "later": "Più avanti"
+      },
+      "window": "Dal {start} al {end}",
+      "effectProduction": "Produzione +{percent} %",
+      "effectTax": "Tassa del mercato −{percent} %",
+      "auto": "Automatico",
+      "autoHint": "Non spuntato: ricevi solo un promemoria. Spuntato: l'evento parte da solo all'inizio del suo periodo.",
+      "launch": "Lancia ora",
+      "launchedThisYear": "Già lanciato per questo periodo",
+      "days": "Durata (giorni)",
+      "launching": "Lancio…",
+      "activeTitle": "Eventi in corso",
+      "activeNone": "Nessun evento in corso.",
+      "endNow": "Interrompi",
+      "ending": "Interruzione…",
+      "confirmEnd": "Interrompere questo evento ora? Il bonus termina subito.",
+      "customTitle": "Evento personalizzato",
+      "customName": "Nome",
+      "customDays": "Durata (giorni)",
+      "customProduction": "Bonus di produzione (%)",
+      "customTax": "Riduzione della tassa del mercato (%)",
+      "customLaunch": "Lancia l'evento",
+      "customHint": "Bonus di produzione: al massimo 100 %. Riduzione della tassa: al massimo 100 % (100 % = nessuna tassa).",
+      "historyTitle": "Cronologia",
+      "historyNone": "Nessun evento passato.",
+      "status": {
+        "ACTIVE": "In corso",
+        "ENDED": "Terminato",
+        "CANCELLED": "Interrotto"
+      },
+      "by": {
+        "auto": "lanciato automaticamente",
+        "manual": "lanciato da un amministratore"
+      },
+      "ends": "termina il {date}"
+    }
   }
 }

@@ -4,7 +4,7 @@ import {
   MARKET_MAX_ACTIVE_OFFERS,
   MARKET_OFFER_HOURS,
   MARKET_RATE_FACTOR,
-  MARKET_TAX_RATE,
+  effectiveTaxRate,
   isMarketResource,
   isRateAllowed,
   normalizeRate,
@@ -15,6 +15,7 @@ import {
 } from '@xnova/game-config';
 import { debitResources, lockPlanet, lockUser } from '../common/atomic';
 import { DatabaseService } from '../database/database.service';
+import { EventModifiersService } from '../world-events/event-modifiers.service';
 import { BuyOfferDto, CreateOfferDto } from './dto/market.dto';
 
 type Tx = Prisma.TransactionClient;
@@ -22,12 +23,16 @@ type Offer = Prisma.MarketOfferGetPayload<object>;
 
 @Injectable()
 export class MarketService {
-  constructor(private readonly database: DatabaseService) {}
+  constructor(
+    private readonly database: DatabaseService,
+    private readonly eventModifiers: EventModifiersService,
+  ) {}
 
   /** Constantes affichées par la page (taxe, durée, limites, bornes de taux par paire). */
-  private rules() {
+  private async rules() {
+    const { marketTaxReduction } = await this.eventModifiers.effects();
     return {
-      taxRate: MARKET_TAX_RATE,
+      taxRate: effectiveTaxRate(marketTaxReduction),
       offerHours: MARKET_OFFER_HOURS,
       maxActiveOffers: MARKET_MAX_ACTIVE_OFFERS,
       rateFactor: MARKET_RATE_FACTOR,
@@ -67,7 +72,7 @@ export class MarketService {
       take: Math.min(100, Math.max(1, limit)),
       include: { seller: { select: { username: true } } },
     });
-    return { rules: this.rules(), offers: offers.map((offer) => this.toView(offer, userId)) };
+    return { rules: await this.rules(), offers: offers.map((offer) => this.toView(offer, userId)) };
   }
 
   /** Mes offres actives et mes dernières ventes (en tant que vendeur ou acheteur). */
@@ -85,7 +90,7 @@ export class MarketService {
       }),
     ]);
     return {
-      rules: this.rules(),
+      rules: await this.rules(),
       offers: offers.map((offer) => this.toView(offer, userId)),
       trades: trades.map((trade) => ({
         id: trade.id,
@@ -198,7 +203,7 @@ export class MarketService {
       const give = offer.giveResource as MarketResource;
       const want = offer.wantResource as MarketResource;
       const payment = paymentFor(dto.amount, offer.rate);
-      const tax = taxOf(payment);
+      const tax = taxOf(payment, (await this.eventModifiers.effects()).marketTaxReduction);
 
       try {
         await debitResources(tx, dto.planetId, this.cost(want, payment));

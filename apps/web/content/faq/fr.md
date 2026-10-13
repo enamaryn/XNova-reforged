@@ -300,6 +300,10 @@ Jusqu'à **3 personnages** recrutés (250 000 deutérium, page Commandants) et a
 **Comment fonctionne le marché ?**
 Page **Marché** : vous proposez une quantité d'une ressource contre une autre (« 1 000 deutérium contre du métal, au taux 3 »). Votre ressource est mise **en séquestre** (retirée de la planète choisie) jusqu'à la vente, au retrait ou à l'**expiration** de l'offre (24 h, le séquestre vous est alors rendu). Un acheteur peut en prendre tout ou une partie (achat minimal que vous fixez) ; il paie dans la ressource demandée et reçoit l'autre **immédiatement** ; vous recevez le paiement sur la planète d'origine de l'offre, **moins 5 % de taxe détruite**. Le taux doit rester entre la **moitié et le double** du taux de référence (valeurs de référence : métal 1, cristal 1,5, deutérium 3). **10 offres actives** au plus par joueur. Vous ne pouvez pas acheter votre propre offre. L'historique donne le dernier taux et le taux moyen récent de chaque paire.
 
+
+**Que sont les événements du monde ?**
+Des périodes de bonus temporaires pour **tous** les joueurs, lancées par un administrateur depuis la console (onglet *Événements*). Une bannière en haut des pages du jeu indique l'événement en cours, sa fin et ses effets : **production +X %** (mines et revenu de base, sur toutes les planètes) et/ou **taxe du marché réduite**. Plusieurs événements s'additionnent, dans la limite de **+100 % de production**. Le temps écoulé avant le début ou après la fin d'un événement n'est jamais recalculé avec le bonus : la production de toutes les planètes est réglée avant chaque changement. Rien ne démarre seul, sauf si l'administrateur coche **« Automatique »** sur un modèle saisonnier (fête du printemps, solstice d'été, lune des moissons, nébuleuse sombre, fête de l'hiver) : il est alors lancé au début de sa période, une fois par an. Les boss, invasions et saisons compétitives n'existent pas encore.
+
 ---
 
 ## 10. « Pourquoi je ne peux pas… ? »

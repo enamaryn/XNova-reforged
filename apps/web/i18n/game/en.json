@@ -406,7 +406,8 @@
       "testSending": "Sending...",
       "testSend": "Send the test"
     },
-    "tabSupervision": "Monitoring"
+    "tabSupervision": "Monitoring",
+    "tabEvents": "Events"
   },
   "common": {
     "language": "Language",
@@ -1367,5 +1368,68 @@
     "tradesTitle": "Latest sales",
     "tradeSold": "Sold {amount} {give} → {received} {want} received (after tax)",
     "tradeBought": "Bought {amount} {give} for {paid} {want}"
+  },
+  "worldEvents": {
+    "banner": {
+      "title": "Event in progress",
+      "until": "until {date}",
+      "production": "Production +{percent}%",
+      "marketTax": "Market tax −{percent}%"
+    },
+    "names": {
+      "spring_festival": "Spring Festival",
+      "summer_solstice": "Summer Solstice",
+      "harvest_moon": "Harvest Moon",
+      "dark_nebula": "Dark Nebula",
+      "winter_festival": "Winter Festival"
+    },
+    "admin": {
+      "title": "World events",
+      "intro": "An event gives a temporary bonus to every player. Nothing starts by itself unless you tick “Automatic” on a template: it is then launched when its period begins, once a year.",
+      "loading": "Loading events…",
+      "loadError": "Unable to load events.",
+      "remindersTitle": "Reminders",
+      "remindersNone": "No event to launch right now.",
+      "remindersCount": "{count} event(s) to launch or schedule",
+      "calendarTitle": "Template calendar",
+      "phase": {
+        "active": "Period under way",
+        "reminder": "Soon",
+        "later": "Later"
+      },
+      "window": "From {start} to {end}",
+      "effectProduction": "Production +{percent}%",
+      "effectTax": "Market tax −{percent}%",
+      "auto": "Automatic",
+      "autoHint": "Unticked: you only get a reminder. Ticked: the event starts by itself when its period begins.",
+      "launch": "Launch now",
+      "launchedThisYear": "Already launched for this period",
+      "days": "Duration (days)",
+      "launching": "Launching…",
+      "activeTitle": "Events in progress",
+      "activeNone": "No event in progress.",
+      "endNow": "Stop",
+      "ending": "Stopping…",
+      "confirmEnd": "Stop this event now? The bonus ends immediately.",
+      "customTitle": "Custom event",
+      "customName": "Name",
+      "customDays": "Duration (days)",
+      "customProduction": "Production bonus (%)",
+      "customTax": "Market tax reduction (%)",
+      "customLaunch": "Launch the event",
+      "customHint": "Production bonus: 100% at most. Tax reduction: 100% at most (100% = no tax).",
+      "historyTitle": "History",
+      "historyNone": "No past event.",
+      "status": {
+        "ACTIVE": "In progress",
+        "ENDED": "Ended",
+        "CANCELLED": "Stopped"
+      },
+      "by": {
+        "auto": "launched automatically",
+        "manual": "launched by an administrator"
+      },
+      "ends": "ends {date}"
+    }
   }
 }
