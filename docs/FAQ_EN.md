@@ -299,6 +299,9 @@ Five characters **hired once** (500,000 deuterium, taken from the planet you cho
 **What are fleet commanders?**
 Up to **3 characters** recruited (250,000 deuterium, Commanders page) and assigned to **one fleet when sending it** (the "Commander" list on the Fleet page). Until the fleet is finished, the commander is on a mission. It earns **experience in every attack combat** (100 + 1 per 1,000 metal and crystal destroyed on the opponent's side); levels need `1000 × 1.5^(level − 1)` XP each (maximum level 20) and every level gives **1 skill point** to place in *Attack* (damage), *Defense* (shield and hull), *Speed* or *Cargo*: +1 % per skill level, 10 levels at most. If the **whole fleet is destroyed**, the commander dies with a 10 % chance. Bonuses apply to the fleets it accompanies (speed and capacity at sending, attack combat); they do not apply to a fleet holding position to defend an ally.
 
+**How does the market work?**
+**Market** page: you offer a quantity of one resource for another ("1,000 deuterium for metal, at rate 3"). Your resource is put **in escrow** (taken from the chosen planet) until it sells, you withdraw it or the offer **expires** (24 h, the escrow is then returned to you). A buyer can take all or part of it (a minimum purchase you set); they pay in the requested resource and receive the other **immediately**; you receive the payment on the offer's original planet, **minus a 5 % tax that is destroyed**. The rate must stay between **half and double** the reference rate (reference values: metal 1, crystal 1.5, deuterium 3). At most **10 active offers** per player. You cannot buy your own offer. The history shows the last rate and the recent average rate of each pair.
+
 ---
 
 ## 10. "Why can't I…?"
@@ -321,6 +324,6 @@ Up to **3 characters** recruited (250,000 deuterium, Commanders page) and assign
 
 ## 11. What does not exist yet
 
-Market, events. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
+Events. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
 
 *This FAQ was checked against the code (`packages/game-config`, `packages/game-engine`, API) and, for solar satellites, by an automated integration test (`solar-satellites.integration.spec.ts`).*

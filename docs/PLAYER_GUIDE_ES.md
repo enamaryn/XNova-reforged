@@ -81,4 +81,4 @@ Una flota en vuelo puede **recuperarse** desde *Movimientos*. Los resultados lle
 
 ## 11. Límites conocidos de la alfa
 
-Sin mercado ni eventos; los nombres y descripciones del juego y algunos mensajes de error siguen en francés sea cual sea el idioma elegido; los correos se envían en francés.
+Sin eventos; los nombres y descripciones del juego y algunos mensajes de error siguen en francés sea cual sea el idioma elegido; los correos se envían en francés.

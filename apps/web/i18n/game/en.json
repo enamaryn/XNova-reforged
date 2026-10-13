@@ -26,7 +26,8 @@
     "logout": "Log out",
     "moon": "Moon",
     "officers": "Officers",
-    "commanders": "Commanders"
+    "commanders": "Commanders",
+    "market": "Market"
   },
   "sidebar": {
     "principal": "Main",
@@ -1331,5 +1332,40 @@
     "select": "Commander",
     "none": "No commander",
     "selectHint": "A free commander strengthens the fleet (attack, defense, speed, cargo)."
+  },
+  "market": {
+    "kicker": "Economy",
+    "title": "Market",
+    "subtitle": "Trade resources with other players. The seller escrows the resource; every sale is taxed {tax} % (destroyed); an offer expires after {hours} h (escrow returned); at most {max} active offers.",
+    "planet": "Payments and purchases use the selected planet: {planet}.",
+    "createTitle": "Post an offer",
+    "give": "I offer",
+    "want": "I want",
+    "amount": "Amount",
+    "rate": "Rate (units wanted per unit offered)",
+    "minAmount": "Minimum purchase",
+    "rateHint": "Allowed rate: {min} to {max} {want} per {give}.",
+    "samePair": "Pick two different resources.",
+    "values": "Reference values: {values}.",
+    "publish": "Post",
+    "offersTitle": "Open offers",
+    "all": "All",
+    "empty": "No offer for this filter.",
+    "noHistory": "No sale recorded for this pair.",
+    "history": "Last rate: {last} · recent average rate: {average}",
+    "offerLine": "{remaining} {give} for {want}",
+    "rateLine": "Rate {rate} {want} per {give}",
+    "yours": "Your offer",
+    "seller": "Seller: {name}",
+    "expires": "expires {time}",
+    "quantity": "Quantity",
+    "buy": "Buy ({cost} {want})",
+    "cancel": "Withdraw",
+    "bought": "Purchase done: {received} {give} received for {paid} {want}.",
+    "mineTitle": "My offers",
+    "mineEmpty": "No active offer.",
+    "tradesTitle": "Latest sales",
+    "tradeSold": "Sold {amount} {give} → {received} {want} received (after tax)",
+    "tradeBought": "Bought {amount} {give} for {paid} {want}"
   }
 }

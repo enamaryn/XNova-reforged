@@ -26,7 +26,8 @@
     "logout": "Disconnetti",
     "moon": "Luna",
     "officers": "Ufficiali",
-    "commanders": "Comandanti"
+    "commanders": "Comandanti",
+    "market": "Mercato"
   },
   "sidebar": {
     "principal": "Principale",
@@ -1331,5 +1332,40 @@
     "select": "Comandante",
     "none": "Nessun comandante",
     "selectHint": "Un comandante libero rafforza la flotta (attacco, difesa, velocità, carico)."
+  },
+  "market": {
+    "kicker": "Economia",
+    "title": "Mercato",
+    "subtitle": "Scambia risorse con altri giocatori. Il venditore mette la risorsa in deposito; ogni vendita è tassata del {tax} % (distrutto); un'offerta scade dopo {hours} h (deposito restituito); al massimo {max} offerte attive.",
+    "planet": "Pagamenti e acquisti usano il pianeta selezionato: {planet}.",
+    "createTitle": "Pubblica un'offerta",
+    "give": "Offro",
+    "want": "Chiedo",
+    "amount": "Quantità",
+    "rate": "Tasso (unità richieste per unità offerta)",
+    "minAmount": "Acquisto minimo",
+    "rateHint": "Tasso consentito: da {min} a {max} {want} per {give}.",
+    "samePair": "Scegli due risorse diverse.",
+    "values": "Valori di riferimento: {values}.",
+    "publish": "Pubblica",
+    "offersTitle": "Offerte in corso",
+    "all": "Tutte",
+    "empty": "Nessuna offerta per questo filtro.",
+    "noHistory": "Nessuna vendita registrata per questa coppia.",
+    "history": "Ultimo tasso: {last} · tasso medio recente: {average}",
+    "offerLine": "{remaining} {give} contro {want}",
+    "rateLine": "Tasso {rate} {want} per {give}",
+    "yours": "La tua offerta",
+    "seller": "Venditore: {name}",
+    "expires": "scade il {time}",
+    "quantity": "Quantità",
+    "buy": "Acquista ({cost} {want})",
+    "cancel": "Ritira",
+    "bought": "Acquisto riuscito: {received} {give} ricevuti per {paid} {want}.",
+    "mineTitle": "Le mie offerte",
+    "mineEmpty": "Nessuna offerta attiva.",
+    "tradesTitle": "Ultime vendite",
+    "tradeSold": "Venduti {amount} {give} → {received} {want} ricevuti (al netto della tassa)",
+    "tradeBought": "Acquistati {amount} {give} per {paid} {want}"
   }
 }

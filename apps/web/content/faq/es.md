@@ -299,6 +299,9 @@ Cinco personajes **contratados una sola vez** (500 000 deuterio, descontados del
 **¿Qué son los comandantes de flota?**
 Hasta **3 personajes** reclutados (250 000 deuterio, página Comandantes) y asignados a **una flota al enviarla** (lista «Comandante» de la página Flota). Mientras la flota no termina, el comandante está en misión. Gana **experiencia en cada combate de ataque** (100 + 1 por cada 1 000 de metal y cristal destruidos en el bando contrario); cada nivel requiere `1000 × 1,5^(nivel − 1)` XP (nivel máximo 20) y cada nivel da **1 punto de habilidad** para *Ataque* (daño), *Defensa* (escudo y casco), *Velocidad* o *Carga*: +1 % por nivel de habilidad, 10 niveles como máximo. Si **toda la flota es destruida**, el comandante muere con un 10 % de probabilidad. Las bonificaciones valen para las flotas que acompaña (velocidad y capacidad al enviar, combate de ataque); no se aplican a una flota que mantiene posición defendiendo a un aliado.
 
+**¿Cómo funciona el mercado?**
+Página **Mercado**: ofreces una cantidad de un recurso a cambio de otro («1 000 deuterio por metal, a tasa 3»). Tu recurso se deposita **en custodia** (se retira del planeta elegido) hasta que se venda, lo retires o la oferta **caduque** (24 h; la custodia se te devuelve). Un comprador puede tomar todo o parte (compra mínima que fijas); paga en el recurso pedido y recibe el otro **al instante**; tú recibes el pago en el planeta de origen de la oferta, **menos un 5 % de impuesto que se destruye**. La tasa debe estar entre la **mitad y el doble** de la de referencia (valores de referencia: metal 1, cristal 1,5, deuterio 3). Como máximo **10 ofertas activas** por jugador. No puedes comprar tu propia oferta. El historial da la última tasa y la tasa media reciente de cada par.
+
 ---
 
 ## 10. «¿Por qué no puedo…?»
@@ -321,6 +324,6 @@ Hasta **3 personajes** reclutados (250 000 deuterio, página Comandantes) y asig
 
 ## 11. Lo que aún no existe
 
-Mercado, eventos. La hoja de ruta del proyecto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) sigue estas discrepancias.
+Eventos. La hoja de ruta del proyecto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) sigue estas discrepancias.
 
 *Esta FAQ se ha comprobado con el código (`packages/game-config`, `packages/game-engine`, API) y, para los satélites solares, con una prueba de integración automatizada (`solar-satellites.integration.spec.ts`).*

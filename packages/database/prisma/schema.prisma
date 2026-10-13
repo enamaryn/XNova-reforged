@@ -57,6 +57,7 @@ model User {
   officers               Officer[]
   fleetCommanders        FleetCommander[]
   attackGroups           AttackGroup[]
+  marketOffers           MarketOffer[]
   technologies  Technology[]
   messages      Message[]      @relation("ReceivedMessages")
   sentMessages  Message[]      @relation("SentMessages")
@@ -744,4 +745,53 @@ model AttackGroup {
   createdAt   DateTime @default(now())
 
   @@index([allianceId, arrivalTime])
+}
+
+// ============================================
+// MARCHE
+// ============================================
+
+model MarketOffer {
+  id           String   @id @default(uuid())
+  sellerId     String
+  seller       User     @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  // Planete d'origine : recoit le paiement ; si elle disparait, une autre planete du vendeur est utilisee
+  planetId     String?
+
+  // Le vendeur met `amount` de giveResource en sequestre et demande wantResource
+  giveResource String
+  wantResource String
+  amount       Float
+  // Quantite encore a vendre (le sequestre restant)
+  remaining    Float
+  minAmount    Float    @default(1)
+  // Unites de wantResource demandees par unite de giveResource (4 decimales)
+  rate         Float
+
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  expiresAt    DateTime
+
+  @@index([active, giveResource, wantResource, rate])
+  @@index([sellerId, active])
+  @@index([active, expiresAt])
+}
+
+model MarketTrade {
+  id           String   @id @default(uuid())
+  offerId      String
+  buyerId      String
+  sellerId     String
+  giveResource String
+  wantResource String
+  amount       Float
+  rate         Float
+  // Paiement verse par l'acheteur ; taxe detruite ; le vendeur recoit payment - tax
+  payment      Float
+  tax          Float
+  createdAt    DateTime @default(now())
+
+  @@index([giveResource, wantResource, createdAt])
+  @@index([buyerId, createdAt])
+  @@index([sellerId, createdAt])
 }

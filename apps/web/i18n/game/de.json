@@ -26,7 +26,8 @@
     "logout": "Abmelden",
     "moon": "Mond",
     "officers": "Offiziere",
-    "commanders": "Kommandanten"
+    "commanders": "Kommandanten",
+    "market": "Markt"
   },
   "sidebar": {
     "principal": "Hauptmenü",
@@ -1331,5 +1332,40 @@
     "select": "Kommandant",
     "none": "Kein Kommandant",
     "selectHint": "Ein freier Kommandant stärkt die Flotte (Angriff, Verteidigung, Geschwindigkeit, Fracht)."
+  },
+  "market": {
+    "kicker": "Wirtschaft",
+    "title": "Markt",
+    "subtitle": "Tausche Ressourcen mit anderen Spielern. Der Verkäufer hinterlegt die Ressource; jeder Verkauf wird mit {tax} % besteuert (vernichtet); ein Angebot läuft nach {hours} h ab (Hinterlegung wird zurückgegeben); höchstens {max} aktive Angebote.",
+    "planet": "Zahlungen und Käufe nutzen den gewählten Planeten: {planet}.",
+    "createTitle": "Angebot einstellen",
+    "give": "Ich biete",
+    "want": "Ich verlange",
+    "amount": "Menge",
+    "rate": "Kurs (verlangte Einheiten pro angebotener Einheit)",
+    "minAmount": "Mindestkauf",
+    "rateHint": "Erlaubter Kurs: {min} bis {max} {want} pro {give}.",
+    "samePair": "Wähle zwei verschiedene Ressourcen.",
+    "values": "Referenzwerte: {values}.",
+    "publish": "Einstellen",
+    "offersTitle": "Laufende Angebote",
+    "all": "Alle",
+    "empty": "Kein Angebot für diesen Filter.",
+    "noHistory": "Kein Verkauf für dieses Paar erfasst.",
+    "history": "Letzter Kurs: {last} · jüngster Durchschnittskurs: {average}",
+    "offerLine": "{remaining} {give} gegen {want}",
+    "rateLine": "Kurs {rate} {want} pro {give}",
+    "yours": "Dein Angebot",
+    "seller": "Verkäufer: {name}",
+    "expires": "läuft ab am {time}",
+    "quantity": "Menge",
+    "buy": "Kaufen ({cost} {want})",
+    "cancel": "Zurückziehen",
+    "bought": "Kauf erfolgt: {received} {give} erhalten für {paid} {want}.",
+    "mineTitle": "Meine Angebote",
+    "mineEmpty": "Kein aktives Angebot.",
+    "tradesTitle": "Letzte Verkäufe",
+    "tradeSold": "Verkauft {amount} {give} → {received} {want} erhalten (nach Steuer)",
+    "tradeBought": "Gekauft {amount} {give} für {paid} {want}"
   }
 }

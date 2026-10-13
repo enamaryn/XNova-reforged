@@ -299,6 +299,9 @@ Cinque personaggi **assunti una sola volta** (500 000 deuterio, prelevati dal pi
 **Cosa sono i comandanti di flotta?**
 Fino a **3 personaggi** reclutati (250 000 deuterio, pagina Comandanti) e assegnati a **una flotta all'invio** (elenco «Comandante» della pagina Flotta). Finché la flotta non è terminata, il comandante è in missione. Guadagna **esperienza a ogni combattimento d'attacco** (100 + 1 ogni 1 000 di metallo e cristallo distrutti sul lato avversario); ogni livello richiede `1000 × 1,5^(livello − 1)` XP (livello massimo 20) e dà **1 punto abilità** da assegnare ad *Attacco* (danni), *Difesa* (scudo e scafo), *Velocità* o *Carico*: +1 % per livello di abilità, al massimo 10 livelli. Se **l'intera flotta è distrutta**, il comandante muore con il 10 % di probabilità. I bonus valgono per le flotte che accompagna (velocità e capacità all'invio, combattimento d'attacco); non per una flotta in mantenimento che difende un alleato.
 
+**Come funziona il mercato?**
+Pagina **Mercato**: offri una quantità di una risorsa in cambio di un'altra («1 000 deuterio contro metallo, al tasso 3»). La tua risorsa viene messa **in deposito** (prelevata dal pianeta scelto) finché non è venduta, la ritiri o l'offerta **scade** (24 h; il deposito ti viene restituito). Un acquirente può prenderne tutta o una parte (acquisto minimo che fissi); paga nella risorsa richiesta e riceve l'altra **subito**; tu ricevi il pagamento sul pianeta d'origine dell'offerta, **meno il 5 % di tassa, che viene distrutto**. Il tasso deve restare tra la **metà e il doppio** di quello di riferimento (valori di riferimento: metallo 1, cristallo 1,5, deuterio 3). Al massimo **10 offerte attive** per giocatore. Non puoi comprare la tua offerta. Lo storico dà l'ultimo tasso e il tasso medio recente di ogni coppia.
+
 ---
 
 ## 10. «Perché non posso…?»
@@ -321,6 +324,6 @@ Fino a **3 personaggi** reclutati (250 000 deuterio, pagina Comandanti) e assegn
 
 ## 11. Ciò che non esiste ancora
 
-Mercato, eventi. La roadmap del progetto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tiene traccia di questi scarti.
+Eventi. La roadmap del progetto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tiene traccia di questi scarti.
 
 *Questa FAQ è stata verificata sul codice (`packages/game-config`, `packages/game-engine`, API) e, per i satelliti solari, con un test di integrazione automatizzato (`solar-satellites.integration.spec.ts`).*

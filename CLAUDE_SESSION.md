@@ -5,6 +5,17 @@
 
 ---
 
+## Session — marché (Phase 5)
+
+**Date :** 20 octobre 2026. Demande du propriétaire : « attaque le marché ». Vérification préalable : aucun code de marché n'existait (la feuille de route ne contenait qu'un schéma indicatif).
+
+- [x] `packages/game-config/src/market.ts` : valeurs de référence 1 / 1,5 / 3, bornes de taux (moitié à double), `paymentFor`, `taxOf` (5 %), constantes (24 h, 10 offres).
+- [x] Tables `MarketOffer` et `MarketTrade`, migration `20261020100000_market`.
+- [x] `MarketService` : création avec séquestre, achat total ou partiel, annulation, expiration, historique ; une transaction par opération, offre verrouillée puis planètes dans l'ordre des identifiants ; tâche planifiée `market` (chaque minute).
+- [x] API `/market`, page `/market` (création avec taux pré-rempli, filtre par paire, achat avec coût calculé, mes offres, dernières ventes), menu, textes fr/en/es/de/it, FAQ (5 langues), guides, `API_ENDPOINTS.md`.
+- [x] Tests : unitaires (7), intégration (14 dont concurrence et conservation des stocks), E2E (1).
+- Restent absents : contrats, commerce PNJ, routes commerciales, événements et quêtes.
+
 ## Session — consolidation
 
 **Date :** 18 octobre 2026. Demande du propriétaire : « option 1 en premier » (consolidation avant le marché).
@@ -13,7 +24,7 @@
 - [x] Équilibrage : `scripts/balance/extensions-prices.mjs` et section « Prix des extensions » de `docs/BALANCE.md` ; aucune modification de prix.
 - [x] Couverture : `npm run test:coverage` branché dans la CI (suites d'intégration en série avec les seuils) ; mesure locale lignes 92,7 %, instructions 91,3 %, branches 79,7 %, fonctions 90,1 %.
 - [ ] Uptime > 99 % : en attente du relevé du propriétaire en production.
-- Note de méthode : le marché (`claude/marche`) est prêt mais son PR n'est pas créé ; sa suite d'intégration complète doit être rejouée sur sa propre branche (la première exécution a été interrompue par un changement de branche pendant le test).
+- Note de méthode : le marché a été livré dans un PR séparé ([#73](https://github.com/enamaryn/XNova-reforged/pull/73)) ; sa suite d'intégration complète a été rejouée sur sa propre branche (la première exécution avait été interrompue par un changement de branche).
 
 
 ## Session — attaques groupées (Phase 7)

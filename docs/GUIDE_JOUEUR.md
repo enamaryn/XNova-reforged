@@ -81,4 +81,4 @@ Une flotte en vol peut être **rappelée** depuis *Mouvements*. Les résultats a
 
 ## 11. Limites connues de l'alpha
 
-Pas de marché ni d'événements ; les noms et descriptions du jeu et certains messages d'erreur restent en français quelle que soit la langue choisie ; les emails sont envoyés en français.
+Pas d'événements ; les noms et descriptions du jeu et certains messages d'erreur restent en français quelle que soit la langue choisie ; les emails sont envoyés en français.

@@ -145,7 +145,7 @@ Cette roadmap étend le MVP avec des fonctionnalités avancées pour créer un M
     expiresAt    DateTime
   }
   ```
-- [ ] Service MarketService
+- [x] Service MarketService — livré le 20 octobre 2026 (offres de vente/échange, achat total ou partiel, taxe 5 %, expiration ; sans enchères) ; contrats, commerce PNJ et routes commerciales restent à faire
   - Création offres vente
   - Recherche offres
   - Achat ressources
@@ -162,7 +162,7 @@ Cette roadmap étend le MVP avec des fonctionnalités avancées pour créer un M
   - Événements commerciaux
 
 #### Frontend - UI Economy
-- [ ] Page `/market`
+- [x] Page `/market` (liste filtrée, création, achat, mes offres, dernier taux ; sans graphiques)
   - Liste offres par ressource
   - Filtres (prix, quantité)
   - Graphiques prix historiques
