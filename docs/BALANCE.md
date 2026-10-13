@@ -49,6 +49,23 @@ Jalons mesurés à ×50 (API réelle, joueur sans ajout de ressources, [résulta
 
 Départ : 500 métal, 500 cristal, 0 deutérium, tous bâtiments au niveau 0 (`auth.service`). Le deutérium à zéro est le principal frein du premier cycle : laboratoire 200, Technologie Énergie 400, Réacteur à combustion 690, hangar 100.
 
+## Prix des extensions (officiers, commandants de flotte)
+
+Les prix sont des constantes (`OFFICER_COST_DEUTERIUM` = 500 000, `FLEET_COMMANDER_COST_DEUTERIUM` = 250 000 dans `packages/game-config/src/`), **indépendantes de la vitesse du serveur**, comme les coûts des bâtiments : c'est la production qui change d'échelle. Mesure à ×50 avec `node scripts/balance/extensions-prices.mjs 50` (rejouer après toute modification) :
+
+| Mine de deutérium (une planète) | Production/h à ×50 | Un officier | Un commandant |
+|---|---:|---:|---:|
+| niveau 5 | 4 026 | 5,2 j | 2,6 j |
+| niveau 10 | 12 969 | 38,6 h | 19,3 h |
+| niveau 15 | 31 329 | 16,0 h | 8,0 h |
+| niveau 20 | 67 275 | 7,4 h | 3,7 h |
+| niveau 25 | 135 434 | 3,7 h | 1,8 h |
+
+- **Lecture** : à ×50, un officier se paie vers la mine de deutérium 10 à 15, donc **après le premier cycle** (le deutérium est le frein du début) : il reste un objectif de milieu de partie, pas un achat immédiat. À ×1 il faudrait de 8 jours (mine 25) à plusieurs mois, comme le reste du jeu : le profil ×50 reste la référence (voir plus haut).
+- **Géologue** (+10 % des mines) : remboursé en 5,4 j avec trois mines niveau 10 sur une planète, 2,2 j au niveau 15, 25 h au niveau 20 ; plus vite avec plusieurs planètes. Les autres officiers n'ont pas de gain chiffrable en ressources ; leur prix identique est un choix de simplicité.
+- **Expérience des commandants** (100 XP + 1 par 1 000 de métal et cristal détruits, `1000 × 1,5^(niveau − 1)` XP par palier) : niveau 5 ≈ 8 100 XP, niveau 10 ≈ 75 000 XP (8 combats détruisant 10 M), niveau 15 ≈ 580 000 XP, niveau 20 ≈ 4,4 M XP (439 combats de ce type). Les niveaux 15 et 20 sont volontairement des objectifs de très long terme ; si l'on veut les rapprocher, baisser le facteur 1,5 de `experienceToLevel` ou relever le plafond de 20 000 XP par combat.
+- **Décision (18 octobre 2026)** : prix et rythme conservés tels quels ; aucune donnée de jeu réel ne justifie de les changer. À revoir avec les statistiques d'embauche (`Officer`, `FleetCommander`) après quelques semaines d'alpha.
+
 ## Vérifier un changement
 
 1. Modifier les valeurs dans l'administration (ou appliquer le profil).

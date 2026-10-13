@@ -8,6 +8,8 @@ pnpm-debug.log*
 
 # Testing
 coverage/
+# Le script de mesure de couverture de l'API est versionné (la règle ci-dessus visait les rapports)
+!/scripts/coverage/
 *.lcov
 .nyc_output
 
