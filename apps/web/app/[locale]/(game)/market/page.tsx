@@ -158,7 +158,7 @@ export default function MarketPage() {
         <h1 className="mt-2 text-2xl font-semibold text-white">{t("market.title")}</h1>
         <p className="text-sm text-slate-400">
           {t("market.subtitle", {
-            tax: Math.round((rules?.taxRate ?? 0.05) * 100),
+            tax: Math.round((rules?.taxRate ?? 0.05) * 1000) / 10,
             hours: rules?.offerHours ?? 24,
             max: rules?.maxActiveOffers ?? 10,
           })}

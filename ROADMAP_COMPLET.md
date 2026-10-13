@@ -653,7 +653,7 @@ Cette roadmap étend le MVP avec des fonctionnalités avancées pour créer un M
     leaderboard Json
   }
   ```
-- [ ] Événements saisonniers
+- [~] Événements saisonniers — cadre livré le 22 octobre 2026 (rappels dans la console, case « automatique », production et taxe du marché ; voir ROADMAP_MVP.md). Restent : bonus de vitesse, défense et recyclage ci-dessous
   - Été : Bonus production +50%
   - Automne : Bonus vitesse flottes +30%
   - Hiver : Bonus défense +40%

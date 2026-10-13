@@ -5,6 +5,20 @@
 
 ---
 
+## Session — événements du monde (Phase 7)
+
+**Date :** 22 octobre 2026. Demande du propriétaire : événements saisonniers, boss, invasions et saisons « proposés en rappel suivant la période dans le menu admin, pas automatiques de base », avec une case à cocher pour les rendre automatiques. Uptime confirmé par le propriétaire (capture : 99,1 % sur 7 j et 30 j, 99,17 % sur 24 h).
+
+- [x] Uptime : critère clos dans `ROADMAP_MVP.md` avec réserve (mesure depuis le 12 octobre 07:19 seulement).
+- [x] Vérification préalable : `game-events` = passerelle WebSocket ; module nouveau nommé `world-events` pour éviter toute collision.
+- [x] `packages/game-config/src/world-events.ts` (modèles, fenêtres, enjambement du nouvel an, rappel à 14 jours, cumul borné), `effectiveTaxRate`/`taxOf(payment, reduction)` dans `market.ts`.
+- [x] Tables `WorldEvent` et `WorldEventSetting`, migration `20261022100000_world_events`.
+- [x] `EventModifiersService` (bonus cumulés des événements ACTIVE, branché dans `getResourceConfig`), `WorldEventsService` (lancement, arrêt, case automatique, règlement de toutes les planètes avant chaque changement, tâche `world-events`), contrôleurs `/world-events/active` et `/admin/world-events`.
+- [x] Interface : onglet **Événements** de la console (badge de rappel, calendrier, case Automatique, lancement, formulaire personnalisé, historique), bannière joueur, textes fr/en/es/de/it, taxe du marché affichée avec décimale.
+- [x] Tests : unitaires (12), intégration (11), E2E, mobile (36 cas sur 3 projets). Docs : FAQ (5 langues), `API_ENDPOINTS.md`, `OPERATIONS.md`.
+- Décisions : un événement n'est actif que par son statut (jamais par l'horloge seule) pour que le bonus ne touche pas du temps non réglé ; effets limités à la production et à la taxe du marché dans ce premier lot (pas de création de ressources hors production : le butin de combat reste conservé).
+- Restent : boss galactiques, invasions, saisons compétitives (PR suivantes), branchement des quêtes après la fusion de la PR #74.
+
 ## Session — marché (Phase 5)
 
 **Date :** 20 octobre 2026. Demande du propriétaire : « attaque le marché ». Vérification préalable : aucun code de marché n'existait (la feuille de route ne contenait qu'un schéma indicatif).

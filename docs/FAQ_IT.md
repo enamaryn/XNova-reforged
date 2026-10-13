@@ -302,6 +302,10 @@ Fino a **3 personaggi** reclutati (250 000 deuterio, pagina Comandanti) e assegn
 **Come funziona il mercato?**
 Pagina **Mercato**: offri una quantità di una risorsa in cambio di un'altra («1 000 deuterio contro metallo, al tasso 3»). La tua risorsa viene messa **in deposito** (prelevata dal pianeta scelto) finché non è venduta, la ritiri o l'offerta **scade** (24 h; il deposito ti viene restituito). Un acquirente può prenderne tutta o una parte (acquisto minimo che fissi); paga nella risorsa richiesta e riceve l'altra **subito**; tu ricevi il pagamento sul pianeta d'origine dell'offerta, **meno il 5 % di tassa, che viene distrutto**. Il tasso deve restare tra la **metà e il doppio** di quello di riferimento (valori di riferimento: metallo 1, cristallo 1,5, deuterio 3). Al massimo **10 offerte attive** per giocatore. Non puoi comprare la tua offerta. Lo storico dà l'ultimo tasso e il tasso medio recente di ogni coppia.
 
+
+**Cosa sono gli eventi del mondo?**
+Periodi di bonus temporaneo per **tutti** i giocatori, lanciati da un amministratore dalla console (scheda *Eventi*). Un banner in cima alle pagine del gioco mostra l'evento in corso, la sua fine e i suoi effetti: **produzione +X %** (miniere e reddito di base, su tutti i pianeti) e/o **tassa del mercato ridotta**. Più eventi si sommano, fino a **+100 % di produzione**. Il tempo trascorso prima dell'inizio o dopo la fine di un evento non viene mai ricalcolato con il bonus: la produzione di tutti i pianeti viene liquidata prima di ogni cambiamento. Nulla parte da solo, a meno che l'amministratore non spunti **«Automatico»** su un modello stagionale (Festa di primavera, Solstizio d'estate, Luna del raccolto, Nebulosa oscura, Festa d'inverno): viene allora lanciato all'inizio del suo periodo, una volta all'anno. Boss, invasioni e stagioni competitive non esistono ancora.
+
 ---
 
 ## 10. «Perché non posso…?»

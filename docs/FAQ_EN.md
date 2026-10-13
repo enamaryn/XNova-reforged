@@ -302,6 +302,10 @@ Up to **3 characters** recruited (250,000 deuterium, Commanders page) and assign
 **How does the market work?**
 **Market** page: you offer a quantity of one resource for another ("1,000 deuterium for metal, at rate 3"). Your resource is put **in escrow** (taken from the chosen planet) until it sells, you withdraw it or the offer **expires** (24 h, the escrow is then returned to you). A buyer can take all or part of it (a minimum purchase you set); they pay in the requested resource and receive the other **immediately**; you receive the payment on the offer's original planet, **minus a 5 % tax that is destroyed**. The rate must stay between **half and double** the reference rate (reference values: metal 1, crystal 1.5, deuterium 3). At most **10 active offers** per player. You cannot buy your own offer. The history shows the last rate and the recent average rate of each pair.
 
+
+**What are world events?**
+Temporary bonus periods for **all** players, launched by an administrator from the console (*Events* tab). A banner at the top of the game pages shows the current event, its end and its effects: **production +X%** (mines and base income, on every planet) and/or a **reduced market tax**. Several events add up, up to **+100% production**. Time elapsed before an event starts or after it ends is never recomputed with the bonus: every planet's production is settled before each change. Nothing starts by itself unless the administrator ticks **“Automatic”** on a seasonal template (Spring Festival, Summer Solstice, Harvest Moon, Dark Nebula, Winter Festival): it is then launched when its period begins, once a year. Bosses, invasions and competitive seasons do not exist yet.
+
 ---
 
 ## 10. "Why can't I…?"

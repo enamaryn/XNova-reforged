@@ -795,3 +795,40 @@ model MarketTrade {
   @@index([buyerId, createdAt])
   @@index([sellerId, createdAt])
 }
+
+// ============================================
+// ÉVÉNEMENTS DU MONDE
+// ============================================
+
+// Période de bonus temporaire lancée par un administrateur (ou automatiquement si la case du modèle est cochée).
+// `kind` permet d'accueillir plus tard boss, invasions et saisons sur le même cadre.
+model WorldEvent {
+  id                 String    @id @default(uuid())
+  kind               String    @default("SEASONAL")
+  // Modèle du calendrier (null = événement personnalisé) et clé d'unicité « modèle:année » (une occurrence par an)
+  templateId         String?
+  occurrenceKey      String?   @unique
+  customName         String?
+  // ACTIVE tant que les compteurs de production sont réglés avec ses bonus ; ENDED ou CANCELLED ensuite
+  status             String    @default("ACTIVE")
+  startsAt           DateTime
+  endsAt             DateTime
+  productionBonus    Float     @default(0)
+  marketTaxReduction Float     @default(0)
+  // true si le cron l'a lancé (case « automatique » cochée), false si un administrateur l'a lancé
+  auto               Boolean   @default(false)
+  launchedById       String?
+  endedAt            DateTime?
+  createdAt          DateTime  @default(now())
+
+  @@index([status, endsAt])
+  @@index([createdAt])
+}
+
+// Réglage par modèle : la case « automatique » (décochée par défaut)
+model WorldEventSetting {
+  templateId  String   @id
+  auto        Boolean  @default(false)
+  updatedById String?
+  updatedAt   DateTime @updatedAt
+}
