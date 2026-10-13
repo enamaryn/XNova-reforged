@@ -34,7 +34,7 @@ export function PlanetSelector() {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex max-w-[160px] min-w-0 items-center gap-2 overflow-hidden rounded-full border border-slate-800 bg-slate-950/60 px-3 py-1.5 text-sm transition-colors hover:border-slate-600 sm:max-w-none"
+        className="flex max-w-[160px] min-w-0 items-center gap-1 overflow-hidden rounded-full border border-slate-800 bg-slate-950/60 px-2 py-1.5 text-sm transition-colors hover:border-slate-600 sm:max-w-none sm:gap-2 sm:px-3"
       >
         <span className="text-lg">{currentPlanet?.isMoon ? "🌙" : "🌍"}</span>
         <div className="text-left hidden sm:block">

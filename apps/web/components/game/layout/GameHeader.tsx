@@ -40,9 +40,9 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-slate-800/60 bg-slate-950/80 backdrop-blur-md">
-      <div className="flex h-14 min-w-0 items-center justify-between gap-2 px-4">
+      <div className="flex h-14 min-w-0 items-center justify-between gap-2 px-2 sm:px-4">
         {/* Gauche: Menu burger + Logo */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <button
             onClick={onMenuToggle}
             className="lg:hidden rounded-full border border-slate-800 p-2 text-slate-300 transition-colors hover:text-white"
@@ -76,7 +76,7 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
         {/* Centre: Ressources + accès rapide */}
         <div className="hidden md:flex items-center gap-3">
           <nav
-            className="hidden xl:flex items-center gap-2 text-xs text-slate-300"
+            className="hidden 2xl:flex items-center gap-2 text-xs text-slate-300"
             aria-label={t("nav.label")}
           >
             {[
@@ -98,13 +98,13 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
         </div>
 
         {/* Droite: Planète + Utilisateur */}
-        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+        <div className="flex min-w-0 items-center gap-1 sm:gap-3">
           <PlanetSelector />
 
           <div className="relative">
             <button
               onClick={() => setShowLangMenu(!showLangMenu)}
-              className="flex items-center gap-2 rounded-full border border-slate-800 px-3 py-1.5 text-xs text-slate-300 hover:border-slate-600 hover:text-white transition-colors"
+              className="flex items-center gap-2 rounded-full border border-slate-800 px-2 py-1.5 text-xs text-slate-300 hover:border-slate-600 hover:text-white transition-colors sm:px-3"
               aria-label={t("common.language")}
               aria-haspopup="menu"
               aria-expanded={showLangMenu}
@@ -163,7 +163,7 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
           <div className="relative">
             <button
               onClick={() => setShowUserMenu(!showUserMenu)}
-              className="flex items-center gap-2 rounded-full border border-slate-800 px-3 py-1.5 text-sm text-slate-300 hover:border-slate-600 hover:text-white transition-colors"
+              className="flex items-center gap-1 rounded-full border border-slate-800 px-2 py-1.5 text-sm text-slate-300 hover:border-slate-600 hover:text-white transition-colors sm:gap-2 sm:px-3"
               aria-haspopup="menu"
               aria-expanded={showUserMenu}
               aria-controls={userMenuId}
@@ -178,7 +178,7 @@ export function GameHeader({ onMenuToggle }: GameHeaderProps) {
                 {user?.username || t("nav.player")}
               </span>
               <svg
-                className="w-4 h-4"
+                className="hidden h-4 w-4 sm:block"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

@@ -16,6 +16,16 @@
 - [x] Tests : unitaires (7), intégration (14 dont concurrence et conservation des stocks), E2E (1).
 - Restent absents : contrats, commerce PNJ, routes commerciales, événements et quêtes.
 
+## Session — consolidation
+
+**Date :** 18 octobre 2026. Demande du propriétaire : « option 1 en premier » (consolidation avant le marché).
+
+- [x] Mobile : `tests/mobile-ui/new-pages.spec.ts` (Officiers, Commandants, Flotte avec commandants et groupes, Lune ; 390 px, 320 px, PC ; fr et de ; aucun débordement horizontal, boutons entiers hors zones qui défilent). Défaut réel trouvé et corrigé : en-tête à 320 px (`GameHeader`, `PlanetSelector`) et débordement de 6 px sur PC (raccourcis centraux à partir de 2xl). 126 tests mobiles Chromium verts ; WebKit non exécutable ici (vérifié par la CI).
+- [x] Équilibrage : `scripts/balance/extensions-prices.mjs` et section « Prix des extensions » de `docs/BALANCE.md` ; aucune modification de prix.
+- [x] Couverture : `npm run test:coverage` branché dans la CI (suites d'intégration en série avec les seuils) ; mesure locale lignes 92,7 %, instructions 91,3 %, branches 79,7 %, fonctions 90,1 %.
+- [ ] Uptime > 99 % : en attente du relevé du propriétaire en production.
+- Note de méthode : le marché a été livré dans un PR séparé ([#73](https://github.com/enamaryn/XNova-reforged/pull/73)) ; sa suite d'intégration complète a été rejouée sur sa propre branche (la première exécution avait été interrompue par un changement de branche).
+
 
 ## Session — attaques groupées (Phase 7)
 
