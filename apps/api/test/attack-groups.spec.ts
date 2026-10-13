@@ -81,23 +81,27 @@ describe('attaques groupées : outils du moteur', () => {
       expect(result.attackerGroupsRemaining).toBeUndefined();
     });
 
-    it("chaque flotte combat avec ses propres technologies : la flotte renforcée détruit nettement plus", () => {
-      // Deux flottes identiques en nombre ; seule l'une est renforcée de 10 % : à la fin, plus d'unités
-      // ennemies tombent que si les deux étaient sans bonus.
-      const total = (tech: typeof noTech & { weaponBonus?: number; shieldBonus?: number; armorBonus?: number }) => {
-        let lost = 0;
-        for (let i = 0; i < 200; i += 1) {
-          const r = run([
-            { key: 'a', ships: { 206: 3 }, tech },
-            { key: 'b', ships: { 206: 3 }, tech: noTech },
-          ]);
-          lost += Object.values(r.defenderLosses).reduce((s, n) => s + Number(n), 0);
-        }
-        return lost;
-      };
-      const boosted = total({ ...noTech, weaponBonus: 0.1, shieldBonus: 0.1, armorBonus: 0.1 });
-      const plain = total(noTech);
-      expect(boosted).toBeGreaterThan(plain);
+    it("chaque flotte combat avec ses propres technologies", () => {
+      // Deux sondes (210, 1 000 de coque) : celle de la flotte « a » a +10 % de coque, pas celle de « b ». Un seul
+      // tir de 1 000 (207) détruit une sonde sans bonus : « a » survit donc TOUJOURS, quel que soit le tirage
+      // de la cible ; « b » tombe quand elle est visée (une fois sur deux : sur 40 combats, quasi certain).
+      let bLost = 0;
+      for (let i = 0; i < 40; i += 1) {
+        const r = simulateCombat({
+          attackerShips: { 210: 2 },
+          defenderShips: { 207: 1 },
+          attackerTech: noTech,
+          attackerGroups: [
+            { key: 'a', ships: { 210: 1 }, tech: { ...noTech, armorBonus: 0.1 } },
+            { key: 'b', ships: { 210: 1 }, tech: noTech },
+          ],
+          defenderTech: noTech,
+          maxRounds: 1,
+        });
+        expect(r.attackerGroupsRemaining!.a[210]).toBe(1);
+        if (!r.attackerGroupsRemaining!.b[210]) bLost += 1;
+      }
+      expect(bLost).toBeGreaterThan(0);
     });
   });
 });

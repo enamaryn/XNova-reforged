@@ -49,29 +49,31 @@ describe('commandants de flotte : progression', () => {
 });
 
 describe('commandants de flotte : moteur de combat', () => {
-  const duel = (bonus: object) =>
+  // Duels déterministes (un seul tireur de chaque côté, un seul round, aucun tir rapide en jeu) : le bonus
+  // fait basculer l'issue, sans aucun tirage au sort. Les valeurs viennent de packages/game-config.
+  const duel = (attackers: Record<number, number>, defenders: Record<number, number>, bonus: object) =>
     simulateCombat({
-      attackerShips: { 206: 6 },
-      defenderShips: { 204: 60 },
+      attackerShips: attackers,
+      defenderShips: defenders,
       attackerTech: { weapon: 0, shield: 0, armor: 0, ...bonus },
       defenderTech: { weapon: 0, shield: 0, armor: 0 },
+      maxRounds: 1,
     });
-  const defenderLosses = (bonus: object, runs: number) => {
-    let total = 0;
-    for (let i = 0; i < runs; i += 1) {
-      total += Object.values(duel(bonus).defenderLosses ?? {}).reduce((sum, n) => sum + Number(n), 0);
-    }
-    return total;
-  };
 
-  it("un attaquant renforcé de 10 % (dégâts, bouclier, coque) détruit nettement plus d'unités", () => {
-    // Sur 300 combats : environ 10 pertes sans bonus contre une centaine avec (marge très large)
-    expect(defenderLosses({ weaponBonus: 0.1, shieldBonus: 0.1, armorBonus: 0.1 }, 300)).toBeGreaterThan(
-      defenderLosses({}, 300) * 2,
-    );
+  it("+10 % de dégâts : un tir de 2 000 (213) ne détruit pas une défense 402 de 2 025 de bouclier et coque, un tir de 2 200 si", () => {
+    expect(duel({ 213: 1 }, { 402: 1 }, {}).defenderLosses[402]).toBeUndefined();
+    expect(duel({ 213: 1 }, { 402: 1 }, { weaponBonus: 0.1 }).defenderLosses[402]).toBe(1);
   });
 
-  it("sans bonus le combat reste inchangé (aucune dérive d'arrondi)", () => {
-    expect(duel({ weaponBonus: 0, shieldBonus: 0, armorBonus: 0 }).attackerRemaining).toEqual(duel({}).attackerRemaining);
+  it("+10 % de coque : une sonde (210, 1 000 de coque) détruite par un tir de 1 000 de la 207 survit avec le bonus", () => {
+    expect(duel({ 210: 1 }, { 207: 1 }, {}).attackerRemaining[210]).toBeUndefined();
+    expect(duel({ 210: 1 }, { 207: 1 }, { armorBonus: 0.1 }).attackerRemaining[210]).toBe(1);
+  });
+
+  it("sans bonus (ou avec des bonus à zéro) le combat reste identique, sans dérive d'arrondi", () => {
+    const base = duel({ 213: 1 }, { 402: 1 }, {});
+    const zero = duel({ 213: 1 }, { 402: 1 }, { weaponBonus: 0, shieldBonus: 0, armorBonus: 0 });
+    expect(zero.defenderRemaining).toEqual(base.defenderRemaining);
+    expect(zero.attackerRemaining).toEqual(base.attackerRemaining);
   });
 });
