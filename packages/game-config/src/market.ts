@@ -55,7 +55,13 @@ export function paymentFor(quantity: number, rate: number): number {
   return Math.max(1, Math.ceil(Number((quantity * rate).toFixed(6))));
 }
 
+/** Taux de taxe effectif : le taux de base, réduit de la part supprimée par les événements du monde (0 à 1). */
+export function effectiveTaxRate(reduction = 0): number {
+  const share = Math.min(Math.max(Number.isFinite(reduction) ? reduction : 0, 0), 1);
+  return MARKET_TAX_RATE * (1 - share);
+}
+
 /** Taxe détruite sur un paiement (arrondie à l'inférieur). */
-export function taxOf(payment: number): number {
-  return Math.floor(payment * MARKET_TAX_RATE);
+export function taxOf(payment: number, reduction = 0): number {
+  return Math.floor(payment * effectiveTaxRate(reduction));
 }

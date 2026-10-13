@@ -23,6 +23,8 @@ import { hasAdminAccess, isSuperAdmin } from "@/lib/roles";
 import { SmtpSettingsPanel } from "./SmtpSettingsPanel";
 import { PlayersPanel } from "./PlayersPanel";
 import { SupervisionPanel } from "./SupervisionPanel";
+import { WorldEventsPanel } from "./WorldEventsPanel";
+import { worldEventsApi } from "@/lib/api/world-events";
 
 function GeneralPanel() {
   const { t } = useI18n();
@@ -731,7 +733,15 @@ function GeneralPanel() {
 export default function AdminPage() {
   const { user } = useAuthStore();
   const { t } = useI18n();
-  const [tab, setTab] = useState<"players" | "general" | "smtp" | "supervision">("players");
+  const [tab, setTab] = useState<"players" | "general" | "events" | "smtp" | "supervision">("players");
+  const canManageEvents = user?.role === "ADMIN" || user?.role === "SUPER_ADMIN";
+  // Rappel : le nombre d'événements à lancer s'affiche sur l'onglet, même quand il n'est pas ouvert
+  const remindersQuery = useQuery({
+    queryKey: ["admin", "world-events"],
+    queryFn: worldEventsApi.admin,
+    enabled: canManageEvents,
+  });
+  const reminders = remindersQuery.data?.reminders ?? 0;
   return (
     <div className="space-y-6">
       <div
@@ -742,6 +752,7 @@ export default function AdminPage() {
           [
             "players",
             "general",
+            ...(canManageEvents ? ["events"] : []),
             ...(hasAdminAccess(user?.role) ? ["supervision"] : []),
             ...(isSuperAdmin(user?.role) ? ["smtp"] : []),
           ] as const
@@ -753,7 +764,16 @@ export default function AdminPage() {
             className={`px-4 py-3 text-sm ${tab === value ? "border-b-2 border-blue-400 text-white" : "text-slate-400"}`}
             onClick={() => setTab(value as typeof tab)}
           >
-            {value === "players"
+            {value === "events" ? (
+              <>
+                {t("admin.tabEvents")}
+                {reminders > 0 ? (
+                  <span className="ml-2 rounded-full bg-amber-500/20 px-2 py-0.5 text-[11px] text-amber-200" data-testid="events-reminder-badge">
+                    {reminders}
+                  </span>
+                ) : null}
+              </>
+            ) : value === "players"
               ? t("admin.tabPlayers")
               : value === "smtp"
                 ? t("admin.tabSmtp")
@@ -765,6 +785,7 @@ export default function AdminPage() {
       </div>
       {tab === "players" && <PlayersPanel />}
       {tab === "general" && <GeneralPanel />}
+      {tab === "events" && canManageEvents && <WorldEventsPanel />}
       {tab === "supervision" && hasAdminAccess(user?.role) && <SupervisionPanel />}
       {tab === "smtp" && isSuperAdmin(user?.role) && <SmtpSettingsPanel />}
     </div>

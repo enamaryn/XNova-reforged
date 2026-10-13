@@ -308,6 +308,9 @@ Seite **Quests**: **drei Quests pro Tag** und **zwei pro Woche**, aus einem Kata
 **Was sind Erfolge?**
 Seite **Erfolge**: 34 Meilensteine in sechs Kategorien (Fortschritt, Bau, Kampf, Erkundung, Sozial, Wirtschaft): Kommandantenstufe, Planetenanzahl, abgeschlossene Bauten und Forschungen, Siege, Spionagen, Expeditionen, Monde, Allianz, Offiziere, Markthandel … Ein Erfolg wird freigeschaltet, sobald der Meilenstein erreicht ist, und **bleibt erhalten**, auch wenn die zugrunde liegende Aktivität verschwindet. Er bringt keine Ressourcen; die Seite zeigt deinen Abschlussprozentsatz.
 
+**Was sind Weltereignisse?**
+Zeitlich begrenzte Bonusphasen für **alle** Spieler, die ein Administrator in der Konsole startet (Reiter *Ereignisse*). Ein Banner oben auf den Spielseiten zeigt das laufende Ereignis, sein Ende und seine Wirkung: **Produktion +X %** (Minen und Grundeinkommen, auf allen Planeten) und/oder **gesenkte Marktsteuer**. Mehrere Ereignisse addieren sich, höchstens bis **+100 % Produktion**. Zeit, die vor dem Beginn oder nach dem Ende eines Ereignisses vergangen ist, wird nie mit dem Bonus neu berechnet: Die Produktion aller Planeten wird vor jeder Änderung abgerechnet. Nichts startet von selbst, außer der Administrator hakt bei einer saisonalen Vorlage **„Automatisch“** an (Frühlingsfest, Sommersonnenwende, Erntemond, Dunkler Nebel, Winterfest): Dann wird sie zu Beginn ihres Zeitraums gestartet, einmal pro Jahr. Bosse, Invasionen und Wettbewerbssaisons gibt es noch nicht.
+
 ---
 
 ## 10. „Warum kann ich nicht …?“
@@ -330,6 +333,6 @@ Seite **Erfolge**: 34 Meilensteine in sechs Kategorien (Fortschritt, Bau, Kampf,
 
 ## 11. Was es noch nicht gibt
 
-Saisonale Ereignisse, galaktische Bosse, Invasionen und Saisons. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
+Galaktische Bosse, Invasionen und Wettbewerbssaisons. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
 
 *Diese FAQ wurde gegen den Code (`packages/game-config`, `packages/game-engine`, API) und, für die Solarsatelliten, durch einen automatisierten Integrationstest (`solar-satellites.integration.spec.ts`) geprüft.*

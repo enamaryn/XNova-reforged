@@ -308,6 +308,9 @@ Pagina **Missioni**: **tre missioni al giorno** e **due a settimana**, estratte 
 **Cosa sono i traguardi?**
 Pagina **Traguardi**: 34 tappe in sei categorie (progressione, costruzione, combattimento, esplorazione, sociale, economia): livello di comandante, numero di pianeti, costruzioni e ricerche completate, vittorie, spionaggi, spedizioni, lune, alleanza, ufficiali, scambi sul mercato… Un traguardo si sblocca appena la tappa è raggiunta e **resta acquisito** anche se l'attività che lo ha prodotto scompare. Non dà risorse; la pagina mostra la tua percentuale di completamento.
 
+**Cosa sono gli eventi del mondo?**
+Periodi di bonus temporaneo per **tutti** i giocatori, lanciati da un amministratore dalla console (scheda *Eventi*). Un banner in cima alle pagine del gioco mostra l'evento in corso, la sua fine e i suoi effetti: **produzione +X %** (miniere e reddito di base, su tutti i pianeti) e/o **tassa del mercato ridotta**. Più eventi si sommano, fino a **+100 % di produzione**. Il tempo trascorso prima dell'inizio o dopo la fine di un evento non viene mai ricalcolato con il bonus: la produzione di tutti i pianeti viene liquidata prima di ogni cambiamento. Nulla parte da solo, a meno che l'amministratore non spunti **«Automatico»** su un modello stagionale (Festa di primavera, Solstizio d'estate, Luna del raccolto, Nebulosa oscura, Festa d'inverno): viene allora lanciato all'inizio del suo periodo, una volta all'anno. Boss, invasioni e stagioni competitive non esistono ancora.
+
 ---
 
 ## 10. «Perché non posso…?»
@@ -330,6 +333,6 @@ Pagina **Traguardi**: 34 tappe in sei categorie (progressione, costruzione, comb
 
 ## 11. Ciò che non esiste ancora
 
-Eventi stagionali, boss galattici, invasioni e stagioni. La roadmap del progetto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tiene traccia di questi scarti.
+Boss galattici, invasioni e stagioni competitive. La roadmap del progetto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tiene traccia di questi scarti.
 
 *Questa FAQ è stata verificata sul codice (`packages/game-config`, `packages/game-engine`, API) e, per i satelliti solari, con un test di integrazione automatizzato (`solar-satellites.integration.spec.ts`).*

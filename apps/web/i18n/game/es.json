@@ -408,7 +408,8 @@
       "testSending": "Enviando...",
       "testSend": "Enviar la prueba"
     },
-    "tabSupervision": "Supervisión"
+    "tabSupervision": "Supervisión",
+    "tabEvents": "Eventos"
   },
   "common": {
     "language": "Idioma",
@@ -1369,6 +1370,69 @@
     "tradesTitle": "Últimas ventas",
     "tradeSold": "Vendidos {amount} {give} → {received} {want} recibidos (tras impuestos)",
     "tradeBought": "Comprados {amount} {give} por {paid} {want}"
+  },
+  "worldEvents": {
+    "banner": {
+      "title": "Evento en curso",
+      "until": "hasta el {date}",
+      "production": "Producción +{percent} %",
+      "marketTax": "Tasa del mercado −{percent} %"
+    },
+    "names": {
+      "spring_festival": "Fiesta de la primavera",
+      "summer_solstice": "Solsticio de verano",
+      "harvest_moon": "Luna de la cosecha",
+      "dark_nebula": "Nebulosa oscura",
+      "winter_festival": "Fiesta del invierno"
+    },
+    "admin": {
+      "title": "Eventos del mundo",
+      "intro": "Un evento da una bonificación temporal a todos los jugadores. Nada empieza solo, salvo que marques «Automático» en una plantilla: entonces se lanza al comenzar su periodo, una vez al año.",
+      "loading": "Cargando eventos…",
+      "loadError": "No se pueden cargar los eventos.",
+      "remindersTitle": "Recordatorios",
+      "remindersNone": "Ningún evento que lanzar por ahora.",
+      "remindersCount": "{count} evento(s) por lanzar o programar",
+      "calendarTitle": "Calendario de plantillas",
+      "phase": {
+        "active": "Periodo en curso",
+        "reminder": "Pronto",
+        "later": "Más adelante"
+      },
+      "window": "Del {start} al {end}",
+      "effectProduction": "Producción +{percent} %",
+      "effectTax": "Tasa del mercado −{percent} %",
+      "auto": "Automático",
+      "autoHint": "Sin marcar: solo recibes un recordatorio. Marcado: el evento empieza solo al comenzar su periodo.",
+      "launch": "Lanzar ahora",
+      "launchedThisYear": "Ya lanzado para este periodo",
+      "days": "Duración (días)",
+      "launching": "Lanzando…",
+      "activeTitle": "Eventos en curso",
+      "activeNone": "Ningún evento en curso.",
+      "endNow": "Detener",
+      "ending": "Deteniendo…",
+      "confirmEnd": "¿Detener este evento ahora? La bonificación termina de inmediato.",
+      "customTitle": "Evento personalizado",
+      "customName": "Nombre",
+      "customDays": "Duración (días)",
+      "customProduction": "Bonificación de producción (%)",
+      "customTax": "Reducción de la tasa del mercado (%)",
+      "customLaunch": "Lanzar el evento",
+      "customHint": "Bonificación de producción: 100 % como máximo. Reducción de tasa: 100 % como máximo (100 % = sin tasa).",
+      "historyTitle": "Historial",
+      "historyNone": "Ningún evento pasado.",
+      "status": {
+        "ACTIVE": "En curso",
+        "ENDED": "Terminado",
+        "CANCELLED": "Detenido"
+      },
+      "by": {
+        "auto": "lanzado automáticamente",
+        "manual": "lanzado por un administrador"
+      },
+      "ends": "termina el {date}"
+    }
   },
   "quests": {
     "kicker": "Objetivos",

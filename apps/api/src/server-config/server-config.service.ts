@@ -4,6 +4,7 @@ import { DEFAULT_LOCALE, GAME_CONSTANTS, isSupportedLocale, type SupportedLocale
 import { type ResourceConfig } from '@xnova/game-engine';
 import { DatabaseService } from '../database/database.service';
 import { RedisService } from '../redis/redis.service';
+import { EventModifiersService } from '../world-events/event-modifiers.service';
 
 export interface ServerConfigValues {
   gameSpeed: number;
@@ -51,6 +52,7 @@ export class ServerConfigService {
     private readonly database: DatabaseService,
     private readonly configService: ConfigService,
     private readonly redis: RedisService,
+    private readonly eventModifiers: EventModifiersService,
   ) {}
 
   async getConfig(force = false): Promise<ServerConfigValues> {
@@ -185,13 +187,15 @@ export class ServerConfigService {
 
   async getResourceConfig(): Promise<ResourceConfig> {
     const config = await this.getConfig();
+    // Événements du monde : bonus de production appliqué au multiplicateur, jamais écrit dans les réglages admin
+    const { productionBonus } = await this.eventModifiers.effects();
     return {
       baseIncome: {
         metal: config.baseMetal,
         crystal: config.baseCrystal,
         deuterium: config.baseDeuterium,
       },
-      resourceMultiplier: config.resourceMultiplier,
+      resourceMultiplier: config.resourceMultiplier * (1 + productionBonus),
       gameSpeed: config.gameSpeed,
       storageBase: 1_000_000,
       storageFactor: 1.5,

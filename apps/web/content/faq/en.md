@@ -308,6 +308,9 @@ Up to **3 characters** recruited (250,000 deuterium, Commanders page) and assign
 **What are achievements?**
 **Achievements** page: 34 milestones in six categories (progression, building, combat, exploration, social, economy): commander level, number of planets, constructions and research completed, victories, espionage, expeditions, moons, alliance, officers, market trades… An achievement unlocks as soon as the milestone is reached and **stays unlocked** even if the activity that produced it disappears. It gives no resources; the page shows your completion percentage.
 
+**What are world events?**
+Temporary bonus periods for **all** players, launched by an administrator from the console (*Events* tab). A banner at the top of the game pages shows the current event, its end and its effects: **production +X%** (mines and base income, on every planet) and/or a **reduced market tax**. Several events add up, up to **+100% production**. Time elapsed before an event starts or after it ends is never recomputed with the bonus: every planet's production is settled before each change. Nothing starts by itself unless the administrator ticks **“Automatic”** on a seasonal template (Spring Festival, Summer Solstice, Harvest Moon, Dark Nebula, Winter Festival): it is then launched when its period begins, once a year. Bosses, invasions and competitive seasons do not exist yet.
+
 ---
 
 ## 10. "Why can't I…?"
@@ -330,6 +333,6 @@ Up to **3 characters** recruited (250,000 deuterium, Commanders page) and assign
 
 ## 11. What does not exist yet
 
-Seasonal events, galactic bosses, invasions and seasons. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
+Galactic bosses, invasions and competitive seasons. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
 
 *This FAQ was checked against the code (`packages/game-config`, `packages/game-engine`, API) and, for solar satellites, by an automated integration test (`solar-satellites.integration.spec.ts`).*

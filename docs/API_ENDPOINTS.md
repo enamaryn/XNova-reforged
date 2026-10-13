@@ -83,6 +83,18 @@ Les missiles se fabriquent par `/defense/build` (502, 503) dans la limite de 10 
 | GET | `/achievements` | Les 34 succès par catégorie (`progress` plafonné à la cible, `unlocked`, `unlockedAt`), `percent` global et `newlyUnlocked` ; les nouveaux succès atteints sont enregistrés à cet appel et restent acquis. |
 
 Les périodes sont en UTC : jour à minuit, semaine ISO du lundi au dimanche. La progression est dérivée des lignes déjà enregistrées par le jeu (constructions et recherches terminées, unités fabriquées, flottes, rapports de combat gagné, d'espionnage et d'expédition) depuis le début de la période ; rien n'est incrémenté à la main.
+## Événements du monde (`/world-events`, `/admin/world-events`)
+
+| Méthode | Chemin | Description |
+| ------- | ------ | ----------- |
+| GET | `/world-events/active` | Tout joueur connecté : événements en cours (`name` pour un événement personnalisé, `templateId` pour un modèle) et effets cumulés (`productionBonus`, `marketTaxReduction`). |
+| GET | `/admin/world-events` | ADMIN et SUPER_ADMIN : événements en cours, 20 derniers terminés ou arrêtés, calendrier des modèles (`phase` : `active`, `reminder` à moins de 14 jours, `later` ; `launched`, `auto`, `reminder`) et nombre de rappels. |
+| POST | `/admin/world-events/launch-template` | Lance un modèle (`templateId`, `days` optionnel, 60 au plus). Un modèle ne se lance qu'une fois par occurrence annuelle : 409 sinon ; 404 modèle inconnu. |
+| POST | `/admin/world-events/launch-custom` | Événement personnalisé (`name` de 60 caractères au plus, `days` 1 à 60, `productionBonus` 0 à 1, `marketTaxReduction` 0 à 1, au moins un effet). 400 hors bornes. |
+| PUT | `/admin/world-events/templates/:templateId/auto` | Case « automatique » du modèle (`auto` booléen, décochée par défaut). |
+| DELETE | `/admin/world-events/:id` | Arrête un événement en cours tout de suite (409 s'il est déjà terminé). |
+
+Chaque lancement ou arrêt **règle d'abord la production de toutes les planètes** avec les bonus encore en vigueur : le temps écoulé n'est jamais recalculé avec un autre bonus. La tâche `world-events` (chaque minute) termine les événements échus et lance ceux dont la case « automatique » est cochée et dont la période est en cours (une fois par an et par modèle ; un événement annulé n'est pas relancé). Les actions administratives sont écrites au journal d'audit (`world_event_launch`, `world_event_cancel`, `world_event_auto`).
 
 ## Marché (`/market`)
 

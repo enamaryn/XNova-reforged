@@ -104,6 +104,16 @@ Voir aussi la section « Première connexion » du `README.md`. Rappels d'exploi
 - Migration d'un serveur existant : `20261006100000_setup_completed_for_existing_installs` marque l'installation
   terminée dès qu'un compte joueur existe.
 
+## Événements du monde (bonus temporaires)
+
+Console d'administration → onglet **Événements** (ADMIN et SUPER_ADMIN). Un événement donne un bonus temporaire à tous les joueurs : **production des mines** (+100 % au plus au total) et/ou **taxe du marché réduite**. Une bannière le signale aux joueurs.
+
+- **Rappels** : cinq modèles saisonniers (fête du printemps, solstice d'été, lune des moissons, nébuleuse sombre, fête de l'hiver) ont une période annuelle recommandée. Quand la période approche (14 jours avant) ou est en cours et que rien n'est lancé, l'onglet affiche un badge et un rappel. **Rien ne démarre seul par défaut.**
+- **Automatique** : la case **Automatique** d'un modèle (décochée par défaut) le fait lancer par la tâche `world-events` au début de sa période, une fois par an. Un événement arrêté à la main n'est pas relancé.
+- **Lancement manuel** : « Lancer maintenant » sur un modèle (durée facultative) ou un événement personnalisé (nom, durée, bonus de production, réduction de taxe).
+- **Cohérence de la production** : à chaque lancement et arrêt, la production de **toutes les planètes** est réglée avec les bonus encore en vigueur avant le changement. Sur un serveur très chargé, cela prend quelques secondes ; le temps écoulé n'est jamais recalculé avec un autre bonus. Une production en cours de calcul au moment exact du basculement peut être décalée de quelques millisecondes (sans effet visible).
+- Les lancements, arrêts et changements de case sont écrits dans le journal d'audit.
+
 ## Supervision locale intégrée
 
 Toujours active, sans service extérieur ni variable : console admin → onglet **Supervision** (ADMIN en lecture, SUPER_ADMIN pour modifier).

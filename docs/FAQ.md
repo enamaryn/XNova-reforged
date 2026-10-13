@@ -306,6 +306,9 @@ Page **Quêtes** : **trois quêtes par jour** et **deux par semaine**, tirées d
 **Que sont les succès ?**
 Page **Succès** : 34 paliers répartis en six catégories (progression, construction, combat, exploration, social, économie) : niveau de commandant, nombre de planètes, constructions et recherches terminées, victoires, espionnages, expéditions, lunes, alliance, officiers, échanges au marché… Un succès se débloque dès que le palier est atteint et **reste acquis** même si l'activité qui l'a produit disparaît. Il n'apporte pas de ressources ; la page affiche votre pourcentage de complétion.
 
+**Que sont les événements du monde ?**
+Des périodes de bonus temporaires pour **tous** les joueurs, lancées par un administrateur depuis la console (onglet *Événements*). Une bannière en haut des pages du jeu indique l'événement en cours, sa fin et ses effets : **production +X %** (mines et revenu de base, sur toutes les planètes) et/ou **taxe du marché réduite**. Plusieurs événements s'additionnent, dans la limite de **+100 % de production**. Le temps écoulé avant le début ou après la fin d'un événement n'est jamais recalculé avec le bonus : la production de toutes les planètes est réglée avant chaque changement. Rien ne démarre seul, sauf si l'administrateur coche **« Automatique »** sur un modèle saisonnier (fête du printemps, solstice d'été, lune des moissons, nébuleuse sombre, fête de l'hiver) : il est alors lancé au début de sa période, une fois par an. Les boss, invasions et saisons compétitives n'existent pas encore.
+
 ---
 
 ## 10. « Pourquoi je ne peux pas… ? »
@@ -328,6 +331,6 @@ Page **Succès** : 34 paliers répartis en six catégories (progression, constru
 
 ## 11. Ce qui n'existe pas encore
 
-Événements saisonniers, boss galactiques, invasions et saisons. La feuille de route du projet ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) suit ces écarts.
+Boss galactiques, invasions et saisons compétitives. La feuille de route du projet ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) suit ces écarts.
 
 *Cette FAQ a été vérifiée contre le code (`packages/game-config`, `packages/game-engine`, API) et, pour les satellites solaires, par un test automatisé d'intégration (`solar-satellites.integration.spec.ts`).*

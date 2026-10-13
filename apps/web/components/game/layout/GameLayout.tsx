@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic';
 import { GameHeader } from './GameHeader';
 import { GameSidebar } from './GameSidebar';
 import { PageTransition } from '@/components/page-transition';
+import { WorldEventsBanner } from '../WorldEventsBanner';
 
 const CombatNotifications = dynamic(
   () => import('../CombatNotifications').then((mod) => mod.CombatNotifications),
@@ -75,6 +76,7 @@ export function GameLayout({ children }: GameLayoutProps) {
 
         {/* Contenu */}
         <div className="min-w-0 p-4 pb-[calc(5rem+env(safe-area-inset-bottom))] md:p-6 lg:p-8">
+          <WorldEventsBanner />
           <PageTransition>{children}</PageTransition>
         </div>
       </main>

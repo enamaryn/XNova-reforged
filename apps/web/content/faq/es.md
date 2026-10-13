@@ -308,6 +308,9 @@ Página **Misiones**: **tres misiones al día** y **dos por semana**, sacadas de
 **¿Qué son los logros?**
 Página **Logros**: 34 hitos en seis categorías (progresión, construcción, combate, exploración, social, economía): nivel de comandante, número de planetas, construcciones e investigaciones terminadas, victorias, espionajes, expediciones, lunas, alianza, oficiales, intercambios en el mercado… Un logro se desbloquea en cuanto se alcanza el hito y **se conserva** aunque desaparezca la actividad que lo produjo. No da recursos; la página muestra tu porcentaje de compleción.
 
+**¿Qué son los eventos del mundo?**
+Periodos de bonificación temporal para **todos** los jugadores, lanzados por un administrador desde la consola (pestaña *Eventos*). Un cartel en la parte superior de las páginas del juego indica el evento en curso, su fin y sus efectos: **producción +X %** (minas e ingreso base, en todos los planetas) y/o **tasa del mercado reducida**. Varios eventos se suman, hasta **+100 % de producción**. El tiempo transcurrido antes del inicio o después del fin de un evento nunca se recalcula con la bonificación: la producción de todos los planetas se liquida antes de cada cambio. Nada empieza solo, salvo que el administrador marque **«Automático»** en una plantilla estacional (Fiesta de la primavera, Solsticio de verano, Luna de la cosecha, Nebulosa oscura, Fiesta del invierno): entonces se lanza al comenzar su periodo, una vez al año. Los jefes, invasiones y temporadas competitivas aún no existen.
+
 ---
 
 ## 10. «¿Por qué no puedo…?»
@@ -330,6 +333,6 @@ Página **Logros**: 34 hitos en seis categorías (progresión, construcción, co
 
 ## 11. Lo que aún no existe
 
-Eventos de temporada, jefes galácticos, invasiones y temporadas. La hoja de ruta del proyecto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) sigue estas discrepancias.
+Jefes galácticos, invasiones y temporadas competitivas. La hoja de ruta del proyecto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) sigue estas discrepancias.
 
 *Esta FAQ se ha comprobado con el código (`packages/game-config`, `packages/game-engine`, API) y, para los satélites solares, con una prueba de integración automatizada (`solar-satellites.integration.spec.ts`).*

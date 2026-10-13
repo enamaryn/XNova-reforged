@@ -408,7 +408,8 @@
       "testSending": "Wird gesendet...",
       "testSend": "Test senden"
     },
-    "tabSupervision": "Überwachung"
+    "tabSupervision": "Überwachung",
+    "tabEvents": "Ereignisse"
   },
   "common": {
     "language": "Sprache",
@@ -1369,6 +1370,69 @@
     "tradesTitle": "Letzte Verkäufe",
     "tradeSold": "Verkauft {amount} {give} → {received} {want} erhalten (nach Steuer)",
     "tradeBought": "Gekauft {amount} {give} für {paid} {want}"
+  },
+  "worldEvents": {
+    "banner": {
+      "title": "Laufendes Ereignis",
+      "until": "bis {date}",
+      "production": "Produktion +{percent} %",
+      "marketTax": "Marktsteuer −{percent} %"
+    },
+    "names": {
+      "spring_festival": "Frühlingsfest",
+      "summer_solstice": "Sommersonnenwende",
+      "harvest_moon": "Erntemond",
+      "dark_nebula": "Dunkler Nebel",
+      "winter_festival": "Winterfest"
+    },
+    "admin": {
+      "title": "Weltereignisse",
+      "intro": "Ein Ereignis gibt allen Spielern einen zeitlich begrenzten Bonus. Nichts startet von selbst, außer Sie haken bei einer Vorlage „Automatisch“ an: Dann wird es zu Beginn seines Zeitraums gestartet, einmal pro Jahr.",
+      "loading": "Ereignisse werden geladen …",
+      "loadError": "Ereignisse konnten nicht geladen werden.",
+      "remindersTitle": "Erinnerungen",
+      "remindersNone": "Derzeit ist kein Ereignis zu starten.",
+      "remindersCount": "{count} Ereignis(se) zu starten oder zu planen",
+      "calendarTitle": "Kalender der Vorlagen",
+      "phase": {
+        "active": "Zeitraum läuft",
+        "reminder": "Bald",
+        "later": "Später"
+      },
+      "window": "Vom {start} bis {end}",
+      "effectProduction": "Produktion +{percent} %",
+      "effectTax": "Marktsteuer −{percent} %",
+      "auto": "Automatisch",
+      "autoHint": "Nicht angehakt: Sie erhalten nur eine Erinnerung. Angehakt: Das Ereignis startet von selbst zu Beginn seines Zeitraums.",
+      "launch": "Jetzt starten",
+      "launchedThisYear": "Für diesen Zeitraum bereits gestartet",
+      "days": "Dauer (Tage)",
+      "launching": "Wird gestartet …",
+      "activeTitle": "Laufende Ereignisse",
+      "activeNone": "Kein Ereignis läuft.",
+      "endNow": "Beenden",
+      "ending": "Wird beendet …",
+      "confirmEnd": "Dieses Ereignis jetzt beenden? Der Bonus endet sofort.",
+      "customTitle": "Eigenes Ereignis",
+      "customName": "Name",
+      "customDays": "Dauer (Tage)",
+      "customProduction": "Produktionsbonus (%)",
+      "customTax": "Senkung der Marktsteuer (%)",
+      "customLaunch": "Ereignis starten",
+      "customHint": "Produktionsbonus: höchstens 100 %. Steuersenkung: höchstens 100 % (100 % = keine Steuer).",
+      "historyTitle": "Verlauf",
+      "historyNone": "Keine vergangenen Ereignisse.",
+      "status": {
+        "ACTIVE": "Läuft",
+        "ENDED": "Beendet",
+        "CANCELLED": "Abgebrochen"
+      },
+      "by": {
+        "auto": "automatisch gestartet",
+        "manual": "von einem Administrator gestartet"
+      },
+      "ends": "endet am {date}"
+    }
   },
   "quests": {
     "kicker": "Ziele",
