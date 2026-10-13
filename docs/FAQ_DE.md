@@ -302,6 +302,11 @@ Bis zu **3 Charaktere**, rekrutiert (250 000 Deuterium, Seite Kommandanten) und 
 **Wie funktioniert der Markt?**
 Seite **Markt**: Du bietest eine Menge einer Ressource gegen eine andere an („1 000 Deuterium gegen Metall, zum Kurs 3“). Deine Ressource wird **hinterlegt** (vom gewählten Planeten abgezogen), bis sie verkauft ist, du sie zurückziehst oder das Angebot **abläuft** (24 h; die Hinterlegung wird dir zurückgegeben). Ein Käufer kann alles oder einen Teil nehmen (von dir festgelegter Mindestkauf); er zahlt in der verlangten Ressource und erhält die andere **sofort**; du erhältst die Zahlung auf dem ursprünglichen Planeten des Angebots, **abzüglich 5 % Steuer, die vernichtet werden**. Der Kurs muss zwischen der **Hälfte und dem Doppelten** des Referenzkurses liegen (Referenzwerte: Metall 1, Kristall 1,5, Deuterium 3). Höchstens **10 aktive Angebote** pro Spieler. Du kannst dein eigenes Angebot nicht kaufen. Der Verlauf zeigt den letzten und den jüngsten Durchschnittskurs jedes Paares.
 
+**Wie funktionieren Quests?**
+Seite **Quests**: **drei Quests pro Tag** und **zwei pro Woche**, aus einem Katalog gezogen (für alle Spieler gleich). Sie werden um **Mitternacht UTC** zurückgesetzt (montags für die Woche). Der Fortschritt wird aus deiner **echten Aktivität** seit Beginn des Zeitraums berechnet: abgeschlossene Bauten und Forschungen, auf der Werft gebaute Einheiten, gesendete Flotten, gewonnene Angriffskämpfe, Spionagen, Expeditionen. Ist das Ziel erreicht, schreibt **Abholen** die Belohnung (Metall, Kristall oder Deuterium) dem **gewählten Planeten** gut, **einmal pro Zeitraum**. Die Belohnung wird mit deiner **Kommandantenstufe** multipliziert (+10 % pro Stufe, bis ×6). Nicht Abgeholtes geht bei der Zurücksetzung verloren.
+
+**Was sind Erfolge?**
+Seite **Erfolge**: 34 Meilensteine in sechs Kategorien (Fortschritt, Bau, Kampf, Erkundung, Sozial, Wirtschaft): Kommandantenstufe, Planetenanzahl, abgeschlossene Bauten und Forschungen, Siege, Spionagen, Expeditionen, Monde, Allianz, Offiziere, Markthandel … Ein Erfolg wird freigeschaltet, sobald der Meilenstein erreicht ist, und **bleibt erhalten**, auch wenn die zugrunde liegende Aktivität verschwindet. Er bringt keine Ressourcen; die Seite zeigt deinen Abschlussprozentsatz.
 
 **Was sind Weltereignisse?**
 Zeitlich begrenzte Bonusphasen für **alle** Spieler, die ein Administrator in der Konsole startet (Reiter *Ereignisse*). Ein Banner oben auf den Spielseiten zeigt das laufende Ereignis, sein Ende und seine Wirkung: **Produktion +X %** (Minen und Grundeinkommen, auf allen Planeten) und/oder **gesenkte Marktsteuer**. Mehrere Ereignisse addieren sich, höchstens bis **+100 % Produktion**. Zeit, die vor dem Beginn oder nach dem Ende eines Ereignisses vergangen ist, wird nie mit dem Bonus neu berechnet: Die Produktion aller Planeten wird vor jeder Änderung abgerechnet. Nichts startet von selbst, außer der Administrator hakt bei einer saisonalen Vorlage **„Automatisch“** an (Frühlingsfest, Sommersonnenwende, Erntemond, Dunkler Nebel, Winterfest): Dann wird sie zu Beginn ihres Zeitraums gestartet, einmal pro Jahr. Bosse, Invasionen und Wettbewerbssaisons gibt es noch nicht.
@@ -328,6 +333,6 @@ Zeitlich begrenzte Bonusphasen für **alle** Spieler, die ein Administrator in d
 
 ## 11. Was es noch nicht gibt
 
-Ereignisse. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
+Galaktische Bosse, Invasionen und Wettbewerbssaisons. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
 
 *Diese FAQ wurde gegen den Code (`packages/game-config`, `packages/game-engine`, API) und, für die Solarsatelliten, durch einen automatisierten Integrationstest (`solar-satellites.integration.spec.ts`) geprüft.*

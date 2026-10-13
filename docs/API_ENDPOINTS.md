@@ -74,6 +74,15 @@ Les missiles se fabriquent par `/defense/build` (502, 503) dans la limite de 10 
 | GET | `/officers` | Les cinq officiers (`intendant`, `admiral`, `engineer`, `geologist`, `technocrat`) avec bonus, état d'embauche, prix et bonus cumulés actifs. |
 | POST | `/officers/:type/hire` | Embauche définitive (`planetId` : planète du joueur qui paie 500 000 deutérium). 404 type inconnu ou planète étrangère, 409 déjà embauché, 400 deutérium insuffisant. Règle d'abord la production de toutes les planètes avec les anciens bonus. |
 
+## Quêtes et succès
+
+| Méthode | Chemin | Description |
+| ------- | ------ | ----------- |
+| GET | `/quests` | Quêtes du jour (3) et de la semaine (2) : `id`, `metric`, `target`, `progress`, `reward` (déjà multipliée par le niveau de commandant), `claimed`, `claimable` ; `resetsAt`, `periodKey`, `rewardMultiplier`. |
+| POST | `/quests/:questId/claim` | Réclame une quête active et terminée (`planetId` du joueur : planète créditée). 400 non terminée, 404 quête inactive ou planète étrangère, 409 déjà réclamée pour la période (l'unicité `(joueur, quête, période)` tranche les demandes simultanées). |
+| GET | `/achievements` | Les 34 succès par catégorie (`progress` plafonné à la cible, `unlocked`, `unlockedAt`), `percent` global et `newlyUnlocked` ; les nouveaux succès atteints sont enregistrés à cet appel et restent acquis. |
+
+Les périodes sont en UTC : jour à minuit, semaine ISO du lundi au dimanche. La progression est dérivée des lignes déjà enregistrées par le jeu (constructions et recherches terminées, unités fabriquées, flottes, rapports de combat gagné, d'espionnage et d'expédition) depuis le début de la période ; rien n'est incrémenté à la main.
 ## Événements du monde (`/world-events`, `/admin/world-events`)
 
 | Méthode | Chemin | Description |

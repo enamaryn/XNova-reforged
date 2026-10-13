@@ -36,6 +36,59 @@ const commanders = {
   ],
 };
 
+const quests = {
+  rewardMultiplier: 1.4,
+  commanderLevel: 5,
+  daily: {
+    periodKey: "2026-10-13",
+    resetsAt: new Date(Date.now() + 5 * 3600000).toISOString(),
+    quests: [
+      { id: "daily_build_3", metric: "buildings", target: 3, progress: 3, reward: { metal: 28000, crystal: 0, deuterium: 0 }, claimed: false, claimable: true },
+      { id: "daily_units_50", metric: "units", target: 50, progress: 12, reward: { metal: 0, crystal: 0, deuterium: 11200 }, claimed: false, claimable: false },
+      { id: "daily_research_1", metric: "research", target: 1, progress: 1, reward: { metal: 0, crystal: 21000, deuterium: 0 }, claimed: true, claimable: false },
+    ],
+  },
+  weekly: {
+    periodKey: "2026-W42",
+    resetsAt: new Date(Date.now() + 3 * 86400000).toISOString(),
+    quests: [
+      { id: "weekly_expedition_5", metric: "expeditions", target: 5, progress: 2, reward: { metal: 0, crystal: 70000, deuterium: 112000 }, claimed: false, claimable: false },
+      { id: "weekly_combat_5", metric: "combatsWon", target: 5, progress: 0, reward: { metal: 140000, crystal: 0, deuterium: 84000 }, claimed: false, claimable: false },
+    ],
+  },
+};
+
+const achievements = {
+  total: 6,
+  unlocked: 2,
+  percent: 33,
+  newlyUnlocked: ["buildings_10"],
+  categories: [
+    {
+      category: "build",
+      achievements: [
+        { id: "buildings_10", category: "build", metric: "buildings", target: 10, progress: 10, unlocked: true, unlockedAt: "2026-10-12T10:00:00Z" },
+        { id: "buildings_100", category: "build", metric: "buildings", target: 100, progress: 12, unlocked: false, unlockedAt: null },
+      ],
+    },
+    {
+      category: "progression",
+      achievements: [
+        { id: "commanderLevel_5", category: "progression", metric: "commanderLevel", target: 5, progress: 5, unlocked: true, unlockedAt: "2026-10-11T10:00:00Z" },
+        { id: "commanderLevel_10", category: "progression", metric: "commanderLevel", target: 10, progress: 5, unlocked: false, unlockedAt: null },
+      ],
+    },
+    {
+      category: "social",
+      achievements: [{ id: "groupAttacks_1", category: "social", metric: "groupAttacks", target: 1, progress: 0, unlocked: false, unlockedAt: null }],
+    },
+    {
+      category: "exploration",
+      achievements: [{ id: "expeditions_50", category: "exploration", metric: "expeditions", target: 50, progress: 2, unlocked: false, unlockedAt: null }],
+    },
+  ],
+};
+
 const moonOverview = {
   moonId: moon.id,
   deuterium: 120000,
@@ -79,6 +132,8 @@ async function fixture(page: Page, locale: string, withMoon = false) {
     else if (path === "/fleet/active") body = [];
     else if (path === "/fleet/attack-groups")
       body = { max: 5, groups: [{ id: "g1", creator: "Capitaine Aldebaran", target: { galaxy: 1, system: 1, position: 1, moon: false }, arrivalTime: new Date(Date.now() + 3600000).toISOString(), fleets: 2 }] };
+    else if (path === "/quests") body = quests;
+    else if (path === "/achievements") body = achievements;
     else if (path === `/moons/${moon.id}`) body = moonOverview;
     else if (path === "/technologies") body = { technologies: [], labNetwork: { networkLevel: 0, ownLab: 0, effectiveLab: 0, linked: 0 } };
     else return route.fulfill({ status: 404, json: { message: "UI fixture not defined" } });
@@ -142,6 +197,27 @@ for (const locale of ["fr", "de"]) {
       await expect(page.getByTestId("fleet-commander-select")).toBeVisible();
       expect(await noOverflow(page)).toBe(true);
       await buttonsFit(page);
+    });
+
+    test("quêtes : cartes, barres de progression et boutons sans débordement", async ({ page }) => {
+      await fixture(page, locale);
+      await page.goto(`/${locale}/quests`);
+      await expect(page.getByTestId("quest-daily_build_3")).toHaveAttribute("data-state", "claimable");
+      await expect(page.getByTestId("claim-daily_build_3")).toBeEnabled();
+      await expect(page.getByTestId("claim-daily_units_50")).toBeDisabled();
+      await expect(page.getByTestId("quest-daily_research_1")).toHaveAttribute("data-state", "claimed");
+      await expect(page.getByTestId("quests-weekly")).toBeVisible();
+      expect(await noOverflow(page)).toBe(true);
+      await buttonsFit(page);
+    });
+
+    test("succès : grille par catégorie sans débordement", async ({ page }) => {
+      await fixture(page, locale);
+      await page.goto(`/${locale}/achievements`);
+      await expect(page.getByTestId("achievements-summary")).toBeVisible();
+      await expect(page.getByTestId("achievement-buildings_10")).toHaveAttribute("data-unlocked", "true");
+      await expect(page.getByTestId("achievement-buildings_100")).toHaveAttribute("data-unlocked", "false");
+      expect(await noOverflow(page)).toBe(true);
     });
 
     test("lune : phalange et porte de saut sans débordement", async ({ page }) => {

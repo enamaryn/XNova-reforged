@@ -27,7 +27,9 @@
     "moon": "Lune",
     "officers": "Officiers",
     "commanders": "Commandants",
-    "market": "Marché"
+    "market": "Marché",
+    "quests": "Quêtes",
+    "achievements": "Succès"
   },
   "sidebar": {
     "principal": "Principal",
@@ -1430,6 +1432,54 @@
         "manual": "lancé par un administrateur"
       },
       "ends": "fin le {date}"
+    }
+  },
+  "quests": {
+    "kicker": "Objectifs",
+    "title": "Quêtes",
+    "subtitle": "Trois quêtes par jour et deux par semaine, comptées d'après votre activité réelle. Les récompenses sont multipliées par {multiplier} (niveau de commandant {level}).",
+    "planet": "Les récompenses sont créditées sur la planète sélectionnée : {planet}.",
+    "daily": "Quêtes du jour",
+    "weekly": "Quêtes de la semaine",
+    "resets": "Remise à zéro dans {time}",
+    "reward": "Récompense : {reward}",
+    "claim": "Réclamer",
+    "claimed": "Réclamée",
+    "progress": "{progress} / {target}"
+  },
+  "achievements": {
+    "kicker": "Collection",
+    "title": "Succès",
+    "summary": "{unlocked} succès débloqués sur {total} ({percent} %)",
+    "newlyUnlocked": "{count} nouveau(x) succès débloqué(s) !",
+    "unlockedOn": "Débloqué le {date}",
+    "categories": {
+      "progression": "Progression",
+      "build": "Construction",
+      "combat": "Combat",
+      "exploration": "Exploration",
+      "social": "Social",
+      "economy": "Économie"
+    }
+  },
+  "goals": {
+    "metric": {
+      "buildings": "Terminer {target} construction(s)",
+      "research": "Terminer {target} recherche(s)",
+      "units": "Fabriquer {target} unité(s) au chantier",
+      "fleets": "Envoyer {target} flotte(s)",
+      "combatsWon": "Gagner {target} combat(s) en attaque",
+      "spy": "Réaliser {target} espionnage(s)",
+      "expeditions": "Mener {target} expédition(s)",
+      "commanderLevel": "Atteindre le niveau {target} de commandant",
+      "planets": "Posséder {target} planète(s)",
+      "moons": "Posséder {target} lune(s)",
+      "alliance": "Rejoindre une alliance",
+      "groupAttacks": "Participer à une attaque groupée",
+      "officers": "Embaucher {target} officier(s)",
+      "commanders": "Recruter un commandant de flotte",
+      "trades": "Réaliser {target} échange(s) au marché",
+      "missiles": "Tirer {target} missile(s) interplanétaire(s)"
     }
   }
 }

@@ -300,6 +300,11 @@ Jusqu'à **3 personnages** recrutés (250 000 deutérium, page Commandants) et a
 **Comment fonctionne le marché ?**
 Page **Marché** : vous proposez une quantité d'une ressource contre une autre (« 1 000 deutérium contre du métal, au taux 3 »). Votre ressource est mise **en séquestre** (retirée de la planète choisie) jusqu'à la vente, au retrait ou à l'**expiration** de l'offre (24 h, le séquestre vous est alors rendu). Un acheteur peut en prendre tout ou une partie (achat minimal que vous fixez) ; il paie dans la ressource demandée et reçoit l'autre **immédiatement** ; vous recevez le paiement sur la planète d'origine de l'offre, **moins 5 % de taxe détruite**. Le taux doit rester entre la **moitié et le double** du taux de référence (valeurs de référence : métal 1, cristal 1,5, deutérium 3). **10 offres actives** au plus par joueur. Vous ne pouvez pas acheter votre propre offre. L'historique donne le dernier taux et le taux moyen récent de chaque paire.
 
+**Comment fonctionnent les quêtes ?**
+Page **Quêtes** : **trois quêtes par jour** et **deux par semaine**, tirées dans un catalogue (les mêmes pour tous les joueurs). Elles se remettent à zéro à **minuit UTC** (le lundi pour la semaine). La progression est calculée d'après votre **activité réelle** depuis le début de la période : constructions et recherches terminées, unités fabriquées au chantier, flottes envoyées, combats d'attaque gagnés, espionnages, expéditions. Une fois la cible atteinte, **Réclamer** crédite la récompense (métal, cristal ou deutérium) sur la **planète sélectionnée**, **une seule fois par période**. La récompense est multipliée par votre **niveau de commandant** (+10 % par niveau, jusqu'à ×6). Ce qui n'est pas réclamé avant la remise à zéro est perdu.
+
+**Que sont les succès ?**
+Page **Succès** : 34 paliers répartis en six catégories (progression, construction, combat, exploration, social, économie) : niveau de commandant, nombre de planètes, constructions et recherches terminées, victoires, espionnages, expéditions, lunes, alliance, officiers, échanges au marché… Un succès se débloque dès que le palier est atteint et **reste acquis** même si l'activité qui l'a produit disparaît. Il n'apporte pas de ressources ; la page affiche votre pourcentage de complétion.
 
 **Que sont les événements du monde ?**
 Des périodes de bonus temporaires pour **tous** les joueurs, lancées par un administrateur depuis la console (onglet *Événements*). Une bannière en haut des pages du jeu indique l'événement en cours, sa fin et ses effets : **production +X %** (mines et revenu de base, sur toutes les planètes) et/ou **taxe du marché réduite**. Plusieurs événements s'additionnent, dans la limite de **+100 % de production**. Le temps écoulé avant le début ou après la fin d'un événement n'est jamais recalculé avec le bonus : la production de toutes les planètes est réglée avant chaque changement. Rien ne démarre seul, sauf si l'administrateur coche **« Automatique »** sur un modèle saisonnier (fête du printemps, solstice d'été, lune des moissons, nébuleuse sombre, fête de l'hiver) : il est alors lancé au début de sa période, une fois par an. Les boss, invasions et saisons compétitives n'existent pas encore.
@@ -326,6 +331,6 @@ Des périodes de bonus temporaires pour **tous** les joueurs, lancées par un ad
 
 ## 11. Ce qui n'existe pas encore
 
-Événements. La feuille de route du projet ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) suit ces écarts.
+Boss galactiques, invasions et saisons compétitives. La feuille de route du projet ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) suit ces écarts.
 
 *Cette FAQ a été vérifiée contre le code (`packages/game-config`, `packages/game-engine`, API) et, pour les satellites solaires, par un test automatisé d'intégration (`solar-satellites.integration.spec.ts`).*

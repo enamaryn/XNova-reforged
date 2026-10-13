@@ -13,6 +13,7 @@ import { MissilesModule } from "./missiles/missiles.module";
 import { MoonsModule } from "./moons/moons.module";
 import { OfficersModule } from "./officers/officers.module";
 import { MarketModule } from "./market/market.module";
+import { QuestsModule } from "./quests/quests.module";
 import { WorldEventsModule } from "./world-events/world-events.module";
 import { FleetCommandersModule } from "./fleet-commanders/fleet-commanders.module";
 import { GalaxyModule } from "./galaxy/galaxy.module";
@@ -80,6 +81,7 @@ import { validateEnv } from "./config/env.validation";
     MoonsModule,
     OfficersModule,
     MarketModule,
+    QuestsModule,
     WorldEventsModule,
     FleetCommandersModule,
 

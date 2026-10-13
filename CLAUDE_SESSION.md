@@ -5,6 +5,17 @@
 
 ---
 
+## Session — quêtes et succès (Phase 7)
+
+**Date :** 21 octobre 2026. Demande du propriétaire : « passe aux événements et quêtes ». Vérification préalable : aucun code de quête ni de succès (le guide de démarrage `onboarding` est un autre mécanisme, à usage unique). Le lot est découpé : quêtes et succès ici, événements saisonniers, boss, invasions et saisons dans un PR distinct.
+
+- [x] `packages/game-config/src/quests.ts` : catalogue (13 quêtes, 34 succès), périodes UTC (jour, semaine ISO), tirage stable (FNV-1a), récompenses multipliées par le niveau de commandant.
+- [x] Progression **dérivée** de l'activité réelle (`activity-metrics.ts`) : aucune incrémentation à la main, aucun double comptage possible.
+- [x] Tables `QuestClaim` (unicité `(joueur, quête, période)`) et `AchievementUnlock`, migration `20261021100000_quests_achievements` ; API `/quests`, `/quests/:id/claim`, `/achievements`.
+- [x] Pages `/quests` et `/achievements`, menu, textes fr/en/es/de/it, FAQ (5 langues), guides, `API_ENDPOINTS.md`.
+- [x] Tests : unitaires (10), intégration (11 dont réclamations simultanées), E2E (1), rendu mobile (12 cas supplémentaires : 390 px, 320 px, PC, fr et de).
+- Restent absents : événements saisonniers, boss galactiques, invasions, saisons compétitives.
+
 ## Session — événements du monde (Phase 7)
 
 **Date :** 22 octobre 2026. Demande du propriétaire : événements saisonniers, boss, invasions et saisons « proposés en rappel suivant la période dans le menu admin, pas automatiques de base », avec une case à cocher pour les rendre automatiques. Uptime confirmé par le propriétaire (capture : 99,1 % sur 7 j et 30 j, 99,17 % sur 24 h).
