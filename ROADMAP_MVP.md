@@ -112,6 +112,10 @@ Toutes les décisions listées dans la version précédente sont prises et appli
 - [x] **PERF-MOBILE** ([PR #59](https://github.com/enamaryn/XNova-reforged/pull/59)) : accueil mobile Lighthouse 67 → 96 (Sentry navigateur chargé à la demande), connexion 100, inscription 99.
 - [x] **UPTIME** : échantillon de santé chaque minute, disponibilité 24 h/7 j/30 j dans la console admin (migration `20261012200000_health_samples`). **Objectif atteint le 13 octobre 2026** : relevé du propriétaire en production, **99,1 %** sur 7 j et sur 30 j (15 min d'indisponibilité, 5 pannes, redémarrages de mise à jour compris), **99,17 %** sur 24 h. Réserve : la mesure ne remonte qu'au 12 octobre 07:19 (un jour et demi) ; les fenêtres 7 j et 30 j ne sont donc pas encore pleines. À reconfirmer sur sept jours complets.
 
+## Validation V1 (23 octobre 2026)
+
+- [ ] **Checklist de validation V1** : [docs/V1_VALIDATION.md](docs/V1_VALIDATION.md) (critères bloquants et recommandés, preuves attendues, état de chaque case). Le MVP est clos ; la V1 attend les vérifications côté propriétaire (restauration réelle, email réel, uptime sur 7 jours pleins), une revue indépendante des fonctions récentes et une semaine de test avec des joueurs.
+
 ## Événements du monde (22 octobre 2026)
 
 Demande du propriétaire : les événements saisonniers sont **proposés en rappel selon la période** dans le menu admin, **pas automatiques par défaut**, avec une **case à cocher** pour les rendre automatiques. Vérification préalable : `game-events` n'est que la passerelle WebSocket (aucune collision) ; aucun code d'événement n'existait. Module nommé `world-events`.
