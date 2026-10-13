@@ -27,7 +27,9 @@
     "moon": "Moon",
     "officers": "Officers",
     "commanders": "Commanders",
-    "market": "Market"
+    "market": "Market",
+    "quests": "Quests",
+    "achievements": "Achievements"
   },
   "sidebar": {
     "principal": "Main",
@@ -1367,5 +1369,53 @@
     "tradesTitle": "Latest sales",
     "tradeSold": "Sold {amount} {give} → {received} {want} received (after tax)",
     "tradeBought": "Bought {amount} {give} for {paid} {want}"
+  },
+  "quests": {
+    "kicker": "Goals",
+    "title": "Quests",
+    "subtitle": "Three quests a day and two a week, counted from your real activity. Rewards are multiplied by {multiplier} (commander level {level}).",
+    "planet": "Rewards are credited to the selected planet: {planet}.",
+    "daily": "Daily quests",
+    "weekly": "Weekly quests",
+    "resets": "Resets in {time}",
+    "reward": "Reward: {reward}",
+    "claim": "Claim",
+    "claimed": "Claimed",
+    "progress": "{progress} / {target}"
+  },
+  "achievements": {
+    "kicker": "Collection",
+    "title": "Achievements",
+    "summary": "{unlocked} of {total} achievements unlocked ({percent} %)",
+    "newlyUnlocked": "{count} new achievement(s) unlocked!",
+    "unlockedOn": "Unlocked on {date}",
+    "categories": {
+      "progression": "Progression",
+      "build": "Building",
+      "combat": "Combat",
+      "exploration": "Exploration",
+      "social": "Social",
+      "economy": "Economy"
+    }
+  },
+  "goals": {
+    "metric": {
+      "buildings": "Complete {target} construction(s)",
+      "research": "Complete {target} research(es)",
+      "units": "Build {target} unit(s) at the shipyard",
+      "fleets": "Send {target} fleet(s)",
+      "combatsWon": "Win {target} attack combat(s)",
+      "spy": "Carry out {target} espionage mission(s)",
+      "expeditions": "Complete {target} expedition(s)",
+      "commanderLevel": "Reach commander level {target}",
+      "planets": "Own {target} planet(s)",
+      "moons": "Own {target} moon(s)",
+      "alliance": "Join an alliance",
+      "groupAttacks": "Take part in a group attack",
+      "officers": "Hire {target} officer(s)",
+      "commanders": "Recruit a fleet commander",
+      "trades": "Make {target} market trade(s)",
+      "missiles": "Fire {target} interplanetary missile(s)"
+    }
   }
 }

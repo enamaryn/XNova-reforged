@@ -81,4 +81,4 @@ A fleet in flight can be **recalled** from *Movements*. Results arrive in *Repor
 
 ## 11. Known alpha limits
 
-No events; game names and descriptions and some error messages stay in French whatever the chosen language; emails are sent in French.
+No seasonal events, bosses or seasons; game names and descriptions and some error messages stay in French whatever the chosen language; emails are sent in French.

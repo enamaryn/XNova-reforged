@@ -58,6 +58,8 @@ model User {
   fleetCommanders        FleetCommander[]
   attackGroups           AttackGroup[]
   marketOffers           MarketOffer[]
+  questClaims            QuestClaim[]
+  achievementUnlocks     AchievementUnlock[]
   technologies  Technology[]
   messages      Message[]      @relation("ReceivedMessages")
   sentMessages  Message[]      @relation("SentMessages")
@@ -794,4 +796,34 @@ model MarketTrade {
   @@index([giveResource, wantResource, createdAt])
   @@index([buyerId, createdAt])
   @@index([sellerId, createdAt])
+}
+
+// ============================================
+// QUETES ET SUCCES
+// ============================================
+
+// Une quete ne se reclame qu'une fois par periode : l'unicite protege contre les doubles recompenses.
+model QuestClaim {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  questId   String
+  // Jour ("2026-10-13") ou semaine ISO ("2026-W42")
+  periodKey String
+  claimedAt DateTime @default(now())
+
+  @@unique([userId, questId, periodKey])
+  @@index([userId, claimedAt])
+}
+
+model AchievementUnlock {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  achievementId String
+  unlockedAt    DateTime @default(now())
+
+  @@unique([userId, achievementId])
 }

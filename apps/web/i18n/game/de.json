@@ -27,7 +27,9 @@
     "moon": "Mond",
     "officers": "Offiziere",
     "commanders": "Kommandanten",
-    "market": "Markt"
+    "market": "Markt",
+    "quests": "Quests",
+    "achievements": "Erfolge"
   },
   "sidebar": {
     "principal": "Hauptmenü",
@@ -1367,5 +1369,53 @@
     "tradesTitle": "Letzte Verkäufe",
     "tradeSold": "Verkauft {amount} {give} → {received} {want} erhalten (nach Steuer)",
     "tradeBought": "Gekauft {amount} {give} für {paid} {want}"
+  },
+  "quests": {
+    "kicker": "Ziele",
+    "title": "Quests",
+    "subtitle": "Drei Quests pro Tag und zwei pro Woche, gezählt nach deiner echten Aktivität. Belohnungen werden mit {multiplier} multipliziert (Kommandantenstufe {level}).",
+    "planet": "Belohnungen werden dem gewählten Planeten gutgeschrieben: {planet}.",
+    "daily": "Tagesquests",
+    "weekly": "Wochenquests",
+    "resets": "Zurücksetzung in {time}",
+    "reward": "Belohnung: {reward}",
+    "claim": "Abholen",
+    "claimed": "Abgeholt",
+    "progress": "{progress} / {target}"
+  },
+  "achievements": {
+    "kicker": "Sammlung",
+    "title": "Erfolge",
+    "summary": "{unlocked} von {total} Erfolgen freigeschaltet ({percent} %)",
+    "newlyUnlocked": "{count} neue(r) Erfolg(e) freigeschaltet!",
+    "unlockedOn": "Freigeschaltet am {date}",
+    "categories": {
+      "progression": "Fortschritt",
+      "build": "Bau",
+      "combat": "Kampf",
+      "exploration": "Erkundung",
+      "social": "Sozial",
+      "economy": "Wirtschaft"
+    }
+  },
+  "goals": {
+    "metric": {
+      "buildings": "{target} Bau(ten) abschließen",
+      "research": "{target} Forschung(en) abschließen",
+      "units": "{target} Einheit(en) auf der Werft bauen",
+      "fleets": "{target} Flotte(n) senden",
+      "combatsWon": "{target} Angriffskampf/-kämpfe gewinnen",
+      "spy": "{target} Spionage(n) durchführen",
+      "expeditions": "{target} Expedition(en) abschließen",
+      "commanderLevel": "Kommandantenstufe {target} erreichen",
+      "planets": "{target} Planet(en) besitzen",
+      "moons": "{target} Mond(e) besitzen",
+      "alliance": "Einer Allianz beitreten",
+      "groupAttacks": "An einem Verbandsangriff teilnehmen",
+      "officers": "{target} Offizier(e) einstellen",
+      "commanders": "Einen Flottenkommandanten rekrutieren",
+      "trades": "{target} Markthandel/-händel abschließen",
+      "missiles": "{target} Interplanetarrakete(n) abfeuern"
+    }
   }
 }

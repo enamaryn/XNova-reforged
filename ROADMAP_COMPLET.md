@@ -671,7 +671,7 @@ Cette roadmap étend le MVP avec des fonctionnalités avancées pour créer un M
   - Trésors cachés
   - Rencontres événements
   - Items rares
-- [ ] Quêtes journalières/hebdomadaires
+- [x] Quêtes journalières/hebdomadaires — livrées le 21 octobre 2026 (voir ROADMAP_MVP.md ; activité dérivée, sans table `Quest`)
   ```typescript
   dailyQuests = [
     { objective: "Construire 5 bâtiments", reward: { metal: 10000 } },
@@ -679,7 +679,7 @@ Cette roadmap étend le MVP avec des fonctionnalités avancées pour créer un M
     { objective: "Espionner 10 planètes", reward: { crystal: 7500 } }
   ]
   ```
-- [ ] Achievements (100+)
+- [x] Achievements — 34 livrés le 21 octobre 2026 (objectif 100+ non atteint)
   - Progression (atteindre niveau X)
   - Combat (gagner X batailles)
   - Économie (accumuler X ressources)
@@ -697,12 +697,12 @@ Cette roadmap étend le MVP avec des fonctionnalités avancées pour créer un M
   - Countdown
   - Progression
   - Leaderboards
-- [ ] Page quêtes
+- [x] Page quêtes (liste du jour et de la semaine, progression, réclamation ; sans historique)
   - Liste daily/weekly
   - Progression
   - Réclamer récompenses
   - Historique
-- [ ] Page achievements
+- [x] Page achievements (grille par catégorie, pourcentage ; sans partage social)
   - Grille achievements
   - Catégories
   - Pourcentage complétion

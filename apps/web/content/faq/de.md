@@ -302,6 +302,12 @@ Bis zu **3 Charaktere**, rekrutiert (250 000 Deuterium, Seite Kommandanten) und 
 **Wie funktioniert der Markt?**
 Seite **Markt**: Du bietest eine Menge einer Ressource gegen eine andere an („1 000 Deuterium gegen Metall, zum Kurs 3“). Deine Ressource wird **hinterlegt** (vom gewählten Planeten abgezogen), bis sie verkauft ist, du sie zurückziehst oder das Angebot **abläuft** (24 h; die Hinterlegung wird dir zurückgegeben). Ein Käufer kann alles oder einen Teil nehmen (von dir festgelegter Mindestkauf); er zahlt in der verlangten Ressource und erhält die andere **sofort**; du erhältst die Zahlung auf dem ursprünglichen Planeten des Angebots, **abzüglich 5 % Steuer, die vernichtet werden**. Der Kurs muss zwischen der **Hälfte und dem Doppelten** des Referenzkurses liegen (Referenzwerte: Metall 1, Kristall 1,5, Deuterium 3). Höchstens **10 aktive Angebote** pro Spieler. Du kannst dein eigenes Angebot nicht kaufen. Der Verlauf zeigt den letzten und den jüngsten Durchschnittskurs jedes Paares.
 
+**Wie funktionieren Quests?**
+Seite **Quests**: **drei Quests pro Tag** und **zwei pro Woche**, aus einem Katalog gezogen (für alle Spieler gleich). Sie werden um **Mitternacht UTC** zurückgesetzt (montags für die Woche). Der Fortschritt wird aus deiner **echten Aktivität** seit Beginn des Zeitraums berechnet: abgeschlossene Bauten und Forschungen, auf der Werft gebaute Einheiten, gesendete Flotten, gewonnene Angriffskämpfe, Spionagen, Expeditionen. Ist das Ziel erreicht, schreibt **Abholen** die Belohnung (Metall, Kristall oder Deuterium) dem **gewählten Planeten** gut, **einmal pro Zeitraum**. Die Belohnung wird mit deiner **Kommandantenstufe** multipliziert (+10 % pro Stufe, bis ×6). Nicht Abgeholtes geht bei der Zurücksetzung verloren.
+
+**Was sind Erfolge?**
+Seite **Erfolge**: 34 Meilensteine in sechs Kategorien (Fortschritt, Bau, Kampf, Erkundung, Sozial, Wirtschaft): Kommandantenstufe, Planetenanzahl, abgeschlossene Bauten und Forschungen, Siege, Spionagen, Expeditionen, Monde, Allianz, Offiziere, Markthandel … Ein Erfolg wird freigeschaltet, sobald der Meilenstein erreicht ist, und **bleibt erhalten**, auch wenn die zugrunde liegende Aktivität verschwindet. Er bringt keine Ressourcen; die Seite zeigt deinen Abschlussprozentsatz.
+
 ---
 
 ## 10. „Warum kann ich nicht …?“
@@ -324,6 +330,6 @@ Seite **Markt**: Du bietest eine Menge einer Ressource gegen eine andere an („
 
 ## 11. Was es noch nicht gibt
 
-Ereignisse. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
+Saisonale Ereignisse, galaktische Bosse, Invasionen und Saisons. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.
 
 *Diese FAQ wurde gegen den Code (`packages/game-config`, `packages/game-engine`, API) und, für die Solarsatelliten, durch einen automatisierten Integrationstest (`solar-satellites.integration.spec.ts`) geprüft.*

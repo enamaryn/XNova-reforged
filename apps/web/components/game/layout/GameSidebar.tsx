@@ -38,6 +38,8 @@ const navItems: NavItem[] = [
   { href: '/officers', label: 'nav.officers', icon: '🎖️', category: 'principal' },
   { href: '/commanders', label: 'nav.commanders', icon: '⭐', category: 'flotte' },
   { href: '/market', label: 'nav.market', icon: '⚖️', category: 'principal' },
+  { href: '/quests', label: 'nav.quests', icon: '📜', category: 'principal' },
+  { href: '/achievements', label: 'nav.achievements', icon: '🏅', category: 'principal' },
 
   // Social
   { href: '/alliance', label: 'nav.alliance', icon: '🤝', category: 'social' },

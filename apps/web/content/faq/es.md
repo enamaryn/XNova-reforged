@@ -302,6 +302,12 @@ Hasta **3 personajes** reclutados (250 000 deuterio, página Comandantes) y asig
 **¿Cómo funciona el mercado?**
 Página **Mercado**: ofreces una cantidad de un recurso a cambio de otro («1 000 deuterio por metal, a tasa 3»). Tu recurso se deposita **en custodia** (se retira del planeta elegido) hasta que se venda, lo retires o la oferta **caduque** (24 h; la custodia se te devuelve). Un comprador puede tomar todo o parte (compra mínima que fijas); paga en el recurso pedido y recibe el otro **al instante**; tú recibes el pago en el planeta de origen de la oferta, **menos un 5 % de impuesto que se destruye**. La tasa debe estar entre la **mitad y el doble** de la de referencia (valores de referencia: metal 1, cristal 1,5, deuterio 3). Como máximo **10 ofertas activas** por jugador. No puedes comprar tu propia oferta. El historial da la última tasa y la tasa media reciente de cada par.
 
+**¿Cómo funcionan las misiones?**
+Página **Misiones**: **tres misiones al día** y **dos por semana**, sacadas de un catálogo (el mismo para todos). Se reinician a **medianoche UTC** (el lunes para la semana). El progreso se calcula según tu **actividad real** desde el inicio del periodo: construcciones e investigaciones terminadas, unidades fabricadas en el astillero, flotas enviadas, combates de ataque ganados, espionajes, expediciones. Al alcanzar el objetivo, **Reclamar** ingresa la recompensa (metal, cristal o deuterio) en el **planeta seleccionado**, **una sola vez por periodo**. La recompensa se multiplica por tu **nivel de comandante** (+10 % por nivel, hasta ×6). Lo que no se reclama antes del reinicio se pierde.
+
+**¿Qué son los logros?**
+Página **Logros**: 34 hitos en seis categorías (progresión, construcción, combate, exploración, social, economía): nivel de comandante, número de planetas, construcciones e investigaciones terminadas, victorias, espionajes, expediciones, lunas, alianza, oficiales, intercambios en el mercado… Un logro se desbloquea en cuanto se alcanza el hito y **se conserva** aunque desaparezca la actividad que lo produjo. No da recursos; la página muestra tu porcentaje de compleción.
+
 ---
 
 ## 10. «¿Por qué no puedo…?»
@@ -324,6 +330,6 @@ Página **Mercado**: ofreces una cantidad de un recurso a cambio de otro («1 00
 
 ## 11. Lo que aún no existe
 
-Eventos. La hoja de ruta del proyecto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) sigue estas discrepancias.
+Eventos de temporada, jefes galácticos, invasiones y temporadas. La hoja de ruta del proyecto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) sigue estas discrepancias.
 
 *Esta FAQ se ha comprobado con el código (`packages/game-config`, `packages/game-engine`, API) y, para los satélites solares, con una prueba de integración automatizada (`solar-satellites.integration.spec.ts`).*

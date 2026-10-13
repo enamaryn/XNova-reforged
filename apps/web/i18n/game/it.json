@@ -27,7 +27,9 @@
     "moon": "Luna",
     "officers": "Ufficiali",
     "commanders": "Comandanti",
-    "market": "Mercato"
+    "market": "Mercato",
+    "quests": "Missioni",
+    "achievements": "Traguardi"
   },
   "sidebar": {
     "principal": "Principale",
@@ -1367,5 +1369,53 @@
     "tradesTitle": "Ultime vendite",
     "tradeSold": "Venduti {amount} {give} → {received} {want} ricevuti (al netto della tassa)",
     "tradeBought": "Acquistati {amount} {give} per {paid} {want}"
+  },
+  "quests": {
+    "kicker": "Obiettivi",
+    "title": "Missioni",
+    "subtitle": "Tre missioni al giorno e due a settimana, contate secondo la tua attività reale. Le ricompense sono moltiplicate per {multiplier} (livello di comandante {level}).",
+    "planet": "Le ricompense sono accreditate sul pianeta selezionato: {planet}.",
+    "daily": "Missioni del giorno",
+    "weekly": "Missioni della settimana",
+    "resets": "Azzeramento tra {time}",
+    "reward": "Ricompensa: {reward}",
+    "claim": "Riscuoti",
+    "claimed": "Riscossa",
+    "progress": "{progress} / {target}"
+  },
+  "achievements": {
+    "kicker": "Collezione",
+    "title": "Traguardi",
+    "summary": "{unlocked} traguardi sbloccati su {total} ({percent} %)",
+    "newlyUnlocked": "{count} nuovo/i traguardo/i sbloccato/i!",
+    "unlockedOn": "Sbloccato il {date}",
+    "categories": {
+      "progression": "Progressione",
+      "build": "Costruzione",
+      "combat": "Combattimento",
+      "exploration": "Esplorazione",
+      "social": "Sociale",
+      "economy": "Economia"
+    }
+  },
+  "goals": {
+    "metric": {
+      "buildings": "Completare {target} costruzione/i",
+      "research": "Completare {target} ricerca/e",
+      "units": "Costruire {target} unità al cantiere",
+      "fleets": "Inviare {target} flotta/e",
+      "combatsWon": "Vincere {target} combattimento/i d'attacco",
+      "spy": "Compiere {target} spionaggio/i",
+      "expeditions": "Completare {target} spedizione/i",
+      "commanderLevel": "Raggiungere il livello {target} di comandante",
+      "planets": "Possedere {target} pianeta/i",
+      "moons": "Possedere {target} luna/e",
+      "alliance": "Unirsi a un'alleanza",
+      "groupAttacks": "Partecipare a un attacco di gruppo",
+      "officers": "Assumere {target} ufficiale/i",
+      "commanders": "Reclutare un comandante di flotta",
+      "trades": "Effettuare {target} scambio/i sul mercato",
+      "missiles": "Lanciare {target} missile/i interplanetario/i"
+    }
   }
 }
