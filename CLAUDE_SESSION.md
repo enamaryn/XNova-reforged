@@ -16,6 +16,15 @@
 - [x] Tests : unitaires (10), intégration (11 dont réclamations simultanées), E2E (1), rendu mobile (12 cas supplémentaires : 390 px, 320 px, PC, fr et de).
 - Restent absents : événements saisonniers, boss galactiques, invasions, saisons compétitives.
 
+## Session — checklist de validation V1
+
+**Date :** 23 octobre 2026. Demande du propriétaire : savoir si le MVP est terminé et si une V1 peut être validée, puis « rédige la checklist de validation V1 ».
+
+- [x] Bilan honnête : registre d'audit clos (19 constats), trois objectifs historiques atteints ; réserves : uptime sur un jour et demi seulement, charge non mesurée sur le serveur du propriétaire, preuve d'envoi SMTP non archivée, Lighthouse à refaire en production, fonctions récentes jamais jouées ni relues par un tiers.
+- [x] `docs/V1_VALIDATION.md` : checklist en 10 sections (fonctions, sécurité, économie, qualité, exploitation, disponibilité, email, équilibrage, hors dépôt, décision), niveaux **B** (bloquant) et **R** (recommandé), statuts « Fait (Claude) », « Fait (propriétaire) » et « À faire », ordre de vérification conseillé.
+- [ ] À faire par le propriétaire : cocher les cases, notamment 5.3 (restauration d'une vraie sauvegarde), 7.1 à 7.2 (email réel), 6.1 (uptime sur 7 jours pleins).
+- [ ] À lancer : revue indépendante des fonctions ajoutées depuis le 12 octobre (case 2.6), semaine de test avec joueurs réels (8.1).
+
 ## Session — événements du monde (Phase 7)
 
 **Date :** 22 octobre 2026. Demande du propriétaire : événements saisonniers, boss, invasions et saisons « proposés en rappel suivant la période dans le menu admin, pas automatiques de base », avec une case à cocher pour les rendre automatiques. Uptime confirmé par le propriétaire (capture : 99,1 % sur 7 j et 30 j, 99,17 % sur 24 h).
