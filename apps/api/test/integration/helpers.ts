@@ -256,3 +256,28 @@ export async function createPlanetAtFreeCoordinates(
   }
   throw new Error('Aucune coordonnée libre trouvée pour la planète de test');
 }
+
+/**
+ * Déplace une planète à des coordonnées précises (zone réservée au test) en gardant galaxie et système : si la
+ * position voulue est déjà prise par une planète d'une autre suite (contrainte unique), une autre position libre du
+ * même système est utilisée. Retourne la position réellement obtenue ; `data` ajoute d'autres champs à la mise à jour.
+ */
+export async function movePlanetToFreeCoordinates(
+  database: Pick<PrismaClient, 'planet'>,
+  planetId: string,
+  to: { galaxy: number; system: number; position: number },
+  data: Omit<Prisma.PlanetUncheckedUpdateInput, 'galaxy' | 'system' | 'position'> = {},
+) {
+  const others = Array.from({ length: 15 }, (_, index) => index + 1)
+    .filter((position) => position !== to.position)
+    .sort(() => Math.random() - 0.5);
+  for (const position of [to.position, ...others]) {
+    try {
+      await database.planet.update({ where: { id: planetId }, data: { ...data, galaxy: to.galaxy, system: to.system, position } });
+      return position;
+    } catch (error) {
+      if ((error as { code?: string }).code !== 'P2002') throw error;
+    }
+  }
+  throw new Error('Aucune position libre dans le système de test');
+}
