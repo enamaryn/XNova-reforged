@@ -72,7 +72,6 @@ describe("API integration - Sessions, rotation et bannissement (SEC-03)", () => 
     app = integration.app;
     database = integration.database;
     admin = app.get(AdminService);
-    await app.listen(0);
     port = (app.getHttpServer().address() as { port: number }).port;
 
     const actor = buildTestUser();

@@ -8,7 +8,13 @@ import {
 import { CombatService } from '../../src/combat/combat.service';
 import { DatabaseService } from '../../src/database/database.service';
 import { FleetCronService } from '../../src/fleet/fleet-cron.service';
-import { buildTestUser, cleanupTestUser, createIntegrationApp, registerAndLogin } from './helpers';
+import {
+  buildTestUser,
+  cleanupTestUser,
+  createIntegrationApp,
+  registerAndLogin,
+  createPlanetAtFreeCoordinates,
+} from './helpers';
 
 /**
  * Commandants de flotte : recrutement payé, limite par joueur, points de compétence, assignation à l'envoi
@@ -36,12 +42,12 @@ describe('API integration - commandants de flotte', () => {
 
   /** Colonie du joueur à des coordonnées aléatoires : cible d'un transport (la cible doit exister). */
   const colony = async (u: { userId: string; planet: { galaxy: number } }) => {
-    const system = 300 + Math.floor(Math.random() * 190);
-    const position = 1 + Math.floor(Math.random() * 15);
-    await database.planet.create({
-      data: { userId: u.userId, name: 'Cible', galaxy: u.planet.galaxy, system, position, fieldsMax: 163 },
-    });
-    return { toGalaxy: u.planet.galaxy, toSystem: system, toPosition: position };
+    const planet = await createPlanetAtFreeCoordinates(
+      database,
+      { userId: u.userId, name: 'Cible', fieldsMax: 163 },
+      { galaxy: u.planet.galaxy, system: [300, 489] },
+    );
+    return { toGalaxy: planet.galaxy, toSystem: planet.system, toPosition: planet.position };
   };
   const targets = new Map<string, { toGalaxy: number; toSystem: number; toPosition: number }>();
   const player = async () => {

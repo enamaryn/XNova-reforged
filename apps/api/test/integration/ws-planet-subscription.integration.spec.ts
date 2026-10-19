@@ -66,7 +66,6 @@ describe('API integration - Autorisation WebSocket (SEC-02)', () => {
     app = integration.app;
     database = integration.database;
     gateway = app.get(GameEventsGateway);
-    await app.listen(0);
     port = (app.getHttpServer().address() as { port: number }).port;
   });
 
