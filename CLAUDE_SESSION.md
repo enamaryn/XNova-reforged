@@ -16,6 +16,15 @@
 - [x] Tests : unitaires (10), intégration (11 dont réclamations simultanées), E2E (1), rendu mobile (12 cas supplémentaires : 390 px, 320 px, PC, fr et de).
 - Restent absents : événements saisonniers, boss galactiques, invasions, saisons compétitives.
 
+## Session — expérience de défense des commandants
+
+**Date :** 19 octobre 2026. Décision du propriétaire : l'attaque (gagnée ou perdue) et la défense réussie donnent de l'expérience aux commandants.
+
+- [x] Vérification : l'attaque donnait déjà de l'expérience, victoire ou défaite (100 + 1 par 1 000 de ressources détruites). La défense n'en donnait pas.
+- [x] `combat.service.ts` : quand l'attaquant ne l'emporte pas (défense gagnée ou égalité), les commandants des flottes en maintien reçoivent l'expérience selon la valeur des vaisseaux perdus par l'attaquant ; jamais de mort en défense.
+- [x] Tests : défense réussie (échoue sans le correctif), défense échouée (aucune expérience, aucune mort), flotte sans commandant.
+- [x] FAQ (5 langues) et checklist V1 (limites connues) mises à jour.
+
 ## Session — interblocage des files de construction
 
 **Date :** 19 octobre 2026. Demande du propriétaire : corriger l'ordre de verrouillage et ajouter le test qui reproduit l'interblocage ; uptime relevé (99,84 % sur 7 j, 99,82 % sur 30 j, 100 % sur 24 h) ; envoi d'email réel, inscription, secrets et HTTPS confirmés par le propriétaire.
