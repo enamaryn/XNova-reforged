@@ -2,7 +2,13 @@ import request from 'supertest';
 import { INestApplication } from '@nestjs/common';
 import { DatabaseService } from '../../src/database/database.service';
 import { MissilesService } from '../../src/missiles/missiles.service';
-import { buildTestUser, cleanupTestUser, createIntegrationApp, registerAndLogin } from './helpers';
+import {
+  buildTestUser,
+  cleanupTestUser,
+  createIntegrationApp,
+  registerAndLogin,
+  movePlanetToFreeCoordinates,
+} from './helpers';
 
 /**
  * Missiles interplanétaires : le silo range 10 missiles par niveau, le tir est limité par la portée
@@ -44,19 +50,19 @@ describe('API integration - missiles interplanétaires', () => {
   };
   const auth = (token: string) => ({ Authorization: `Bearer ${token}` });
 
+  /** Positions obtenues par le dernier `duel` (voir movePlanetToFreeCoordinates). */
+  let attackerPosition = 5;
+  let defenderPosition = 6;
   /** Place deux joueurs à `distance` systèmes l'un de l'autre, dans une zone libre. */
   const duel = async (distance: number) => {
     const attacker = await player();
     const defender = await player();
     nextSystem += 20;
-    await database.planet.update({
-      where: { id: attacker.planetId },
-      data: { galaxy: 2, system: nextSystem, position: 5, missileSilo: 5 },
-    });
-    await database.planet.update({
-      where: { id: defender.planetId },
-      data: { galaxy: 2, system: nextSystem + distance, position: 6 },
-    });
+    // positions préférées 5 et 6 ; une autre position du système est prise si une planète d'une autre suite l'occupe
+    attackerPosition = await movePlanetToFreeCoordinates(
+      database, attacker.planetId, { galaxy: 2, system: nextSystem, position: 5 }, { missileSilo: 5 });
+    defenderPosition = await movePlanetToFreeCoordinates(
+      database, defender.planetId, { galaxy: 2, system: nextSystem + distance, position: 6 });
     return { attacker, defender, defenderSystem: nextSystem + distance };
   };
   const setTech = (userId: string, techId: number, level: number) =>
@@ -77,7 +83,7 @@ describe('API integration - missiles interplanétaires', () => {
     request(app.getHttpServer())
       .post('/missiles/launch')
       .set(auth(u.token))
-      .send({ planetId: u.planetId, toGalaxy: 2, toSystem: system, toPosition: 6, amount, ...extra });
+      .send({ planetId: u.planetId, toGalaxy: 2, toSystem: system, toPosition: defenderPosition, amount, ...extra });
   const arriveNow = (id: string) =>
     database.missileStrike.update({ where: { id }, data: { arrivalTime: new Date(Date.now() - 1000) } });
 
@@ -124,15 +130,15 @@ describe('API integration - missiles interplanétaires', () => {
       await launch(attacker, defenderSystem, 99).expect(400); // stock insuffisant
       await request(app.getHttpServer())
         .post('/missiles/launch').set(auth(attacker.token))
-        .send({ planetId: attacker.planetId, toGalaxy: 3, toSystem: defenderSystem, toPosition: 6, amount: 1 })
+        .send({ planetId: attacker.planetId, toGalaxy: 3, toSystem: defenderSystem, toPosition: defenderPosition, amount: 1 })
         .expect(400);
       await request(app.getHttpServer())
         .post('/missiles/launch').set(auth(attacker.token))
-        .send({ planetId: attacker.planetId, toGalaxy: 2, toSystem: defenderSystem, toPosition: 14, amount: 1 })
+        .send({ planetId: attacker.planetId, toGalaxy: 2, toSystem: defenderSystem, toPosition: defenderPosition === 14 ? 13 : 14, amount: 1 })
         .expect(400);
       await request(app.getHttpServer())
         .post('/missiles/launch').set(auth(attacker.token))
-        .send({ planetId: attacker.planetId, toGalaxy: 2, toSystem: defenderSystem - 10, toPosition: 5, amount: 1 })
+        .send({ planetId: attacker.planetId, toGalaxy: 2, toSystem: defenderSystem - 10, toPosition: attackerPosition, amount: 1 })
         .expect(400); // propre planète
       expect(await amountOf(attacker.planetId, 502)).toBe(5);
       expect(await database.missileStrike.count({ where: { userId: attacker.userId } })).toBe(0);

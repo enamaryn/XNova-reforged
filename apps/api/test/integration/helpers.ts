@@ -1,6 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { execSync } from 'child_process';
 import { randomBytes } from 'crypto';
 import { mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'fs';
@@ -71,7 +71,10 @@ export async function createIntegrationApp(options: { setupCompleted?: boolean }
 
   const app = moduleRef.createNestApplication();
   configureApp(app);
-  await app.init();
+  // Le serveur HTTP écoute sur un port éphémère, une fois pour toute la suite. Sans cela, supertest en ouvre un
+  // temporaire à chaque requête et ses requêtes simultanées sur le même serveur se coupent mutuellement
+  // (`ECONNRESET` sur les tests de concurrence).
+  await app.listen(0);
 
   // Les tâches planifiées de l'application sont arrêtées : les suites appellent elles-mêmes les services
   // de résolution (arrivées de flottes, files, production). Un cron concurrent prendrait en charge un
@@ -222,4 +225,59 @@ export async function useIsolatedSchema(prefix: string) {
       }
     },
   };
+}
+
+/**
+ * Crée une planète à des coordonnées libres. Les suites d'intégration partagent une même base (semis de galaxie,
+ * autres tests) : un tirage au hasard peut tomber sur une position déjà prise (contrainte unique). On retire alors
+ * d'autres coordonnées plutôt que de laisser un test échouer pour une raison qui lui est étrangère.
+ * Les bornes sont inclusives ; `position` vaut 1 à 15 par défaut.
+ */
+export async function createPlanetAtFreeCoordinates(
+  database: Pick<PrismaClient, 'planet'>,
+  data: Omit<Prisma.PlanetUncheckedCreateInput, 'galaxy' | 'system' | 'position'>,
+  area: { galaxy: number | [number, number]; system: [number, number]; position?: [number, number] },
+) {
+  const between = (range: [number, number]) => range[0] + Math.floor(Math.random() * (range[1] - range[0] + 1));
+  const galaxy = Array.isArray(area.galaxy) ? area.galaxy : ([area.galaxy, area.galaxy] as [number, number]);
+  for (let attempt = 0; attempt < 60; attempt += 1) {
+    try {
+      return await database.planet.create({
+        data: {
+          ...data,
+          galaxy: between(galaxy),
+          system: between(area.system),
+          position: between(area.position ?? [1, 15]),
+        },
+      });
+    } catch (error) {
+      if ((error as { code?: string }).code !== 'P2002') throw error;
+    }
+  }
+  throw new Error('Aucune coordonnée libre trouvée pour la planète de test');
+}
+
+/**
+ * Déplace une planète à des coordonnées précises (zone réservée au test) en gardant galaxie et système : si la
+ * position voulue est déjà prise par une planète d'une autre suite (contrainte unique), une autre position libre du
+ * même système est utilisée. Retourne la position réellement obtenue ; `data` ajoute d'autres champs à la mise à jour.
+ */
+export async function movePlanetToFreeCoordinates(
+  database: Pick<PrismaClient, 'planet'>,
+  planetId: string,
+  to: { galaxy: number; system: number; position: number },
+  data: Omit<Prisma.PlanetUncheckedUpdateInput, 'galaxy' | 'system' | 'position'> = {},
+) {
+  const others = Array.from({ length: 15 }, (_, index) => index + 1)
+    .filter((position) => position !== to.position)
+    .sort(() => Math.random() - 0.5);
+  for (const position of [to.position, ...others]) {
+    try {
+      await database.planet.update({ where: { id: planetId }, data: { ...data, galaxy: to.galaxy, system: to.system, position } });
+      return position;
+    } catch (error) {
+      if ((error as { code?: string }).code !== 'P2002') throw error;
+    }
+  }
+  throw new Error('Aucune position libre dans le système de test');
 }

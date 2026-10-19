@@ -1,5 +1,6 @@
 import { DatabaseService } from '../../src/database/database.service';
 import { ResourcesService } from '../../src/resources/resources.service';
+import { createPlanetAtFreeCoordinates } from './helpers';
 
 /**
  * ECO-01 (niveau API + PostgreSQL) — une planète interrogée très souvent ne perd aucune fraction
@@ -35,18 +36,11 @@ describe('API integration - API interrogée fréquemment (ECO-01)', () => {
       },
     });
     userId = user.id;
-    const planet = await database.planet.create({
-      data: {
-        userId,
-        name: 'ECO01',
-        galaxy: 9,
-        system: 450 + Math.floor(Math.random() * 40),
-        position: 1 + Math.floor(Math.random() * 15),
-        metal: 500,
-        crystal: 500,
-        deuterium: 0,
-      },
-    });
+    const planet = await createPlanetAtFreeCoordinates(
+      database,
+      { userId, name: 'ECO01', metal: 500, crystal: 500, deuterium: 0 },
+      { galaxy: 9, system: [450, 489] },
+    );
     planetId = planet.id;
   });
 

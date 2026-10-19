@@ -3,7 +3,13 @@ import { INestApplication } from '@nestjs/common';
 import { MARKET_MAX_ACTIVE_OFFERS, MARKET_OFFER_HOURS } from '@xnova/game-config';
 import { DatabaseService } from '../../src/database/database.service';
 import { MarketService } from '../../src/market/market.service';
-import { buildTestUser, cleanupTestUser, createIntegrationApp, registerAndLogin } from './helpers';
+import {
+  buildTestUser,
+  cleanupTestUser,
+  createIntegrationApp,
+  registerAndLogin,
+  createPlanetAtFreeCoordinates,
+} from './helpers';
 
 /**
  * Marché : séquestre à la création, achat total ou partiel, taxe détruite, annulation et expiration avec
@@ -259,9 +265,11 @@ describe('API integration - marché', () => {
 
     it("le remboursement va sur une autre planète du vendeur si la planète d'origine a disparu", async () => {
       const seller = await player();
-      const colony = await database.planet.create({
-        data: { userId: seller.userId, name: 'Colonie', galaxy: 8, system: 100 + Math.floor(Math.random() * 300), position: 1 + Math.floor(Math.random() * 15), fieldsMax: 163, metal: 5000 },
-      });
+      const colony = await createPlanetAtFreeCoordinates(
+        database,
+        { userId: seller.userId, name: 'Colonie', fieldsMax: 163, metal: 5000 },
+        { galaxy: 8, system: [100, 399] },
+      );
       const created = await request(app.getHttpServer())
         .post('/market/offers').set(auth(seller))
         .send({ planetId: colony.id, give: 'metal', want: 'crystal', amount: 1000, rate: 1 }).expect(201);

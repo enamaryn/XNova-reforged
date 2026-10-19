@@ -6,6 +6,7 @@ import {
   cleanupTestUser,
   createIntegrationApp,
   registerAndLogin,
+  createPlanetAtFreeCoordinates,
 } from './helpers';
 
 describe('API integration - Flottes', () => {
@@ -102,9 +103,11 @@ describe('API integration - Flottes', () => {
         password: 'x',
       },
     });
-    const targetPlanet = await database.planet.create({
-      data: { userId: rival.id, name: 'Cible', galaxy: 9, system: 497, position: 1 + Math.floor(Math.random() * 15) },
-    });
+    const targetPlanet = await createPlanetAtFreeCoordinates(
+      database,
+      { userId: rival.id, name: 'Cible' },
+      { galaxy: 9, system: [497, 497] },
+    );
 
     // POST /fleet/send - Envoyer une flotte (mission transport = 3)
     const sendResponse = await request(server)
@@ -165,9 +168,11 @@ describe('API integration - Flottes', () => {
         password: 'x',
       },
     });
-    const targetPlanet = await database.planet.create({
-      data: { userId: rival.id, name: 'Cible', galaxy: 9, system: 496, position: 1 + Math.floor(Math.random() * 15) },
-    });
+    const targetPlanet = await createPlanetAtFreeCoordinates(
+      database,
+      { userId: rival.id, name: 'Cible' },
+      { galaxy: 9, system: [496, 496] },
+    );
 
     // Tenter d'envoyer une flotte sans vaisseaux disponibles : 400 précis, jamais 500
     const sendResponse = await request(server)

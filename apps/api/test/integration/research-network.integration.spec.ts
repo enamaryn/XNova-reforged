@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { INestApplication } from '@nestjs/common';
 import { DatabaseService } from '../../src/database/database.service';
-import { buildTestUser, cleanupTestUser, createIntegrationApp, registerAndLogin } from './helpers';
+import { buildTestUser, cleanupTestUser, createIntegrationApp, createPlanetAtFreeCoordinates, registerAndLogin } from './helpers';
 
 /**
  * Réseau de recherche intergalactique (123) : le laboratoire effectif d'une recherche est celui de la planète
@@ -38,11 +38,11 @@ describe('API integration - réseau de recherche intergalactique', () => {
   type Player = Awaited<ReturnType<typeof player>>;
   const auth = (u: Player) => ({ Authorization: `Bearer ${u.token}` });
   const colony = (u: Player, system: number, researchLab: number, extra: object = {}) =>
-    database.planet.create({
-      data: {
-        userId: u.userId, name: 'Colonie', galaxy: 5, system, position: 3, fieldsMax: 163, researchLab, ...extra,
-      },
-    });
+    createPlanetAtFreeCoordinates(
+      database,
+      { userId: u.userId, name: 'Colonie', fieldsMax: 163, researchLab, ...extra },
+      { galaxy: 5, system: [system, system] },
+    );
   const listing = async (u: Player, planetId = u.planetId) =>
     (await request(app.getHttpServer()).get('/technologies').query({ planetId }).set(auth(u)).expect(200)).body;
   const timeOf = (body: any, techId: number) => body.technologies.find((t: any) => t.id === techId).buildTime;
