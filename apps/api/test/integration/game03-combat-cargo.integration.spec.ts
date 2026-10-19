@@ -1,7 +1,12 @@
 import { INestApplication } from '@nestjs/common';
 import { DatabaseService } from '../../src/database/database.service';
 import { FleetCronService } from '../../src/fleet/fleet-cron.service';
-import { DORMANT_SINCE, createIntegrationApp, deleteUsersByIds } from './helpers';
+import {
+  DORMANT_SINCE,
+  createIntegrationApp,
+  deleteUsersByIds,
+  createPlanetAtFreeCoordinates,
+} from './helpers';
 
 /**
  * GAME-03 — combat complet avec le VRAI moteur via le cron de flotte : retour, pertes, cargaison
@@ -57,12 +62,8 @@ describe('API integration - Cargo et combat (GAME-03)', () => {
       });
     attackerId = (await mk('a')).id;
     defenderId = (await mk('d')).id;
-    origin = await database.planet.create({
-      data: { userId: attackerId, name: 'Origine', galaxy: 9, system: 480, position: 3 },
-    });
-    target = await database.planet.create({
-      data: { userId: defenderId, name: 'Cible', galaxy: 9, system: 481, position: 4 },
-    });
+    origin = await createPlanetAtFreeCoordinates(database, { userId: attackerId, name: 'Origine' }, { galaxy: 9, system: [480, 480] });
+    target = await createPlanetAtFreeCoordinates(database, { userId: defenderId, name: 'Cible' }, { galaxy: 9, system: [481, 481] });
   });
 
   beforeEach(async () => {

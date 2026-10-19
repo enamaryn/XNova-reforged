@@ -1,5 +1,6 @@
 import { ResourcesService } from '../../src/resources/resources.service';
 import { DatabaseService } from '../../src/database/database.service';
+import { createPlanetAtFreeCoordinates } from './helpers';
 
 /**
  * ECO-02 — le rafraîchissement ne doit pas écraser les débits/crédits concurrents.
@@ -37,29 +38,11 @@ describe('API integration - Concurrence des ressources (ECO-02)', () => {
   beforeEach(async () => {
     initialLastUpdate = new Date(Date.now() - 3_600_000);
     await database.planet.deleteMany({ where: { userId } });
-    // Coordonnées tirées au hasard : une collision avec une planète d'une autre suite (base partagée) est
-    // possible, on retire alors d'autres coordonnées plutôt que de faire échouer ce test pour une raison étrangère
-    let planet: Awaited<ReturnType<typeof database.planet.create>> | undefined;
-    for (let attempt = 0; attempt < 30 && !planet; attempt += 1) {
-      try {
-        planet = await database.planet.create({
-          data: {
-            userId,
-            name: 'ECO02',
-            galaxy: 1 + Math.floor(Math.random() * 9),
-            system: 1 + Math.floor(Math.random() * 499),
-            position: 1 + Math.floor(Math.random() * 15),
-            metal: INITIAL,
-            crystal: INITIAL,
-            deuterium: INITIAL,
-            lastUpdate: initialLastUpdate,
-          },
-        });
-      } catch (error) {
-        if ((error as { code?: string }).code !== 'P2002') throw error;
-      }
-    }
-    if (!planet) throw new Error('Aucune coordonnée libre trouvée pour la planète de test');
+    const planet = await createPlanetAtFreeCoordinates(
+      database,
+      { userId, name: 'ECO02', metal: INITIAL, crystal: INITIAL, deuterium: INITIAL, lastUpdate: initialLastUpdate },
+      { galaxy: [1, 9], system: [1, 499] },
+    );
     planetId = planet.id;
   });
 
