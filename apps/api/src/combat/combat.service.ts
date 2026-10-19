@@ -160,10 +160,10 @@ export class CombatService {
           toPosition: fleet.toPosition,
           toMoon: target.isMoon,
         },
-        select: { id: true, ships: true },
+        select: { id: true, ships: true, commanderId: true },
         orderBy: { id: 'asc' },
       })
-    ).map((holder) => ({ id: holder.id, ships: this.normalizeShipMap(holder.ships) }));
+    ).map((holder) => ({ id: holder.id, ships: this.normalizeShipMap(holder.ships), commanderId: holder.commanderId }));
     const defendingShips: Record<number, number> = { ...defenderShips };
     for (const holder of holders) {
       for (const [id, amount] of Object.entries(holder.ships)) {
@@ -473,6 +473,20 @@ export class CombatService {
             ? { ships: remaining }
             : { status: 'completed', ships: {}, cargo: {}, returnTime: null, holdUntil: null },
         });
+      }
+
+      // Défense réussie (l'attaquant ne l'emporte pas) : les commandants des flottes en maintien gagnent de
+      // l'expérience, selon la valeur des vaisseaux que l'attaque a perdus. Ils ne risquent pas la mort ici.
+      if (combat.result !== CombatResult.ATTACKER_WIN) {
+        const attackerLossValue = this.lossValue(combat.attackerLosses ?? {});
+        for (const holder of holders) {
+          if (!holder.commanderId) continue;
+          await applyCombatToCommander(tx, holder.commanderId, {
+            enemyLossValue: attackerLossValue,
+            fleetDestroyed: false,
+            died: false,
+          });
+        }
       }
 
       // Défenses perdues pour de bon = détruites moins réparées
