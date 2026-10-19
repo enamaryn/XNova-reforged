@@ -740,8 +740,10 @@ model AttackGroup {
   toPosition  Int
   toMoon      Boolean  @default(false)
 
-  // Instant d'arrivee commun, fixe par la premiere flotte
+  // Instant d'arrivee commun : fixe par la premiere flotte, repousse ensuite par les flottes plus lentes
   arrivalTime DateTime
+  // Arrivee prevue a la creation : reference du retard maximal (+30 %)
+  plannedArrivalTime DateTime
 
   fleets      Fleet[]
   createdAt   DateTime @default(now())

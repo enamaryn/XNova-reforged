@@ -1,4 +1,4 @@
-import { MAX_GROUP_FLEETS } from '@xnova/game-config';
+import { GROUP_MAX_DELAY_RATIO, MAX_GROUP_FLEETS, resolveGroupArrival } from '@xnova/game-config';
 import { mergeShipMaps, simulateCombat, splitLoot } from '@xnova/game-engine';
 
 const noTech = { weapon: 0, shield: 0, armor: 0 };
@@ -103,5 +103,59 @@ describe('attaques groupées : outils du moteur', () => {
       }
       expect(bLost).toBeGreaterThan(0);
     });
+  });
+});
+
+describe('attaque groupée coordonnée : heure d\'arrivée du groupe', () => {
+  const minute = 60_000;
+  const t0 = new Date('2026-10-19T12:00:00.000Z');
+  /** Groupe créé à t0, arrivée prévue 100 minutes plus tard. */
+  const group = (overrides: Partial<{ arrivalTime: Date; plannedArrivalTime: Date }> = {}) => ({
+    createdAt: t0,
+    plannedArrivalTime: new Date(t0.getTime() + 100 * minute),
+    arrivalTime: new Date(t0.getTime() + 100 * minute),
+    ...overrides,
+  });
+  const at = (minutes: number) => new Date(t0.getTime() + minutes * minute);
+
+  it('le retard maximal est de 30 % de la durée prévue', () => {
+    expect(GROUP_MAX_DELAY_RATIO).toBe(0.3);
+  });
+
+  it("une flotte assez rapide arrive avec le groupe, sans le retarder", () => {
+    const result = resolveGroupArrival(group(), at(10), 60 * minute);
+    expect(result).toEqual({ ok: true, arrivalTime: at(100), delayed: false });
+  });
+
+  it("une flotte arrivant pile à l'heure du groupe ne le retarde pas", () => {
+    expect(resolveGroupArrival(group(), at(10), 90 * minute)).toEqual({ ok: true, arrivalTime: at(100), delayed: false });
+  });
+
+  it('une flotte plus lente repousse le groupe à sa propre arrivée, dans la limite de +30 %', () => {
+    // arrive à t0 + 10 + 110 = 120 minutes : +20 % de la durée prévue (100 minutes)
+    expect(resolveGroupArrival(group(), at(10), 110 * minute)).toEqual({ ok: true, arrivalTime: at(120), delayed: true });
+  });
+
+  it('accepte exactement +30 % et refuse au-delà', () => {
+    expect(resolveGroupArrival(group(), at(0), 130 * minute)).toEqual({ ok: true, arrivalTime: at(130), delayed: true });
+    const refused = resolveGroupArrival(group(), at(0), 131 * minute);
+    expect(refused).toMatchObject({ ok: false, reason: 'too_slow' });
+    expect((refused as { latestArrival: Date }).latestArrival).toEqual(at(130));
+  });
+
+  it("le retard se mesure depuis la durée prévue à la création, pas depuis l'arrivée déjà repoussée", () => {
+    // le groupe a déjà été repoussé à +25 % (125 minutes) : une autre flotte ne peut aller que jusqu'à 130 minutes
+    const pushed = group({ arrivalTime: at(125) });
+    expect(resolveGroupArrival(pushed, at(10), 118 * minute)).toEqual({ ok: true, arrivalTime: at(128), delayed: true });
+    expect(resolveGroupArrival(pushed, at(10), 121 * minute)).toMatchObject({ ok: false, reason: 'too_slow' });
+  });
+
+  it('un groupe déjà arrivé est refusé', () => {
+    expect(resolveGroupArrival(group(), at(100), minute)).toMatchObject({ ok: false, reason: 'gone' });
+    expect(resolveGroupArrival(group(), at(150), minute)).toMatchObject({ ok: false, reason: 'gone' });
+  });
+
+  it('une durée négative ou nulle compte comme immédiate', () => {
+    expect(resolveGroupArrival(group(), at(10), -5 * minute)).toEqual({ ok: true, arrivalTime: at(100), delayed: false });
   });
 });

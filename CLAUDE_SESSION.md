@@ -16,6 +16,15 @@
 - [x] Tests : unitaires (10), intégration (11 dont réclamations simultanées), E2E (1), rendu mobile (12 cas supplémentaires : 390 px, 320 px, PC, fr et de).
 - Restent absents : événements saisonniers, boss galactiques, invasions, saisons compétitives.
 
+## Session — attaque groupée coordonnée
+
+**Date :** 19 octobre 2026. Décision du propriétaire : le groupe arrive ensemble, au rythme de la flotte la plus lente ; retard limité à +30 % de la durée prévue (choix du propriétaire parmi les options proposées).
+
+- [x] Avant : une flotte plus lente que le groupe était refusée (« Flotte trop lente »).
+- [x] `GROUP_MAX_DELAY_RATIO` et `resolveGroupArrival` (`game-config/src/attack-groups.ts`) : règle pure, testée à part. Colonne `AttackGroup.plannedArrivalTime` (migration `20261023100000`) : durée prévue à la création, référence du retard (le retard ne se cumule pas sans borne).
+- [x] `fleet.service.ts` : la flotte qui rejoint recalcule l'arrivée sur la ligne du groupe verrouillée ; si elle retarde le groupe, l'arrivée du groupe et celles de toutes les flottes déjà parties sont décalées (retour décalé d'autant) ; réponse enrichie (`groupDelayed`).
+- [x] Tests : 8 unitaires (limites exactes, cumul, groupe déjà arrivé), 4 d'intégration (retard accepté et propagé, retard refusé sans rien changer, flotte rapide, deux flottes lentes simultanées) ; texte d'aide de la page Flotte et FAQ en 5 langues.
+
 ## Session — interblocage des files de construction
 
 **Date :** 19 octobre 2026. Demande du propriétaire : corriger l'ordre de verrouillage et ajouter le test qui reproduit l'interblocage ; uptime relevé (99,84 % sur 7 j, 99,82 % sur 30 j, 100 % sur 24 h) ; envoi d'email réel, inscription, secrets et HTTPS confirmés par le propriétaire.
