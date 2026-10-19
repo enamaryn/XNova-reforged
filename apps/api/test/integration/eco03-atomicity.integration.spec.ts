@@ -11,6 +11,7 @@ import {
   createIntegrationApp,
   registerAndLogin,
   deleteUsersByIds,
+  createPlanetAtFreeCoordinates,
 } from './helpers';
 
 const settle = <T>(promises: Promise<T>[]) => Promise.allSettled(promises);
@@ -146,15 +147,11 @@ describe('API integration - Atomicité des disponibilités et files (ECO-03)', (
         password: 'x',
       },
     });
-    const targetPlanet = await database.planet.create({
-      data: {
-        userId: rival.id,
-        name: 'Cible',
-        galaxy: 9,
-        system: 498,
-        position: 1 + Math.floor(Math.random() * 15),
-      },
-    });
+    const targetPlanet = await createPlanetAtFreeCoordinates(
+      database,
+      { userId: rival.id, name: 'Cible' },
+      { galaxy: 9, system: [498, 498] },
+    );
     rivalIds.push(rival.id);
 
     const dto = {

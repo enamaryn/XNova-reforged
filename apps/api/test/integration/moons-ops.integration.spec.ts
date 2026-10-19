@@ -1,7 +1,14 @@
 import request from 'supertest';
 import { INestApplication } from '@nestjs/common';
 import { DatabaseService } from '../../src/database/database.service';
-import { buildTestUser, cleanupTestUser, createIntegrationApp, registerAndLogin } from './helpers';
+import {
+  buildTestUser,
+  cleanupTestUser,
+  createIntegrationApp,
+  registerAndLogin,
+  createPlanetAtFreeCoordinates,
+  movePlanetToFreeCoordinates,
+} from './helpers';
 
 /**
  * Lunes (2e partie) : la phalange scrute les mouvements de flotte autour d'une planète à portée
@@ -40,8 +47,8 @@ describe('API integration - phalange et porte de saut', () => {
 
   /** Place la planète du joueur dans une zone libre de la galaxie 4. */
   const place = async (u: Player, system: number, position = 5) => {
-    await database.planet.update({ where: { id: u.planetId }, data: { galaxy: 4, system, position } });
-    return { galaxy: 4, system, position };
+    const placed = await movePlanetToFreeCoordinates(database, u.planetId, { galaxy: 4, system, position });
+    return { galaxy: 4, system, position: placed };
   };
   const moonOf = (u: Player, c: { galaxy: number; system: number; position: number }, extra: object = {}) =>
     database.planet.create({
@@ -142,10 +149,9 @@ describe('API integration - phalange et porte de saut', () => {
       nextSystem += 30;
       const c1 = await place(u, nextSystem);
       const m1 = await moonOf(u, c1, { jumpGate: 1 });
-      const colony = await database.planet.create({
-        data: { userId: u.userId, name: 'Colonie', galaxy: 4, system: nextSystem + 9, position: 4, fieldsMax: 163 },
-      });
-      const m2 = await moonOf(u, { galaxy: 4, system: nextSystem + 9, position: 4 }, { jumpGate: 2 });
+      const colony = await createPlanetAtFreeCoordinates(
+        database, { userId: u.userId, name: 'Colonie', fieldsMax: 163 }, { galaxy: 4, system: [nextSystem + 9, nextSystem + 9] });
+      const m2 = await moonOf(u, { galaxy: 4, system: colony.system, position: colony.position }, { jumpGate: 2 });
       await database.ship.create({ data: { planetId: m1.id, shipId: 202, amount: 10 } });
       await database.ship.create({ data: { planetId: m1.id, shipId: 206, amount: 4 } });
 
@@ -189,10 +195,9 @@ describe('API integration - phalange et porte de saut', () => {
       const cs = await place(stranger, nextSystem + 1);
       const m1 = await moonOf(u, c1, { jumpGate: 1 });
       const ms = await moonOf(stranger, cs, { jumpGate: 1 });
-      await database.planet.create({
-        data: { userId: u.userId, name: 'Colonie', galaxy: 4, system: nextSystem + 5, position: 2, fieldsMax: 163 },
-      });
-      const m2 = await moonOf(u, { galaxy: 4, system: nextSystem + 5, position: 2 }, { jumpGate: 0 });
+      const colony2 = await createPlanetAtFreeCoordinates(
+        database, { userId: u.userId, name: 'Colonie', fieldsMax: 163 }, { galaxy: 4, system: [nextSystem + 5, nextSystem + 5] });
+      const m2 = await moonOf(u, { galaxy: 4, system: colony2.system, position: colony2.position }, { jumpGate: 0 });
       await database.ship.create({ data: { planetId: m1.id, shipId: 202, amount: 3 } });
       await database.ship.create({ data: { planetId: m1.id, shipId: 212, amount: 3 } });
       const jump = (to: string, ships: object) =>
