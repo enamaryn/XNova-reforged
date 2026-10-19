@@ -1,6 +1,6 @@
 # Checklist de validation V1
 
-Mise à jour : 13 octobre 2026. Document à cocher par le propriétaire au fil des vérifications. Il distingue trois statuts :
+Mise à jour : 19 octobre 2026. Document à cocher par le propriétaire au fil des vérifications. Il distingue trois statuts :
 
 - **Fait (Claude)** : exécuté et rapporté par Claude dans le dépôt ou la CI ; à ne pas confondre avec une validation indépendante.
 - **Fait (propriétaire)** : constaté par le propriétaire sur son serveur (capture, journal, mail reçu).
@@ -37,8 +37,8 @@ Rappel de méthode ([CLAUDE.md](../CLAUDE.md)) : une déclaration de complétion
 | 2.1 | Dépendances de production : 0 alerte haute ou critique | B | job CI « Audit des dépendances de production » vert | Fait (Claude) |
 | 2.2 | Autorisations : un joueur n'accède à aucune donnée d'un autre ; WebSocket vérifié | B | tests `ws-planet-subscription`, `ops03-access-control` (refus interjoueur) | Fait (Claude) |
 | 2.3 | Limitation des tentatives de connexion et d'inscription | B | test `sec04-hardening` | Fait (Claude) |
-| 2.4 | Secrets de production changés (`JWT_SECRET`, `JWT_REFRESH_SECRET`, mots de passe base et Redis) | B | contrôle sur le serveur : aucune valeur de `.env.example` | À faire (propriétaire) |
-| 2.5 | Site servi en HTTPS, `NEXT_PUBLIC_API_URL` et CORS réglés sur l'adresse publique | B | navigateur : cadenas, aucune erreur CORS en console | À faire (propriétaire) |
+| 2.4 | Secrets de production changés (`JWT_SECRET`, `JWT_REFRESH_SECRET`, mots de passe base et Redis) | B | contrôle sur le serveur : aucune valeur de `.env.example` | Fait (propriétaire) le 19 octobre 2026 |
+| 2.5 | Site servi en HTTPS, `NEXT_PUBLIC_API_URL` et CORS réglés sur l'adresse publique | B | navigateur : cadenas, aucune erreur CORS en console | Fait (propriétaire) le 19 octobre 2026 |
 | 2.6 | Revue de sécurité indépendante des fonctions ajoutées depuis le 12 octobre (missiles, lunes, officiers, commandants, attaques groupées, marché, quêtes, événements) : doubles dépenses, concurrence, droits | R | rapport Codex ou équivalent, constats clos | **À faire** |
 | 2.7 | Compte de test et comptes d'essai supprimés ou sans rôle admin | B | liste des comptes dans la console admin | À faire (propriétaire) |
 
@@ -57,7 +57,7 @@ Rappel de méthode ([CLAUDE.md](../CLAUDE.md)) : une déclaration de complétion
 |---|---|---|---|---|
 | 4.1 | CI verte sur `main` : build, lint, tests unitaires et d'intégration, E2E, migrations, installation web | B | page Actions : dernier run de `main` | Fait (Claude) pour #74 et #75 ; **à relire sur le `main` actuel** |
 | 4.2 | Couverture de l'API sous seuil de CI (lignes ≥ 85 %, fonctions ≥ 80 %, branches ≥ 70 %) | B | job « Build, lint et tests » | Fait (Claude) : 92,7 % / 90,1 % / 79,7 % mesurés le 18 octobre |
-| 4.3 | Aucun test instable connu en attente | R | 5 exécutions consécutives de la suite d'intégration sans échec | **À faire** : deux collisions de coordonnées aléatoires ont déjà été corrigées ; un `ECONNRESET` transitoire a été vu sur un test de concurrence du marché |
+| 4.3 | Aucun test instable connu en attente | R | 5 exécutions consécutives de la suite d'intégration sans échec | **En cours** : un interblocage réel (annulation de construction contre finalisation) a été trouvé dans la CI de `main` le 13 octobre et corrigé le 19 octobre (test déterministe `build-queue-lock-order`) ; l'échec de la CI de `main` après la fusion de #75 n'a pas pu être attribué à un test précis ; un `ECONNRESET` transitoire a été vu sur un test de concurrence du marché. À reconfirmer par cinq runs verts consécutifs de `main` |
 | 4.4 | Dette d'outillage (Jest 30, Tailwind 4, eslint-config-next 16) | R | `ROADMAP_MVP.md` | Fait |
 
 ## 5. Exploitation
@@ -75,7 +75,7 @@ Rappel de méthode ([CLAUDE.md](../CLAUDE.md)) : une déclaration de complétion
 
 | # | Critère | Niveau | Preuve attendue | État |
 |---|---|---|---|---|
-| 6.1 | Disponibilité > 99 % sur **7 jours pleins** | B | console admin → Supervision, carte « 7 jours » avec fenêtre pleine | **En cours** : 99,1 % relevé le 13 octobre avec un jour et demi de mesure seulement. À reconfirmer vers le 19 octobre (mesure débutée le 12 octobre à 07:19) |
+| 6.1 | Disponibilité > 99 % sur **7 jours pleins** | B | console admin → Supervision, carte « 7 jours » avec fenêtre pleine | **Fait (propriétaire) le 19 octobre 2026** : **99,84 %** sur 7 jours (16 min d'indisponibilité, 5 pannes), **99,82 %** sur 30 jours (19 min, 6 pannes), 100 % sur 24 h ; mesure depuis le 12 octobre 07:19 (capture du propriétaire) |
 | 6.2 | Mesure de charge **sur le serveur du propriétaire** à ×50 | R | rapport du script de charge (`docs/LOAD_TEST.md`), exécuté depuis une autre machine | **À faire** : mesure faite le 10 octobre sur la machine de test, avec 200 joueurs simulés et 0 erreur |
 | 6.3 | Scénario de charge élargi : attaque, dépôt, colonisation, marché | R | rapport de charge avec ces actions | **À faire** (absents du scénario actuel) |
 | 6.4 | Lighthouse > 90 sur le site déployé (accueil mobile) | R | rapport Lighthouse sur l'adresse publique | À faire : 96 mesuré sur la machine de développement |
@@ -84,8 +84,8 @@ Rappel de méthode ([CLAUDE.md](../CLAUDE.md)) : une déclaration de complétion
 
 | # | Critère | Niveau | Preuve attendue | État |
 |---|---|---|---|---|
-| 7.1 | SMTP réel : envoi du message de test depuis la console admin | B | message reçu dans la boîte du propriétaire | À faire (propriétaire) : déclaré validé, preuve d'envoi non archivée |
-| 7.2 | Inscription avec confirmation d'adresse : le mail arrive (hors spam) et le lien fonctionne | B | inscription d'un compte réel de bout en bout | À faire (propriétaire) |
+| 7.1 | SMTP réel : envoi du message de test depuis la console admin | B | message reçu dans la boîte du propriétaire | Fait (propriétaire) le 19 octobre 2026 |
+| 7.2 | Inscription avec confirmation d'adresse : le mail arrive (hors spam) et le lien fonctionne | B | inscription d'un compte réel de bout en bout | Fait (propriétaire) le 19 octobre 2026 |
 | 7.3 | Réinitialisation de mot de passe et changement d'adresse par mail | R | parcours réel | À faire |
 
 ## 8. Équilibrage et jeu réel
@@ -128,8 +128,8 @@ Ces points ne sont pas visibles depuis le code ; je ne peux ni les vérifier ni 
 
 ### Ordre de vérification conseillé
 
-1. Déployer les deux migrations en attente (5.1), puis relever l'état « Sain » (5.4).
-2. Tester l'email réel de bout en bout (7.1 à 7.2) et la restauration d'une vraie sauvegarde (5.3) : ce sont les deux risques de perte de données ou de verrouillage des joueurs.
+1. Déployer les migrations en attente et le correctif d'interblocage (5.1), puis relever l'état « Sain » (5.4).
+2. ~~Email réel~~ (fait le 19 octobre) ; reste la restauration d'une vraie sauvegarde (5.3) : c'est le dernier risque de perte de données.
 3. Lancer la revue indépendante des fonctions récentes (2.6) pendant la semaine d'uptime.
 4. Lancer la semaine de test avec des joueurs réels (8.1), en parallèle de la mesure d'uptime (6.1).
 5. Mesure de charge sur le serveur (6.2, 6.3) puis Lighthouse sur l'adresse publique (6.4).

@@ -421,8 +421,11 @@ export class BuildingsService {
       getBuildingCost(queueEntry.buildingId, queueEntry.level - 1),
     );
 
-    // Reclamer l'entree (annulation vs finalisation) puis rembourser, de facon atomique
+    // Reclamer l'entree (annulation vs finalisation) puis rembourser, de facon atomique.
+    // Meme ordre de verrouillage que lancement et finalisation : planete AVANT file. L'ordre inverse (file puis
+    // credit de la planete) provoquait un interblocage PostgreSQL quand la finalisation tenait deja la planete.
     const updatedPlanet = await this.database.$transaction(async (tx) => {
+      await lockPlanet(tx, queueEntry.planetId);
       const claimed = await tx.buildQueue.deleteMany({
         where: { id: queueId, completed: false },
       });
