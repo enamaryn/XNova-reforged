@@ -4,7 +4,12 @@ import { DatabaseService } from '../../src/database/database.service';
 import { FleetCronService } from '../../src/fleet/fleet-cron.service';
 import { ResearchService } from '../../src/research/research.service';
 import { ShipyardService } from '../../src/shipyard/shipyard.service';
-import { DORMANT_SINCE, createIntegrationApp, deleteUsersByIds } from './helpers';
+import {
+  DORMANT_SINCE,
+  createIntegrationApp,
+  deleteUsersByIds,
+  createPlanetAtFreeCoordinates,
+} from './helpers';
 
 /**
  * ECO-04 — chaque événement (arrivée, retour, combat, finalisation) n'a d'effet qu'une fois,
@@ -67,24 +72,12 @@ describe('API integration - Exécution unique des événements (ECO-04)', () => 
       });
     userA = (await mkUser('a')).id;
     userB = (await mkUser('b')).id;
-    // Coordonnées tirées au hasard : on retente si l'emplacement est déjà pris (semis de galaxie, autres suites)
-    const mkPlanet = async (userId: string, firstPosition: number, span: number) => {
-      for (let attempt = 0; ; attempt++) {
-        try {
-          return await database.planet.create({
-            data: {
-              userId,
-              name: 'E4',
-              galaxy: 9,
-              system: 490 + Math.floor(Math.random() * 9),
-              position: firstPosition + Math.floor(Math.random() * span),
-            },
-          });
-        } catch (error: any) {
-          if (error?.code !== 'P2002' || attempt >= 50) throw error;
-        }
-      }
-    };
+    const mkPlanet = (userId: string, firstPosition: number, span: number) =>
+      createPlanetAtFreeCoordinates(
+        database,
+        { userId, name: 'E4' },
+        { galaxy: 9, system: [490, 498], position: [firstPosition, firstPosition + span - 1] },
+      );
     origin = await mkPlanet(userA, 1, 7);
     target = await mkPlanet(userB, 8, 7);
   });
