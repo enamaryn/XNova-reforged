@@ -1445,7 +1445,14 @@
     "reward": "Récompense : {reward}",
     "claim": "Réclamer",
     "claimed": "Réclamée",
-    "progress": "{progress} / {target}"
+    "progress": "{progress} / {target}",
+    "pending": {
+      "title": "Récompenses à réclamer ({count})",
+      "hint": "Quêtes terminées avant une remise à zéro et jamais réclamées : elles ne sont pas perdues. Les quêtes du jour restent réclamables 30 jours, celles de la semaine 12 semaines.",
+      "dailyOf": "Quête du {date}",
+      "weeklyOf": "Quête de la semaine {week}",
+      "expires": "Expire dans {time}"
+    }
   },
   "achievements": {
     "kicker": "Collection",

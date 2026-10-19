@@ -102,7 +102,7 @@ Limites connues documentées, à accepter ou à corriger avant la V1 :
 - **Commandants** : seule l'attaque donne de l'expérience ; les non-assignés n'ont aucun bonus.
 - **Attaques groupées** : pas de coordination en temps réel ; défenseur à technologie unique.
 - **Marché** : échange instantané, ressources seulement ; transfert entre comptes possible ; pas de contrats ni de commerce PNJ.
-- **Quêtes** : 34 succès, pas d'historique ni de classements ; récompenses en ressources seulement.
+- **Quêtes** : une quête terminée mais non réclamée n'est plus perdue à la remise à zéro : elle reste réclamable 30 jours (journalières) ou 12 semaines (hebdomadaires), puis expire (décision du propriétaire du 19 octobre 2026, faite) ; 34 succès, pas d'historique ni de classements ; récompenses en ressources seulement.
 - **Événements** : production et taxe du marché seulement ; les quêtes n'en profitent pas encore.
 - **Absents** : boss galactiques, invasions, saisons compétitives.
 

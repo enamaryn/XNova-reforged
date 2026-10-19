@@ -1,8 +1,11 @@
 import {
   ACHIEVEMENTS,
   QUEST_CATALOG,
+  QUEST_CLAIM_WINDOW,
   QUESTS_PER_PERIOD,
   activeQuests,
+  claimablePastPeriods,
+  periodOfKey,
   periodEnd,
   periodKey,
   periodStart,
@@ -105,5 +108,55 @@ describe('succès : catalogue', () => {
     const byMetric = new Map<string, number[]>();
     for (const a of ACHIEVEMENTS) byMetric.set(a.metric, [...(byMetric.get(a.metric) ?? []), a.target]);
     for (const targets of byMetric.values()) expect([...targets].sort((x, y) => x - y)).toEqual(targets);
+  });
+});
+
+describe('quêtes non réclamées : périodes passées encore réclamables', () => {
+  const now = new Date('2026-10-14T15:30:00.000Z'); // mercredi
+
+  it('la fenêtre est de 30 jours pour les journalières et de 12 semaines pour les hebdomadaires', () => {
+    expect(QUEST_CLAIM_WINDOW).toEqual({ daily: 30, weekly: 12 });
+    expect(claimablePastPeriods('daily', now)).toHaveLength(30);
+    expect(claimablePastPeriods('weekly', now)).toHaveLength(12);
+  });
+
+  it("exclut la période en cours et commence à la veille, de la plus récente à la plus ancienne", () => {
+    const days = claimablePastPeriods('daily', now);
+    expect(days[0].key).toBe('2026-10-13');
+    expect(days[0].start).toEqual(new Date('2026-10-13T00:00:00.000Z'));
+    expect(days[0].end).toEqual(new Date('2026-10-14T00:00:00.000Z'));
+    expect(days[29].key).toBe('2026-09-14');
+    expect(days.some((p) => p.key === periodKey('daily', now))).toBe(false);
+  });
+
+  it('les semaines passées sont des semaines ISO complètes, du lundi au dimanche', () => {
+    const weeks = claimablePastPeriods('weekly', now);
+    expect(weeks[0].key).toBe(periodKey('weekly', new Date('2026-10-07T00:00:00.000Z')));
+    expect(weeks[0].start).toEqual(new Date('2026-10-05T00:00:00.000Z')); // lundi
+    expect(weeks[0].end).toEqual(new Date('2026-10-12T00:00:00.000Z'));
+    expect(new Set(weeks.map((p) => p.key)).size).toBe(12);
+  });
+
+  it("une période expire quand elle sort de la fenêtre : la veille dans 30 jours, la plus ancienne demain", () => {
+    const days = claimablePastPeriods('daily', now);
+    // la plus ancienne (30 jours en arrière) expire à minuit prochain, la plus récente 30 jours plus tard
+    expect(days[29].expiresAt).toEqual(new Date('2026-10-15T00:00:00.000Z'));
+    expect(days[0].expiresAt).toEqual(new Date('2026-11-13T00:00:00.000Z'));
+  });
+
+  it("écarte les périodes terminées avant la création du compte", () => {
+    const created = new Date('2026-10-10T08:00:00.000Z');
+    const days = claimablePastPeriods('daily', now, created);
+    // le 10 octobre se termine après la création : conservé ; le 9 est écarté
+    expect(days.map((p) => p.key)).toEqual(['2026-10-13', '2026-10-12', '2026-10-11', '2026-10-10']);
+    expect(claimablePastPeriods('daily', now, new Date('2026-10-14T01:00:00.000Z'))).toEqual([]);
+  });
+
+  it('reconnaît le type d’une clé de période', () => {
+    expect(periodOfKey('2026-10-13')).toBe('daily');
+    expect(periodOfKey('2026-W42')).toBe('weekly');
+    expect(periodOfKey('2026-13')).toBeNull();
+    expect(periodOfKey('')).toBeNull();
+    expect(periodOfKey('2026-10-13; DROP TABLE')).toBeNull();
   });
 });

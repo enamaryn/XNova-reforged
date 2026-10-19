@@ -1445,7 +1445,14 @@
     "reward": "Belohnung: {reward}",
     "claim": "Abholen",
     "claimed": "Abgeholt",
-    "progress": "{progress} / {target}"
+    "progress": "{progress} / {target}",
+    "pending": {
+      "title": "Zu holende Belohnungen ({count})",
+      "hint": "Vor einem Zurücksetzen abgeschlossene, nie abgeholte Aufgaben: Sie gehen nicht verloren. Tagesaufgaben bleiben 30 Tage abholbar, Wochenaufgaben 12 Wochen.",
+      "dailyOf": "Aufgabe vom {date}",
+      "weeklyOf": "Aufgabe der Woche {week}",
+      "expires": "Läuft ab in {time}"
+    }
   },
   "achievements": {
     "kicker": "Sammlung",
