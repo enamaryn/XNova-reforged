@@ -114,7 +114,7 @@ Toutes les décisions listées dans la version précédente sont prises et appli
 
 ## Validation V1 (23 octobre 2026)
 
-- [ ] **Checklist de validation V1** : [docs/V1_VALIDATION.md](docs/V1_VALIDATION.md) (critères bloquants et recommandés, preuves attendues, état de chaque case). Le MVP est clos ; la V1 attend les vérifications côté propriétaire (restauration réelle, email réel, uptime sur 7 jours pleins), une revue indépendante des fonctions récentes et une semaine de test avec des joueurs.
+- [ ] **Checklist de validation V1** (19 octobre : uptime 99,84 % sur 7 jours, email réel, secrets et HTTPS confirmés par le propriétaire ; interblocage des files corrigé) : [docs/V1_VALIDATION.md](docs/V1_VALIDATION.md) (critères bloquants et recommandés, preuves attendues, état de chaque case). Le MVP est clos ; la V1 attend les vérifications côté propriétaire (restauration réelle, email réel, uptime sur 7 jours pleins), une revue indépendante des fonctions récentes et une semaine de test avec des joueurs.
 
 ## Événements du monde (22 octobre 2026)
 

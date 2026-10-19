@@ -16,6 +16,16 @@
 - [x] Tests : unitaires (10), intégration (11 dont réclamations simultanées), E2E (1), rendu mobile (12 cas supplémentaires : 390 px, 320 px, PC, fr et de).
 - Restent absents : événements saisonniers, boss galactiques, invasions, saisons compétitives.
 
+## Session — interblocage des files de construction
+
+**Date :** 19 octobre 2026. Demande du propriétaire : corriger l'ordre de verrouillage et ajouter le test qui reproduit l'interblocage ; uptime relevé (99,84 % sur 7 j, 99,82 % sur 30 j, 100 % sur 24 h) ; envoi d'email réel, inscription, secrets et HTTPS confirmés par le propriétaire.
+
+- [x] Cause : le journal PostgreSQL de la CI de `main` (fusion de #74) montrait `deadlock detected` entre `UPDATE "BuildQueue" SET completed` (finalisation : planète puis file) et `UPDATE "Planet" … metal +` (annulation : file puis planète).
+- [x] Correctif : `cancelConstruction` verrouille la planète avant de prendre l'entrée en charge (même ordre que lancement et finalisation). Recherche et chantier avaient déjà un ordre cohérent (vérifiés).
+- [x] Test `build-queue-lock-order.integration.spec.ts` : (1) entrelacement déterministe (la finalisation tient la planète, l'annulation démarre, puis la finalisation prend la file en charge) : **échoue avant le correctif avec l'erreur 40P01**, passe après ; (2) 12 annulations/finalisations simultanées sans erreur de base ni double effet.
+- [x] Checklist V1 mise à jour : 2.4, 2.5, 6.1, 7.1, 7.2 faites (propriétaire) ; 4.3 en cours.
+- Limite : l'échec de la CI de `main` après la fusion de #75 n'a pas été attribué à un test précis (journal tronqué sur du bruit PostgreSQL).
+
 ## Session — checklist de validation V1
 
 **Date :** 23 octobre 2026. Demande du propriétaire : savoir si le MVP est terminé et si une V1 peut être validée, puis « rédige la checklist de validation V1 ».
