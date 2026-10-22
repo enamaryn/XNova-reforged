@@ -47,10 +47,13 @@ describe('API integration - quêtes et succès', () => {
    * Un jour passé où la quête voulue est tirée (l'horloge du service est figée sur ce jour) : la période commence
    * avant les lignes d'activité créées par le test, qui comptent donc bien dans sa fenêtre.
    */
-  const dayWhere = (period: 'daily' | 'weekly', questId: string) => {
+  const dayWhere = (period: 'daily' | 'weekly', questId: string, notWeekly?: string) => {
     for (let day = 1; day < 400; day += 1) {
       const date = new Date(Date.now() - day * 86_400_000);
-      if (activeQuests(period, periodKey(period, date)).some((q) => q.id === questId)) return date;
+      if (!activeQuests(period, periodKey(period, date)).some((q) => q.id === questId)) continue;
+      // Écarte les jours dont la semaine tire la quête hebdomadaire à refuser (le tirage change chaque semaine).
+      if (notWeekly && activeQuests('weekly', periodKey('weekly', date)).some((q) => q.id === notWeekly)) continue;
+      return date;
     }
     throw new Error('quête jamais tirée');
   };
@@ -81,7 +84,7 @@ describe('API integration - quêtes et succès', () => {
     it('refuse une quête non terminée, inactive ou une planète étrangère, sans rien créditer', async () => {
       const u = await player();
       const other = await player();
-      const date = dayWhere('daily', 'daily_build_3');
+      const date = dayWhere('daily', 'daily_build_3', 'weekly_expedition_5');
       freezeClock(date);
       const before = await planetStock(u);
       const early = await claim(u, 'daily_build_3').expect(400);
