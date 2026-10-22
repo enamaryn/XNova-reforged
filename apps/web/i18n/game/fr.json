@@ -76,7 +76,7 @@
     "expeditionHelp": "Envoie la flotte dans l'espace profond (position 16 du système) : elle y trouve parfois des ressources ou des vaisseaux, mais peut aussi être retardée, attaquée par des pirates ou engloutie par un trou noir. Technologie Expédition requise ; le rapport arrive à l'arrivée dans la page Rapports.",
     "holdHelp": "Maintien de position chez un allié : la flotte reste en orbite de sa planète ou de sa lune (jusqu'à 32 h), la défend si elle est attaquée et rentre ensuite. Le carburant de maintien (un dixième de la consommation par heure) est payé d'avance ; le dépôt d'alliance de l'hôte peut le rembourser. Cible : un membre de votre alliance.",
     "holdHours": "Durée du maintien (heures, 1 à 32)",
-    "acsHelp": "Avec les membres de votre alliance, frappez une cible au même instant : choisissez un groupe déjà annoncé pour ces coordonnées (vous arriverez avec lui, si votre flotte est assez rapide) ou créez-en un nouveau.",
+    "acsHelp": "Avec les membres de votre alliance, frappez une cible au même instant : choisissez un groupe déjà annoncé pour ces coordonnées (vous arriverez avec lui ; si votre flotte est plus lente, le groupe vous attend, jusqu'à +30 % de sa durée prévue) ou créez-en un nouveau.",
     "acsGroup": "Groupe",
     "acsNew": "Nouveau groupe (je pars le premier)",
     "acsEntry": "{creator} · {count}/{max} flottes · arrivée {time}"

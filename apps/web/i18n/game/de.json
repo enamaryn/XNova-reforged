@@ -76,7 +76,7 @@
     "expeditionHelp": "Schickt die Flotte in den Weltraum (Position 16 des Systems): Manchmal findet sie Rohstoffe oder Schiffe, kann aber auch aufgehalten, von Piraten angegriffen oder von einem Schwarzen Loch verschluckt werden. Erfordert die Expeditionstechnik; der Bericht kommt bei der Ankunft auf der Berichteseite.",
     "holdHelp": "Halten bei einem Verbündeten: Die Flotte bleibt im Orbit seines Planeten oder Mondes (bis zu 32 h), verteidigt ihn bei einem Angriff und kehrt dann zurück. Der Haltetreibstoff (ein Zehntel des Verbrauchs pro Stunde) wird im Voraus bezahlt; das Allianzdepot des Gastgebers kann ihn erstatten. Ziel: ein Mitglied deiner Allianz.",
     "holdHours": "Haltedauer (Stunden, 1 bis 32)",
-    "acsHelp": "Greife ein Ziel gleichzeitig mit den Mitgliedern deiner Allianz an: Wähle eine für diese Koordinaten bereits angekündigte Gruppe (du kommst mit ihr an, wenn deine Flotte schnell genug ist) oder erstelle eine neue.",
+    "acsHelp": "Greife ein Ziel gleichzeitig mit den Mitgliedern deiner Allianz an: Wähle eine für diese Koordinaten bereits angekündigte Gruppe (du kommst mit ihr an; ist deine Flotte langsamer, wartet die Gruppe auf dich, bis zu +30 % ihrer geplanten Dauer) oder erstelle eine neue.",
     "acsGroup": "Gruppe",
     "acsNew": "Neue Gruppe (ich starte zuerst)",
     "acsEntry": "{creator} · {count}/{max} Flotten · Ankunft {time}"
