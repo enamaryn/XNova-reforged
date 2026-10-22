@@ -22,10 +22,11 @@ test("la mission Attaque groupée propose de créer un groupe et liste ceux de l
       { allianceId: alliance.id, userId: ally.id, rank: 'member' },
     ],
   });
+  const arrival = new Date(Date.now() + 3_600_000);
   const group = await prisma.attackGroup.create({
     data: {
       creatorId: ally.id, allianceId: alliance.id, toGalaxy: 3, toSystem: 77, toPosition: 5, toMoon: false,
-      arrivalTime: new Date(Date.now() + 3_600_000),
+      arrivalTime: arrival, plannedArrivalTime: arrival,
     },
   });
   await prisma.fleet.create({

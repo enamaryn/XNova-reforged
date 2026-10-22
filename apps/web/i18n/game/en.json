@@ -76,7 +76,7 @@
     "expeditionHelp": "Sends the fleet into deep space (position 16 of the system): it sometimes finds resources or ships, but may also be delayed, attacked by pirates or swallowed by a black hole. Expedition technology required; the report arrives on landing in the Reports page.",
     "holdHelp": "Hold position at an ally: the fleet stays in orbit of their planet or moon (up to 32 h), defends it if attacked, then returns. Holding fuel (a tenth of consumption per hour) is paid up front; the host's alliance depot can refund it. Target: a member of your alliance.",
     "holdHours": "Hold time (hours, 1 to 32)",
-    "acsHelp": "Strike a target at the same moment as your alliance members: pick a group already announced for these coordinates (you arrive with it, if your fleet is fast enough) or create a new one.",
+    "acsHelp": "Strike a target at the same moment as your alliance members: pick a group already announced for these coordinates (you arrive with it; if your fleet is slower, the group waits for you, up to +30 % of its planned duration) or create a new one.",
     "acsGroup": "Group",
     "acsNew": "New group (I leave first)",
     "acsEntry": "{creator} · {count}/{max} fleets · arrives {time}"

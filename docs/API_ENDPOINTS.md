@@ -113,7 +113,7 @@ Les offres expirées (24 h) sont fermées chaque minute par la tâche `market`, 
 
 | Méthode | Chemin | Description |
 | ------- | ------ | ----------- |
-| POST | `/fleet/send` (`mission: 2`) | Sans `groupId` : crée un groupe (le joueur doit être dans une alliance, la cible est hors de l'alliance et d'un autre joueur) et fixe l'arrivée. Avec `groupId` : rejoint le groupe de son alliance (404 groupe étranger ou inconnu, 400 autre cible, groupe déjà parti, flotte trop lente pour arriver à l'heure du groupe, groupe complet : 5 flottes). La réponse contient `groupId`. |
+| POST | `/fleet/send` (`mission: 2`) | Sans `groupId` : crée un groupe (le joueur doit être dans une alliance, la cible est hors de l'alliance et d'un autre joueur) et fixe l'arrivée. Avec `groupId` : rejoint le groupe de son alliance (404 groupe étranger ou inconnu, 400 autre cible, groupe déjà parti, groupe complet : 5 flottes, flotte qui retarderait le groupe de plus de 30 % de sa durée prévue à la création). Une flotte plus lente que le groupe le **retarde** : l'arrivée du groupe et celle de chaque flotte déjà partie sont repoussées (retour décalé d'autant). La réponse contient `groupId`, `arrivalTime` et `groupDelayed`. |
 | GET | `/fleet/attack-groups` | Groupes de l'alliance du joueur encore en route : `id`, `creator`, `target`, `arrivalTime`, `fleets`. |
 
 À l'arrivée, un seul combat réunit les flottes du groupe (technologies et commandant de chacune) ; butin partagé au prorata de la place libre ; un rapport par participant (`participants` dans le détail du rapport) ; le groupe est supprimé après le combat.

@@ -154,8 +154,9 @@ describe('API integration - attaques groupées', () => {
       await acs(b, other, { groupId }).expect(400); // autre cible
       await acs(b, target, { groupId: 'inexistant' }).expect(404);
 
-      // le groupe arrive dans 1 s : aucune flotte ne peut le rattraper
-      await database.attackGroup.update({ where: { id: groupId }, data: { arrivalTime: new Date(Date.now() + 1000) } });
+      // le groupe arrive dans 1 s : aucune flotte ne peut le rattraper ni le retarder de plus de 30 %
+      const soon = new Date(Date.now() + 1000);
+      await database.attackGroup.update({ where: { id: groupId }, data: { arrivalTime: soon, plannedArrivalTime: soon } });
       const slow = await acs(b, target, { groupId }).expect(400);
       expect(slow.body.message).toMatch(/lente/);
       await database.attackGroup.update({ where: { id: groupId }, data: { arrivalTime: new Date(Date.now() - 1000) } });
@@ -270,6 +271,107 @@ describe('API integration - attaques groupées', () => {
       const report = await database.combatReport.findFirstOrThrow({ where: { attackerId: a.userId, defenderId: target.userId } });
       expect(report.result).toBe('attacker_win');
       expect(await database.attackGroup.count({ where: { id: only.body.groupId } })).toBe(0);
+    });
+  });
+
+  describe('coordination : le groupe attend la flotte la plus lente', () => {
+    /** Durée de trajet (en secondes) de la flotte de `u` vers la cible, mesurée par un envoi puis annulé. */
+    const measure = async (u: Player, target: Player, groupId: string) => {
+      const probe = await acs(u, target, { groupId }).expect(201);
+      await database.fleet.delete({ where: { id: probe.body.fleetId } });
+      await database.ship.update({ where: { planetId_shipId: { planetId: u.planetId, shipId: 206 } }, data: { amount: 100 } });
+      return probe.body.durationSeconds as number;
+    };
+
+    it("une flotte plus lente repousse l'arrivée de tout le groupe, dans la limite de 30 %", async () => {
+      const a = await player();
+      const b = await player();
+      const target = await player(0);
+      await ally(a, b);
+      const created = await acs(a, target).expect(201);
+      const groupId = created.body.groupId as string;
+      const durationMs = (await measure(b, target, groupId)) * 1000;
+      expect(durationMs).toBeGreaterThanOrEqual(8000);
+
+      // Groupe créé à l'instant, arrivée prévue 20 % avant la fin du trajet de b : b doit le retarder
+      const planned = new Date(Date.now() + durationMs / 1.2);
+      await database.attackGroup.update({ where: { id: groupId }, data: { createdAt: new Date(), arrivalTime: planned, plannedArrivalTime: planned } });
+      const creatorBefore = await database.fleet.update({
+        where: { id: created.body.fleetId },
+        data: { arrivalTime: planned, returnTime: new Date(planned.getTime() + durationMs) },
+      });
+
+      const joined = await acs(b, target, { groupId }).expect(201);
+      expect(joined.body.groupDelayed).toBe(true);
+      const newArrival = new Date(joined.body.arrivalTime).getTime();
+      expect(newArrival - planned.getTime()).toBeGreaterThan(durationMs * 0.1);
+      expect(newArrival - planned.getTime()).toBeLessThan(durationMs * 0.3);
+
+      // Le groupe et toutes ses flottes arrivent à la même heure ; le retour du créateur est décalé d'autant
+      const group = await database.attackGroup.findUniqueOrThrow({ where: { id: groupId } });
+      expect(group.arrivalTime.getTime()).toBe(newArrival);
+      expect(group.plannedArrivalTime.getTime()).toBe(planned.getTime());
+      const fleets = await database.fleet.findMany({ where: { groupId } });
+      expect(fleets).toHaveLength(2);
+      for (const fleet of fleets) expect(fleet.arrivalTime.getTime()).toBe(newArrival);
+      const creatorAfter = fleets.find((f) => f.id === created.body.fleetId)!;
+      expect(creatorAfter.returnTime!.getTime() - creatorBefore.returnTime!.getTime()).toBe(newArrival - planned.getTime());
+    });
+
+    it('un retard de plus de 30 % de la durée prévue est refusé et ne change rien', async () => {
+      const a = await player();
+      const b = await player();
+      const target = await player(0);
+      await ally(a, b);
+      const created = await acs(a, target).expect(201);
+      const groupId = created.body.groupId as string;
+      const durationMs = (await measure(b, target, groupId)) * 1000;
+
+      const planned = new Date(Date.now() + durationMs / 1.6);
+      await database.attackGroup.update({ where: { id: groupId }, data: { createdAt: new Date(), arrivalTime: planned, plannedArrivalTime: planned } });
+      await database.fleet.update({ where: { id: created.body.fleetId }, data: { arrivalTime: planned } });
+
+      const refused = await acs(b, target, { groupId }).expect(400);
+      expect(refused.body.message).toMatch(/30 %/);
+      expect((await database.attackGroup.findUniqueOrThrow({ where: { id: groupId } })).arrivalTime.getTime()).toBe(planned.getTime());
+      expect(await database.fleet.count({ where: { groupId } })).toBe(1);
+      expect((await database.fleet.findUniqueOrThrow({ where: { id: created.body.fleetId } })).arrivalTime.getTime()).toBe(planned.getTime());
+    });
+
+    it("une flotte assez rapide rejoint le groupe sans le retarder", async () => {
+      const a = await player();
+      const b = await player();
+      const target = await player(0);
+      await ally(a, b);
+      const created = await acs(a, target).expect(201);
+      const joined = await acs(b, target, { groupId: created.body.groupId }).expect(201);
+      expect(joined.body.groupDelayed).toBe(false);
+      expect(new Date(joined.body.arrivalTime).getTime()).toBe(new Date(created.body.arrivalTime).getTime());
+    });
+
+    it('deux flottes lentes simultanées : le groupe finit à une heure unique, jamais au-delà de la limite', async () => {
+      const a = await player();
+      const b = await player();
+      const c = await player();
+      const target = await player(0);
+      await ally(a, b, c);
+      const created = await acs(a, target).expect(201);
+      const groupId = created.body.groupId as string;
+      const durationB = (await measure(b, target, groupId)) * 1000;
+      const durationC = (await measure(c, target, groupId)) * 1000;
+      const slowest = Math.max(durationB, durationC);
+
+      const planned = new Date(Date.now() + slowest / 1.25);
+      await database.attackGroup.update({ where: { id: groupId }, data: { createdAt: new Date(), arrivalTime: planned, plannedArrivalTime: planned } });
+      await database.fleet.update({ where: { id: created.body.fleetId }, data: { arrivalTime: planned } });
+
+      const results = await Promise.allSettled([acs(b, target, { groupId }), acs(c, target, { groupId })]);
+      expect(results.every((r) => r.status === 'fulfilled')).toBe(true);
+      const group = await database.attackGroup.findUniqueOrThrow({ where: { id: groupId } });
+      const fleets = await database.fleet.findMany({ where: { groupId } });
+      expect(fleets.length).toBeGreaterThanOrEqual(2);
+      for (const fleet of fleets) expect(fleet.arrivalTime.getTime()).toBe(group.arrivalTime.getTime());
+      expect(group.arrivalTime.getTime() - planned.getTime()).toBeLessThanOrEqual((slowest / 1.25) * 0.3 + 2000);
     });
   });
 });

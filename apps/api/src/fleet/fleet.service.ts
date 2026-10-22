@@ -17,7 +17,9 @@ import {
   RECYCLER_ID,
   GAME_CONSTANTS,
   HOLD_MAX_HOURS,
+  GROUP_MAX_DELAY_RATIO,
   MAX_GROUP_FLEETS,
+  resolveGroupArrival,
   IMPLEMENTED_MISSIONS,
   MissionType,
   SHIPS,
@@ -475,14 +477,13 @@ export class FleetService {
       ) {
         throw new BadRequestException("Ce groupe vise une autre cible");
       }
-      const remainingMs = group.arrivalTime.getTime() - now.getTime();
-      if (remainingMs <= 0) throw new BadRequestException('Ce groupe est deja parti');
-      if (adjustedDuration * 1000 > remainingMs) {
-        throw new BadRequestException("Flotte trop lente : elle n'arriverait pas avant le groupe");
-      }
-      arrivalTime = group.arrivalTime;
+      // Le groupe arrive ensemble : il attend la flotte la plus lente, dans la limite du retard autorisé
+      const timing = resolveGroupArrival(group, now, adjustedDuration * 1000);
+      if (timing.ok === false) throw this.groupRefusal(timing.reason);
+      arrivalTime = timing.arrivalTime;
       returnTime = new Date(arrivalTime.getTime() + adjustedDuration * 1000);
     }
+    let groupDelayed = false;
 
     const shipsPayload = shipsToSend.reduce((acc, ship) => {
       acc[ship.shipId] = ship.amount;
@@ -504,6 +505,32 @@ export class FleetService {
           if (size >= MAX_GROUP_FLEETS) {
             throw new BadRequestException(`Groupe complet (${MAX_GROUP_FLEETS} flottes au maximum)`);
           }
+          // Le groupe a pu changer depuis la lecture : on recalcule avec la ligne verrouillée
+          const fresh = await tx.attackGroup.findUnique({ where: { id: dto.groupId } });
+          if (!fresh) throw new NotFoundException("Groupe d'attaque introuvable");
+          const timing = resolveGroupArrival(fresh, now, adjustedDuration * 1000);
+          if (timing.ok === false) throw this.groupRefusal(timing.reason);
+          arrivalTime = timing.arrivalTime;
+          returnTime = new Date(arrivalTime.getTime() + adjustedDuration * 1000);
+          if (timing.delayed) {
+            // Une flotte plus lente repousse l'arrivée de tout le groupe : chaque flotte déjà partie est décalée
+            const delta = timing.arrivalTime.getTime() - fresh.arrivalTime.getTime();
+            const members = await tx.fleet.findMany({
+              where: { groupId: dto.groupId, status: 'traveling' },
+              select: { id: true, arrivalTime: true, returnTime: true },
+            });
+            for (const member of members) {
+              await tx.fleet.update({
+                where: { id: member.id },
+                data: {
+                  arrivalTime: new Date(member.arrivalTime.getTime() + delta),
+                  ...(member.returnTime ? { returnTime: new Date(member.returnTime.getTime() + delta) } : {}),
+                },
+              });
+            }
+            await tx.attackGroup.update({ where: { id: dto.groupId }, data: { arrivalTime: timing.arrivalTime } });
+            groupDelayed = true;
+          }
           groupId = dto.groupId;
         } else {
           const created = await tx.attackGroup.create({
@@ -515,6 +542,7 @@ export class FleetService {
               toPosition: dto.toPosition,
               toMoon,
               arrivalTime,
+              plannedArrivalTime: arrivalTime,
             },
           });
           groupId = created.id;
@@ -568,12 +596,22 @@ export class FleetService {
       success: true,
       fleetId: fleet.id,
       groupId: fleet.groupId,
+      groupDelayed,
       durationSeconds: adjustedDuration,
       fuelConsumption,
       holdFuel,
       mission: dto.mission,
       arrivalTime,
     };
+  }
+
+  /** Refus d'une flotte qui rejoint un groupe : groupe déjà parti, ou retard trop important pour lui. */
+  private groupRefusal(reason: 'gone' | 'too_slow') {
+    return new BadRequestException(
+      reason === 'gone'
+        ? 'Ce groupe est deja parti'
+        : `Flotte trop lente : elle retarderait le groupe de plus de ${Math.round(GROUP_MAX_DELAY_RATIO * 100)} % de sa duree prevue`,
+    );
   }
 
   /** Flottes en vol : 1 de base, plus 1 par niveau de la technologie Ordinateur. */
