@@ -27,6 +27,14 @@
 - [x] Tests : 6 unitaires (fenêtre, ordre, expiration, compte récent, type de clé), 7 d'intégration (journalière et hebdomadaire reportées, activité d'une autre période exclue, expiration au-delà de la fenêtre, périodes invalides, compte trop récent, trois demandes simultanées), 1 E2E (réclamation depuis la page).
 - Limite : la page recalcule la progression de chaque période passée non réclamée (jusqu'à 30 × 3 + 12 × 2 requêtes de comptage pour un ancien compte sans aucune réclamation) ; à surveiller si la page devient lente.
 
+## Session — test de restauration
+
+**Date :** 19 octobre 2026. Le propriétaire a restauré la sauvegarde `xnova_backup_20261019_131154` sur son serveur de test (restauration en place, services redémarrés), puis comparé les lignes de chaque table avec l'archive.
+
+- [x] Résultat : toutes les tables métier identiques ; seuls `HealthSample`, `AdminAuditLog` et `WorldEventSetting` diffèrent, par l'activité postérieure à la restauration (cases « Automatique » cochées dans l'onglet Événements). Case 5.3 de `docs/V1_VALIDATION.md` cochée avec la réserve « serveur de test, pas des données de joueurs ».
+- [x] Déduction : les migrations `20261021100000` et `20261022100000` sont appliquées sur le serveur (les tables `QuestClaim` et `WorldEventSetting` sont dans l'archive).
+- [ ] Reste : confirmer que le correctif d'interblocage (PR #77) est déployé ; restauration à refaire sur la production le jour de l'ouverture ; limites connues (8.3) à accepter par écrit.
+
 ## Session — interblocage des files de construction
 
 **Date :** 19 octobre 2026. Demande du propriétaire : corriger l'ordre de verrouillage et ajouter le test qui reproduit l'interblocage ; uptime relevé (99,84 % sur 7 j, 99,82 % sur 30 j, 100 % sur 24 h) ; envoi d'email réel, inscription, secrets et HTTPS confirmés par le propriétaire.
