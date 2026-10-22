@@ -64,9 +64,9 @@ Rappel de méthode ([CLAUDE.md](../CLAUDE.md)) : une déclaration de complétion
 
 | # | Critère | Niveau | Preuve attendue | État |
 |---|---|---|---|---|
-| 5.1 | Déploiement par `sudo bash scripts/update.sh` : migrations appliquées, service redémarré, vérification d'installation | B | sortie du script ; `scripts/verify-install.sh` | Fait (propriétaire) pour les mises à jour précédentes ; **à refaire pour `20261021100000` et `20261022100000`** |
+| 5.1 | Déploiement par `sudo bash scripts/update.sh` : migrations appliquées, service redémarré, vérification d'installation | B | sortie du script ; `scripts/verify-install.sh` | Fait (propriétaire) : les tables des quêtes et des événements du monde (`QuestClaim`, `WorldEventSetting`) figurent dans la sauvegarde du 19 octobre, donc les migrations `20261021100000` et `20261022100000` sont appliquées. Reste à confirmer que le correctif d'interblocage (PR #77) est déployé |
 | 5.2 | Sauvegarde quotidienne planifiée qui produit une archive valide | B | archive récente ; `scripts/backup-db.sh` ; `docs/OPERATIONS.md` | À faire (propriétaire) : confirmer la planification **sur le serveur de production** |
-| 5.3 | **Restauration d'une vraie sauvegarde de production dans une base isolée**, données comparées | B | `scripts/restore-db.sh <archive> <URL_BASE_ISOLEE>`, puis comparaison des comptes de joueurs et planètes | **À faire** : jamais répétée sur des données de production (limite connue) |
+| 5.3 | **Restauration d'une vraie sauvegarde dans une base, données comparées** | B | `scripts/restore-db.sh <archive>`, puis comparaison des lignes de chaque table avec l'archive | **Fait (propriétaire) le 19 octobre 2026, sur le serveur de test** (archive `xnova_backup_20261019_131154`, restauration en place avec `--yes`, services redémarrés `active`). Comparaison table par table : toutes les tables métier identiques (`User` 2, `Planet` 201, `Fleet` 0, `Message` 0…) ; seuls trois écarts attendus, dus à l'activité après la restauration (`HealthSample` +5, `AdminAuditLog` +5 et `WorldEventSetting` +5 : cases « Automatique » cochées dans l'onglet Événements). **Réserve** : serveur de test (2 comptes, 201 planètes), pas des données de joueurs réels ; à refaire sur la production le jour de l'ouverture |
 | 5.4 | Supervision en service : état « Sain », cron attendus actifs, incidents ouverts examinés | B | console admin → Supervision | Fait (propriétaire) pour l'état ; incidents à relire |
 | 5.5 | Sauvegardes protégées (accès restreint, chiffrement si elles quittent le serveur) | R | emplacement et droits des archives | À faire (propriétaire) |
 | 5.6 | Procédure de retour arrière documentée et essayée (version précédente + base restaurée) | R | essai sur une copie du serveur | À faire |
@@ -129,7 +129,7 @@ Ces points ne sont pas visibles depuis le code ; je ne peux ni les vérifier ni 
 ### Ordre de vérification conseillé
 
 1. Déployer les migrations en attente et le correctif d'interblocage (5.1), puis relever l'état « Sain » (5.4).
-2. ~~Email réel~~ (fait le 19 octobre) ; reste la restauration d'une vraie sauvegarde (5.3) : c'est le dernier risque de perte de données.
+2. ~~Email réel~~ et ~~restauration d'une sauvegarde~~ (faits le 19 octobre, sur le serveur de test) ; restent l'acceptation écrite des limites connues (8.3) et les critères recommandés.
 3. Lancer la revue indépendante des fonctions récentes (2.6) pendant la semaine d'uptime.
 4. Lancer la semaine de test avec des joueurs réels (8.1), en parallèle de la mesure d'uptime (6.1).
 5. Mesure de charge sur le serveur (6.2, 6.3) puis Lighthouse sur l'adresse publique (6.4).
