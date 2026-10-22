@@ -1445,7 +1445,14 @@
     "reward": "Recompensa: {reward}",
     "claim": "Reclamar",
     "claimed": "Reclamada",
-    "progress": "{progress} / {target}"
+    "progress": "{progress} / {target}",
+    "pending": {
+      "title": "Recompensas por reclamar ({count})",
+      "hint": "Misiones completadas antes de un reinicio y nunca reclamadas: no se pierden. Las diarias siguen reclamables 30 días y las semanales 12 semanas.",
+      "dailyOf": "Misión del {date}",
+      "weeklyOf": "Misión de la semana {week}",
+      "expires": "Caduca en {time}"
+    }
   },
   "achievements": {
     "kicker": "Colección",

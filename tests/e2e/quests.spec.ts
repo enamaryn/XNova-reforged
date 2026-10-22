@@ -62,3 +62,40 @@ test('terminer une quête du jour, la réclamer, puis voir ses succès', async (
   await expect(page.getByTestId('achievement-buildings_10')).toHaveAttribute('data-unlocked', 'false');
   await expect(page.getByTestId('achievement-alliance_1')).toHaveAttribute('data-unlocked', 'false');
 });
+
+test("une quête terminée avant la remise à zéro reste réclamable depuis la page", async ({ page }) => {
+  const credentials = buildCredentials('e2e_qpend');
+  await registerUser(page, credentials);
+  const user = await prisma.user.findUniqueOrThrow({ where: { username: credentials.username }, include: { planets: true } });
+  const planet = user.planets[0];
+  // Compte « ancien » : les périodes passées ne sont pas écartées parce que le compte n'existait pas encore
+  await prisma.user.update({ where: { id: user.id }, data: { createdAt: new Date(Date.now() - 400 * 86_400_000) } });
+
+  // Un jour passé (dans la fenêtre de 30 jours) où la quête « 3 bâtiments » est tirée
+  let day = new Date();
+  for (let back = 2; back <= 25; back += 1) {
+    const candidate = new Date(Date.now() - back * 86_400_000);
+    if (activeQuests('daily', periodKey('daily', candidate)).some((q) => q.id === 'daily_build_3')) {
+      day = candidate;
+      break;
+    }
+  }
+  const key = periodKey('daily', day);
+  const noon = new Date(Date.UTC(day.getUTCFullYear(), day.getUTCMonth(), day.getUTCDate(), 12));
+  for (let i = 0; i < 3; i += 1) {
+    await prisma.buildQueue.create({ data: { planetId: planet.id, buildingId: 1, level: i + 1, startTime: noon, endTime: noon, completed: true } });
+  }
+  const before = await prisma.planet.findUniqueOrThrow({ where: { id: planet.id } });
+
+  await page.goto('/quests');
+  const pending = page.getByTestId(`pending-${key}-daily_build_3`);
+  await expect(page.getByTestId('quests-pending')).toBeVisible();
+  await expect(pending).toBeVisible();
+
+  await page.getByTestId(`claim-pending-${key}-daily_build_3`).click();
+  await expect(pending).toHaveCount(0);
+  const reward = scaledReward({ metal: 20_000, crystal: 0, deuterium: 0 }, questRewardMultiplier(1));
+  const after = await prisma.planet.findUniqueOrThrow({ where: { id: planet.id } });
+  expect(Math.abs(after.metal - (before.metal + reward.metal))).toBeLessThan(2);
+  expect(await prisma.questClaim.count({ where: { userId: user.id, questId: 'daily_build_3', periodKey: key } })).toBe(1);
+});

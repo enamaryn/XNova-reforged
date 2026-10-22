@@ -16,6 +16,17 @@
 - [x] Tests : unitaires (10), intégration (11 dont réclamations simultanées), E2E (1), rendu mobile (12 cas supplémentaires : 390 px, 320 px, PC, fr et de).
 - Restent absents : événements saisonniers, boss galactiques, invasions, saisons compétitives.
 
+## Session — quêtes non réclamées conservées
+
+**Date :** 19 octobre 2026. Décision du propriétaire : une quête terminée mais non réclamée avant la remise à zéro ne doit pas être perdue ; durée de conservation choisie : 30 jours (journalières) et 12 semaines (hebdomadaires).
+
+- [x] Règle pure `claimablePastPeriods` et constante `QUEST_CLAIM_WINDOW` (`game-config/src/quests.ts`) : périodes passées encore réclamables, sans celles terminées avant la création du compte.
+- [x] `activityCount(…, until)` : fenêtre exacte d'une période passée (borne supérieure exclusive).
+- [x] `GET /quests` renvoie `pending` (quêtes terminées d'une période passée, non réclamées) ; `POST /quests/:id/claim` accepte `periodKey` ; l'unicité `(joueur, quête, période)` reste l'arbitre des demandes simultanées.
+- [x] Page Quêtes : section « Récompenses à réclamer » (5 langues) ; FAQ (5 langues), `API_ENDPOINTS.md` et checklist V1 mises à jour.
+- [x] Tests : 6 unitaires (fenêtre, ordre, expiration, compte récent, type de clé), 7 d'intégration (journalière et hebdomadaire reportées, activité d'une autre période exclue, expiration au-delà de la fenêtre, périodes invalides, compte trop récent, trois demandes simultanées), 1 E2E (réclamation depuis la page).
+- Limite : la page recalcule la progression de chaque période passée non réclamée (jusqu'à 30 × 3 + 12 × 2 requêtes de comptage pour un ancien compte sans aucune réclamation) ; à surveiller si la page devient lente.
+
 ## Session — attaque groupée coordonnée
 
 **Date :** 19 octobre 2026. Décision du propriétaire : le groupe arrive ensemble, au rythme de la flotte la plus lente ; retard limité à +30 % de la durée prévue (choix du propriétaire parmi les options proposées).

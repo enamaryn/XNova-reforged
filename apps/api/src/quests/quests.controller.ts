@@ -16,7 +16,7 @@ export class QuestsController {
 
   @Post('quests/:questId/claim')
   claim(@Param('questId') questId: string, @Body() dto: ClaimQuestDto, @CurrentUser('id') userId: string) {
-    return this.quests.claim(userId, questId, dto.planetId);
+    return this.quests.claim(userId, questId, dto.planetId, dto.periodKey);
   }
 
   @Get('achievements')

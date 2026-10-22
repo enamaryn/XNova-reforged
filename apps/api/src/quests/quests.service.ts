@@ -4,7 +4,9 @@ import {
   ACHIEVEMENTS,
   ACHIEVEMENT_CATEGORIES,
   activeQuests,
+  claimablePastPeriods,
   periodEnd,
+  periodOfKey,
   periodKey,
   periodStart,
   questRewardMultiplier,
@@ -56,32 +58,89 @@ export class QuestsService {
       }
       result[period] = { periodKey: key, resetsAt: periodEnd(period, now), quests };
     }
+    result.pending = await this.pending(userId, now, multiplier);
     return result;
+  }
+
+  /**
+   * Quêtes terminées pendant une période passée et jamais réclamées : elles ne sont pas perdues à la remise à zéro,
+   * mais restent réclamables pendant QUEST_CLAIM_WINDOW périodes (30 jours, 12 semaines). La progression est relue
+   * dans la fenêtre exacte de chaque période passée.
+   */
+  private async pending(userId: string, now: Date, multiplier: number) {
+    const user = await this.database.user.findUnique({ where: { id: userId }, select: { createdAt: true } });
+    const periods = PERIODS.flatMap((period) => claimablePastPeriods(period, now, user?.createdAt));
+    if (periods.length === 0) return [];
+    const claims = await this.database.questClaim.findMany({
+      where: { userId, periodKey: { in: periods.map((p) => p.key) } },
+      select: { questId: true, periodKey: true },
+    });
+    const claimed = new Set(claims.map((c) => `${c.periodKey}:${c.questId}`));
+    const candidates = periods.flatMap((past) =>
+      activeQuests(past.period, past.key)
+        .filter((quest) => !claimed.has(`${past.key}:${quest.id}`))
+        .map((quest) => ({ past, quest })),
+    );
+    const progress = await Promise.all(
+      candidates.map(({ past, quest }) =>
+        activityCount(this.database, this.progression, userId, quest.metric, past.start, past.end),
+      ),
+    );
+    return candidates
+      .map((entry, index) => ({ ...entry, progress: progress[index] }))
+      .filter(({ quest, progress: value }) => value >= quest.target)
+      .map(({ past, quest }) => ({
+        id: quest.id,
+        period: past.period,
+        periodKey: past.key,
+        metric: quest.metric,
+        target: quest.target,
+        reward: scaledReward(quest.reward, multiplier),
+        expiresAt: past.expiresAt,
+      }));
   }
 
   /**
    * Réclame la récompense d'une quête terminée : une seule fois par période (l'unicité de `QuestClaim` tranche
    * les demandes simultanées), créditée sur la planète choisie.
    */
-  async claim(userId: string, questId: string, planetId: string) {
+  async claim(userId: string, questId: string, planetId: string, requestedKey?: string) {
     const now = this.now();
-    let found: { period: QuestPeriod; key: string; quest: ReturnType<typeof activeQuests>[number] } | null = null;
+    const user = await this.database.user.findUnique({ where: { id: userId }, select: { createdAt: true } });
+    // Période demandée : la période en cours par défaut, ou une période passée encore réclamable
+    let found: {
+      period: QuestPeriod;
+      key: string;
+      quest: ReturnType<typeof activeQuests>[number];
+      since: Date;
+      until?: Date;
+    } | null = null;
     for (const period of PERIODS) {
-      const key = periodKey(period, now);
+      const currentKey = periodKey(period, now);
+      const key = requestedKey ?? currentKey;
+      if (periodOfKey(key) !== period) continue;
+      let window: { since: Date; until?: Date } | null = null;
+      if (key === currentKey) window = { since: periodStart(period, now) };
+      else {
+        const past = claimablePastPeriods(period, now, user?.createdAt).find((p) => p.key === key);
+        if (past) window = { since: past.start, until: past.end };
+      }
+      if (!window) continue;
       const quest = activeQuests(period, key).find((q) => q.id === questId);
-      if (quest) found = { period, key, quest };
+      if (quest) found = { period, key, quest, ...window };
     }
-    if (!found) throw new NotFoundException("Cette quete n'est pas active");
+    if (!found) {
+      throw new NotFoundException(requestedKey ? "Cette quete n'est plus reclamable" : "Cette quete n'est pas active");
+    }
     const planet = await this.database.planet.findUnique({ where: { id: planetId }, select: { userId: true } });
     if (!planet || planet.userId !== userId) throw new NotFoundException('Planete introuvable');
 
     const level = (await this.progression.get(userId)).commanderLevel;
     const reward = scaledReward(found.quest.reward, questRewardMultiplier(level));
-    const since = periodStart(found.period, now);
 
     try {
       await this.database.$transaction(async (tx) => {
-        const progress = await activityCount(tx, this.progression, userId, found!.quest.metric, since);
+        const progress = await activityCount(tx, this.progression, userId, found!.quest.metric, found!.since, found!.until);
         if (progress < found!.quest.target) {
           throw new BadRequestException(`Quete non terminee (${progress}/${found!.quest.target})`);
         }

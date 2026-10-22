@@ -1,6 +1,6 @@
 import request from 'supertest';
 import { INestApplication } from '@nestjs/common';
-import { activeQuests, periodKey } from '@xnova/game-config';
+import { QUEST_CLAIM_WINDOW, activeQuests, periodKey, periodStart } from '@xnova/game-config';
 import { DatabaseService } from '../../src/database/database.service';
 import { QuestsService } from '../../src/quests/quests.service';
 import { buildTestUser, cleanupTestUser, createIntegrationApp, registerAndLogin } from './helpers';
@@ -169,6 +169,131 @@ describe('API integration - quêtes et succès', () => {
       const after = await planetStock(u);
       expect(after.crystal).toBe(before.crystal + 50_000);
       expect(after.deuterium).toBe(before.deuterium + 80_000);
+    });
+  });
+
+  describe('quêtes terminées mais non réclamées', () => {
+    const DAY = 86_400_000;
+    /** Compte créé il y a longtemps : aucune période passée n'est écartée parce que le compte n'existait pas encore. */
+    const oldPlayer = async () => {
+      const u = await player();
+      await database.user.update({ where: { id: u.userId }, data: { createdAt: new Date(Date.now() - 400 * DAY) } });
+      return u;
+    };
+    /** Une date passée (entre `min` et `max` périodes en arrière) où la quête voulue est tirée. */
+    const pastDate = (period: 'daily' | 'weekly', questId: string, min: number, max: number) => {
+      const length = period === 'weekly' ? 7 : 1;
+      for (let back = min; back <= max; back += 1) {
+        const date = new Date(Date.now() - back * length * DAY);
+        if (activeQuests(period, periodKey(period, date)).some((q) => q.id === questId)) return date;
+      }
+      throw new Error(`quête ${questId} jamais tirée entre ${min} et ${max}`);
+    };
+    /** Bâtiments terminés au milieu de la période de `date`. */
+    const buildingsDuring = async (u: Player, period: 'daily' | 'weekly', date: Date, count: number) => {
+      const at = new Date(periodStart(period, date).getTime() + 12 * 3_600_000);
+      for (let i = 0; i < count; i += 1) {
+        await database.buildQueue.create({
+          data: { planetId: u.planetId, buildingId: 1, level: i + 1, startTime: new Date(at.getTime() - 1000), endTime: at, completed: true },
+        });
+      }
+    };
+
+    it('une quête journalière terminée hier et non réclamée reste réclamable, une seule fois', async () => {
+      const u = await oldPlayer();
+      const date = pastDate('daily', 'daily_build_3', 2, 25);
+      const key = periodKey('daily', date);
+      await buildingsDuring(u, 'daily', date, 3);
+
+      const body = await list(u);
+      const entry = body.pending.find((q: any) => q.id === 'daily_build_3' && q.periodKey === key);
+      expect(entry).toMatchObject({ period: 'daily', metric: 'buildings', target: 3 });
+      expect(new Date(entry.expiresAt).getTime()).toBeGreaterThan(Date.now());
+      // la période en cours n'est pas touchée : elle n'a aucune progression
+      expect(body.daily.quests.every((q: any) => q.progress === 0)).toBe(true);
+
+      const before = await planetStock(u);
+      const res = await claim(u, 'daily_build_3', { periodKey: key }).expect(201);
+      expect(res.body).toMatchObject({ questId: 'daily_build_3', periodKey: key });
+      const after = await planetStock(u);
+      expect(after.metal).toBeCloseTo(before.metal + 20_000, 0);
+
+      await claim(u, 'daily_build_3', { periodKey: key }).expect(409);
+      const again = await list(u);
+      expect(again.pending.some((q: any) => q.id === 'daily_build_3' && q.periodKey === key)).toBe(false);
+    });
+
+    it("l'activité d'une autre période ne compte pas dans la fenêtre de celle-ci", async () => {
+      const u = await oldPlayer();
+      const date = pastDate('daily', 'daily_build_3', 3, 25);
+      const key = periodKey('daily', date);
+      // trois bâtiments terminés la veille et le lendemain de la période, aucun pendant
+      await buildingsDuring(u, 'daily', new Date(date.getTime() - DAY), 2);
+      await buildingsDuring(u, 'daily', new Date(date.getTime() + DAY), 2);
+      const body = await list(u);
+      expect(body.pending.some((q: any) => q.id === 'daily_build_3' && q.periodKey === key)).toBe(false);
+      const refused = await claim(u, 'daily_build_3', { periodKey: key }).expect(400);
+      expect(refused.body.message).toMatch(/non terminee/);
+      expect(await database.questClaim.count({ where: { userId: u.userId } })).toBe(0);
+    });
+
+    it('une quête hebdomadaire terminée une semaine passée reste réclamable', async () => {
+      const u = await oldPlayer();
+      const date = pastDate('weekly', 'weekly_build_25', 2, 10);
+      const key = periodKey('weekly', date);
+      await buildingsDuring(u, 'weekly', date, 25);
+      const body = await list(u);
+      expect(body.pending.some((q: any) => q.id === 'weekly_build_25' && q.periodKey === key && q.period === 'weekly')).toBe(true);
+      const before = await planetStock(u);
+      await claim(u, 'weekly_build_25', { periodKey: key }).expect(201);
+      expect((await planetStock(u)).metal).toBeCloseTo(before.metal + 150_000, 0);
+    });
+
+    it('au-delà de la fenêtre (30 jours, 12 semaines), la quête expire : ni listée, ni réclamable', async () => {
+      const u = await oldPlayer();
+      const date = pastDate('daily', 'daily_build_3', QUEST_CLAIM_WINDOW.daily + 2, 120);
+      const key = periodKey('daily', date);
+      await buildingsDuring(u, 'daily', date, 3);
+      expect((await list(u)).pending.some((q: any) => q.periodKey === key)).toBe(false);
+      const refused = await claim(u, 'daily_build_3', { periodKey: key }).expect(404);
+      expect(refused.body.message).toMatch(/plus reclamable/);
+      expect(await database.questClaim.count({ where: { userId: u.userId } })).toBe(0);
+    });
+
+    it("une quête qui n'était pas tirée ce jour-là, une période invalide ou la période en cours mal nommée sont refusées", async () => {
+      const u = await oldPlayer();
+      const date = pastDate('daily', 'daily_build_3', 2, 25);
+      const key = periodKey('daily', date);
+      await buildingsDuring(u, 'daily', date, 5);
+      // une quête du catalogue qui n'était pas tirée ce jour-là
+      const notDrawn = ['daily_research_1', 'daily_units_50', 'daily_fleets_2', 'daily_combat_1', 'daily_spy_3', 'daily_expedition_1', 'daily_build_5']
+        .find((id) => !activeQuests('daily', key).some((q) => q.id === id))!;
+      await claim(u, notDrawn, { periodKey: key }).expect(404);
+      await claim(u, 'daily_build_3', { periodKey: 'pas-une-periode' }).expect(400);
+      await claim(u, 'daily_build_3', { periodKey: '2026-13-45' }).expect(404);
+      await claim(u, 'weekly_build_25', { periodKey: key }).expect(404); // clé journalière pour une quête hebdomadaire
+      expect(await database.questClaim.count({ where: { userId: u.userId } })).toBe(0);
+    });
+
+    it('un compte créé après la période ne peut pas réclamer cette période', async () => {
+      const u = await player(); // compte créé maintenant
+      const date = pastDate('daily', 'daily_build_3', 3, 25);
+      await buildingsDuring(u, 'daily', date, 3);
+      expect((await list(u)).pending).toEqual([]);
+      await claim(u, 'daily_build_3', { periodKey: periodKey('daily', date) }).expect(404);
+    });
+
+    it('trois demandes simultanées pour la même période passée ne créditent qu’une fois', async () => {
+      const u = await oldPlayer();
+      const date = pastDate('daily', 'daily_build_3', 2, 25);
+      const key = periodKey('daily', date);
+      await buildingsDuring(u, 'daily', date, 3);
+      const before = await planetStock(u);
+      const results = await Promise.all([1, 2, 3].map(() => claim(u, 'daily_build_3', { periodKey: key })));
+      expect(results.filter((r) => r.status === 201)).toHaveLength(1);
+      expect(results.filter((r) => r.status === 409)).toHaveLength(2);
+      expect((await planetStock(u)).metal).toBeCloseTo(before.metal + 20_000, 0);
+      expect(await database.questClaim.count({ where: { userId: u.userId, periodKey: key } })).toBe(1);
     });
   });
 

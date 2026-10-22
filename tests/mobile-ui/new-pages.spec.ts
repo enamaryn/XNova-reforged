@@ -39,6 +39,11 @@ const commanders = {
 const quests = {
   rewardMultiplier: 1.4,
   commanderLevel: 5,
+  // quêtes terminées avant une remise à zéro et jamais réclamées
+  pending: [
+    { id: "daily_build_5", period: "daily", periodKey: "2026-10-12", metric: "buildings", target: 5, reward: { metal: 42000, crystal: 14000, deuterium: 0 }, expiresAt: new Date(Date.now() + 26 * 86400000).toISOString() },
+    { id: "weekly_expedition_5", period: "weekly", periodKey: "2026-W41", metric: "expeditions", target: 5, reward: { metal: 0, crystal: 70000, deuterium: 112000 }, expiresAt: new Date(Date.now() + 9 * 86400000).toISOString() },
+  ],
   daily: {
     periodKey: "2026-10-13",
     resetsAt: new Date(Date.now() + 5 * 3600000).toISOString(),
@@ -207,6 +212,9 @@ for (const locale of ["fr", "de"]) {
       await expect(page.getByTestId("claim-daily_units_50")).toBeDisabled();
       await expect(page.getByTestId("quest-daily_research_1")).toHaveAttribute("data-state", "claimed");
       await expect(page.getByTestId("quests-weekly")).toBeVisible();
+      await expect(page.getByTestId("quests-pending")).toBeVisible();
+      await expect(page.getByTestId("claim-pending-2026-10-12-daily_build_5")).toBeEnabled();
+      await expect(page.getByTestId("claim-pending-2026-W41-weekly_expedition_5")).toBeVisible();
       expect(await noOverflow(page)).toBe(true);
       await buttonsFit(page);
     });

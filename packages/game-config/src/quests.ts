@@ -95,6 +95,46 @@ function hash(text: string): number {
 }
 
 /** Quêtes actives pour une période (même tirage pour tous), dans un ordre stable. */
+/** Nombre de périodes passées pendant lesquelles une quête terminée mais non réclamée reste réclamable. */
+export const QUEST_CLAIM_WINDOW: Record<QuestPeriod, number> = { daily: 30, weekly: 12 };
+
+export interface PastPeriod {
+  period: QuestPeriod;
+  key: string;
+  start: Date;
+  /** Exclusive : début de la période suivante. */
+  end: Date;
+  /** Instant où ses quêtes terminées cessent d'être réclamables. */
+  expiresAt: Date;
+}
+
+/** Type de période d'une clé (« 2026-10-13 » : journalière ; « 2026-W42 » : hebdomadaire), ou null si elle est invalide. */
+export function periodOfKey(key: string): QuestPeriod | null {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(key)) return 'daily';
+  if (/^\d{4}-W\d{2}$/.test(key)) return 'weekly';
+  return null;
+}
+
+/**
+ * Périodes passées dont les quêtes terminées sont encore réclamables, de la plus récente à la plus ancienne :
+ * les QUEST_CLAIM_WINDOW dernières périodes, sans la période en cours ni celles terminées avant la création du compte.
+ */
+export function claimablePastPeriods(period: QuestPeriod, now: Date, accountCreatedAt?: Date): PastPeriod[] {
+  const length = period === 'weekly' ? 7 : 1;
+  const currentStart = periodStart(period, now);
+  const list: PastPeriod[] = [];
+  for (let index = 1; index <= QUEST_CLAIM_WINDOW[period]; index += 1) {
+    const start = new Date(currentStart);
+    start.setUTCDate(start.getUTCDate() - index * length);
+    const end = periodEnd(period, start);
+    if (accountCreatedAt && end.getTime() <= accountCreatedAt.getTime()) break;
+    const expiresAt = new Date(currentStart);
+    expiresAt.setUTCDate(expiresAt.getUTCDate() + (QUEST_CLAIM_WINDOW[period] - index + 1) * length);
+    list.push({ period, key: periodKey(period, start), start, end, expiresAt });
+  }
+  return list;
+}
+
 export function activeQuests(period: QuestPeriod, key: string): QuestDefinition[] {
   return QUEST_CATALOG.filter((q) => q.period === period)
     .map((q) => ({ q, order: hash(`${key}:${q.id}`) }))

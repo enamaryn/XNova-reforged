@@ -1445,7 +1445,14 @@
     "reward": "Ricompensa: {reward}",
     "claim": "Riscuoti",
     "claimed": "Riscossa",
-    "progress": "{progress} / {target}"
+    "progress": "{progress} / {target}",
+    "pending": {
+      "title": "Ricompense da riscuotere ({count})",
+      "hint": "Missioni completate prima di un azzeramento e mai riscosse: non vanno perse. Le giornaliere restano riscuotibili per 30 giorni, le settimanali per 12 settimane.",
+      "dailyOf": "Missione del {date}",
+      "weeklyOf": "Missione della settimana {week}",
+      "expires": "Scade tra {time}"
+    }
   },
   "achievements": {
     "kicker": "Collezione",
