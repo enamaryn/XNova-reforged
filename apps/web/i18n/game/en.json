@@ -29,7 +29,8 @@
     "commanders": "Commanders",
     "market": "Market",
     "quests": "Quests",
-    "achievements": "Achievements"
+    "achievements": "Achievements",
+    "npcTrade": "Trade"
   },
   "sidebar": {
     "principal": "Main",
@@ -409,7 +410,28 @@
       "testSend": "Send the test"
     },
     "tabSupervision": "Monitoring",
-    "tabEvents": "Events"
+    "tabEvents": "Events",
+    "tabNpcTrade": "NPC trade",
+    "npcTrade": {
+      "title": "NPC merchant",
+      "intro": "Tune the merchant: margin, daily variation, per-player limits, ship prices and each season’s effect. Every save is written to the audit log.",
+      "enabled": "Merchant present",
+      "spread": "Merchant margin (0 to 0.5)",
+      "dailyVariation": "Daily variation (0 to 0.5)",
+      "exchangeDailyCap": "Exchange limit per player per day (metal value)",
+      "shipDailyCap": "Ship purchase limit per player per day (metal value)",
+      "shipPriceMultiplier": "Ship price (× shipyard cost)",
+      "ships": "Ships offered (no requirement is checked on purchase)",
+      "seasonsTitle": "Seasons",
+      "values": "Resource value",
+      "spreadReduction": "Margin removed (0 to 1)",
+      "shipDiscount": "Ship discount (0 to 1)",
+      "currentSeason": "current season",
+      "save": "Save",
+      "saved": "Settings saved.",
+      "reset": "Defaults",
+      "resetConfirm": "Return to the merchant’s default values?"
+    }
   },
   "common": {
     "language": "Language",
@@ -1481,5 +1503,37 @@
       "trades": "Make {target} market trade(s)",
       "missiles": "Fire {target} interplanetary missile(s)"
     }
+  },
+  "npcTrade": {
+    "kicker": "Economy",
+    "title": "Trading with the merchant",
+    "subtitle": "A merchant in the galaxy swaps your resources instantly and sells you ships. Its rates change every day and with the season; it keeps a margin.",
+    "planet": "Exchanges and purchases use the selected planet: {planet}.",
+    "disabled": "The merchant is not here right now.",
+    "seasonLine": "Season: {season} · merchant margin today: {spread}%",
+    "season": {
+      "winter": "winter",
+      "spring": "spring",
+      "summer": "summer",
+      "autumn": "autumn"
+    },
+    "exchangeTitle": "Exchange resources",
+    "give": "I give",
+    "want": "I receive",
+    "amount": "Amount",
+    "receive": "You will receive {received} {want} (rate {rate}).",
+    "submit": "Exchange",
+    "done": "Exchange done: {given} {give} for {received} {want}.",
+    "ratesTitle": "Today's rates",
+    "rateLine": "1 {give} → {rate} {want}",
+    "shipsTitle": "Ships for sale",
+    "shipsHint": "Instant delivery, no research or building requirement. Today’s price: {factor} × the shipyard cost.",
+    "unitPrice": "Unit price",
+    "quantity": "Quantity",
+    "buy": "Buy",
+    "bought": "{amount} × {ship} bought.",
+    "capTitle": "Daily limits (reset at midnight UTC)",
+    "capExchange": "Exchanges: {used} / {cap} (metal-equivalent value)",
+    "capShip": "Ships: {used} / {cap} (metal-equivalent value)"
   }
 }

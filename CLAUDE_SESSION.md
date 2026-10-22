@@ -5,6 +5,17 @@
 
 ---
 
+## Session — commerce avec un marchand PNJ
+
+**Date :** 22 octobre 2026. Décision du propriétaire (19 octobre) : page « commerce » avec un PNJ, taux et avantages variables selon les jours et les saisons, achat de vaisseaux ; « fixe les valeurs par défaut, mais elles doivent être modifiables dans la partie admin ».
+
+- [x] `packages/game-config/src/npc-trade.ts` : règles pures (saisons UTC, bruit quotidien déterministe FNV-1a, marge effective, taux, prix des vaisseaux, plafonds, validation stricte `parseNpcTradeConfig`, relecture tolérante `readNpcTradeConfig`).
+- [x] Valeurs par défaut : marge 15 %, variation ± 10 %, vaisseaux à 1,5 × le chantier spatial (petit et grand transporteur, chasseur léger, recycleur, sonde), plafonds de 20 M (valeur métal) par joueur et par jour pour les échanges et pour les vaisseaux, effets de saison (hiver : deutérium plus cher et vaisseaux −5 % ; printemps : marge −25 % ; été : cristal plus cher, deutérium moins cher, vaisseaux −10 % ; automne : métal plus cher, marge −20 %).
+- [x] API `/npc-trade` (état, échange, achat) et `/admin/npc-trade` (lecture, remplacement validé, remise aux défauts ; ADMIN et SUPER_ADMIN, audit avant/après) ; réglage dans `GameConfig` (`npcTrade.config`), table `NpcTrade` (migration `20261024100000_npc_trade`). Verrou sur le joueur + sur la planète : le plafond ne peut pas être dépassé en parallèle. La marge profite de la réduction de taxe des événements du monde.
+- [x] Interface : page `/npc-trade` (menu, 5 langues), onglet « Commerce PNJ » de la console admin (formulaire complet, erreurs du serveur affichées, remise aux défauts), FAQ (5 langues, nouvelle question + règle « doubles comptes interdits »), `API_ENDPOINTS.md`, limites de la checklist V1.
+- [x] Tests : 12 unitaires (règles et validation), 18 d'intégration (taux, plafonds simultanés et par jour, vaisseaux, prérequis ignorés, admin 403, audit, remise aux défauts), 2 E2E (joueur ; admin), rendu mobile (390, 320, PC, fr et de).
+- Reste : valeurs par défaut à valider par le propriétaire ; **le blocage des doubles comptes n'est pas technique** (règle écrite) ; prochain lot : boss galactiques.
+
 ## Session — quêtes et succès (Phase 7)
 
 **Date :** 21 octobre 2026. Demande du propriétaire : « passe aux événements et quêtes ». Vérification préalable : aucun code de quête ni de succès (le guide de démarrage `onboarding` est un autre mécanisme, à usage unique). Le lot est découpé : quêtes et succès ici, événements saisonniers, boss, invasions et saisons dans un PR distinct.

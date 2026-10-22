@@ -175,6 +175,10 @@ export function shipUnitPrice(
   };
 }
 
+function asRecord(value: unknown): Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value) ? (value as Record<string, unknown>) : {};
+}
+
 function clampNumber(value: unknown, min: number, max: number, fallback: number): number {
   const number = typeof value === 'number' && Number.isFinite(value) ? value : fallback;
   return Math.min(Math.max(number, min), max);
@@ -193,7 +197,7 @@ export type NpcTradeParse = { ok: true; config: NpcTradeConfig } | { ok: false; 
 /** Valide un réglage complet envoyé par la console admin (rien n'est corrigé en silence). */
 export function parseNpcTradeConfig(input: unknown): NpcTradeParse {
   const errors: string[] = [];
-  const source = (typeof input === 'object' && input !== null ? input : {}) as Record<string, any>;
+  const source = asRecord(input);
   const limits = NPC_TRADE_LIMITS;
 
   if (typeof source.enabled !== 'boolean') errors.push('enabled doit être un booléen');
@@ -230,11 +234,11 @@ export function parseNpcTradeConfig(input: unknown): NpcTradeParse {
 
   const seasons = {} as Record<NpcSeason, NpcSeasonSettings>;
   for (const season of NPC_SEASONS) {
-    const entry = (source.seasons?.[season] ?? {}) as Record<string, any>;
+    const entry = asRecord(asRecord(source.seasons)[season]);
     const values = {} as Record<MarketResource, number>;
     for (const resource of MARKET_RESOURCES) {
       values[resource] = strictNumber(
-        entry.values?.[resource],
+        asRecord(entry.values)[resource],
         limits.seasonValue.min,
         limits.seasonValue.max,
         `seasons.${season}.values.${resource}`,
@@ -282,9 +286,9 @@ export function parseNpcTradeConfig(input: unknown): NpcTradeParse {
  */
 export function readNpcTradeConfig(raw: string | null | undefined): NpcTradeConfig {
   if (!raw) return NPC_TRADE_DEFAULTS;
-  let stored: Record<string, any>;
+  let stored: Record<string, unknown>;
   try {
-    stored = JSON.parse(raw);
+    stored = asRecord(JSON.parse(raw));
   } catch {
     return NPC_TRADE_DEFAULTS;
   }
@@ -293,10 +297,10 @@ export function readNpcTradeConfig(raw: string | null | undefined): NpcTradeConf
   const seasons = {} as Record<NpcSeason, NpcSeasonSettings>;
   for (const season of NPC_SEASONS) {
     const fallback = d.seasons[season];
-    const entry = (stored?.seasons?.[season] ?? {}) as Record<string, any>;
+    const entry = asRecord(asRecord(stored.seasons)[season]);
     const values = {} as Record<MarketResource, number>;
     for (const resource of MARKET_RESOURCES) {
-      values[resource] = clampNumber(entry.values?.[resource], l.seasonValue.min, l.seasonValue.max, fallback.values[resource]);
+      values[resource] = clampNumber(asRecord(entry.values)[resource], l.seasonValue.min, l.seasonValue.max, fallback.values[resource]);
     }
     seasons[season] = {
       values,
@@ -304,17 +308,17 @@ export function readNpcTradeConfig(raw: string | null | undefined): NpcTradeConf
       shipDiscount: clampNumber(entry.shipDiscount, l.fraction.min, l.fraction.max, fallback.shipDiscount),
     };
   }
-  const ships = Array.isArray(stored?.ships)
+  const ships = Array.isArray(stored.ships)
     ? [...new Set((stored.ships as unknown[]).filter((id): id is number => typeof id === 'number' && isNpcSellableShip(id)))]
     : d.ships;
   return {
-    enabled: typeof stored?.enabled === 'boolean' ? stored.enabled : d.enabled,
-    spread: clampNumber(stored?.spread, l.spread.min, l.spread.max, d.spread),
-    dailyVariation: clampNumber(stored?.dailyVariation, l.dailyVariation.min, l.dailyVariation.max, d.dailyVariation),
-    exchangeDailyCap: clampNumber(stored?.exchangeDailyCap, l.cap.min, l.cap.max, d.exchangeDailyCap),
-    shipDailyCap: clampNumber(stored?.shipDailyCap, l.cap.min, l.cap.max, d.shipDailyCap),
+    enabled: typeof stored.enabled === 'boolean' ? stored.enabled : d.enabled,
+    spread: clampNumber(stored.spread, l.spread.min, l.spread.max, d.spread),
+    dailyVariation: clampNumber(stored.dailyVariation, l.dailyVariation.min, l.dailyVariation.max, d.dailyVariation),
+    exchangeDailyCap: clampNumber(stored.exchangeDailyCap, l.cap.min, l.cap.max, d.exchangeDailyCap),
+    shipDailyCap: clampNumber(stored.shipDailyCap, l.cap.min, l.cap.max, d.shipDailyCap),
     shipPriceMultiplier: clampNumber(
-      stored?.shipPriceMultiplier,
+      stored.shipPriceMultiplier,
       l.shipPriceMultiplier.min,
       l.shipPriceMultiplier.max,
       d.shipPriceMultiplier,
