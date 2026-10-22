@@ -248,5 +248,85 @@ describe('API integration - commandants de flotte', () => {
       expect(await database.fleetCommander.count({ where: { id } })).toBe(1);
       expect(death).not.toHaveBeenCalled();
     });
+
+    describe('défense : flotte en maintien de position', () => {
+      /** Flotte alliée posée chez l'hôte : elle défend avec lui (le combat les retrouve par les coordonnées). */
+      const holdAt = (h: Player, host: Player, ships: Record<string, number>, commanderId: string | null) =>
+        database.fleet.create({
+          data: {
+            userId: h.userId,
+            fromGalaxy: h.planet.galaxy, fromSystem: h.planet.system, fromPosition: h.planet.position,
+            toGalaxy: host.planet.galaxy, toSystem: host.planet.system, toPosition: host.planet.position,
+            mission: 5, ships, cargo: {}, holdHours: 8, holdUntil: new Date(Date.now() + 3600_000),
+            startTime: past(600), arrivalTime: past(300), returnTime: new Date(Date.now() + 3600_000),
+            status: 'holding', commanderId,
+          } as any,
+        });
+      const attackWith = (a: Player, d: Player, ships: Record<string, number>) =>
+        database.fleet.create({
+          data: {
+            userId: a.userId,
+            fromGalaxy: a.planet.galaxy, fromSystem: a.planet.system, fromPosition: a.planet.position,
+            toGalaxy: d.planet.galaxy, toSystem: d.planet.system, toPosition: d.planet.position,
+            mission: 1, ships, cargo: {},
+            startTime: past(120), arrivalTime: past(60), returnTime: past(10), status: 'traveling',
+          } as any,
+        });
+
+      it("défense réussie : le commandant de la flotte en maintien gagne de l'expérience", async () => {
+        const host = await player();
+        const holder = await player();
+        const attacker = await player();
+        const id = await withCommander(holder);
+        jest.spyOn(CombatService.prototype as any, 'rollMoon').mockReturnValue(false);
+        await database.ship.deleteMany({ where: { planetId: host.planetId } });
+        await database.ship.create({ data: { planetId: host.planetId, shipId: 204, amount: 300 } });
+        await holdAt(holder, host, { '204': 200 }, id);
+        await attackWith(attacker, host, { '206': 20 });
+        const before = await database.fleetCommander.findUniqueOrThrow({ where: { id } });
+
+        await fleetCron.processArrivals();
+
+        const report = await database.combatReport.findFirstOrThrow({ where: { attackerId: attacker.userId } });
+        expect(report.result).not.toBe('attacker_win');
+        const after = await database.fleetCommander.findUniqueOrThrow({ where: { id } });
+        // Au moins le socle de l'expérience de combat (100) : le commandant de l'attaquant n'est pas concerné
+        expect(after.experience).toBeGreaterThanOrEqual(before.experience + 100);
+      });
+
+      it("défense échouée (l'attaquant gagne) : aucune expérience, et le commandant ne risque pas la mort", async () => {
+        const host = await player();
+        const holder = await player();
+        const attacker = await player();
+        const id = await withCommander(holder);
+        jest.spyOn(CombatService.prototype as any, 'rollMoon').mockReturnValue(false);
+        const death = jest.spyOn(CombatService.prototype as any, 'rollCommanderDeath').mockReturnValue(true);
+        await database.ship.deleteMany({ where: { planetId: host.planetId } });
+        await holdAt(holder, host, { '202': 2 }, id);
+        await attackWith(attacker, host, { '206': 300 });
+        const before = await database.fleetCommander.findUniqueOrThrow({ where: { id } });
+
+        await fleetCron.processArrivals();
+
+        const report = await database.combatReport.findFirstOrThrow({ where: { attackerId: attacker.userId } });
+        expect(report.result).toBe('attacker_win');
+        const after = await database.fleetCommander.findUniqueOrThrow({ where: { id } });
+        expect(after.experience).toBe(before.experience);
+        expect(death).not.toHaveBeenCalled();
+      });
+
+      it("une flotte en maintien sans commandant défend sans erreur", async () => {
+        const host = await player();
+        const holder = await player();
+        const attacker = await player();
+        jest.spyOn(CombatService.prototype as any, 'rollMoon').mockReturnValue(false);
+        await database.ship.deleteMany({ where: { planetId: host.planetId } });
+        await database.ship.create({ data: { planetId: host.planetId, shipId: 204, amount: 300 } });
+        await holdAt(holder, host, { '204': 200 }, null);
+        await attackWith(attacker, host, { '206': 20 });
+        await fleetCron.processArrivals();
+        expect(await database.combatReport.count({ where: { attackerId: attacker.userId } })).toBe(1);
+      });
+    });
   });
 });

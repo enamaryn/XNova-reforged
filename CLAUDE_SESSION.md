@@ -25,6 +25,15 @@
 - [x] `fleet.service.ts` : la flotte qui rejoint recalcule l'arrivée sur la ligne du groupe verrouillée ; si elle retarde le groupe, l'arrivée du groupe et celles de toutes les flottes déjà parties sont décalées (retour décalé d'autant) ; réponse enrichie (`groupDelayed`).
 - [x] Tests : 8 unitaires (limites exactes, cumul, groupe déjà arrivé), 4 d'intégration (retard accepté et propagé, retard refusé sans rien changer, flotte rapide, deux flottes lentes simultanées) ; texte d'aide de la page Flotte et FAQ en 5 langues.
 
+## Session — expérience de défense des commandants
+
+**Date :** 19 octobre 2026. Décision du propriétaire : l'attaque (gagnée ou perdue) et la défense réussie donnent de l'expérience aux commandants.
+
+- [x] Vérification : l'attaque donnait déjà de l'expérience, victoire ou défaite (100 + 1 par 1 000 de ressources détruites). La défense n'en donnait pas.
+- [x] `combat.service.ts` : quand l'attaquant ne l'emporte pas (défense gagnée ou égalité), les commandants des flottes en maintien reçoivent l'expérience selon la valeur des vaisseaux perdus par l'attaquant ; jamais de mort en défense.
+- [x] Tests : défense réussie (échoue sans le correctif), défense échouée (aucune expérience, aucune mort), flotte sans commandant.
+- [x] FAQ (5 langues) et checklist V1 (limites connues) mises à jour.
+
 ## Session — test de restauration
 
 **Date :** 19 octobre 2026. Le propriétaire a restauré la sauvegarde `xnova_backup_20261019_131154` sur son serveur de test (restauration en place, services redémarrés), puis comparé les lignes de chaque table avec l'archive.

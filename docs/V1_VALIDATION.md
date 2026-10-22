@@ -99,7 +99,7 @@ Rappel de méthode ([CLAUDE.md](../CLAUDE.md)) : une déclaration de complétion
 Limites connues documentées, à accepter ou à corriger avant la V1 :
 
 - **Officiers** : +1 emplacement de file et non +2 ; pas de bonus de champs ni d'expérience.
-- **Commandants** : seule l'attaque donne de l'expérience ; les non-assignés n'ont aucun bonus.
+- **Commandants** : l'attaque (gagnée ou perdue) et la défense réussie en maintien de position donnent de l'expérience (décision du propriétaire du 19 octobre 2026, faite) ; un commandant non assigné n'a aucun bonus ; les bonus de compétence ne s'appliquent pas en défense.
 - **Attaques groupées** : le groupe arrive ensemble et attend la flotte la plus lente, avec un retard limité à +30 % de la durée prévue à la création (décision du propriétaire du 19 octobre 2026, faite) ; pas de coordination en temps réel au-delà ; défenseur à technologie unique.
 - **Marché** : échange instantané, ressources seulement ; transfert entre comptes possible ; pas de contrats ni de commerce PNJ.
 - **Quêtes** : 34 succès, pas d'historique ni de classements ; récompenses en ressources seulement.
