@@ -1467,7 +1467,14 @@
     "reward": "Reward: {reward}",
     "claim": "Claim",
     "claimed": "Claimed",
-    "progress": "{progress} / {target}"
+    "progress": "{progress} / {target}",
+    "pending": {
+      "title": "Rewards to claim ({count})",
+      "hint": "Quests completed before a reset and never claimed: they are not lost. Daily quests stay claimable for 30 days, weekly quests for 12 weeks.",
+      "dailyOf": "Quest of {date}",
+      "weeklyOf": "Quest of week {week}",
+      "expires": "Expires in {time}"
+    }
   },
   "achievements": {
     "kicker": "Collection",

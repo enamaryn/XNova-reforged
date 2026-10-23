@@ -22,7 +22,8 @@ type Db = Pick<
 
 /**
  * Compteurs d'activité d'un joueur, lus dans les lignes déjà enregistrées par le jeu. Avec `since`, seule
- * l'activité depuis cet instant compte (fenêtre d'une quête) ; sans, c'est le cumul à vie (succès).
+ * l'activité depuis cet instant compte (fenêtre d'une quête), jusqu'à `until` exclu s'il est donné ; sans, c'est le
+ * cumul à vie (succès).
  * Aucun compteur ne dépend d'un incrément à la main : rien ne peut être compté deux fois.
  */
 export async function activityCount(
@@ -31,9 +32,12 @@ export async function activityCount(
   userId: string,
   metric: AchievementMetric,
   since?: Date,
+  until?: Date,
 ): Promise<number> {
-  const done = since ? { endTime: { gte: since } } : {};
-  const created = since ? { createdAt: { gte: since } } : {};
+  // `until` est exclusif : il borne la fenêtre d'une période passée (quête réclamée après sa remise à zéro)
+  const range = { gte: since, ...(until ? { lt: until } : {}) };
+  const done = since ? { endTime: range } : {};
+  const created = since ? { createdAt: range } : {};
   switch (metric) {
     case 'buildings':
       return db.buildQueue.count({ where: { completed: true, planet: { userId }, ...done } });

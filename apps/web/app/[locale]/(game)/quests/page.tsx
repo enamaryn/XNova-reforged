@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { questsApi, type QuestPeriodView, type QuestRow, type QuestReward } from "@/lib/api/quests";
+import { questsApi, type PendingQuest, type QuestPeriodView, type QuestRow, type QuestReward } from "@/lib/api/quests";
 import { useI18n } from "@/lib/i18n";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { usePlanetStore } from "@/lib/stores/planet-store";
@@ -34,7 +34,8 @@ export default function QuestsPage() {
 
   const { data } = useQuery({ queryKey: ["quests"], queryFn: questsApi.list, refetchInterval: 30000 });
   const claim = useMutation({
-    mutationFn: (questId: string) => questsApi.claim(questId, current!.id),
+    mutationFn: ({ questId, periodKey }: { questId: string; periodKey?: string }) =>
+      questsApi.claim(questId, current!.id, periodKey),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["quests"] });
       queryClient.invalidateQueries({ queryKey: ["resources"] });
@@ -70,7 +71,7 @@ export default function QuestsPage() {
               type="button"
               className="rounded-xl bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-500 disabled:opacity-40"
               disabled={!quest.claimable || claim.isPending || !current}
-              onClick={() => claim.mutate(quest.id)}
+              onClick={() => claim.mutate({ questId: quest.id })}
               data-testid={`claim-${quest.id}`}
             >
               {t("quests.claim")}
@@ -99,6 +100,34 @@ export default function QuestsPage() {
     </section>
   );
 
+  const pendingCard = (quest: PendingQuest) => (
+    <li
+      key={`${quest.periodKey}:${quest.id}`}
+      className="flex flex-col gap-2 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 text-sm sm:flex-row sm:items-center sm:justify-between"
+      data-testid={`pending-${quest.periodKey}-${quest.id}`}
+    >
+      <div className="min-w-0">
+        <p className="font-medium text-white">{t(`goals.metric.${quest.metric}`, { target: format(quest.target) })}</p>
+        <p className="text-xs text-slate-400">
+          {quest.period === "daily"
+            ? t("quests.pending.dailyOf", { date: quest.periodKey })
+            : t("quests.pending.weeklyOf", { week: quest.periodKey })}{" "}
+          · {t("quests.reward", { reward: rewardText(quest.reward) })}
+        </p>
+        <p className="text-xs text-slate-500">{t("quests.pending.expires", { time: countdown(quest.expiresAt, nowMs) })}</p>
+      </div>
+      <button
+        type="button"
+        className="rounded-xl bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-500 disabled:opacity-40"
+        disabled={claim.isPending || !current}
+        onClick={() => claim.mutate({ questId: quest.id, periodKey: quest.periodKey })}
+        data-testid={`claim-pending-${quest.periodKey}-${quest.id}`}
+      >
+        {t("quests.claim")}
+      </button>
+    </li>
+  );
+
   return (
     <div className="space-y-6">
       <div>
@@ -114,6 +143,16 @@ export default function QuestsPage() {
         <p className="rounded-xl border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-300" data-testid="quests-error">
           {claim.error instanceof Error ? claim.error.message : t("common.errorUnknown")}
         </p>
+      ) : null}
+
+      {data.pending?.length ? (
+        <section className="space-y-3 rounded-3xl border border-amber-500/30 bg-slate-950/60 p-5" data-testid="quests-pending">
+          <div>
+            <h2 className="text-lg font-semibold text-white">{t("quests.pending.title", { count: data.pending.length })}</h2>
+            <p className="text-xs text-slate-400">{t("quests.pending.hint")}</p>
+          </div>
+          <ul className="space-y-3">{data.pending.map(pendingCard)}</ul>
+        </section>
       ) : null}
 
       <div className="grid gap-6 lg:grid-cols-2">
