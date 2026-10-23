@@ -331,6 +331,9 @@ Periodi di bonus temporaneo per **tutti** i giocatori, lanciati da un amministra
 
 ---
 
+**Perché uno scambio, un trasporto o un attacco viene rifiutato tra due account?**
+Gli **account multipli sono vietati**. Due account sono considerati **collegati** quando hanno la stessa casella email (gli alias «+etichetta» e i punti di Gmail contano come lo stesso indirizzo) o quando lo stesso **indirizzo IP** è stato visto su entrambi di recente (30 giorni di default). Tra account collegati il gioco rifiuta l'acquisto al mercato, il trasporto di risorse e l'attacco; la registrazione di un nuovo account viene rifiutata quando un indirizzo IP ha già troppi account (3 di default). Se condividi la connessione (famiglia, coinquilini, scuola) con un altro giocatore, **contatta un amministratore**: può dichiarare legittimi i tuoi account (esenzione). Per spostare risorse tra **i tuoi pianeti**, invia una flotta di trasporto. Gli indirizzi IP sono visibili solo agli amministratori e cancellati dopo 90 giorni di default. Gli amministratori regolano questi limiti nella console.
+
 ## 11. Ciò che non esiste ancora
 
 Boss galattici, invasioni e stagioni competitive. La roadmap del progetto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tiene traccia di questi scarti.

@@ -409,7 +409,36 @@
       "testSend": "Envoyer le test"
     },
     "tabSupervision": "Supervision",
-    "tabEvents": "Événements"
+    "tabEvents": "Événements",
+    "tabLinked": "Comptes liés",
+    "linked": {
+      "title": "Doubles comptes",
+      "intro": "Deux comptes sont liés quand ils partagent la même adresse email (alias +étiquette, points Gmail) ou une adresse IP vue récemment. Les comptes liés ne peuvent ni échanger au marché, ni se transporter des ressources, ni s'attaquer. Une exemption lève le lien pour un foyer ou une école.",
+      "enforceRegistration": "Refuser l'inscription quand une adresse IP a trop de comptes",
+      "blockLinkedTransfers": "Interdire marché, transport et attaque entre comptes liés",
+      "maxAccountsPerIp": "Comptes admis par adresse IP (0 = illimité)",
+      "ipWindowDays": "Fenêtre d'une IP vue (jours)",
+      "retentionDays": "Conservation des adresses IP (jours)",
+      "privacy": "Les adresses IP sont des données personnelles : elles ne sont visibles que des administrateurs, conservées pendant la durée indiquée puis supprimées chaque nuit.",
+      "save": "Enregistrer",
+      "saved": "Réglages enregistrés.",
+      "reset": "Valeurs par défaut",
+      "resetConfirm": "Revenir aux valeurs par défaut ?",
+      "groupsTitle": "Comptes liés ({count} à examiner)",
+      "noGroups": "Aucun compte lié pour le moment.",
+      "openBadge": "à examiner",
+      "closedBadge": "tout exempté",
+      "exemptBadge": "exempté",
+      "reasonIp": "Même adresse IP : {value}",
+      "reasonEmail": "Même boîte email : {value}",
+      "exemptionReason": "Motif : {reason}",
+      "reasonPlaceholder": "Motif (foyer, école…)",
+      "exempt": "Exempter",
+      "removeExemption": "Retirer l'exemption",
+      "created": "créé le {date}",
+      "lastActive": "actif le {date}",
+      "banned": "suspendu"
+    }
   },
   "common": {
     "language": "Langue",

@@ -6,7 +6,7 @@ import {
   UnauthorizedException,
   NotFoundException,
 } from '@nestjs/common';
-import { GAME_CONSTANTS } from '@xnova/game-config';
+import { GAME_CONSTANTS, canonicalizeEmail } from '@xnova/game-config';
 import { Prisma, UserRole } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
@@ -22,6 +22,8 @@ import { EMAIL_NOT_VERIFIED, isEmailVerificationRequired } from './email-verific
 import { MailService } from '../mail/mail.service';
 import { SetupStateService } from '../setup/setup-state.service';
 import { requestLocaleOrNull } from '../common/request-locale';
+import { MultiAccountService } from '../multi-account/multi-account.service';
+import { canonicalEmailTaken } from '../multi-account/email-canonical';
 
 /** Nombre maximal de positions tentées pour la planète de départ lors d'une inscription. */
 const MAX_STARTER_ATTEMPTS = 10;
@@ -35,6 +37,7 @@ export class AuthService {
     private readonly serverConfig: ServerConfigService,
     private readonly mail: MailService,
     private readonly setupState: SetupStateService,
+    private readonly multiAccount: MultiAccountService,
   ) {}
 
   /**
@@ -42,7 +45,7 @@ export class AuthService {
    */
   async register(
     registerDto: RegisterDto,
-    options: { role?: UserRole; internal?: boolean } = {},
+    options: { role?: UserRole; internal?: boolean; ip?: string } = {},
   ): Promise<AuthResponseDto | RegistrationPendingDto> {
     const { username, email, password } = registerDto;
     const internal = options.internal === true;
@@ -63,6 +66,9 @@ export class AuthService {
       );
     }
 
+    // Trop de comptes déjà créés depuis cette adresse IP (doubles comptes) : refus avant tout travail coûteux
+    if (!internal) await this.multiAccount.assertCanRegister(options.ip);
+
     // Hachage hors transaction : opération lente, sans accès base
     const hashedPassword = await argon2.hash(password);
     const config = await this.serverConfig.getConfig();
@@ -74,10 +80,16 @@ export class AuthService {
     for (let attempt = 1; attempt <= MAX_STARTER_ATTEMPTS; attempt += 1) {
       try {
         const { user, tokens } = await this.database.$transaction(async (tx) => {
+          // Même boîte mail sous un autre alias (+étiquette, points Gmail) : refusée. Le verrou sérialise deux
+          // inscriptions simultanées qui n'auraient que l'alias de différent.
+          const canonical = canonicalizeEmail(email);
+          await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${canonical}))`;
+          if (await canonicalEmailTaken(tx, email)) throw new ConflictException('Cet email est déjà utilisé');
           const created = await tx.user.create({
             data: {
               username,
               email,
+              emailCanonical: canonical,
               password: hashedPassword,
               // Langue de l'interface à l'inscription (sinon celle du serveur) : emails et textes
               locale: requestLocaleOrNull() ?? config.language,
@@ -93,6 +105,8 @@ export class AuthService {
             : await this.createSessionTokens(created.id, created.username, tx);
           return { user: created, tokens: sessionTokens };
         });
+
+        await this.multiAccount.touchIp(user.id, options.ip);
 
         if (!tokens) {
           return {
@@ -167,7 +181,7 @@ export class AuthService {
   /**
    * Connexion d'un utilisateur
    */
-  async login(loginDto: LoginDto): Promise<AuthResponseDto> {
+  async login(loginDto: LoginDto, ip?: string): Promise<AuthResponseDto> {
     const { identifier, password } = loginDto;
 
     // Chercher l'utilisateur par username OU email
@@ -223,6 +237,7 @@ export class AuthService {
 
     // Générer les tokens JWT
     const tokens = await this.createSessionTokens(user.id, user.username);
+    await this.multiAccount.touchIp(user.id, ip);
 
     return {
       user: {
@@ -247,6 +262,7 @@ export class AuthService {
    */
   async refreshAccessToken(
     refreshToken: string,
+    ip?: string,
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const invalid = new UnauthorizedException('Refresh token invalide ou expiré');
 
@@ -298,6 +314,7 @@ export class AuthService {
       throw invalid;
     }
 
+    await this.multiAccount.touchIp(session.user.id, ip);
     return next;
   }
 

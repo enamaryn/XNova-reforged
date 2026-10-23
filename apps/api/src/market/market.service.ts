@@ -16,6 +16,7 @@ import {
 import { debitResources, lockPlanet, lockUser } from '../common/atomic';
 import { DatabaseService } from '../database/database.service';
 import { EventModifiersService } from '../world-events/event-modifiers.service';
+import { MultiAccountService } from '../multi-account/multi-account.service';
 import { BuyOfferDto, CreateOfferDto } from './dto/market.dto';
 
 type Tx = Prisma.TransactionClient;
@@ -26,6 +27,7 @@ export class MarketService {
   constructor(
     private readonly database: DatabaseService,
     private readonly eventModifiers: EventModifiersService,
+    private readonly multiAccount: MultiAccountService,
   ) {}
 
   /** Constantes affichées par la page (taxe, durée, limites, bornes de taux par paire). */
@@ -191,6 +193,8 @@ export class MarketService {
         throw new ConflictException("Cette offre n'est plus disponible");
       }
       if (offer.sellerId === userId) throw new BadRequestException('Vous ne pouvez pas acheter votre propre offre');
+      // Doubles comptes : le marché ne sert pas à transférer des ressources entre deux comptes liés
+      await this.multiAccount.assertTransferAllowed(userId, offer.sellerId);
       if (dto.amount > offer.remaining) {
         throw new BadRequestException(`Quantite disponible : ${offer.remaining}`);
       }
