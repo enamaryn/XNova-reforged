@@ -7,7 +7,9 @@ import {
   HttpStatus,
   Put,
   UseGuards,
+  Req,
 } from '@nestjs/common';
+import type { Request } from 'express';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -42,8 +44,8 @@ export class AuthController {
   @Post('register')
   @RateLimit('register')
   @HttpCode(HttpStatus.CREATED)
-  async register(@Body() registerDto: RegisterDto) {
-    const result = await this.authService.register(registerDto);
+  async register(@Body() registerDto: RegisterDto, @Req() req: Request) {
+    const result = await this.authService.register(registerDto, { ip: req.ip });
     // Email de confirmation hors de la réponse : l'inscription ne dépend pas du SMTP
     void this.account.sendVerificationEmail(result.user);
     return result;
@@ -56,8 +58,8 @@ export class AuthController {
   @Post('login')
   @RateLimit('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() loginDto: LoginDto) {
-    return this.authService.login(loginDto);
+  async login(@Body() loginDto: LoginDto, @Req() req: Request) {
+    return this.authService.login(loginDto, req.ip);
   }
 
   /**
@@ -66,8 +68,8 @@ export class AuthController {
    */
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
-  async refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
-    return this.authService.refreshAccessToken(refreshTokenDto.refreshToken);
+  async refreshToken(@Body() refreshTokenDto: RefreshTokenDto, @Req() req: Request) {
+    return this.authService.refreshAccessToken(refreshTokenDto.refreshToken, req.ip);
   }
 
   /**

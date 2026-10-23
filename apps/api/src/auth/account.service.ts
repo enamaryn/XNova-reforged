@@ -16,6 +16,8 @@ import { GameEventsGateway } from '../game-events/game-events.gateway';
 import { MailService } from '../mail/mail.service';
 import { SetupStateService } from '../setup/setup-state.service';
 import { lockUser } from '../common/atomic';
+import { canonicalEmailTaken } from '../multi-account/email-canonical';
+import { canonicalizeEmail } from '@xnova/game-config';
 import type { Prisma } from '@prisma/client';
 
 type TokenType = 'verify_email' | 'reset_password' | 'change_email';
@@ -217,7 +219,7 @@ export class AccountService {
       where: { email: { equals: newEmail, mode: 'insensitive' } },
       select: { id: true },
     });
-    if (taken) {
+    if (taken || (await canonicalEmailTaken(this.database, newEmail, userId))) {
       throw new ConflictException('Cet email est déjà utilisé');
     }
 
@@ -250,10 +252,10 @@ export class AccountService {
         }
         if (user.email.toLowerCase() === email.toLowerCase()) throw new BadRequestException('Cette adresse est déjà utilisée par ce joueur');
         const taken = await tx.user.findFirst({ where: { email: { equals: email, mode: 'insensitive' } }, select: { id: true } });
-        if (taken) throw new ConflictException('Cet email est déjà utilisé');
+        if (taken || (await canonicalEmailTaken(tx, email, userId))) throw new ConflictException('Cet email est déjà utilisé');
         const now = new Date();
         const token = randomBytes(32).toString('base64url');
-        await tx.user.update({ where: { id: userId }, data: { email, emailVerifiedAt: null, mustVerifyEmail: true } });
+        await tx.user.update({ where: { id: userId }, data: { email, emailCanonical: canonicalizeEmail(email), emailVerifiedAt: null, mustVerifyEmail: true } });
         await tx.session.updateMany({ where: { userId, revokedAt: null }, data: { revokedAt: now } });
         await tx.emailToken.updateMany({ where: { userId, usedAt: null }, data: { usedAt: now } });
         await tx.emailToken.create({ data: { userId, type: 'verify_email', email, tokenHash: hashToken(token), expiresAt: new Date(now.getTime() + TTL_MS.verify_email) } });
@@ -293,7 +295,7 @@ export class AccountService {
           await tx.emailToken.updateMany({ where: { userId: user.id, usedAt: null }, data: { usedAt: new Date() } });
         }
         await tx.user.update({ where: { id: user.id }, data: {
-          ...(row.type === 'change_email' ? { email: row.email } : {}),
+          ...(row.type === 'change_email' ? { email: row.email, emailCanonical: canonicalizeEmail(row.email) } : {}),
           emailVerifiedAt: new Date(), mustVerifyEmail: false,
         } });
         return { id: user.id, type: row.type, previousEmail: user.email, email: row.email, username: user.username, locale: user.locale };

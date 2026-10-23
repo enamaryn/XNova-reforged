@@ -5,6 +5,18 @@
 
 ---
 
+## Session — vérification des doubles comptes
+
+**Date :** 23 octobre 2026. Demande du propriétaire : « met en place la vérification de double compte (comme même IP et/ou même email) ».
+
+- [x] `packages/game-config/src/multi-account.ts` : règles pures (`canonicalizeEmail`, `normalizeIp` avec IPv6 en /64, réglages validés strictement et relus de façon tolérante).
+- [x] Base : `User.emailCanonical` (rempli pour les comptes existants), `AccountIp`, `AccountLinkExemption` (migration `20261024110000_multi_account`, vérifiée sans écart avec le schéma).
+- [x] API : inscription et changement d'email refusent un alias de la même boîte (verrou consultatif contre les inscriptions simultanées) ; IP enregistrée à l'inscription, à la connexion et au rafraîchissement ; inscription refusée au-delà de 3 comptes par IP (réglable, 0 = illimité) ; marché (achat), transport et attaques refusés entre comptes liés ; purge nocturne des IP (90 jours).
+- [x] Console admin : onglet « Comptes liés » (groupes à examiner, raisons, exemptions avec motif, réglages validés et audités, remise aux défauts).
+- [x] Tests : 12 unitaires, 17 d'intégration (alias, inscriptions simultanées, IP, fenêtre et purge, exemptions, marché, transport et attaque, admin, audit). Les suites d'intégration et E2E coupent le contrôle par `MULTI_ACCOUNT_CHECKS=off` (tous leurs comptes partagent l'adresse 127.0.0.1) ; la suite dédiée le réactive.
+- [x] FAQ (5 langues), `API_ENDPOINTS.md`, limites de la checklist V1, feuille de route.
+- Reste : mention des adresses IP dans les conditions d'utilisation (RGPD) ; détection d'un second compte sur un autre réseau impossible par cette méthode ; prochain lot : boss galactiques.
+
 ## Session — quêtes et succès (Phase 7)
 
 **Date :** 21 octobre 2026. Demande du propriétaire : « passe aux événements et quêtes ». Vérification préalable : aucun code de quête ni de succès (le guide de démarrage `onboarding` est un autre mécanisme, à usage unique). Le lot est découpé : quêtes et succès ici, événements saisonniers, boss, invasions et saisons dans un PR distinct.

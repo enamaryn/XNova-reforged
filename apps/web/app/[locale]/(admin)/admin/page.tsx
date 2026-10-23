@@ -24,6 +24,7 @@ import { SmtpSettingsPanel } from "./SmtpSettingsPanel";
 import { PlayersPanel } from "./PlayersPanel";
 import { SupervisionPanel } from "./SupervisionPanel";
 import { WorldEventsPanel } from "./WorldEventsPanel";
+import { MultiAccountPanel } from "./MultiAccountPanel";
 import { worldEventsApi } from "@/lib/api/world-events";
 
 function GeneralPanel() {
@@ -733,7 +734,7 @@ function GeneralPanel() {
 export default function AdminPage() {
   const { user } = useAuthStore();
   const { t } = useI18n();
-  const [tab, setTab] = useState<"players" | "general" | "events" | "smtp" | "supervision">("players");
+  const [tab, setTab] = useState<"players" | "general" | "events" | "linked" | "smtp" | "supervision">("players");
   const canManageEvents = user?.role === "ADMIN" || user?.role === "SUPER_ADMIN";
   // Rappel : le nombre d'événements à lancer s'affiche sur l'onglet, même quand il n'est pas ouvert
   const remindersQuery = useQuery({
@@ -752,7 +753,7 @@ export default function AdminPage() {
           [
             "players",
             "general",
-            ...(canManageEvents ? ["events"] : []),
+            ...(canManageEvents ? ["events", "linked"] : []),
             ...(hasAdminAccess(user?.role) ? ["supervision"] : []),
             ...(isSuperAdmin(user?.role) ? ["smtp"] : []),
           ] as const
@@ -775,6 +776,8 @@ export default function AdminPage() {
               </>
             ) : value === "players"
               ? t("admin.tabPlayers")
+              : value === "linked"
+                ? t("admin.tabLinked")
               : value === "smtp"
                 ? t("admin.tabSmtp")
                 : value === "supervision"
@@ -786,6 +789,7 @@ export default function AdminPage() {
       {tab === "players" && <PlayersPanel />}
       {tab === "general" && <GeneralPanel />}
       {tab === "events" && canManageEvents && <WorldEventsPanel />}
+      {tab === "linked" && canManageEvents && <MultiAccountPanel />}
       {tab === "supervision" && hasAdminAccess(user?.role) && <SupervisionPanel />}
       {tab === "smtp" && isSuperAdmin(user?.role) && <SmtpSettingsPanel />}
     </div>

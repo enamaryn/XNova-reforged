@@ -329,6 +329,9 @@ Des périodes de bonus temporaires pour **tous** les joueurs, lancées par un ad
 
 ---
 
+**Pourquoi un échange, un transport ou une attaque est-il refusé entre deux comptes ?**
+Les **doubles comptes sont interdits**. Deux comptes sont considérés comme **liés** quand ils ont la même boîte email (les alias « +étiquette » et les points Gmail comptent comme la même adresse) ou quand une même **adresse IP** a été vue sur les deux récemment (30 jours par défaut). Entre comptes liés, le jeu refuse l'achat au marché, le transport de ressources et l'attaque ; l'inscription d'un nouveau compte est refusée quand une adresse IP porte déjà trop de comptes (3 par défaut). Si vous partagez une connexion (famille, colocation, école) avec un autre joueur, **contactez un administrateur** : il peut déclarer vos comptes légitimes (exemption). Pour déplacer des ressources entre **vos propres planètes**, envoyez une flotte de transport. Les adresses IP sont visibles des seuls administrateurs et supprimées après 90 jours par défaut. Les administrateurs règlent ces limites dans la console.
+
 ## 11. Ce qui n'existe pas encore
 
 Boss galactiques, invasions et saisons compétitives. La feuille de route du projet ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) suit ces écarts.

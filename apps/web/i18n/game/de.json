@@ -409,7 +409,36 @@
       "testSend": "Test senden"
     },
     "tabSupervision": "Überwachung",
-    "tabEvents": "Ereignisse"
+    "tabEvents": "Ereignisse",
+    "tabLinked": "Verknüpfte Konten",
+    "linked": {
+      "title": "Mehrfachkonten",
+      "intro": "Zwei Konten sind verknüpft, wenn sie dieselbe E-Mail-Adresse (+Tag-Aliasse, Gmail-Punkte) oder eine kürzlich gesehene IP-Adresse teilen. Verknüpfte Konten können weder auf dem Markt handeln noch sich Rohstoffe schicken noch sich angreifen. Eine Ausnahme hebt die Verknüpfung für einen Haushalt oder eine Schule auf.",
+      "enforceRegistration": "Registrierung ablehnen, wenn eine IP-Adresse zu viele Konten hat",
+      "blockLinkedTransfers": "Markt, Transport und Angriffe zwischen verknüpften Konten verbieten",
+      "maxAccountsPerIp": "Erlaubte Konten pro IP-Adresse (0 = unbegrenzt)",
+      "ipWindowDays": "Zeitfenster einer gesehenen IP (Tage)",
+      "retentionDays": "Aufbewahrung der IP-Adressen (Tage)",
+      "privacy": "IP-Adressen sind personenbezogene Daten: Nur Administratoren sehen sie, sie werden für die angegebene Dauer aufbewahrt und jede Nacht gelöscht.",
+      "save": "Speichern",
+      "saved": "Einstellungen gespeichert.",
+      "reset": "Standardwerte",
+      "resetConfirm": "Zu den Standardwerten zurückkehren?",
+      "groupsTitle": "Verknüpfte Konten ({count} zu prüfen)",
+      "noGroups": "Zurzeit keine verknüpften Konten.",
+      "openBadge": "zu prüfen",
+      "closedBadge": "alle ausgenommen",
+      "exemptBadge": "ausgenommen",
+      "reasonIp": "Gleiche IP-Adresse: {value}",
+      "reasonEmail": "Gleiches Postfach: {value}",
+      "exemptionReason": "Grund: {reason}",
+      "reasonPlaceholder": "Grund (Haushalt, Schule …)",
+      "exempt": "Ausnehmen",
+      "removeExemption": "Ausnahme entfernen",
+      "created": "erstellt am {date}",
+      "lastActive": "aktiv am {date}",
+      "banned": "gesperrt"
+    }
   },
   "common": {
     "language": "Sprache",

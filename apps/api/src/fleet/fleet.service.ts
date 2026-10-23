@@ -1,3 +1,4 @@
+import { MultiAccountService } from '../multi-account/multi-account.service';
 import { OfficersService } from '../officers/officers.service';
 import { FleetCommandersService } from '../fleet-commanders/fleet-commanders.service';
 import {
@@ -47,6 +48,7 @@ export class FleetService {
     private readonly serverConfig: ServerConfigService,
     private readonly officers: OfficersService,
     private readonly commanders: FleetCommandersService,
+    private readonly multiAccount: MultiAccountService,
   ) {}
 
   async getAvailableShips(planetId: string, userId: string) {
@@ -332,6 +334,17 @@ export class FleetService {
     } else if (!target) {
       // TRANSPORT : la cible doit exister
       throw new BadRequestException('Aucune planete a cette position');
+    }
+
+    // Doubles comptes : ni transport de ressources ni attaque (pillage d'un compte « jetable ») entre comptes liés
+    if (
+      target &&
+      target.userId !== userId &&
+      (dto.mission === MissionType.TRANSPORT ||
+        dto.mission === MissionType.ATTACK ||
+        dto.mission === MissionType.ACS_ATTACK)
+    ) {
+      await this.multiAccount.assertTransferAllowed(userId, target.userId);
     }
 
     const shipRows = await this.database.ship.findMany({
