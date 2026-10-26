@@ -114,7 +114,7 @@ Contexte : le 23 octobre 2026, le contrôle d'audit de production (seuil « haut
 | Alerte | Où | Correction |
 |---|---|---|
 | **critique** — exécution de code à distance dans l'API d'optimisation d'images avec des SVG (GHSA-2464-fhr4-w9xw) et déni de service des Server Actions (GHSA-p3m5-59mp-jv5r) | `next` ≤ 15.5.28 (aucun correctif 15.x) | `next` 15.5.27 → **16.4.3** |
-| haute — mémoire épuisée en validant de grandes collections (GHSA-mrhx-c7xc-m3w5) | `zod` 3 | `zod` 3.25 → **4.6.7**, `@hookform/resolvers` 3 → **5** (seul fichier concerné : `apps/web/lib/validators/auth.ts`, schémas inchangés) |
+| haute — mémoire épuisée en validant de grandes collections (GHSA-mrhx-c7xc-m3w5) | `zod` 3 | `zod` 3.25 → **4.6.7** ; `@hookform/resolvers` **retiré** au profit d'un résolveur de 15 lignes (`apps/web/lib/validators/zod-resolver.ts`) : sa version 5 déclare `ajv ^8` en dépendance optionnelle, ce que `npm ls` signale comme invalide dès qu'un `ajv` 6 est présent (le contrôle d'installation `scripts/verify-install.sh` exige un arbre sans erreur). Schémas inchangés (`apps/web/lib/validators/auth.ts`) |
 | haute — déni de service d'un `fileFilter` asynchrone (GHSA-q7qp-rjg7-q26m) | `multer` 2.4.0 (via `@nestjs/platform-express`, version épinglée) | `overrides` racine `multer ^2.5.0` |
 | modérée — analyse d'adresses (3 avis) | `nodemailer` 10.0.14 | `nodemailer` ^10.2.1 |
 | haute — déni de service (body-parser) | `body-parser` | corrigée par `npm audit fix` (lockfile) |
