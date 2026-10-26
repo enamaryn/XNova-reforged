@@ -801,6 +801,31 @@ model MarketTrade {
 }
 
 // ============================================
+// COMMERCE PNJ
+// ============================================
+
+// Historique des echanges et achats aupres du marchand PNJ ; `value` (equivalent metal) alimente le plafond quotidien
+model NpcTrade {
+  id            String   @id @default(uuid())
+  userId        String
+  planetId      String
+  // EXCHANGE (ressources contre ressources) ou SHIP (achat de vaisseaux)
+  kind          String
+  giveResource  String?
+  wantResource  String?
+  giveAmount    Float    @default(0)
+  receiveAmount Float    @default(0)
+  shipId        Int?
+  shipAmount    Int?
+  rate          Float?
+  value         Float
+  createdAt     DateTime @default(now())
+
+  @@index([userId, kind, createdAt])
+  @@index([createdAt])
+}
+
+// ============================================
 // QUETES ET SUCCES
 // ============================================
 

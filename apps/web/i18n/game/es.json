@@ -29,7 +29,8 @@
     "commanders": "Comandantes",
     "market": "Mercado",
     "quests": "Misiones",
-    "achievements": "Logros"
+    "achievements": "Logros",
+    "npcTrade": "Comercio"
   },
   "sidebar": {
     "principal": "Principal",
@@ -409,7 +410,28 @@
       "testSend": "Enviar la prueba"
     },
     "tabSupervision": "Supervisión",
-    "tabEvents": "Eventos"
+    "tabEvents": "Eventos",
+    "tabNpcTrade": "Comercio PNJ",
+    "npcTrade": {
+      "title": "Mercader PNJ",
+      "intro": "Ajusta al mercader: margen, variación diaria, límites por jugador, precio de las naves y efecto de cada estación. Cada guardado queda en el registro de auditoría.",
+      "enabled": "Mercader presente",
+      "spread": "Margen del mercader (0 a 0,5)",
+      "dailyVariation": "Variación diaria (0 a 0,5)",
+      "exchangeDailyCap": "Límite de intercambio por jugador y día (valor metal)",
+      "shipDailyCap": "Límite de compra de naves por jugador y día (valor metal)",
+      "shipPriceMultiplier": "Precio de las naves (× coste del astillero)",
+      "ships": "Naves ofrecidas (no se exige ningún requisito al comprar)",
+      "seasonsTitle": "Estaciones",
+      "values": "Valor de los recursos",
+      "spreadReduction": "Margen suprimido (0 a 1)",
+      "shipDiscount": "Descuento en naves (0 a 1)",
+      "currentSeason": "estación actual",
+      "save": "Guardar",
+      "saved": "Ajustes guardados.",
+      "reset": "Valores por defecto",
+      "resetConfirm": "¿Volver a los valores por defecto del mercader?"
+    }
   },
   "common": {
     "language": "Idioma",
@@ -1488,5 +1510,37 @@
       "trades": "Realizar {target} intercambio(s) en el mercado",
       "missiles": "Disparar {target} misil(es) interplanetario(s)"
     }
+  },
+  "npcTrade": {
+    "kicker": "Economía",
+    "title": "Comercio con el mercader",
+    "subtitle": "Un mercader de la galaxia cambia tus recursos al instante y te vende naves. Sus tasas cambian cada día y con la estación; se queda con un margen.",
+    "planet": "Los intercambios y las compras usan el planeta seleccionado: {planet}.",
+    "disabled": "El mercader no está presente ahora.",
+    "seasonLine": "Estación: {season} · margen del mercader hoy: {spread} %",
+    "season": {
+      "winter": "invierno",
+      "spring": "primavera",
+      "summer": "verano",
+      "autumn": "otoño"
+    },
+    "exchangeTitle": "Intercambiar recursos",
+    "give": "Doy",
+    "want": "Recibo",
+    "amount": "Cantidad",
+    "receive": "Recibirás {received} {want} (tasa {rate}).",
+    "submit": "Intercambiar",
+    "done": "Intercambio hecho: {given} {give} por {received} {want}.",
+    "ratesTitle": "Tasas de hoy",
+    "rateLine": "1 {give} → {rate} {want}",
+    "shipsTitle": "Naves a la venta",
+    "shipsHint": "Entrega inmediata, sin requisitos de investigación ni de edificio. Precio de hoy: {factor} × el coste del astillero.",
+    "unitPrice": "Precio unitario",
+    "quantity": "Cantidad",
+    "buy": "Comprar",
+    "bought": "{amount} × {ship} comprados.",
+    "capTitle": "Límites del día (se reinician a medianoche UTC)",
+    "capExchange": "Intercambios: {used} / {cap} (valor equivalente en metal)",
+    "capShip": "Naves: {used} / {cap} (valor equivalente en metal)"
   }
 }

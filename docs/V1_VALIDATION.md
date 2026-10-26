@@ -101,7 +101,8 @@ Limites connues documentées, à accepter ou à corriger avant la V1 :
 - **Officiers** : +1 emplacement de file et non +2 ; pas de bonus de champs ni d'expérience.
 - **Commandants** : l'attaque (gagnée ou perdue) et la défense réussie en maintien de position donnent de l'expérience (décision du propriétaire du 19 octobre 2026, faite) ; un commandant non assigné n'a aucun bonus ; les bonus de compétence ne s'appliquent pas en défense.
 - **Attaques groupées** : le groupe arrive ensemble et attend la flotte la plus lente, avec un retard limité à +30 % de la durée prévue à la création (décision du propriétaire du 19 octobre 2026, faite) ; pas de coordination en temps réel au-delà ; défenseur à technologie unique.
-- **Marché** : échange instantané, ressources seulement ; transfert entre comptes possible ; pas de contrats ni de commerce PNJ.
+- **Marché** : échange instantané, ressources seulement (décision du propriétaire du 19 octobre 2026, faite) ; doubles comptes interdits (règle écrite dans la FAQ, **non détectée par le code** : un transfert entre deux comptes d'une même personne reste techniquement possible) ; pas de contrats.
+- **Commerce PNJ** : marchand à taux variables (jour, saison), achat de vaisseaux sans prérequis, plafonds quotidiens, tout modifiable en console admin (valeurs par défaut fixées par Claude, **à valider ou rééquilibrer par le propriétaire**) ; aucun marchand itinérant ni quête liée.
 - **Quêtes** : une quête terminée mais non réclamée n'est plus perdue à la remise à zéro : elle reste réclamable 30 jours (journalières) ou 12 semaines (hebdomadaires), puis expire (décision du propriétaire du 19 octobre 2026, faite) ; 34 succès, pas d'historique ni de classements ; récompenses en ressources seulement.
 - **Événements** : production et taxe du marché seulement ; les quêtes n'en profitent pas encore.
 - **Absents** : boss galactiques, invasions, saisons compétitives.

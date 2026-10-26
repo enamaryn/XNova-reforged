@@ -145,7 +145,7 @@ Cette roadmap étend le MVP avec des fonctionnalités avancées pour créer un M
     expiresAt    DateTime
   }
   ```
-- [x] Service MarketService — livré le 20 octobre 2026 (offres de vente/échange, achat total ou partiel, taxe 5 %, expiration ; sans enchères) ; contrats, commerce PNJ et routes commerciales restent à faire
+- [x] Service MarketService — livré le 20 octobre 2026 (offres de vente/échange, achat total ou partiel, taxe 5 %, expiration ; sans enchères) ; commerce PNJ livré le 22 octobre 2026 (échange, vaisseaux, taux jour/saison, réglages admin) ; contrats et routes commerciales restent à faire
   - Création offres vente
   - Recherche offres
   - Achat ressources
