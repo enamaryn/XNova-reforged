@@ -9,7 +9,7 @@
 
 **Date :** 26 octobre 2026. Demande du propriétaire : « migre vers Next 16 » (le contrôle d'audit de production était rouge depuis le 23 octobre : avis critique sur Next 15, sans correctif 15.x).
 
-- [x] `next` 15 → 16.4.3 ; `zod` 3 → 4 et `@hookform/resolvers` 3 → 5 (avis haute sur zod 3) ; `nodemailer` ^10.2.1 ; override `multer ^2.5.0` ; `npm audit fix` : `npm audit --omit=dev --audit-level=high` repasse à 0.
+- [x] `next` 15 → 16.4.3 ; `zod` 3 → 4 (avis haute sur zod 3) et `@hookform/resolvers` remplacé par un résolveur local (son `ajv ^8` optionnel faisait échouer `npm ls` dans le contrôle d'installation) ; `nodemailer` ^10.2.1 ; override `multer ^2.5.0` ; `npm audit fix` : `npm audit --omit=dev --audit-level=high` repasse à 0.
 - [x] `allowedDevOrigins` en noms d'hôte (Next 16 bloque les ressources de développement d'une autre origine : sans cela, aucune page ne s'hydratait en mode développement).
 - [x] Documentation : `docs/NPM_AUDIT_2026-10.md` (tableau des alertes, exposition, changements de comportement), `CLAUDE.md`, `README.md`, `AGENT.md`.
 - Reste : React 18 déprécié (retiré dans Next 17) → montée vers React 19 ; fichier `middleware` à renommer en `proxy` ; avertissements « scroll-behavior » ; PR #85 (doubles comptes) à fusionner.
