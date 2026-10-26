@@ -106,7 +106,8 @@ Limites connues documentées, à accepter ou à corriger avant la V1 :
 - **Commerce PNJ** : marchand à taux variables (jour, saison), achat de vaisseaux sans prérequis, plafonds quotidiens, tout modifiable en console admin (valeurs par défaut fixées par Claude, **à valider ou rééquilibrer par le propriétaire**) ; aucun marchand itinérant ni quête liée.
 - **Quêtes** : une quête terminée mais non réclamée n'est plus perdue à la remise à zéro : elle reste réclamable 30 jours (journalières) ou 12 semaines (hebdomadaires), puis expire (décision du propriétaire du 19 octobre 2026, faite) ; 34 succès, pas d'historique ni de classements ; récompenses en ressources seulement.
 - **Événements** : production et taxe du marché seulement ; les quêtes n'en profitent pas encore.
-- **Absents** : boss galactiques, invasions, saisons compétitives.
+- **Boss galactique** (décisions du propriétaire du 19 octobre 2026) : un boss à la fois, position 16 aléatoire, réapparition 7 jours après sa mort, jamais d'attaque de planète, interception aléatoire des expéditions de son système, combat par la mission d'attaque, butin partagé au prorata des dégâts ; **désactivé par défaut**, tous les réglages en console admin. Limites : les valeurs par défaut (flotte, butin, régénération) sont des choix de Claude **jamais éprouvés en jeu réel** : à équilibrer avant d'activer ; pas d'attaque groupée contre le boss ; les commandants de flotte et leurs bonus ne comptent pas dans ce combat ; seules les expéditions sont interceptées (pas les autres flottes) ; pas de marqueur du boss dans la vue de la galaxie.
+- **Absents** : invasions, saisons compétitives.
 
 ## 9. Hors dépôt (propriétaire)
 

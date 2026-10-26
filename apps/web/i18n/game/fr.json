@@ -30,7 +30,8 @@
     "market": "Marché",
     "quests": "Quêtes",
     "achievements": "Succès",
-    "npcTrade": "Commerce"
+    "npcTrade": "Commerce",
+    "boss": "Boss galactique"
   },
   "sidebar": {
     "principal": "Principal",
@@ -460,6 +461,38 @@
       "created": "créé le {date}",
       "lastActive": "actif le {date}",
       "banned": "suspendu"
+    },
+    "tabBoss": "Boss",
+    "boss": {
+      "title": "Boss galactique",
+      "intro": "Réglez le boss : activation, flotte, technologies, butin, régénération, probabilité d'intercepter une expédition et délai de réapparition. Chaque enregistrement est inscrit au journal d'audit. Le boss est désactivé par défaut : vérifiez sa puissance avant de l'activer.",
+      "alive": "{name} en galaxie {galaxy}, système {system} (santé {percent} %).",
+      "despawn": "Retirer le boss",
+      "despawnConfirm": "Retirer le boss sans butin ? Il réapparaîtra après le délai habituel.",
+      "none": "Aucun boss vivant.",
+      "galaxy": "Galaxie (facultatif)",
+      "system": "Système (facultatif)",
+      "spawn": "Faire apparaître",
+      "historyLine": "{name} — galaxie {galaxy}, système {system} · mort le {died} · réapparition le {respawn}",
+      "enabled": "Boss actif (apparition, combats et interceptions)",
+      "respawnDays": "Délai de réapparition (jours)",
+      "aggroPercent": "Chance d'intercepter une expédition (%)",
+      "regen": "Régénération (% de la flotte par heure)",
+      "techTitle": "Technologies du boss",
+      "weapon": "Armes",
+      "shield": "Bouclier",
+      "armor": "Coque",
+      "lootTitle": "Butin partagé à sa mort",
+      "shipsTitle": "Flotte du boss",
+      "removeShip": "Retirer ce vaisseau",
+      "addShip": "Ajouter un vaisseau…",
+      "fleetValue": "Valeur de la flotte (équivalent métal) : {value}",
+      "save": "Enregistrer",
+      "saved": "Réglages enregistrés.",
+      "reset": "Valeurs par défaut",
+      "resetConfirm": "Revenir aux valeurs par défaut du boss ?",
+      "spawned": "Boss apparu.",
+      "despawned": "Boss retiré."
     }
   },
   "common": {
@@ -860,7 +893,9 @@
     "exp_delay": "Un contretemps allonge le retour (×{factor}).",
     "exp_speedup": "Un courant favorable raccourcit le retour (×{factor}).",
     "expPirates": "Attaque de pirates : {lost} vaisseau(x) perdu(s).",
-    "exp_blackhole": "Un trou noir a englouti toute la flotte."
+    "exp_blackhole": "Un trou noir a englouti toute la flotte.",
+    "expBoss": "Le boss galactique a intercepté l'expédition : {lost} vaisseau(x) perdu(s).",
+    "expBossKilled": "Le boss galactique a intercepté l'expédition, et elle l'a terrassé ! {lost} vaisseau(x) perdu(s)."
   },
   "spy": {
     "building": {
@@ -1571,5 +1606,43 @@
     "capTitle": "Plafonds du jour (remise à zéro à minuit UTC)",
     "capExchange": "Échanges : {used} / {cap} (valeur équivalent métal)",
     "capShip": "Vaisseaux : {used} / {cap} (valeur équivalent métal)"
+  },
+  "boss": {
+    "kicker": "Espace profond",
+    "title": "Boss galactique",
+    "subtitle": "Une flotte monstrueuse rôde en position 16 d'un système. Elle n'attaque jamais de planète. Attaquez-la avec la mission « Attaque » vers sa position ; elle peut aussi intercepter une expédition qui arrive dans son système ({aggro} % de chances). Ses pertes persistent entre les combats et elle regagne {regen} % de sa flotte par heure. À sa mort, le butin est partagé au prorata des dégâts ; elle réapparaît ailleurs {days} jours plus tard.",
+    "disabled": "Les boss galactiques ne sont pas actifs pour le moment.",
+    "location": "Position : galaxie {galaxy}, système {system}, position {position}",
+    "health": "Santé : {percent} %",
+    "fleet": "Flotte : {ships}",
+    "lootPool": "Butin à partager à sa mort : {loot}",
+    "attack": "Préparer une attaque",
+    "expeditionHint": "Une expédition vers ce système peut aussi tomber sur lui : ses dégâts comptent pour le butin.",
+    "mine": "Vos dégâts : {damage} (valeur des vaisseaux détruits) en {battles} combat(s).",
+    "nextSpawn": "Aucun boss en ce moment. Prochaine apparition : {date}.",
+    "none": "Aucun boss en ce moment.",
+    "topTitle": "Meilleurs attaquants",
+    "topLine": "{damage} de dégâts en {battles} combat(s)",
+    "battlesTitle": "Vos combats contre le boss",
+    "battleLine": "{source} : {result}, {damage} de dégâts infligés. Pertes : {lost}.",
+    "battleKilled": "{source} : coup fatal ! {damage} de dégâts infligés. Pertes : {lost}.",
+    "lootLine": "Butin reçu à la mort du boss : {loot}.",
+    "source": {
+      "ATTACK": "Attaque",
+      "EXPEDITION": "Expédition",
+      "LOOT": "Butin"
+    },
+    "result": {
+      "attacker_win": "victoire",
+      "defender_win": "défaite",
+      "draw": "égalité"
+    },
+    "names": {
+      "1": "Léviathan des Abysses",
+      "2": "Moissonneur Noir",
+      "3": "Nuée Stellaire",
+      "4": "Kraken Orbital",
+      "5": "Sentinelle Oubliée"
+    }
   }
 }

@@ -5,6 +5,18 @@
 
 ---
 
+## Session — boss galactiques
+
+**Date :** 26 octobre 2026. Décisions du propriétaire (19 octobre) : boss roulant dans la galaxie, un seul à la fois, réapparition 7 jours après sa mort à un endroit aléatoire, jamais d'attaque de planète, interception aléatoire des flottes en attente. « Fais les choix par défaut » (26 octobre) pour les deux points laissés ouverts.
+
+- [x] Choix par défaut : les « flottes en attente au milieu de la galaxie » sont les **expéditions** qui arrivent dans le système du boss (50 % de chances par défaut) ; le boss se combat par la **mission d'attaque** vers sa position 16, ses pertes persistent (régénération 2 % de la flotte par heure), butin partagé au prorata des dégâts ; **désactivé par défaut** pour que le propriétaire règle sa puissance avant de l'activer.
+- [x] `packages/game-config/src/boss.ts` : règles pures (régénération, santé, partage du butin, interception, validation stricte et relecture tolérante des réglages).
+- [x] Base : `GalacticBoss` (un seul vivant : `activeSlot` unique), `BossDamage`, `BossBattle` (migration `20261026100000_galactic_boss`, vérifiée sans écart avec le schéma).
+- [x] API : `/boss` (état joueur), `/admin/boss` (réglages, apparition, retrait), tâche `boss` (apparition, régénération, réapparition), attaque vers la position 16 (`fleet.service.ts`, `fleet-cron.service.ts`), interception des expéditions (`expedition.service.ts`, issue `boss`).
+- [x] Interface : page `/boss` (5 langues, menu Flotte), onglet Boss de la console admin (réglages complets, apparition, retrait, historique), rapport d'expédition d'issue `boss`, lien d'attaque prérempli (position 16 conservée).
+- [x] Tests : 8 unitaires, 19 d'intégration (cycle de vie, apparition unique, régénération, dégâts persistants, partage du butin, réapparition, attaque par la mission 1, flotte détruite, interception, droits et audit), 2 E2E, rendu mobile (6 cas), FAQ (5 langues), `API_ENDPOINTS.md`, limites de la checklist V1.
+- Reste : **équilibrer** la flotte, le butin et la régénération avant d'activer le boss ; pas d'attaque groupée ni de commandants contre le boss ; marqueur du boss dans la vue de la galaxie ; lier les événements du monde aux quêtes.
+
 ## Session — vérification des doubles comptes
 
 **Date :** 23 octobre 2026. Demande du propriétaire : « met en place la vérification de double compte (comme même IP et/ou même email) ».

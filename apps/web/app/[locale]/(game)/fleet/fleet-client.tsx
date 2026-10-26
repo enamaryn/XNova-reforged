@@ -388,7 +388,8 @@ export default function FleetClient() {
                       if (item.id === 'expedition') {
                         setToMoon(false);
                         setDestination((prev) => ({ ...prev, position: 16 }));
-                      } else {
+                      } else if (item.id !== 'attaque') {
+                        // L'attaque garde la position 16 : c'est celle du boss galactique
                         setDestination((prev) => (prev.position === 16 ? { ...prev, position: 1 } : prev));
                       }
                     }}

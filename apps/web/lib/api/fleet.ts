@@ -135,7 +135,8 @@ export type ExpeditionOutcome =
   | 'delay'
   | 'speedup'
   | 'pirates'
-  | 'blackhole';
+  | 'blackhole'
+  | 'boss';
 
 export interface ExpeditionReport {
   id: string;

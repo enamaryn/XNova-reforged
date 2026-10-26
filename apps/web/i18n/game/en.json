@@ -30,7 +30,8 @@
     "market": "Market",
     "quests": "Quests",
     "achievements": "Achievements",
-    "npcTrade": "Trade"
+    "npcTrade": "Trade",
+    "boss": "Galactic boss"
   },
   "sidebar": {
     "principal": "Main",
@@ -460,6 +461,38 @@
       "created": "created {date}",
       "lastActive": "active {date}",
       "banned": "suspended"
+    },
+    "tabBoss": "Boss",
+    "boss": {
+      "title": "Galactic boss",
+      "intro": "Tune the boss: activation, fleet, technologies, loot, regeneration, chance to intercept an expedition and respawn delay. Every save is written to the audit log. The boss is disabled by default: check its strength before enabling it.",
+      "alive": "{name} in galaxy {galaxy}, system {system} (health {percent}%).",
+      "despawn": "Remove the boss",
+      "despawnConfirm": "Remove the boss without loot? It will reappear after the usual delay.",
+      "none": "No living boss.",
+      "galaxy": "Galaxy (optional)",
+      "system": "System (optional)",
+      "spawn": "Spawn",
+      "historyLine": "{name} — galaxy {galaxy}, system {system} · died {died} · respawn {respawn}",
+      "enabled": "Boss active (spawning, battles and interceptions)",
+      "respawnDays": "Respawn delay (days)",
+      "aggroPercent": "Chance to intercept an expedition (%)",
+      "regen": "Regeneration (% of the fleet per hour)",
+      "techTitle": "Boss technologies",
+      "weapon": "Weapons",
+      "shield": "Shield",
+      "armor": "Armor",
+      "lootTitle": "Loot shared on death",
+      "shipsTitle": "Boss fleet",
+      "removeShip": "Remove this ship",
+      "addShip": "Add a ship…",
+      "fleetValue": "Fleet value (metal equivalent): {value}",
+      "save": "Save",
+      "saved": "Settings saved.",
+      "reset": "Defaults",
+      "resetConfirm": "Return to the boss's default values?",
+      "spawned": "Boss spawned.",
+      "despawned": "Boss removed."
     }
   },
   "common": {
@@ -860,7 +893,9 @@
     "exp_delay": "A setback lengthens the return (×{factor}).",
     "exp_speedup": "A favourable current shortens the return (×{factor}).",
     "expPirates": "Pirate attack: {lost} ship(s) lost.",
-    "exp_blackhole": "A black hole swallowed the whole fleet."
+    "exp_blackhole": "A black hole swallowed the whole fleet.",
+    "expBoss": "The galactic boss intercepted the expedition: {lost} ship(s) lost.",
+    "expBossKilled": "The galactic boss intercepted the expedition, and it brought it down! {lost} ship(s) lost."
   },
   "spy": {
     "building": {
@@ -1571,5 +1606,43 @@
     "capTitle": "Daily limits (reset at midnight UTC)",
     "capExchange": "Exchanges: {used} / {cap} (metal-equivalent value)",
     "capShip": "Ships: {used} / {cap} (metal-equivalent value)"
+  },
+  "boss": {
+    "kicker": "Deep space",
+    "title": "Galactic boss",
+    "subtitle": "A monstrous fleet roams position 16 of a system. It never attacks planets. Attack it with the \"Attack\" mission to its position; it can also intercept an expedition arriving in its system ({aggro}% chance). Its losses persist between battles and it regains {regen}% of its fleet per hour. When it dies, the loot is shared in proportion to damage; it reappears elsewhere {days} days later.",
+    "disabled": "Galactic bosses are not active right now.",
+    "location": "Position: galaxy {galaxy}, system {system}, position {position}",
+    "health": "Health: {percent}%",
+    "fleet": "Fleet: {ships}",
+    "lootPool": "Loot shared when it dies: {loot}",
+    "attack": "Prepare an attack",
+    "expeditionHint": "An expedition to this system can also run into it: its damage counts toward the loot.",
+    "mine": "Your damage: {damage} (value of destroyed ships) over {battles} battle(s).",
+    "nextSpawn": "No boss right now. Next appearance: {date}.",
+    "none": "No boss right now.",
+    "topTitle": "Top attackers",
+    "topLine": "{damage} damage over {battles} battle(s)",
+    "battlesTitle": "Your battles against the boss",
+    "battleLine": "{source}: {result}, {damage} damage dealt. Losses: {lost}.",
+    "battleKilled": "{source}: killing blow! {damage} damage dealt. Losses: {lost}.",
+    "lootLine": "Loot received when the boss died: {loot}.",
+    "source": {
+      "ATTACK": "Attack",
+      "EXPEDITION": "Expedition",
+      "LOOT": "Loot"
+    },
+    "result": {
+      "attacker_win": "victory",
+      "defender_win": "defeat",
+      "draw": "draw"
+    },
+    "names": {
+      "1": "Leviathan of the Abyss",
+      "2": "Black Reaper",
+      "3": "Stellar Swarm",
+      "4": "Orbital Kraken",
+      "5": "Forgotten Sentinel"
+    }
   }
 }

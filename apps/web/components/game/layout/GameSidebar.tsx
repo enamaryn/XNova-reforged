@@ -37,6 +37,7 @@ const navItems: NavItem[] = [
   { href: '/moon', label: 'nav.moon', icon: '🌙', category: 'flotte' },
   { href: '/officers', label: 'nav.officers', icon: '🎖️', category: 'principal' },
   { href: '/commanders', label: 'nav.commanders', icon: '⭐', category: 'flotte' },
+  { href: '/boss', label: 'nav.boss', icon: '👾', category: 'flotte' },
   { href: '/market', label: 'nav.market', icon: '⚖️', category: 'principal' },
   { href: '/npc-trade', label: 'nav.npcTrade', icon: '🛸', category: 'principal' },
   { href: '/quests', label: 'nav.quests', icon: '📜', category: 'principal' },
