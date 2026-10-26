@@ -334,6 +334,9 @@ Periodos de bonificación temporal para **todos** los jugadores, lanzados por un
 
 ---
 
+**¿Por qué se rechaza un intercambio, transporte o ataque entre dos cuentas?**
+Las **cuentas múltiples están prohibidas**. Dos cuentas se consideran **vinculadas** cuando tienen el mismo buzón de correo (los alias «+etiqueta» y los puntos de Gmail cuentan como la misma dirección) o cuando se ha visto la misma **dirección IP** en ambas recientemente (30 días por defecto). Entre cuentas vinculadas el juego rechaza la compra en el mercado, el transporte de recursos y el ataque; el registro de una cuenta nueva se rechaza cuando una dirección IP ya tiene demasiadas cuentas (3 por defecto). Si compartes conexión (familia, compañeros de piso, escuela) con otro jugador, **contacta con un administrador**: puede declarar tus cuentas legítimas (exención). Para mover recursos entre **tus propios planetas**, envía una flota de transporte. Las direcciones IP solo las ven los administradores y se eliminan a los 90 días por defecto. Los administradores ajustan estos límites en la consola.
+
 ## 11. Lo que aún no existe
 
 Jefes galácticos, invasiones y temporadas competitivas. La hoja de ruta del proyecto ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) sigue estas discrepancias.

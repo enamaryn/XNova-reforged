@@ -334,6 +334,9 @@ Zeitlich begrenzte Bonusphasen für **alle** Spieler, die ein Administrator in d
 
 ---
 
+**Warum wird Handel, Transport oder Angriff zwischen zwei Konten abgelehnt?**
+**Mehrfachkonten sind verboten.** Zwei Konten gelten als **verknüpft**, wenn sie dasselbe Postfach haben (»+Tag«-Aliasse und Gmail-Punkte zählen als dieselbe Adresse) oder wenn dieselbe **IP-Adresse** kürzlich bei beiden gesehen wurde (standardmäßig 30 Tage). Zwischen verknüpften Konten lehnt das Spiel Marktkäufe, Rohstofftransporte und Angriffe ab; die Registrierung eines neuen Kontos wird abgelehnt, wenn eine IP-Adresse schon zu viele Konten trägt (standardmäßig 3). Wenn Sie eine Verbindung mit einem anderen Spieler teilen (Familie, WG, Schule), **wenden Sie sich an einen Administrator**: Er kann Ihre Konten als legitim einstufen (Ausnahme). Um Rohstoffe zwischen **Ihren eigenen Planeten** zu verschieben, senden Sie eine Transportflotte. IP-Adressen sehen nur Administratoren, sie werden standardmäßig nach 90 Tagen gelöscht. Administratoren stellen diese Grenzen in der Konsole ein.
+
 ## 11. Was es noch nicht gibt
 
 Galaktische Bosse, Invasionen und Wettbewerbssaisons. Die Roadmap des Projekts ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) verfolgt diese Abweichungen.

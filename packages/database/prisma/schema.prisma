@@ -29,6 +29,8 @@ model User {
   id        String   @id @default(uuid())
   username  String   @unique
   email     String   @unique
+  // Forme canonique (alias +tag, points Gmail) : détection des doubles comptes ; non unique en base (comptes anciens), unicité contrôlée à l'inscription
+  emailCanonical String?
   password  String   // Hashed with Argon2
   role      UserRole @default(PLAYER)
   bannedUntil DateTime?
@@ -60,6 +62,7 @@ model User {
   marketOffers           MarketOffer[]
   questClaims            QuestClaim[]
   achievementUnlocks     AchievementUnlock[]
+  accountIps             AccountIp[]
   technologies  Technology[]
   messages      Message[]      @relation("ReceivedMessages")
   sentMessages  Message[]      @relation("SentMessages")
@@ -74,6 +77,7 @@ model User {
 
   @@index([username])
   @@index([email])
+  @@index([emailCanonical])
   @@index([lastActive]) // Index pour les requêtes de planètes actives
   @@index([points])
   @@index([rank])
@@ -798,6 +802,39 @@ model MarketTrade {
   @@index([giveResource, wantResource, createdAt])
   @@index([buyerId, createdAt])
   @@index([sellerId, createdAt])
+}
+
+// ============================================
+// DOUBLES COMPTES
+// ============================================
+
+// Adresses IP vues par compte (inscription, connexion, rafraichissement), purgees apres la duree de conservation
+model AccountIp {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // Adresse normalisee : IPv4, ou prefixe /64 pour IPv6
+  ip          String
+  firstSeenAt DateTime @default(now())
+  lastSeenAt  DateTime @default(now())
+  hits        Int      @default(1)
+
+  @@unique([userId, ip])
+  @@index([ip, lastSeenAt])
+  @@index([lastSeenAt])
+}
+
+// Paire de comptes declaree legitime (foyer, ecole) par un administrateur : le lien n'est plus applique
+model AccountLinkExemption {
+  id          String   @id @default(uuid())
+  // userA < userB (ordre des identifiants)
+  userA       String
+  userB       String
+  reason      String
+  createdById String?
+  createdAt   DateTime @default(now())
+
+  @@unique([userA, userB])
 }
 
 // ============================================

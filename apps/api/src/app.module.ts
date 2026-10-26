@@ -13,6 +13,7 @@ import { MissilesModule } from "./missiles/missiles.module";
 import { MoonsModule } from "./moons/moons.module";
 import { OfficersModule } from "./officers/officers.module";
 import { MarketModule } from "./market/market.module";
+import { MultiAccountModule } from "./multi-account/multi-account.module";
 import { NpcTradeModule } from "./npc-trade/npc-trade.module";
 import { QuestsModule } from "./quests/quests.module";
 import { WorldEventsModule } from "./world-events/world-events.module";
@@ -82,6 +83,7 @@ import { validateEnv } from "./config/env.validation";
     MoonsModule,
     OfficersModule,
     MarketModule,
+    MultiAccountModule,
     NpcTradeModule,
     QuestsModule,
     WorldEventsModule,

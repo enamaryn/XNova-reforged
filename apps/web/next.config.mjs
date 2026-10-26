@@ -26,12 +26,21 @@ if (!isProd) {
   }
 }
 
+// Next 16 bloque par défaut les ressources de développement (/_next/hmr, chunks) demandées depuis une autre origine :
+// on autorise explicitement la boucle locale et les adresses du réseau local, sous forme de noms d'hôte.
+const hostnameOf = (origin) => {
+  try {
+    return new URL(origin).hostname;
+  } catch {
+    return origin;
+  }
+};
 const allowedDevOrigins = Array.from(
   new Set([
-    "http://localhost:3000",
-    "http://127.0.0.0.1:3000",
-    ...localIps,
-    ...extraOrigins,
+    "localhost",
+    "127.0.0.1",
+    ...localIps.map(hostnameOf),
+    ...extraOrigins.map(hostnameOf),
   ])
 );
 

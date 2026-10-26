@@ -63,6 +63,9 @@ export async function createIntegrationApp(options: { setupCompleted?: boolean }
   // La suite dédiée la réactive (scope01-email-required).
   process.env.EMAIL_VERIFICATION_REQUIRED = process.env.EMAIL_VERIFICATION_REQUIRED || 'false';
 
+  // Tous les comptes de test partagent la même IP : contrôle des doubles comptes coupé sauf test dédié (multi-account)
+  process.env.MULTI_ACCOUNT_CHECKS = process.env.MULTI_ACCOUNT_CHECKS || 'off';
+
   if (options.setupCompleted !== false) await markSetupCompletedForTests();
 
   const moduleRef = await Test.createTestingModule({

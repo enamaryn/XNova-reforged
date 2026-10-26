@@ -139,6 +139,7 @@ export * from "./officers";
 export * from "./fleet-commanders";
 export * from "./attack-groups";
 export * from "./market";
+export * from "./multi-account";
 export * from "./npc-trade";
 export * from "./quests";
 export * from "./production-queue";

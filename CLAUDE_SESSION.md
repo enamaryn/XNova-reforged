@@ -5,6 +5,27 @@
 
 ---
 
+## Session — vérification des doubles comptes
+
+**Date :** 23 octobre 2026. Demande du propriétaire : « met en place la vérification de double compte (comme même IP et/ou même email) ».
+
+- [x] `packages/game-config/src/multi-account.ts` : règles pures (`canonicalizeEmail`, `normalizeIp` avec IPv6 en /64, réglages validés strictement et relus de façon tolérante).
+- [x] Base : `User.emailCanonical` (rempli pour les comptes existants), `AccountIp`, `AccountLinkExemption` (migration `20261024110000_multi_account`, vérifiée sans écart avec le schéma).
+- [x] API : inscription et changement d'email refusent un alias de la même boîte (verrou consultatif contre les inscriptions simultanées) ; IP enregistrée à l'inscription, à la connexion et au rafraîchissement ; inscription refusée au-delà de 3 comptes par IP (réglable, 0 = illimité) ; marché (achat), transport et attaques refusés entre comptes liés ; purge nocturne des IP (90 jours).
+- [x] Console admin : onglet « Comptes liés » (groupes à examiner, raisons, exemptions avec motif, réglages validés et audités, remise aux défauts).
+- [x] Tests : 12 unitaires, 17 d'intégration (alias, inscriptions simultanées, IP, fenêtre et purge, exemptions, marché, transport et attaque, admin, audit). Les suites d'intégration et E2E coupent le contrôle par `MULTI_ACCOUNT_CHECKS=off` (tous leurs comptes partagent l'adresse 127.0.0.1) ; la suite dédiée le réactive.
+- [x] FAQ (5 langues), `API_ENDPOINTS.md`, limites de la checklist V1, feuille de route.
+- Reste : mention des adresses IP dans les conditions d'utilisation (RGPD) ; détection d'un second compte sur un autre réseau impossible par cette méthode ; prochain lot : boss galactiques.
+
+## Session — migration vers Next.js 16
+
+**Date :** 26 octobre 2026. Demande du propriétaire : « migre vers Next 16 » (le contrôle d'audit de production était rouge depuis le 23 octobre : avis critique sur Next 15, sans correctif 15.x).
+
+- [x] `next` 15 → 16.4.3 ; `zod` 3 → 4 (avis haute sur zod 3) et `@hookform/resolvers` remplacé par un résolveur local (son `ajv ^8` optionnel faisait échouer `npm ls` dans le contrôle d'installation) ; `nodemailer` ^10.2.1 ; override `multer ^2.5.0` ; `npm audit fix` : `npm audit --omit=dev --audit-level=high` repasse à 0.
+- [x] `allowedDevOrigins` en noms d'hôte (Next 16 bloque les ressources de développement d'une autre origine : sans cela, aucune page ne s'hydratait en mode développement).
+- [x] Documentation : `docs/NPM_AUDIT_2026-10.md` (tableau des alertes, exposition, changements de comportement), `CLAUDE.md`, `README.md`, `AGENT.md`.
+- Reste : React 18 déprécié (retiré dans Next 17) → montée vers React 19 ; fichier `middleware` à renommer en `proxy` ; avertissements « scroll-behavior » ; PR #85 (doubles comptes) à fusionner.
+
 ## Session — commerce avec un marchand PNJ
 
 **Date :** 22 octobre 2026. Décision du propriétaire (19 octobre) : page « commerce » avec un PNJ, taux et avantages variables selon les jours et les saisons, achat de vaisseaux ; « fixe les valeurs par défaut, mais elles doivent être modifiables dans la partie admin ».

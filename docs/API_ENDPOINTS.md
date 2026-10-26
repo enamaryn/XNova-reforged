@@ -109,6 +109,20 @@ Chaque lancement ou arrêt **règle d'abord la production de toutes les planète
 
 Les offres expirées (24 h) sont fermées chaque minute par la tâche `market`, qui rend le séquestre à la planète d'origine ou, à défaut, à une autre planète du vendeur. Tous les mouvements d'une vente se font dans une transaction qui verrouille l'offre puis les deux planètes (ordre des identifiants).
 
+## Doubles comptes (`/admin/multi-account`)
+
+Contrôles intégrés (aucun endpoint dédié aux joueurs) : l'inscription et le changement d'adresse refusent un email **canonique** déjà utilisé (409 « Cet email est déjà utilisé » : minuscules, partie `+étiquette` retirée, points ignorés chez Gmail, `googlemail.com` = `gmail.com`) ; l'inscription est refusée (403) quand l'adresse IP a déjà `maxAccountsPerIp` comptes distincts vus dans la fenêtre ; `POST /market/offers/:id/buy` et `POST /fleet/send` (missions 1 attaque, 2 attaque groupée, 3 transport) répondent **403** entre deux comptes liés, sans rien débiter. L'adresse IP vient de `req.ip` (`TRUST_PROXY` doit être réglé derrière un proxy) ; IPv6 réduite au préfixe /64.
+
+| Méthode | Chemin | Description |
+|---|---|---|
+| GET | `/admin/multi-account` | ADMIN ou SUPER_ADMIN : réglage, valeurs par défaut, groupes de comptes liés (utilisateurs, paires, raisons IP ou email, exemptions) et nombre de groupes à examiner. |
+| PUT | `/admin/multi-account/config` | Remplace tout le réglage (`enforceRegistration`, `maxAccountsPerIp` 0 à 100 (0 = illimité), `ipWindowDays` 1 à 365, `blockLinkedTransfers`, `retentionDays` 1 à 730, fenêtre ≤ conservation). 400 avec la liste des champs invalides, sans rien enregistrer ; audit `update_multi_account`. |
+| DELETE | `/admin/multi-account/config` | Revient aux valeurs par défaut (audit `reset_multi_account`). |
+| POST | `/admin/multi-account/exemptions` | Déclare légitime une paire de comptes (`userA`, `userB`, `reason` de 3 à 200 caractères) ; audit `add_account_exemption`. 400 même compte ou compte inconnu. |
+| DELETE | `/admin/multi-account/exemptions` | Retire l'exemption d'une paire (`userA`, `userB`) ; audit `remove_account_exemption`. |
+
+Table `AccountIp` (une ligne par compte et adresse, `lastSeenAt` mise à jour au plus une fois par heure) purgée chaque nuit au-delà de `retentionDays` (tâche `multi-account`) ; table `AccountLinkExemption` ; colonne `User.emailCanonical` remplie par la migration `20261024110000_multi_account` pour les comptes existants. La variable `MULTI_ACCOUNT_CHECKS=off` coupe les refus (environnements de test uniquement).
+
 ## Commerce PNJ (`/npc-trade`, `/admin/npc-trade`)
 
 | Méthode | Chemin | Description |

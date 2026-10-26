@@ -41,7 +41,7 @@ Ces mises à jour ne sont PAS optionnelles - elles sont critiques pour maintenir
 
 XNova Reforged est une réécriture complète d'un MMORPG de stratégie spatiale utilisant :
 - **Backend** : NestJS + Prisma + PostgreSQL + Redis
-- **Frontend** : Next.js 15 + TailwindCSS + shadcn/ui
+- **Frontend** : Next.js 16 + TailwindCSS + shadcn/ui
 - **Monorepo** : Turborepo avec workspaces npm
 
 ## Principes de Développement

@@ -334,6 +334,9 @@ Temporary bonus periods for **all** players, launched by an administrator from t
 
 ---
 
+**Why is a trade, transport or attack refused between two accounts?**
+**Multi-accounting is forbidden.** Two accounts are considered **linked** when they have the same mailbox ("+tag" aliases and Gmail dots count as the same address) or when the same **IP address** was seen on both recently (30 days by default). Between linked accounts the game refuses market purchases, resource transport and attacks; registering a new account is refused when an IP address already carries too many accounts (3 by default). If you share a connection (family, flatmates, school) with another player, **contact an administrator**: they can mark your accounts as legitimate (exemption). To move resources between **your own planets**, send a transport fleet. IP addresses are visible to administrators only and deleted after 90 days by default. Administrators set these limits in the console.
+
 ## 11. What does not exist yet
 
 Galactic bosses, invasions and competitive seasons. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.

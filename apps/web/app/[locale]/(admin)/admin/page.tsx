@@ -24,6 +24,7 @@ import { SmtpSettingsPanel } from "./SmtpSettingsPanel";
 import { PlayersPanel } from "./PlayersPanel";
 import { SupervisionPanel } from "./SupervisionPanel";
 import { WorldEventsPanel } from "./WorldEventsPanel";
+import { MultiAccountPanel } from "./MultiAccountPanel";
 import { NpcTradePanel } from "./NpcTradePanel";
 import { worldEventsApi } from "@/lib/api/world-events";
 
@@ -734,7 +735,7 @@ function GeneralPanel() {
 export default function AdminPage() {
   const { user } = useAuthStore();
   const { t } = useI18n();
-  const [tab, setTab] = useState<"players" | "general" | "events" | "npcTrade" | "smtp" | "supervision">("players");
+  const [tab, setTab] = useState<"players" | "general" | "events" | "linked" | "npcTrade" | "smtp" | "supervision">("players");
   const canManageEvents = user?.role === "ADMIN" || user?.role === "SUPER_ADMIN";
   // Rappel : le nombre d'événements à lancer s'affiche sur l'onglet, même quand il n'est pas ouvert
   const remindersQuery = useQuery({
@@ -753,7 +754,7 @@ export default function AdminPage() {
           [
             "players",
             "general",
-            ...(canManageEvents ? ["events", "npcTrade"] : []),
+            ...(canManageEvents ? ["events", "linked", "npcTrade"] : []),
             ...(hasAdminAccess(user?.role) ? ["supervision"] : []),
             ...(isSuperAdmin(user?.role) ? ["smtp"] : []),
           ] as const
@@ -761,6 +762,7 @@ export default function AdminPage() {
           <button
             key={value}
             role="tab"
+            data-testid={`admin-tab-${value}`}
             aria-selected={tab === value}
             className={`px-4 py-3 text-sm ${tab === value ? "border-b-2 border-blue-400 text-white" : "text-slate-400"}`}
             onClick={() => setTab(value as typeof tab)}
@@ -776,6 +778,8 @@ export default function AdminPage() {
               </>
             ) : value === "players"
               ? t("admin.tabPlayers")
+              : value === "linked"
+                ? t("admin.tabLinked")
               : value === "npcTrade"
                 ? t("admin.tabNpcTrade")
               : value === "smtp"
@@ -789,6 +793,7 @@ export default function AdminPage() {
       {tab === "players" && <PlayersPanel />}
       {tab === "general" && <GeneralPanel />}
       {tab === "events" && canManageEvents && <WorldEventsPanel />}
+      {tab === "linked" && canManageEvents && <MultiAccountPanel />}
       {tab === "npcTrade" && canManageEvents && <NpcTradePanel />}
       {tab === "supervision" && hasAdminAccess(user?.role) && <SupervisionPanel />}
       {tab === "smtp" && isSuperAdmin(user?.role) && <SmtpSettingsPanel />}

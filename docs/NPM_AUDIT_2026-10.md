@@ -105,3 +105,27 @@ Avertissements ESLint : **0** (étaient 105). Code mort retiré (animations jama
 
 ### Migration Tailwind 4 : points traités (comparaison automatique avant/après)
 Protocole : 22 pages (publiques, jeu, FAQ) × bureau et mobile, styles calculés et rectangles de chaque élément comparés, plus différence d'images. Corrigé : pile de polices par défaut (celle de Tailwind 4.3 diffère de la 3, rétablie dans `@theme`) ; curseur « main » des boutons ; règles de base du projet placées dans `@layer base` (hors couche, `main { min-height }` écrasait `min-h-screen`) ; `space-y-*` agit désormais sur la marge basse, sans effet sur les éléments en ligne (`label` des formulaires et libellés SMTP/compte passés en `block`). Écarts acceptés : interlignes des tailles arbitraires (`text-[10px]`) plus serrés, palette en `oklch` (nuances à ±3 % près).
+
+
+## Mise à jour du 26 octobre 2026 — Next.js 16 et alertes publiées après coup
+
+Contexte : le 23 octobre 2026, le contrôle d'audit de production (seuil « hautes et critiques ») est devenu rouge sans changement de code, sur toutes les branches et sur `main`. Décision du propriétaire (26 octobre) : **migrer vers Next 16**.
+
+| Alerte | Où | Correction |
+|---|---|---|
+| **critique** — exécution de code à distance dans l'API d'optimisation d'images avec des SVG (GHSA-2464-fhr4-w9xw) et déni de service des Server Actions (GHSA-p3m5-59mp-jv5r) | `next` ≤ 15.5.28 (aucun correctif 15.x) | `next` 15.5.27 → **16.4.3** |
+| haute — mémoire épuisée en validant de grandes collections (GHSA-mrhx-c7xc-m3w5) | `zod` 3 | `zod` 3.25 → **4.6.7** ; `@hookform/resolvers` **retiré** au profit d'un résolveur de 15 lignes (`apps/web/lib/validators/zod-resolver.ts`) : sa version 5 déclare `ajv ^8` en dépendance optionnelle, ce que `npm ls` signale comme invalide dès qu'un `ajv` 6 est présent (le contrôle d'installation `scripts/verify-install.sh` exige un arbre sans erreur). Schémas inchangés (`apps/web/lib/validators/auth.ts`) |
+| haute — déni de service d'un `fileFilter` asynchrone (GHSA-q7qp-rjg7-q26m) | `multer` 2.4.0 (via `@nestjs/platform-express`, version épinglée) | `overrides` racine `multer ^2.5.0` |
+| modérée — analyse d'adresses (3 avis) | `nodemailer` 10.0.14 | `nodemailer` ^10.2.1 |
+| haute — déni de service (body-parser) | `body-parser` | corrigée par `npm audit fix` (lockfile) |
+
+Exposition avant correction : aucune Server Action dans `apps/web` ; le SVG n'est pas activé pour l'optimisation d'images (`dangerouslyAllowSVG` absent) ; `next/image` n'est utilisé que sur la page d'accueil. La correction reste nécessaire : le seuil CI l'exige et l'état de la configuration pourrait changer.
+
+Changements de comportement traités :
+- Next 16 bloque par défaut les ressources de développement (`/_next/hmr`) demandées depuis une autre origine : `allowedDevOrigins` (`apps/web/next.config.mjs`) liste maintenant des **noms d'hôte** (`localhost`, `127.0.0.1`, adresses du réseau local, `DEV_ALLOWED_ORIGINS`) ; l'ancienne entrée `127.0.0.0.1` (faute de frappe) disparaît. Sans cela, les pages ne s'hydratent pas en développement (les tests de rendu mobile lancés en mode développement échouaient en masse ; le CI, qui les exécute sur la version compilée, n'était pas concerné).
+- Avertissements restants : le fichier `middleware` est renommé « proxy » dans Next 16 (fonctionne encore) ; React 18 est déprécié et sera retiré dans Next 17 (**montée vers React 19 à planifier**, `@types/react` compris).
+- Override `next → postcss ^8.5.23` conservé.
+
+Reste en production : `ajv`, `js-yaml` et `@nestjs/swagger` (modérées, non exposées à un joueur).
+
+Validation locale : builds complets, lint (0 erreur), typage, unitaires, intégration, E2E complets (64/64 après relance d'un test dont les coordonnées fixes entraient en collision avec un résidu de la base locale), rendu mobile.
