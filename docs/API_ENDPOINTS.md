@@ -123,6 +123,19 @@ Contrôles intégrés (aucun endpoint dédié aux joueurs) : l'inscription et le
 
 Table `AccountIp` (une ligne par compte et adresse, `lastSeenAt` mise à jour au plus une fois par heure) purgée chaque nuit au-delà de `retentionDays` (tâche `multi-account`) ; table `AccountLinkExemption` ; colonne `User.emailCanonical` remplie par la migration `20261024110000_multi_account` pour les comptes existants. La variable `MULTI_ACCOUNT_CHECKS=off` coupe les refus (environnements de test uniquement).
 
+## Commerce PNJ (`/npc-trade`, `/admin/npc-trade`)
+
+| Méthode | Chemin | Description |
+|---|---|---|
+| GET | `/npc-trade` | Tout joueur connecté : saison, jour UTC, marge effective du jour, valeur des ressources, facteur de prix des vaisseaux, taux des six paires (`rates`), vaisseaux en vente avec prix unitaire du jour (`ships`), plafonds quotidiens utilisés (`caps`) et heure de remise à zéro (`resetsAt`). |
+| POST | `/npc-trade/exchange` | Échange instantané (`planetId`, `give`, `want`, `amount` entier) au taux du jour, marge du marchand comprise (réduite par la saison et par l'événement du monde qui baisse la taxe du marché). 400 même ressource, ressource inconnue, quantité trop faible pour rapporter une unité, stock insuffisant, plafond quotidien atteint ou marchand fermé ; 404 planète étrangère. |
+| POST | `/npc-trade/ships` | Achat de vaisseaux (`planetId`, `shipId`, `amount`) : prix du chantier spatial × multiplicateur du serveur × facteur du jour, débité, vaisseaux livrés tout de suite sans prérequis. 400 vaisseau non proposé (le satellite solaire n'est jamais vendu), stock insuffisant, plafond atteint ou marchand fermé ; 404 planète étrangère. |
+| GET | `/admin/npc-trade` | ADMIN ou SUPER_ADMIN : réglage courant, valeurs par défaut, bornes, saisons et vaisseaux vendables. |
+| PUT | `/admin/npc-trade` | ADMIN ou SUPER_ADMIN : remplace tout le réglage (`enabled`, `spread` 0 à 0,5, `dailyVariation` 0 à 0,5, `exchangeDailyCap`, `shipDailyCap`, `shipPriceMultiplier` 0,5 à 10, `ships`, `seasons.<saison>.{values, spreadReduction, shipDiscount}`). 400 avec la liste des champs invalides, sans rien enregistrer ; inscrit au journal d'audit (`update_npc_trade`, avant/après). |
+| DELETE | `/admin/npc-trade` | ADMIN ou SUPER_ADMIN : revient aux valeurs par défaut (audit `reset_npc_trade`). |
+
+Les échanges d'un même joueur sont sérialisés par un verrou sur le joueur : le plafond quotidien (valeur équivalent métal, jour UTC) ne peut pas être dépassé par des requêtes simultanées. Le réglage est stocké dans `GameConfig` (clé `npcTrade.config`) ; un réglage absent ou corrompu retombe sur les valeurs par défaut. Table `NpcTrade` (migration `20261024100000_npc_trade`) : historique et base des plafonds.
+
 ## Attaques groupées (mission 2)
 
 | Méthode | Chemin | Description |

@@ -29,7 +29,8 @@
     "commanders": "Kommandanten",
     "market": "Markt",
     "quests": "Quests",
-    "achievements": "Erfolge"
+    "achievements": "Erfolge",
+    "npcTrade": "Handel"
   },
   "sidebar": {
     "principal": "Hauptmenü",
@@ -410,6 +411,27 @@
     },
     "tabSupervision": "Überwachung",
     "tabEvents": "Ereignisse",
+    "tabNpcTrade": "NPC-Handel",
+    "npcTrade": {
+      "title": "NPC-Händler",
+      "intro": "Stellen Sie den Händler ein: Marge, tägliche Schwankung, Limits pro Spieler, Schiffspreise und die Wirkung jeder Jahreszeit. Jedes Speichern wird im Audit-Protokoll vermerkt.",
+      "enabled": "Händler anwesend",
+      "spread": "Marge des Händlers (0 bis 0,5)",
+      "dailyVariation": "Tägliche Schwankung (0 bis 0,5)",
+      "exchangeDailyCap": "Tauschlimit pro Spieler und Tag (Metallwert)",
+      "shipDailyCap": "Schiffskauflimit pro Spieler und Tag (Metallwert)",
+      "shipPriceMultiplier": "Schiffspreis (× Werftkosten)",
+      "ships": "Angebotene Schiffe (beim Kauf wird keine Voraussetzung geprüft)",
+      "seasonsTitle": "Jahreszeiten",
+      "values": "Rohstoffwert",
+      "spreadReduction": "Entfallene Marge (0 bis 1)",
+      "shipDiscount": "Schiffsrabatt (0 bis 1)",
+      "currentSeason": "aktuelle Jahreszeit",
+      "save": "Speichern",
+      "saved": "Einstellungen gespeichert.",
+      "reset": "Standardwerte",
+      "resetConfirm": "Zu den Standardwerten des Händlers zurückkehren?"
+    },
     "tabLinked": "Verknüpfte Konten",
     "linked": {
       "title": "Mehrfachkonten",
@@ -1517,5 +1539,37 @@
       "trades": "{target} Markthandel/-händel abschließen",
       "missiles": "{target} Interplanetarrakete(n) abfeuern"
     }
+  },
+  "npcTrade": {
+    "kicker": "Wirtschaft",
+    "title": "Handel mit dem Händler",
+    "subtitle": "Ein Händler der Galaxie tauscht Ihre Rohstoffe sofort und verkauft Ihnen Schiffe. Seine Kurse ändern sich täglich und mit der Jahreszeit; er behält eine Marge.",
+    "planet": "Tausch und Käufe nutzen den gewählten Planeten: {planet}.",
+    "disabled": "Der Händler ist gerade nicht da.",
+    "seasonLine": "Jahreszeit: {season} · Marge des Händlers heute: {spread} %",
+    "season": {
+      "winter": "Winter",
+      "spring": "Frühling",
+      "summer": "Sommer",
+      "autumn": "Herbst"
+    },
+    "exchangeTitle": "Rohstoffe tauschen",
+    "give": "Ich gebe",
+    "want": "Ich erhalte",
+    "amount": "Menge",
+    "receive": "Sie erhalten {received} {want} (Kurs {rate}).",
+    "submit": "Tauschen",
+    "done": "Tausch erledigt: {given} {give} gegen {received} {want}.",
+    "ratesTitle": "Kurse von heute",
+    "rateLine": "1 {give} → {rate} {want}",
+    "shipsTitle": "Schiffe im Angebot",
+    "shipsHint": "Sofortige Lieferung, ohne Forschungs- oder Gebäudevoraussetzung. Preis von heute: {factor} × die Kosten der Werft.",
+    "unitPrice": "Stückpreis",
+    "quantity": "Menge",
+    "buy": "Kaufen",
+    "bought": "{amount} × {ship} gekauft.",
+    "capTitle": "Tageslimits (Rücksetzung um Mitternacht UTC)",
+    "capExchange": "Tausch: {used} / {cap} (Metallwert)",
+    "capShip": "Schiffe: {used} / {cap} (Metallwert)"
   }
 }

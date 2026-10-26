@@ -36,6 +36,28 @@ const commanders = {
   ],
 };
 
+const npcTrade = {
+  enabled: true,
+  season: "autumn",
+  day: "2026-10-22",
+  spread: 0.12,
+  shipPriceFactor: 1.43,
+  rates: [
+    { give: "metal", want: "crystal", rate: 0.5712 },
+    { give: "metal", want: "deuterium", rate: 0.2871 },
+    { give: "crystal", want: "metal", rate: 1.6345 },
+    { give: "crystal", want: "deuterium", rate: 0.5035 },
+    { give: "deuterium", want: "metal", rate: 2.9876 },
+    { give: "deuterium", want: "crystal", rate: 1.8012 },
+  ],
+  ships: [
+    { id: 202, price: { metal: 2860, crystal: 2860, deuterium: 0 }, value: 7150 },
+    { id: 209, price: { metal: 22880, crystal: 8580, deuterium: 2860 }, value: 44330 },
+  ],
+  caps: { exchange: { cap: 20000000, used: 1250000 }, ship: { cap: 20000000, used: 0 } },
+  resetsAt: "2026-10-23T00:00:00.000Z",
+};
+
 const quests = {
   rewardMultiplier: 1.4,
   commanderLevel: 5,
@@ -137,6 +159,7 @@ async function fixture(page: Page, locale: string, withMoon = false) {
     else if (path === "/fleet/active") body = [];
     else if (path === "/fleet/attack-groups")
       body = { max: 5, groups: [{ id: "g1", creator: "Capitaine Aldebaran", target: { galaxy: 1, system: 1, position: 1, moon: false }, arrivalTime: new Date(Date.now() + 3600000).toISOString(), fleets: 2 }] };
+    else if (path === "/npc-trade") body = npcTrade;
     else if (path === "/quests") body = quests;
     else if (path === "/achievements") body = achievements;
     else if (path === `/moons/${moon.id}`) body = moonOverview;
@@ -215,6 +238,16 @@ for (const locale of ["fr", "de"]) {
       await expect(page.getByTestId("quests-pending")).toBeVisible();
       await expect(page.getByTestId("claim-pending-2026-10-12-daily_build_5")).toBeEnabled();
       await expect(page.getByTestId("claim-pending-2026-W41-weekly_expedition_5")).toBeVisible();
+      expect(await noOverflow(page)).toBe(true);
+      await buttonsFit(page);
+    });
+
+    test("commerce PNJ : taux, plafonds et vaisseaux sans débordement", async ({ page }) => {
+      await fixture(page, locale);
+      await page.goto(`/${locale}/npc-trade`);
+      await expect(page.getByTestId("npc-season")).toBeVisible();
+      await expect(page.getByTestId("npc-rates").locator("li")).toHaveCount(6);
+      await expect(page.getByTestId("npc-ship-209")).toBeVisible();
       expect(await noOverflow(page)).toBe(true);
       await buttonsFit(page);
     });

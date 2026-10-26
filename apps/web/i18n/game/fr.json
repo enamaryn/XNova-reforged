@@ -29,7 +29,8 @@
     "commanders": "Commandants",
     "market": "Marché",
     "quests": "Quêtes",
-    "achievements": "Succès"
+    "achievements": "Succès",
+    "npcTrade": "Commerce"
   },
   "sidebar": {
     "principal": "Principal",
@@ -410,6 +411,27 @@
     },
     "tabSupervision": "Supervision",
     "tabEvents": "Événements",
+    "tabNpcTrade": "Commerce PNJ",
+    "npcTrade": {
+      "title": "Marchand PNJ",
+      "intro": "Réglez le marchand : marge, variation quotidienne, plafonds par joueur, prix des vaisseaux et effet de chaque saison. Chaque enregistrement est inscrit au journal d’audit.",
+      "enabled": "Marchand présent",
+      "spread": "Marge du marchand (0 à 0,5)",
+      "dailyVariation": "Variation quotidienne (0 à 0,5)",
+      "exchangeDailyCap": "Plafond d’échange par joueur et par jour (valeur métal)",
+      "shipDailyCap": "Plafond d’achat de vaisseaux par joueur et par jour (valeur métal)",
+      "shipPriceMultiplier": "Prix des vaisseaux (× coût du chantier spatial)",
+      "ships": "Vaisseaux proposés (aucun prérequis exigé à l’achat)",
+      "seasonsTitle": "Saisons",
+      "values": "Valeur des ressources",
+      "spreadReduction": "Marge supprimée (0 à 1)",
+      "shipDiscount": "Remise vaisseaux (0 à 1)",
+      "currentSeason": "saison en cours",
+      "save": "Enregistrer",
+      "saved": "Réglages enregistrés.",
+      "reset": "Valeurs par défaut",
+      "resetConfirm": "Revenir aux valeurs par défaut du marchand ?"
+    },
     "tabLinked": "Comptes liés",
     "linked": {
       "title": "Doubles comptes",
@@ -1517,5 +1539,37 @@
       "trades": "Réaliser {target} échange(s) au marché",
       "missiles": "Tirer {target} missile(s) interplanétaire(s)"
     }
+  },
+  "npcTrade": {
+    "kicker": "Économie",
+    "title": "Commerce avec le marchand",
+    "subtitle": "Un marchand de la galaxie échange vos ressources tout de suite et vous vend des vaisseaux. Ses taux changent chaque jour et selon la saison ; il garde une marge.",
+    "planet": "Les échanges et les achats utilisent la planète sélectionnée : {planet}.",
+    "disabled": "Le marchand n'est pas présent en ce moment.",
+    "seasonLine": "Saison : {season} · marge du marchand aujourd’hui : {spread} %",
+    "season": {
+      "winter": "hiver",
+      "spring": "printemps",
+      "summer": "été",
+      "autumn": "automne"
+    },
+    "exchangeTitle": "Échanger des ressources",
+    "give": "Je donne",
+    "want": "Je reçois",
+    "amount": "Quantité",
+    "receive": "Vous recevrez {received} {want} (taux {rate}).",
+    "submit": "Échanger",
+    "done": "Échange fait : {given} {give} contre {received} {want}.",
+    "ratesTitle": "Taux du jour",
+    "rateLine": "1 {give} → {rate} {want}",
+    "shipsTitle": "Vaisseaux en vente",
+    "shipsHint": "Livraison immédiate, sans condition de recherche ni de bâtiment. Prix du jour : {factor} × le coût du chantier spatial.",
+    "unitPrice": "Prix unitaire",
+    "quantity": "Quantité",
+    "buy": "Acheter",
+    "bought": "{amount} × {ship} achetés.",
+    "capTitle": "Plafonds du jour (remise à zéro à minuit UTC)",
+    "capExchange": "Échanges : {used} / {cap} (valeur équivalent métal)",
+    "capShip": "Vaisseaux : {used} / {cap} (valeur équivalent métal)"
   }
 }

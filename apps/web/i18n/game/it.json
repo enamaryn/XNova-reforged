@@ -29,7 +29,8 @@
     "commanders": "Comandanti",
     "market": "Mercato",
     "quests": "Missioni",
-    "achievements": "Traguardi"
+    "achievements": "Traguardi",
+    "npcTrade": "Commercio"
   },
   "sidebar": {
     "principal": "Principale",
@@ -410,6 +411,27 @@
     },
     "tabSupervision": "Supervisione",
     "tabEvents": "Eventi",
+    "tabNpcTrade": "Commercio PNG",
+    "npcTrade": {
+      "title": "Mercante PNG",
+      "intro": "Regola il mercante: margine, variazione giornaliera, limiti per giocatore, prezzi delle navi ed effetto di ogni stagione. Ogni salvataggio è registrato nel registro di audit.",
+      "enabled": "Mercante presente",
+      "spread": "Margine del mercante (da 0 a 0,5)",
+      "dailyVariation": "Variazione giornaliera (da 0 a 0,5)",
+      "exchangeDailyCap": "Limite di scambio per giocatore al giorno (valore metallo)",
+      "shipDailyCap": "Limite di acquisto navi per giocatore al giorno (valore metallo)",
+      "shipPriceMultiplier": "Prezzo delle navi (× costo del cantiere)",
+      "ships": "Navi proposte (all’acquisto non si controlla alcun requisito)",
+      "seasonsTitle": "Stagioni",
+      "values": "Valore delle risorse",
+      "spreadReduction": "Margine eliminato (da 0 a 1)",
+      "shipDiscount": "Sconto navi (da 0 a 1)",
+      "currentSeason": "stagione corrente",
+      "save": "Salva",
+      "saved": "Impostazioni salvate.",
+      "reset": "Valori predefiniti",
+      "resetConfirm": "Tornare ai valori predefiniti del mercante?"
+    },
     "tabLinked": "Account collegati",
     "linked": {
       "title": "Account multipli",
@@ -1517,5 +1539,37 @@
       "trades": "Effettuare {target} scambio/i sul mercato",
       "missiles": "Lanciare {target} missile/i interplanetario/i"
     }
+  },
+  "npcTrade": {
+    "kicker": "Economia",
+    "title": "Commercio con il mercante",
+    "subtitle": "Un mercante della galassia scambia subito le tue risorse e ti vende navi. I suoi tassi cambiano ogni giorno e con la stagione; trattiene un margine.",
+    "planet": "Scambi e acquisti usano il pianeta selezionato: {planet}.",
+    "disabled": "Il mercante non è presente al momento.",
+    "seasonLine": "Stagione: {season} · margine del mercante oggi: {spread} %",
+    "season": {
+      "winter": "inverno",
+      "spring": "primavera",
+      "summer": "estate",
+      "autumn": "autunno"
+    },
+    "exchangeTitle": "Scambiare risorse",
+    "give": "Do",
+    "want": "Ricevo",
+    "amount": "Quantità",
+    "receive": "Riceverai {received} {want} (tasso {rate}).",
+    "submit": "Scambia",
+    "done": "Scambio fatto: {given} {give} per {received} {want}.",
+    "ratesTitle": "Tassi di oggi",
+    "rateLine": "1 {give} → {rate} {want}",
+    "shipsTitle": "Navi in vendita",
+    "shipsHint": "Consegna immediata, senza requisiti di ricerca o di edificio. Prezzo di oggi: {factor} × il costo del cantiere.",
+    "unitPrice": "Prezzo unitario",
+    "quantity": "Quantità",
+    "buy": "Acquista",
+    "bought": "{amount} × {ship} acquistati.",
+    "capTitle": "Limiti del giorno (azzeramento a mezzanotte UTC)",
+    "capExchange": "Scambi: {used} / {cap} (valore equivalente in metallo)",
+    "capShip": "Navi: {used} / {cap} (valore equivalente in metallo)"
   }
 }
