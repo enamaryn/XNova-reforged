@@ -7,10 +7,12 @@ import {
   expeditionResourceFind,
   expeditionShipFind,
   expeditionSpeedupFactor,
+  bossIntercepts,
   pickExpeditionOutcome,
   type ExpeditionOutcome,
 } from '@xnova/game-config';
 import { computeCargoCapacity } from '@xnova/game-engine';
+import { BossService } from '../boss/boss.service';
 import { DatabaseService } from '../database/database.service';
 
 /** Flotte telle que lue par la tâche planifiée à l'arrivée. */
@@ -23,11 +25,18 @@ interface ExpeditionFleet {
   arrivalTime: Date;
   toGalaxy: number;
   toSystem: number;
+  fromGalaxy: number;
+  fromSystem: number;
+  fromPosition: number;
+  fromMoon: boolean;
 }
 
 @Injectable()
 export class ExpeditionService {
-  constructor(private readonly database: DatabaseService) {}
+  constructor(
+    private readonly database: DatabaseService,
+    private readonly boss: BossService,
+  ) {}
 
   /** Tirage dans [0, 1[ ; isolé pour pouvoir le forcer dans les tests. */
   protected random(): number {
@@ -53,6 +62,51 @@ export class ExpeditionService {
       const techLevel = tech?.level ?? 0;
 
       const sent = this.readShips(fleet.ships);
+
+      // Le boss galactique du système peut intercepter l'expédition : combat, puis retour des survivants
+      const bossConfig = await this.boss.config();
+      const bossHere = bossConfig.enabled ? await this.boss.aliveAt(fleet.toGalaxy, fleet.toSystem, tx) : null;
+      if (bossHere && bossIntercepts(this.random(), bossConfig.aggroChance)) {
+        const originId = await this.boss.originPlanetId(tx, fleet);
+        const fought = originId
+          ? await this.boss.engage(
+              tx,
+              { userId: fleet.userId, planetId: originId, ships: sent, source: 'EXPEDITION', galaxy: fleet.toGalaxy, system: fleet.toSystem },
+              bossConfig,
+            )
+          : null;
+        if (fought) {
+          const left = fought.survivors;
+          const destroyed = Object.values(left).reduce((sum, n) => sum + n, 0) === 0;
+          await tx.fleet.update({
+            where: { id: fleet.id },
+            data: destroyed
+              ? { status: 'completed', ships: {}, cargo: {}, returnTime: null }
+              : { ships: left as unknown as object },
+          });
+          await tx.expeditionReport.create({
+            data: {
+              userId: fleet.userId,
+              galaxy: fleet.toGalaxy,
+              system: fleet.toSystem,
+              outcome: 'boss',
+              details: {
+                result: fought.result,
+                rounds: fought.rounds,
+                damage: fought.damage,
+                bossHealthAfter: fought.bossHealthAfter,
+                killed: fought.killed,
+                lost: fought.attackerLosses,
+                bossLosses: fought.bossLosses,
+                loot: fought.loot,
+              } as object,
+              ships: sent as object,
+            },
+          });
+          return true;
+        }
+      }
+
       const ships = { ...sent };
       const cargo = this.readCargo(fleet.cargo);
       const fleetSize = Object.values(ships).reduce((sum, n) => sum + n, 0);

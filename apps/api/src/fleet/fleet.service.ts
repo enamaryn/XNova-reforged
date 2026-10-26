@@ -1,3 +1,4 @@
+import { BossService } from '../boss/boss.service';
 import { MultiAccountService } from '../multi-account/multi-account.service';
 import { OfficersService } from '../officers/officers.service';
 import { FleetCommandersService } from '../fleet-commanders/fleet-commanders.service';
@@ -49,6 +50,7 @@ export class FleetService {
     private readonly officers: OfficersService,
     private readonly commanders: FleetCommandersService,
     private readonly multiAccount: MultiAccountService,
+    private readonly boss: BossService,
   ) {}
 
   async getAvailableShips(planetId: string, userId: string) {
@@ -176,7 +178,9 @@ export class FleetService {
 
     // Seule une expédition vise la position 16 de l'espace profond, et elle ne vise que celle-ci
     const isExpedition = dto.mission === MissionType.EXPEDITION;
-    const maxPosition = isExpedition ? EXPEDITION_POSITION : GAME_CONSTANTS.MAX_POSITIONS;
+    // Une attaque vers la position 16 vise le boss galactique (vérifié plus bas) : aucune planète n'y existe
+    const isBossAttack = dto.mission === MissionType.ATTACK && dto.toPosition === EXPEDITION_POSITION;
+    const maxPosition = isExpedition || isBossAttack ? EXPEDITION_POSITION : GAME_CONSTANTS.MAX_POSITIONS;
     if (
       dto.toGalaxy < 1 ||
       dto.toGalaxy > GAME_CONSTANTS.MAX_GALAXIES ||
@@ -237,7 +241,10 @@ export class FleetService {
     if (dto.groupId && dto.mission !== MissionType.ACS_ATTACK) {
       throw new BadRequestException("Un groupe d'attaque ne se rejoint qu'avec la mission d'attaque groupee");
     }
-    if (dto.mission === MissionType.ATTACK) {
+    if (dto.mission === MissionType.ATTACK && isBossAttack) {
+      if (toMoon) throw new BadRequestException('Le boss ne se trouve pas sur une lune');
+      await this.boss.assertBossAt(dto.toGalaxy, dto.toSystem, dto.toPosition);
+    } else if (dto.mission === MissionType.ATTACK) {
       if (!target) throw new BadRequestException(toMoon ? 'Aucune lune a cette position' : 'Aucune planete a cette position');
       if (target.userId === userId) {
         throw new BadRequestException('Vous ne pouvez pas attaquer votre propre planete');

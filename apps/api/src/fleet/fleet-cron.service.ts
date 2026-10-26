@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { MissionType, SHIPS, depotSupply, holdFuelPerHour, holdSeconds } from '@xnova/game-config';
+import { EXPEDITION_POSITION, MissionType, SHIPS, depotSupply, holdFuelPerHour, holdSeconds } from '@xnova/game-config';
+import { BossService } from '../boss/boss.service';
 import { lockPlanet } from '../common/atomic';
 import { ServerConfigService } from '../server-config/server-config.service';
 import { ALREADY_PROCESSED, CombatService } from '../combat/combat.service';
@@ -23,6 +24,7 @@ export class FleetCronService {
     private readonly colonizationService: ColonizationService,
     private readonly expeditionService: ExpeditionService,
     private readonly serverConfig: ServerConfigService,
+    private readonly boss: BossService,
   ) {}
 
   /**
@@ -56,7 +58,10 @@ export class FleetCronService {
     const resolvedGroups = new Set<string>();
     for (const fleet of fleets) {
       let processed = true;
-      if (fleet.mission === MissionType.ATTACK) {
+      if (fleet.mission === MissionType.ATTACK && fleet.toPosition === EXPEDITION_POSITION) {
+        // Position 16 : le boss galactique (aucune planète ne s'y trouve)
+        processed = await this.boss.resolveAttackArrival(fleet);
+      } else if (fleet.mission === MissionType.ATTACK) {
         const outcome = await this.combatService.resolveAttackMission(fleet);
         processed = outcome !== ALREADY_PROCESSED;
       } else if (fleet.mission === MissionType.ACS_ATTACK) {
