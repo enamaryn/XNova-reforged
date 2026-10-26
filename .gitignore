@@ -80,3 +80,6 @@ playwright-report/
 
 # Installed web build identity
 apps/web/.build-info.json
+
+# Instantané Redis local (créé par redis-server dans le dossier courant)
+dump.rdb
