@@ -56,7 +56,7 @@ for (const locale of ["fr", "en", "es", "de", "it"] as const) {
     await page.goto(`/${locale}/admin`);
     // Onglets de l'admin : Joueurs, Général, Événements, Supervision
     await expect(page.getByTestId("events-reminder-badge")).toHaveText("1");
-    await page.getByRole("tab").nth(2).click();
+    await page.getByTestId("admin-tab-events").click();
     await expect(page.getByTestId("world-events-panel")).toBeVisible();
     await expect(page.getByTestId("world-reminders")).toBeVisible();
     await expect(page.getByTestId("world-template-dark_nebula")).toBeVisible();

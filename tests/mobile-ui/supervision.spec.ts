@@ -80,8 +80,8 @@ for (const locale of ["fr", "en", "es", "de", "it"] as const) {
   test(`supervision responsive (${locale}) : aucune barre de défilement horizontale, cartes et incidents lisibles`, async ({ page }) => {
     await fixture(page, "SUPER_ADMIN");
     await page.goto(`/${locale}/admin`);
-    // Onglets du super admin : Joueurs, Général, Événements, Supervision, SMTP
-    await page.getByRole("tab").nth(3).click();
+    // Les onglets ont un identifiant stable : leur nombre et leur ordre évoluent avec les lots
+    await page.getByTestId("admin-tab-supervision").click();
     await expect(page.getByTestId("supervision-panel")).toBeVisible();
     await expect(page.getByTestId("overall-status")).toBeVisible();
     await expect(page.getByTestId("check-redis")).toBeVisible();
