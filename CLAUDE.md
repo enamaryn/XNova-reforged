@@ -123,7 +123,7 @@ The project follows a monorepo pattern with workspaces:
   - Implements JWT authentication with Argon2 password hashing
   - Will use Socket.io for real-time updates
 
-- **apps/web/** - Next.js 15 frontend (port 3000)
+- **apps/web/** - Next.js 16 frontend (port 3000)
   - Uses App Router architecture
   - Planned routes: (auth) group for login/register, (game) group for gameplay pages
   - State management with Zustand

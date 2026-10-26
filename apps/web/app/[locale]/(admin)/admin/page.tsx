@@ -761,6 +761,7 @@ export default function AdminPage() {
           <button
             key={value}
             role="tab"
+            data-testid={`admin-tab-${value}`}
             aria-selected={tab === value}
             className={`px-4 py-3 text-sm ${tab === value ? "border-b-2 border-blue-400 text-white" : "text-slate-400"}`}
             onClick={() => setTab(value as typeof tab)}
