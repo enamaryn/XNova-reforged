@@ -3,7 +3,7 @@ import { headers } from 'next/headers'
 import { defaultLocale, type Locale } from './config'
 
 export default getRequestConfig(async () => {
-  // Get locale from header set by middleware
+  // Get locale from header set by proxy
   const headersList = await headers()
   const locale = (headersList.get('x-locale') || defaultLocale) as Locale
 

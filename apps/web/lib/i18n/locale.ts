@@ -28,7 +28,7 @@ export function pathWithLocale(pathname: string, next: Locale): string {
   return segments.join('/');
 }
 
-/** Mémorise le choix de langue (lu par le middleware pour les visites sans préfixe). */
+/** Mémorise le choix de langue (lu par le proxy pour les visites sans préfixe). */
 export function persistLocaleCookie(next: Locale) {
   document.cookie = `NEXT_LOCALE=${next}; max-age=${60 * 60 * 24 * 365}; path=/`;
 }

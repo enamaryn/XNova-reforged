@@ -5,6 +5,13 @@
 
 ---
 
+## Session — Renommage middleware → proxy (27 octobre 2026)
+
+- [x] `apps/web/middleware.ts` renommé en `apps/web/proxy.ts`, fonction exportée `proxy` (convention Next 16) ; contenu inchangé.
+- [x] Commentaires et `docs/I18N_GUIDE.md` mis à jour. Build : « ƒ Proxy (Middleware) », plus d'avertissement de dépréciation.
+- Remarque : le proxy de Next 16 s'exécute uniquement sur le runtime Node.js ; le code n'utilisait aucune API Edge.
+- Console admin Boss : les coordonnées (galaxie, système) du boss vivant et de l'historique y sont déjà affichées.
+
 ## Session — React 19
 
 **Date :** 27 octobre 2026. Demande du propriétaire : « Passe à React 19 ».

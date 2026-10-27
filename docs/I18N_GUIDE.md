@@ -20,7 +20,7 @@ apps/web/
 │       ├── fr.json …      # Pages publiques et authentification (next-intl), 5 langues
 │   └── game/
 │       └── fr.json …      # Interface de jeu (provider `useI18n`), 5 langues
-├── middleware.ts          # Middleware de détection de langue
+├── proxy.ts               # Proxy (ex-middleware) de détection de langue
 └── app/
     ├── layout.tsx         # Root layout
     └── [locale]/          # Routes localisées
@@ -141,7 +141,7 @@ cp i18n/messages/fr.json i18n/messages/es.json
 # Traduire le contenu...
 ```
 
-3. **C'est tout !** Le middleware et le système de routing gèrent automatiquement la nouvelle langue.
+3. **C'est tout !** Le proxy et le système de routing gèrent automatiquement la nouvelle langue.
 
 ---
 
@@ -186,7 +186,7 @@ Toutes les routes sont préfixées par la locale :
 
 ### Middleware
 
-Le middleware `/home/didrod/Documents/projet GITHUB/XNova-reforged/apps/web/middleware.ts` gère :
+Le proxy `/home/didrod/Documents/projet GITHUB/XNova-reforged/apps/web/proxy.ts` gère :
 
 1. **Détection de langue** - Cookie > Accept-Language > défaut (fr)
 2. **Redirection** - `/login` → `/fr/login` automatiquement
@@ -207,7 +207,7 @@ import Link from 'next/link';
 <Link href="/fr/overview">Vue d'ensemble</Link>
 ```
 
-Le middleware ajoutera automatiquement le bon préfixe.
+Le proxy ajoutera automatiquement le bon préfixe.
 
 ---
 
@@ -296,7 +296,7 @@ try {
 **Solution** :
 1. Vérifiez que le cookie `NEXT_LOCALE` est bien défini
 2. Effacez le cache du navigateur
-3. Vérifiez que le middleware s'exécute correctement
+3. Vérifiez que le proxy s'exécute correctement
 
 ---
 
@@ -401,7 +401,7 @@ La FAQ existe en cinq fichiers : `docs/FAQ.md` (français), `FAQ_EN.md`, `FAQ_ES
 ## 🌍 Langue du serveur, du joueur et des emails
 
 - **Langue d'installation** : la première étape visible de l'assistant (`/setup`) propose les cinq langues. Le choix devient la **langue du serveur** (`GameConfig` clé `server.language`, valeur initiale `DEFAULT_LANGUAGE` du `.env`, sinon `fr`) : langue par défaut de l'interface, du jeu et des emails. Elle se modifie ensuite dans l'administration (Général → Langue du serveur).
-- **Langue par défaut de l'interface** : le middleware web lit `GET /setup/status` (champ public `language`, gardé 60 s en mémoire) pour les visiteurs sans préfixe de langue et sans cookie `NEXT_LOCALE`. Le cookie ne mémorise que le choix explicite du visiteur.
+- **Langue par défaut de l'interface** : le proxy web lit `GET /setup/status` (champ public `language`, gardé 60 s en mémoire) pour les visiteurs sans préfixe de langue et sans cookie `NEXT_LOCALE`. Le cookie ne mémorise que le choix explicite du visiteur.
 - **Langue du joueur** : `User.locale`, enregistrée à l'inscription (langue de l'interface, sinon langue du serveur) et mise à jour par `PUT /auth/locale` quand un joueur connecté change de langue. Les emails suivent : langue de la requête quand le joueur agit lui-même (mot de passe oublié, renvoi de confirmation), sinon `User.locale`, sinon langue du serveur ; les emails déclenchés par un administrateur utilisent la langue du joueur concerné.
 - **Emails** : modèles dans `apps/api/src/mail/mail-templates.ts` (5 langues, vérifiés par `test/i18n-content.spec.ts`). Les liens portent la langue : `<site>/<langue>/verify-email?token=…`.
 - **Noms et descriptions du jeu** : le français reste la source (`packages/game-config/src/{buildings,technologies,ships,defenses}.ts`) ; `item-texts.ts` porte en, es, de, it. L'interface envoie l'en-tête `X-Locale` à chaque appel API (`apps/web/lib/api/client.ts`) ; l'API localise noms, descriptions, libellés d'effets d'amélioration et prérequis. Les écrans qui lisent `@xnova/game-config` directement (rapports, administration) passent par `useItemText()`. Ajouter un élément du jeu = ajouter ses textes dans les quatre langues (le test de complétude échoue sinon).
