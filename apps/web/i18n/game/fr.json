@@ -1644,5 +1644,11 @@
       "4": "Kraken Orbital",
       "5": "Sentinelle Oubliée"
     }
+  },
+  "legal": {
+    "terms": "Conditions d'utilisation",
+    "privacy": "Politique de confidentialité",
+    "acceptPrefix": "En créant un compte, vous acceptez les",
+    "acceptAnd": " et la "
   }
 }
