@@ -32,7 +32,7 @@ async function getServerLanguage(request: NextRequest): Promise<(typeof locales)
   return value;
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Step 1: Handle locale detection and routing

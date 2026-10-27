@@ -63,7 +63,7 @@ export function LoginForm() {
     onSuccess: () => {
       showSuccess(t('success'));
       // Navigation complète : le cache du routeur peut contenir les préchargements de /overview faits
-      // avant connexion (redirigés vers /login par le middleware) et renverrait le joueur à /login.
+      // avant connexion (redirigés vers /login par le proxy) et renverrait le joueur à /login.
       window.location.assign("/overview");
     },
     onError: (error) => {
