@@ -30,7 +30,8 @@
     "market": "Mercado",
     "quests": "Misiones",
     "achievements": "Logros",
-    "npcTrade": "Comercio"
+    "npcTrade": "Comercio",
+    "boss": "Jefe galáctico"
   },
   "sidebar": {
     "principal": "Principal",
@@ -460,6 +461,38 @@
       "created": "creada el {date}",
       "lastActive": "activa el {date}",
       "banned": "suspendida"
+    },
+    "tabBoss": "Jefe",
+    "boss": {
+      "title": "Jefe galáctico",
+      "intro": "Ajusta al jefe: activación, flota, tecnologías, botín, regeneración, probabilidad de interceptar una expedición y plazo de reaparición. Cada guardado queda en el registro de auditoría. El jefe está desactivado por defecto: comprueba su poder antes de activarlo.",
+      "alive": "{name} en la galaxia {galaxy}, sistema {system} (salud {percent} %).",
+      "despawn": "Retirar al jefe",
+      "despawnConfirm": "¿Retirar al jefe sin botín? Reaparecerá tras el plazo habitual.",
+      "none": "Ningún jefe vivo.",
+      "galaxy": "Galaxia (opcional)",
+      "system": "Sistema (opcional)",
+      "spawn": "Hacer aparecer",
+      "historyLine": "{name} — galaxia {galaxy}, sistema {system} · muerto el {died} · reaparición el {respawn}",
+      "enabled": "Jefe activo (aparición, combates e interceptaciones)",
+      "respawnDays": "Plazo de reaparición (días)",
+      "aggroPercent": "Probabilidad de interceptar una expedición (%)",
+      "regen": "Regeneración (% de la flota por hora)",
+      "techTitle": "Tecnologías del jefe",
+      "weapon": "Armas",
+      "shield": "Escudo",
+      "armor": "Casco",
+      "lootTitle": "Botín repartido al morir",
+      "shipsTitle": "Flota del jefe",
+      "removeShip": "Quitar esta nave",
+      "addShip": "Añadir una nave…",
+      "fleetValue": "Valor de la flota (equivalente en metal): {value}",
+      "save": "Guardar",
+      "saved": "Ajustes guardados.",
+      "reset": "Valores por defecto",
+      "resetConfirm": "¿Volver a los valores por defecto del jefe?",
+      "spawned": "Jefe aparecido.",
+      "despawned": "Jefe retirado."
     }
   },
   "common": {
@@ -860,7 +893,9 @@
     "exp_delay": "Un contratiempo alarga el regreso (×{factor}).",
     "exp_speedup": "Una corriente favorable acorta el regreso (×{factor}).",
     "expPirates": "Ataque pirata: {lost} nave(s) perdida(s).",
-    "exp_blackhole": "Un agujero negro engulló toda la flota."
+    "exp_blackhole": "Un agujero negro engulló toda la flota.",
+    "expBoss": "El jefe galáctico interceptó la expedición: {lost} nave(s) perdida(s).",
+    "expBossKilled": "El jefe galáctico interceptó la expedición, ¡y esta lo derribó! {lost} nave(s) perdida(s)."
   },
   "spy": {
     "building": {
@@ -1571,5 +1606,43 @@
     "capTitle": "Límites del día (se reinician a medianoche UTC)",
     "capExchange": "Intercambios: {used} / {cap} (valor equivalente en metal)",
     "capShip": "Naves: {used} / {cap} (valor equivalente en metal)"
+  },
+  "boss": {
+    "kicker": "Espacio profundo",
+    "title": "Jefe galáctico",
+    "subtitle": "Una flota monstruosa merodea la posición 16 de un sistema. Nunca ataca planetas. Atácala con la misión «Ataque» hacia su posición; también puede interceptar una expedición que llegue a su sistema ({aggro} % de probabilidad). Sus pérdidas persisten entre combates y recupera un {regen} % de su flota por hora. Al morir, el botín se reparte según el daño; reaparece en otro lugar {days} días después.",
+    "disabled": "Los jefes galácticos no están activos por ahora.",
+    "location": "Posición: galaxia {galaxy}, sistema {system}, posición {position}",
+    "health": "Salud: {percent} %",
+    "fleet": "Flota: {ships}",
+    "lootPool": "Botín a repartir al morir: {loot}",
+    "attack": "Preparar un ataque",
+    "expeditionHint": "Una expedición a este sistema también puede encontrarse con él: su daño cuenta para el botín.",
+    "mine": "Tu daño: {damage} (valor de las naves destruidas) en {battles} combate(s).",
+    "nextSpawn": "Ningún jefe por ahora. Próxima aparición: {date}.",
+    "none": "Ningún jefe por ahora.",
+    "topTitle": "Mejores atacantes",
+    "topLine": "{damage} de daño en {battles} combate(s)",
+    "battlesTitle": "Tus combates contra el jefe",
+    "battleLine": "{source}: {result}, {damage} de daño causado. Pérdidas: {lost}.",
+    "battleKilled": "{source}: ¡golpe mortal! {damage} de daño causado. Pérdidas: {lost}.",
+    "lootLine": "Botín recibido al morir el jefe: {loot}.",
+    "source": {
+      "ATTACK": "Ataque",
+      "EXPEDITION": "Expedición",
+      "LOOT": "Botín"
+    },
+    "result": {
+      "attacker_win": "victoria",
+      "defender_win": "derrota",
+      "draw": "empate"
+    },
+    "names": {
+      "1": "Leviatán del Abismo",
+      "2": "Segador Negro",
+      "3": "Enjambre Estelar",
+      "4": "Kraken Orbital",
+      "5": "Centinela Olvidado"
+    }
   }
 }

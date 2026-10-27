@@ -58,6 +58,29 @@ const npcTrade = {
   resetsAt: "2026-10-23T00:00:00.000Z",
 };
 
+const bossState = {
+  enabled: true,
+  aggroChance: 0.5,
+  regenPercentPerHour: 2,
+  respawnDays: 7,
+  loot: { metal: 20000000, crystal: 10000000, deuterium: 5000000 },
+  boss: {
+    nameId: 2, galaxy: 7, system: 321, position: 16, spawnedAt: "2026-10-26T08:00:00Z", health: 0.62,
+    ships: { "204": 3100, "205": 1240, "206": 620, "207": 186 }, maxShips: { "204": 5000, "205": 2000, "206": 1000, "207": 300 },
+    top: [
+      { username: "Capitaine Aldebaran", damage: 123456789, battles: 4 },
+      { username: "Amiral Cassiopée", damage: 4567890, battles: 1 },
+    ],
+    mine: { damage: 4567890, battles: 1 },
+  },
+  nextSpawn: null,
+  lastDeath: null,
+  battles: [
+    { id: "b1", source: "ATTACK", galaxy: 7, system: 321, result: "defender_win", rounds: 6, attackerLosses: { "207": 40 }, bossLosses: { "204": 900 }, damage: 2250000, bossHealthAfter: 0.62, killed: false, loot: null, createdAt: "2026-10-26T10:00:00Z" },
+    { id: "b2", source: "LOOT", galaxy: 7, system: 321, result: null, rounds: 0, attackerLosses: null, bossLosses: null, damage: 2250000, bossHealthAfter: null, killed: false, loot: { metal: 1234567, crystal: 654321, deuterium: 111111 }, createdAt: "2026-10-25T10:00:00Z" },
+  ],
+};
+
 const quests = {
   rewardMultiplier: 1.4,
   commanderLevel: 5,
@@ -160,6 +183,7 @@ async function fixture(page: Page, locale: string, withMoon = false) {
     else if (path === "/fleet/attack-groups")
       body = { max: 5, groups: [{ id: "g1", creator: "Capitaine Aldebaran", target: { galaxy: 1, system: 1, position: 1, moon: false }, arrivalTime: new Date(Date.now() + 3600000).toISOString(), fleets: 2 }] };
     else if (path === "/npc-trade") body = npcTrade;
+    else if (path === "/boss") body = bossState;
     else if (path === "/quests") body = quests;
     else if (path === "/achievements") body = achievements;
     else if (path === `/moons/${moon.id}`) body = moonOverview;
@@ -248,6 +272,17 @@ for (const locale of ["fr", "de"]) {
       await expect(page.getByTestId("npc-season")).toBeVisible();
       await expect(page.getByTestId("npc-rates").locator("li")).toHaveCount(6);
       await expect(page.getByTestId("npc-ship-209")).toBeVisible();
+      expect(await noOverflow(page)).toBe(true);
+      await buttonsFit(page);
+    });
+
+    test("boss galactique : position, santé, classement et combats sans débordement", async ({ page }) => {
+      await fixture(page, locale);
+      await page.goto(`/${locale}/boss`);
+      await expect(page.getByTestId("boss-alive")).toBeVisible();
+      await expect(page.getByTestId("boss-location")).toContainText("321");
+      await expect(page.getByTestId("boss-top")).toBeVisible();
+      await expect(page.getByTestId("boss-battles")).toBeVisible();
       expect(await noOverflow(page)).toBe(true);
       await buttonsFit(page);
     });

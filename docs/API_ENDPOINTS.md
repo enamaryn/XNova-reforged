@@ -136,6 +136,22 @@ Table `AccountIp` (une ligne par compte et adresse, `lastSeenAt` mise à jour au
 
 Les échanges d'un même joueur sont sérialisés par un verrou sur le joueur : le plafond quotidien (valeur équivalent métal, jour UTC) ne peut pas être dépassé par des requêtes simultanées. Le réglage est stocké dans `GameConfig` (clé `npcTrade.config`) ; un réglage absent ou corrompu retombe sur les valeurs par défaut. Table `NpcTrade` (migration `20261024100000_npc_trade`) : historique et base des plafonds.
 
+## Boss galactique (`/boss`, `/admin/boss`)
+
+Flotte unique en position 16 d'un système tiré au hasard. Elle n'attaque jamais de planète. Désactivée par défaut (`enabled: false`).
+
+| Méthode | Chemin | Description |
+|---|---|---|
+| GET | `/boss` | Tout joueur connecté : réglages publics (chance d'interception, régénération, délai, butin), boss vivant (`nameId`, position, santé, flotte actuelle et maximale, 10 premiers par dégâts, ma participation) ou prochaine apparition, et mes 10 derniers combats (`ATTACK`, `EXPEDITION`, `LOOT`). Le boss n'apparaît que s'il est activé. |
+| POST | `/fleet/send` | Mission **1 (attaque)** vers la position 16 : cible le boss vivant à ces coordonnées (400 « Aucun boss galactique à cette position » sinon : mauvaises coordonnées, boss mort ou désactivé ; aucun débit). Les autres missions vers la position 16 restent refusées (sauf l'expédition). L'attaque groupée ne peut pas viser le boss. |
+| GET | `/admin/boss` | ADMIN ou SUPER_ADMIN : réglage, valeurs par défaut, bornes, vaisseaux possibles, boss vivant, 10 derniers boss morts, valeur de la flotte. |
+| PUT | `/admin/boss/config` | Remplace tout le réglage (`enabled`, `respawnDays` 1 à 60, `aggroChance` 0 à 1, `regenPercentPerHour` 0 à 100, `ships` (id → nombre, sans satellite solaire), `tech` 0 à 30, `loot`). 400 avec la liste des champs invalides, sans rien enregistrer ; audit `update_boss` (avant/après). |
+| DELETE | `/admin/boss/config` | Valeurs par défaut (audit `reset_boss`). |
+| POST | `/admin/boss/spawn` | Fait apparaître le boss tout de suite (`galaxy` et `system` facultatifs, tirés au hasard sinon) ; 400 si un boss vit déjà ; audit `spawn_boss`. |
+| POST | `/admin/boss/despawn` | Retire le boss vivant sans butin (réapparition après le délai) ; 404 sans boss vivant ; audit `despawn_boss`. |
+
+Fonctionnement : la tâche `boss` (chaque minute) fait apparaître le premier boss dès l'activation, régénère sa flotte (`regenPercentPerHour` de la flotte maximale par heure, par type de vaisseau) et le fait réapparaître `respawnDays` jours après sa mort. Un seul boss vit à la fois (`GalacticBoss.activeSlot` unique, NULL ensuite). Un combat (6 tours, moteur commun, technologies Armes, Bouclier et Coque du joueur contre celles du boss) se déroule sous verrou du boss : pertes persistées, dégâts cumulés par joueur (`BossDamage`, valeur équivalent métal des vaisseaux détruits), journal (`BossBattle`). À la mort, le butin est partagé au prorata des dégâts et versé à la planète d'origine de la dernière flotte de chaque participant (rapport `LOOT`). Une expédition qui arrive dans le système du boss est interceptée avec la probabilité `aggroChance` (rapport d'expédition d'issue `boss`) ; les survivants rentrent, une flotte détruite disparaît avec sa cargaison. Table et migration : `20261026100000_galactic_boss`.
+
 ## Attaques groupées (mission 2)
 
 | Méthode | Chemin | Description |

@@ -12,6 +12,7 @@ import { FleetModule } from "./fleet/fleet.module";
 import { MissilesModule } from "./missiles/missiles.module";
 import { MoonsModule } from "./moons/moons.module";
 import { OfficersModule } from "./officers/officers.module";
+import { BossModule } from "./boss/boss.module";
 import { MarketModule } from "./market/market.module";
 import { MultiAccountModule } from "./multi-account/multi-account.module";
 import { NpcTradeModule } from "./npc-trade/npc-trade.module";
@@ -82,6 +83,7 @@ import { validateEnv } from "./config/env.validation";
     MissilesModule,
     MoonsModule,
     OfficersModule,
+    BossModule,
     MarketModule,
     MultiAccountModule,
     NpcTradeModule,

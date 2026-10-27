@@ -30,7 +30,8 @@
     "market": "Mercato",
     "quests": "Missioni",
     "achievements": "Traguardi",
-    "npcTrade": "Commercio"
+    "npcTrade": "Commercio",
+    "boss": "Boss galattico"
   },
   "sidebar": {
     "principal": "Principale",
@@ -460,6 +461,38 @@
       "created": "creato il {date}",
       "lastActive": "attivo il {date}",
       "banned": "sospeso"
+    },
+    "tabBoss": "Boss",
+    "boss": {
+      "title": "Boss galattico",
+      "intro": "Regola il boss: attivazione, flotta, tecnologie, bottino, rigenerazione, probabilità di intercettare una spedizione e tempo di ricomparsa. Ogni salvataggio è registrato nel registro di audit. Il boss è disattivato di default: controlla la sua potenza prima di attivarlo.",
+      "alive": "{name} nella galassia {galaxy}, sistema {system} (salute {percent} %).",
+      "despawn": "Rimuovi il boss",
+      "despawnConfirm": "Rimuovere il boss senza bottino? Ricomparirà dopo il tempo abituale.",
+      "none": "Nessun boss vivo.",
+      "galaxy": "Galassia (facoltativo)",
+      "system": "Sistema (facoltativo)",
+      "spawn": "Fai comparire",
+      "historyLine": "{name} — galassia {galaxy}, sistema {system} · morto il {died} · ricomparsa il {respawn}",
+      "enabled": "Boss attivo (comparsa, combattimenti e intercettazioni)",
+      "respawnDays": "Tempo di ricomparsa (giorni)",
+      "aggroPercent": "Probabilità di intercettare una spedizione (%)",
+      "regen": "Rigenerazione (% della flotta all'ora)",
+      "techTitle": "Tecnologie del boss",
+      "weapon": "Armi",
+      "shield": "Scudo",
+      "armor": "Scafo",
+      "lootTitle": "Bottino diviso alla morte",
+      "shipsTitle": "Flotta del boss",
+      "removeShip": "Rimuovi questa nave",
+      "addShip": "Aggiungi una nave…",
+      "fleetValue": "Valore della flotta (equivalente in metallo): {value}",
+      "save": "Salva",
+      "saved": "Impostazioni salvate.",
+      "reset": "Valori predefiniti",
+      "resetConfirm": "Tornare ai valori predefiniti del boss?",
+      "spawned": "Boss comparso.",
+      "despawned": "Boss rimosso."
     }
   },
   "common": {
@@ -860,7 +893,9 @@
     "exp_delay": "Un contrattempo allunga il ritorno (×{factor}).",
     "exp_speedup": "Una corrente favorevole accorcia il ritorno (×{factor}).",
     "expPirates": "Attacco di pirati: {lost} nave/i perduta/e.",
-    "exp_blackhole": "Un buco nero ha inghiottito l'intera flotta."
+    "exp_blackhole": "Un buco nero ha inghiottito l'intera flotta.",
+    "expBoss": "Il boss galattico ha intercettato la spedizione: {lost} nave/i perse.",
+    "expBossKilled": "Il boss galattico ha intercettato la spedizione, e questa lo ha abbattuto! {lost} nave/i perse."
   },
   "spy": {
     "building": {
@@ -1571,5 +1606,43 @@
     "capTitle": "Limiti del giorno (azzeramento a mezzanotte UTC)",
     "capExchange": "Scambi: {used} / {cap} (valore equivalente in metallo)",
     "capShip": "Navi: {used} / {cap} (valore equivalente in metallo)"
+  },
+  "boss": {
+    "kicker": "Spazio profondo",
+    "title": "Boss galattico",
+    "subtitle": "Una flotta mostruosa si aggira nella posizione 16 di un sistema. Non attacca mai i pianeti. Attaccala con la missione «Attacco» verso la sua posizione; può anche intercettare una spedizione che arriva nel suo sistema ({aggro} % di probabilità). Le sue perdite restano tra un combattimento e l'altro e recupera il {regen} % della flotta all'ora. Alla sua morte, il bottino è diviso in proporzione ai danni; ricompare altrove {days} giorni dopo.",
+    "disabled": "I boss galattici non sono attivi al momento.",
+    "location": "Posizione: galassia {galaxy}, sistema {system}, posizione {position}",
+    "health": "Salute: {percent} %",
+    "fleet": "Flotta: {ships}",
+    "lootPool": "Bottino da dividere alla sua morte: {loot}",
+    "attack": "Prepara un attacco",
+    "expeditionHint": "Anche una spedizione verso questo sistema può incontrarlo: i suoi danni contano per il bottino.",
+    "mine": "I tuoi danni: {damage} (valore delle navi distrutte) in {battles} combattimento/i.",
+    "nextSpawn": "Nessun boss al momento. Prossima comparsa: {date}.",
+    "none": "Nessun boss al momento.",
+    "topTitle": "Migliori attaccanti",
+    "topLine": "{damage} di danni in {battles} combattimento/i",
+    "battlesTitle": "I tuoi combattimenti contro il boss",
+    "battleLine": "{source}: {result}, {damage} di danni inflitti. Perdite: {lost}.",
+    "battleKilled": "{source}: colpo mortale! {damage} di danni inflitti. Perdite: {lost}.",
+    "lootLine": "Bottino ricevuto alla morte del boss: {loot}.",
+    "source": {
+      "ATTACK": "Attacco",
+      "EXPEDITION": "Spedizione",
+      "LOOT": "Bottino"
+    },
+    "result": {
+      "attacker_win": "vittoria",
+      "defender_win": "sconfitta",
+      "draw": "pareggio"
+    },
+    "names": {
+      "1": "Leviatano dell'Abisso",
+      "2": "Mietitore Nero",
+      "3": "Sciame Stellare",
+      "4": "Kraken Orbitale",
+      "5": "Sentinella Dimenticata"
+    }
   }
 }

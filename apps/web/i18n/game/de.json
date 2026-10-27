@@ -30,7 +30,8 @@
     "market": "Markt",
     "quests": "Quests",
     "achievements": "Erfolge",
-    "npcTrade": "Handel"
+    "npcTrade": "Handel",
+    "boss": "Galaxie-Boss"
   },
   "sidebar": {
     "principal": "Hauptmenü",
@@ -460,6 +461,38 @@
       "created": "erstellt am {date}",
       "lastActive": "aktiv am {date}",
       "banned": "gesperrt"
+    },
+    "tabBoss": "Boss",
+    "boss": {
+      "title": "Galaxie-Boss",
+      "intro": "Stellen Sie den Boss ein: Aktivierung, Flotte, Technologien, Beute, Regeneration, Wahrscheinlichkeit, eine Expedition abzufangen, und Wiedererscheinungsfrist. Jedes Speichern wird im Audit-Protokoll vermerkt. Der Boss ist standardmäßig deaktiviert: Prüfen Sie seine Stärke, bevor Sie ihn aktivieren.",
+      "alive": "{name} in Galaxie {galaxy}, System {system} (Gesundheit {percent} %).",
+      "despawn": "Boss entfernen",
+      "despawnConfirm": "Den Boss ohne Beute entfernen? Er erscheint nach der üblichen Frist wieder.",
+      "none": "Kein lebender Boss.",
+      "galaxy": "Galaxie (optional)",
+      "system": "System (optional)",
+      "spawn": "Erscheinen lassen",
+      "historyLine": "{name} — Galaxie {galaxy}, System {system} · gestorben am {died} · Wiedererscheinen am {respawn}",
+      "enabled": "Boss aktiv (Erscheinen, Kämpfe und Abfangen)",
+      "respawnDays": "Wiedererscheinungsfrist (Tage)",
+      "aggroPercent": "Wahrscheinlichkeit, eine Expedition abzufangen (%)",
+      "regen": "Regeneration (% der Flotte pro Stunde)",
+      "techTitle": "Technologien des Bosses",
+      "weapon": "Waffen",
+      "shield": "Schild",
+      "armor": "Hülle",
+      "lootTitle": "Beute, die bei seinem Tod geteilt wird",
+      "shipsTitle": "Flotte des Bosses",
+      "removeShip": "Dieses Schiff entfernen",
+      "addShip": "Schiff hinzufügen …",
+      "fleetValue": "Flottenwert (Metalläquivalent): {value}",
+      "save": "Speichern",
+      "saved": "Einstellungen gespeichert.",
+      "reset": "Standardwerte",
+      "resetConfirm": "Zu den Standardwerten des Bosses zurückkehren?",
+      "spawned": "Boss erschienen.",
+      "despawned": "Boss entfernt."
     }
   },
   "common": {
@@ -860,7 +893,9 @@
     "exp_delay": "Ein Rückschlag verlängert den Rückflug (×{factor}).",
     "exp_speedup": "Eine günstige Strömung verkürzt den Rückflug (×{factor}).",
     "expPirates": "Piratenangriff: {lost} Schiff(e) verloren.",
-    "exp_blackhole": "Ein Schwarzes Loch hat die ganze Flotte verschluckt."
+    "exp_blackhole": "Ein Schwarzes Loch hat die ganze Flotte verschluckt.",
+    "expBoss": "Der Galaxie-Boss hat die Expedition abgefangen: {lost} Schiff(e) verloren.",
+    "expBossKilled": "Der Galaxie-Boss hat die Expedition abgefangen, und sie hat ihn besiegt! {lost} Schiff(e) verloren."
   },
   "spy": {
     "building": {
@@ -1571,5 +1606,43 @@
     "capTitle": "Tageslimits (Rücksetzung um Mitternacht UTC)",
     "capExchange": "Tausch: {used} / {cap} (Metallwert)",
     "capShip": "Schiffe: {used} / {cap} (Metallwert)"
+  },
+  "boss": {
+    "kicker": "Tiefer Weltraum",
+    "title": "Galaxie-Boss",
+    "subtitle": "Eine monströse Flotte streift durch Position 16 eines Systems. Sie greift nie Planeten an. Greifen Sie sie mit der Mission „Angriff“ auf ihre Position an; sie kann auch eine Expedition abfangen, die in ihrem System ankommt ({aggro} % Wahrscheinlichkeit). Ihre Verluste bleiben zwischen den Kämpfen bestehen, und sie gewinnt {regen} % ihrer Flotte pro Stunde zurück. Beim Tod wird die Beute nach Schaden aufgeteilt; sie erscheint {days} Tage später woanders wieder.",
+    "disabled": "Galaxie-Bosse sind im Moment nicht aktiv.",
+    "location": "Position: Galaxie {galaxy}, System {system}, Position {position}",
+    "health": "Gesundheit: {percent} %",
+    "fleet": "Flotte: {ships}",
+    "lootPool": "Beute, die bei ihrem Tod geteilt wird: {loot}",
+    "attack": "Angriff vorbereiten",
+    "expeditionHint": "Eine Expedition in dieses System kann ebenfalls auf ihn treffen: Ihr Schaden zählt für die Beute.",
+    "mine": "Ihr Schaden: {damage} (Wert der zerstörten Schiffe) in {battles} Kampf/Kämpfen.",
+    "nextSpawn": "Im Moment kein Boss. Nächstes Erscheinen: {date}.",
+    "none": "Im Moment kein Boss.",
+    "topTitle": "Beste Angreifer",
+    "topLine": "{damage} Schaden in {battles} Kampf/Kämpfen",
+    "battlesTitle": "Ihre Kämpfe gegen den Boss",
+    "battleLine": "{source}: {result}, {damage} Schaden verursacht. Verluste: {lost}.",
+    "battleKilled": "{source}: Todesstoß! {damage} Schaden verursacht. Verluste: {lost}.",
+    "lootLine": "Beute beim Tod des Bosses erhalten: {loot}.",
+    "source": {
+      "ATTACK": "Angriff",
+      "EXPEDITION": "Expedition",
+      "LOOT": "Beute"
+    },
+    "result": {
+      "attacker_win": "Sieg",
+      "defender_win": "Niederlage",
+      "draw": "Unentschieden"
+    },
+    "names": {
+      "1": "Leviathan der Tiefe",
+      "2": "Schwarzer Schnitter",
+      "3": "Sternenschwarm",
+      "4": "Orbitaler Kraken",
+      "5": "Vergessener Wächter"
+    }
   }
 }

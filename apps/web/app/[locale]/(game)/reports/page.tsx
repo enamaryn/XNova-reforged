@@ -34,6 +34,8 @@ function ExpeditionReportsSection() {
         return t(`reports.exp_${report.outcome}`, { factor: Number(d.factor ?? 1) });
       case 'pirates':
         return t('reports.expPirates', { lost: sum(d.lost) });
+      case 'boss':
+        return t(d.killed ? 'reports.expBossKilled' : 'reports.expBoss', { lost: sum(d.lost) });
       default:
         return t(`reports.exp_${report.outcome}`);
     }

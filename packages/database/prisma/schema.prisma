@@ -863,6 +863,76 @@ model NpcTrade {
 }
 
 // ============================================
+// BOSS GALACTIQUES
+// ============================================
+
+// Flotte monstrueuse unique cachee en position 16 d'un systeme. `activeSlot` vaut 1 tant que le boss est vivant et
+// reste NULL ensuite : l'unicite garantit qu'un seul boss vit a la fois (plusieurs NULL sont permis)
+model GalacticBoss {
+  id          String    @id @default(uuid())
+  nameId      Int
+  galaxy      Int
+  system      Int
+  // ALIVE ou DEAD
+  status      String
+  activeSlot  Int?      @unique
+  // Flotte actuelle et flotte maximale (identifiant de vaisseau -> nombre)
+  ships       Json
+  maxShips    Json
+  spawnedAt   DateTime  @default(now())
+  // Derniere regeneration appliquee
+  lastRegenAt DateTime  @default(now())
+  diedAt      DateTime?
+  respawnAt   DateTime?
+  killedById  String?
+  damages     BossDamage[]
+  battles     BossBattle[]
+
+  @@index([status, respawnAt])
+}
+
+// Degats cumules d'un joueur contre un boss (valeur equivalent metal des vaisseaux detruits) : base du partage du butin
+model BossDamage {
+  id       String      @id @default(uuid())
+  bossId   String
+  boss     GalacticBoss @relation(fields: [bossId], references: [id], onDelete: Cascade)
+  userId   String
+  // Planete qui recevra la part du butin (origine de la derniere flotte engagee)
+  planetId String
+  damage   Float       @default(0)
+  battles  Int         @default(0)
+  lastAt   DateTime    @default(now())
+
+  @@unique([bossId, userId])
+  @@index([bossId, damage])
+}
+
+// Combats contre un boss (attaque ou interception d'expedition) et parts de butin versees a sa mort
+model BossBattle {
+  id               String       @id @default(uuid())
+  bossId           String
+  boss             GalacticBoss @relation(fields: [bossId], references: [id], onDelete: Cascade)
+  userId           String
+  // ATTACK, EXPEDITION ou LOOT (part de butin)
+  source           String
+  galaxy           Int
+  system           Int
+  result           String?
+  rounds           Int          @default(0)
+  attackerShips    Json?
+  attackerLosses   Json?
+  bossLosses       Json?
+  damage           Float        @default(0)
+  bossHealthAfter  Float?
+  killed           Boolean      @default(false)
+  loot             Json?
+  createdAt        DateTime     @default(now())
+
+  @@index([userId, createdAt])
+  @@index([bossId, createdAt])
+}
+
+// ============================================
 // QUETES ET SUCCES
 // ============================================
 

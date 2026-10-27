@@ -337,8 +337,11 @@ Temporary bonus periods for **all** players, launched by an administrator from t
 **Why is a trade, transport or attack refused between two accounts?**
 **Multi-accounting is forbidden.** Two accounts are considered **linked** when they have the same mailbox ("+tag" aliases and Gmail dots count as the same address) or when the same **IP address** was seen on both recently (30 days by default). Between linked accounts the game refuses market purchases, resource transport and attacks; registering a new account is refused when an IP address already carries too many accounts (3 by default). If you share a connection (family, flatmates, school) with another player, **contact an administrator**: they can mark your accounts as legitimate (exemption). To move resources between **your own planets**, send a transport fleet. IP addresses are visible to administrators only and deleted after 90 days by default. Administrators set these limits in the console.
 
+**How does the galactic boss work?**
+A single monstrous fleet roams **position 16** (deep space) of a randomly chosen system; the **Galactic boss** page shows its position, health and the loot at stake. It **never attacks planets**. To fight it, send a fleet with the **Attack** mission to that position: the battle lasts 6 rounds, your survivors come home, and **its losses persist** from one battle to the next (it regains a small percentage of its fleet per hour). It can also **intercept an expedition** arriving in its system (50 % by default): the battle takes place and the survivors come home, or the expedition is lost. When its fleet is destroyed, the **loot is shared in proportion to each player's damage** (value of ships destroyed), paid to the planet the fleet left from; it reappears **7 days later** somewhere else, and only one boss exists at a time. Grouped attacks do not target it. All settings (fleet, technologies, loot, regeneration, delay, interception chance) can be changed by administrators; the boss is **disabled** until they enable it.
+
 ## 11. What does not exist yet
 
-Galactic bosses, invasions and competitive seasons. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
+Invasions and competitive seasons. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
 
 *This FAQ was checked against the code (`packages/game-config`, `packages/game-engine`, API) and, for solar satellites, by an automated integration test (`solar-satellites.integration.spec.ts`).*
