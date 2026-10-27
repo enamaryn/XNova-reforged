@@ -5,6 +5,15 @@
 
 ---
 
+## Session — React 19
+
+**Date :** 27 octobre 2026. Demande du propriétaire : « Passe à React 19 ».
+
+- [x] `react` / `react-dom` 18.3 → 19.3.1 et `@types/react` / `@types/react-dom` → 19.3 ; bibliothèques compatibles (pairs vérifiés), **aucune modification de code**.
+- [x] Lockfile : entrées React 18 retirées avant réinstallation pour obtenir un seul exemplaire de React ; `npm ls --all` à 0, audit de production à 0.
+- [x] Vérifications : typage, lint (0 erreur), build complet, E2E complets, rendu mobile ; documentation (`docs/NPM_AUDIT_2026-10.md`, `prompt.md`).
+- Reste : renommer `middleware` en `proxy` (avertissement Next 16) ; `scroll-behavior`.
+
 ## Session — boss galactiques
 
 **Date :** 26 octobre 2026. Décisions du propriétaire (19 octobre) : boss roulant dans la galaxie, un seul à la fois, réapparition 7 jours après sa mort à un endroit aléatoire, jamais d'attaque de planète, interception aléatoire des flottes en attente. « Fais les choix par défaut » (26 octobre) pour les deux points laissés ouverts.

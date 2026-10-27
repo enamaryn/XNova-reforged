@@ -12,7 +12,7 @@ Finaliser le polish du MVP XNova Reforged pour une expérience utilisateur profe
 
 **Stack Frontend :**
 - Next.js 15 (App Router)
-- React 18
+- React 19
 - TailwindCSS (thème space/sci-fi)
 - Framer Motion (animations déjà installé)
 - Sonner (toasts)

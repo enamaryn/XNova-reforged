@@ -129,3 +129,13 @@ Changements de comportement traités :
 Reste en production : `ajv`, `js-yaml` et `@nestjs/swagger` (modérées, non exposées à un joueur).
 
 Validation locale : builds complets, lint (0 erreur), typage, unitaires, intégration, E2E complets (64/64 après relance d'un test dont les coordonnées fixes entraient en collision avec un résidu de la base locale), rendu mobile.
+
+
+## Mise à jour du 27 octobre 2026 — React 19
+
+Demande du propriétaire : passer à React 19, déprécié à l'avertissement de Next 16 (« React 18 sera retiré dans Next 17 »).
+
+- `react` et `react-dom` 18.3 → **19.3.1**, `@types/react` et `@types/react-dom` 18 → **19.3** (`apps/web`). Aucun changement de code : le typage et le lint passent sans modification.
+- Les bibliothèques de l'interface acceptaient déjà React 19 (pairs vérifiés) : `@tanstack/react-query`, `framer-motion` 11, `lucide-react` 0.446, `next-intl` 4, `react-hook-form`, `sonner` 1.7, `zustand` 4, `@sentry/nextjs` 11.
+- Un seul exemplaire de React dans l'arbre (`npm ls react`) ; `npm ls --all` sort avec le code 0 (contrôle d'installation du serveur) ; `npm audit --omit=dev --audit-level=high` reste à 0. Piège rencontré : après la mise à jour des dépendances directes, le lockfile gardait React 18 hoisté à la racine (les bibliothèques le « partageaient », d'où des erreurs de types entre deux copies de `@types/react`) ; il a fallu retirer les entrées React du lockfile avant de réinstaller.
+- L'avertissement « React 18 support is deprecated » de Next 16 a disparu. Reste : le fichier `middleware` à renommer en `proxy`.
