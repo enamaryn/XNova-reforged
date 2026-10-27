@@ -1644,5 +1644,11 @@
       "4": "Orbitaler Kraken",
       "5": "Vergessener Wächter"
     }
+  },
+  "legal": {
+    "terms": "Nutzungsbedingungen",
+    "privacy": "Datenschutzerklärung",
+    "acceptPrefix": "Mit der Kontoerstellung akzeptieren Sie die",
+    "acceptAnd": " und die "
   }
 }

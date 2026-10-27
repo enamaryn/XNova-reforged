@@ -14,6 +14,7 @@ import { useAuthStore } from "@/lib/stores/auth-store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { LegalAcceptNotice } from "@/components/legal/LegalLinks";
 import { ResendConfirmation } from "@/components/auth/ResendConfirmation";
 
 export function RegisterForm() {
@@ -136,6 +137,7 @@ export function RegisterForm() {
       <Button type="submit" className="w-full" disabled={mutation.isPending}>
         {mutation.isPending ? "Inscription en cours..." : "Creer mon compte"}
       </Button>
+      <LegalAcceptNotice />
     </form>
   );
 }

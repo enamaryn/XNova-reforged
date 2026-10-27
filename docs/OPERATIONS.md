@@ -104,6 +104,10 @@ Voir aussi la section « Première connexion » du `README.md`. Rappels d'exploi
 - Migration d'un serveur existant : `20261006100000_setup_completed_for_existing_installs` marque l'installation
   terminée dès qu'un compte joueur existe.
 
+## Conditions d'utilisation et confidentialité
+
+Les pages publiques `/terms` et `/privacy` (5 langues, textes dans `apps/web/content/legal/`) affichent l'éditeur et l'adresse de contact lus dans le `.env` du serveur web : `LEGAL_OPERATOR_NAME` (nom ou raison sociale) et `LEGAL_CONTACT` (adresse email). Sans ces variables, la page indique « non renseigné » : à compléter avant d'inviter des joueurs, puis redémarrer le service web. Les durées citées (adresses IP 90 jours, incidents 30 jours) sont les valeurs par défaut des onglets « Comptes liés » et « Supervision » : si vous les changez, mettez les textes à jour. Les demandes d'accès ou de suppression de données arrivent à l'adresse de contact (il n'existe pas de bouton de suppression de compte). Faire relire les textes par un juriste avant l'ouverture publique.
+
 ## Événements du monde (bonus temporaires)
 
 Console d'administration → onglet **Événements** (ADMIN et SUPER_ADMIN). Un événement donne un bonus temporaire à tous les joueurs : **production des mines** (+100 % au plus au total) et/ou **taxe du marché réduite**. Une bannière le signale aux joueurs.
