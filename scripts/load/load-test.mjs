@@ -94,7 +94,7 @@ async function register(i) {
   const player = { i, name: `lt${RUN}${i}`.slice(0, 20) };
   const password = 'LoadTest1234';
   const email = `${player.name}@load.test`;
-  const r = await call(player, 'POST', '/auth/register', { body: { username: player.name, email, password }, kind: 'auth' });
+  const r = await call(player, 'POST', '/auth/register', { body: { username: player.name, email, password, acceptTerms: true }, kind: 'auth' });
   if (r.status !== 201 && r.status !== 200) return null;
   const l = await call(player, 'POST', '/auth/login', { body: { identifier: player.name, password }, kind: 'auth' });
   const alt = l.data ?? r.data;

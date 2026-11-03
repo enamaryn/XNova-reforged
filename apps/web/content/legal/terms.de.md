@@ -1,6 +1,6 @@
 # Nutzungsbedingungen
 
-Letzte Aktualisierung: 27. Oktober 2026. Diese Bedingungen gelten für jede Person, die ein Konto erstellt oder auf diesem XNova-Reforged-Server spielt.
+Letzte Aktualisierung: 3. November 2026. Diese Bedingungen gelten für jede Person, die ein Konto erstellt oder auf diesem XNova-Reforged-Server spielt.
 
 ## 1. Betreiber und Kontakt
 
@@ -45,7 +45,7 @@ Die Verwendung Ihrer Daten ist in der [Datenschutzerklärung](/{{LOCALE}}/privac
 
 ## 9. Änderung und Beendigung
 
-Der Betreiber kann diese Bedingungen ändern; das obige Datum ändert sich dann, und das Weiterspielen gilt als Zustimmung. Sie können jederzeit aufhören zu spielen und unter der Kontaktadresse die Löschung Ihres Kontos verlangen.
+Der Betreiber kann diese Bedingungen ändern; das obige Datum ändert sich dann, und das Weiterspielen gilt als Zustimmung. Mit der Kontoerstellung akzeptieren Sie diese Bedingungen und die Datenschutzerklärung; Datum und Version der Zustimmung werden gespeichert. Sie können jederzeit aufhören zu spielen und Ihr Konto selbst in den Einstellungen löschen (oder unter der Kontaktadresse darum bitten).
 
 ## 10. Anwendbares Recht
 

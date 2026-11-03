@@ -1,4 +1,5 @@
-import { IsEmail, IsString, MinLength, MaxLength, Matches } from 'class-validator';
+import { OmitType } from '@nestjs/swagger';
+import { Equals, IsEmail, IsString, MinLength, MaxLength, Matches } from 'class-validator';
 
 export class RegisterDto {
   @IsString({ message: 'Le nom d\'utilisateur doit être une chaîne de caractères' })
@@ -20,4 +21,12 @@ export class RegisterDto {
     message: 'Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre',
   })
   password: string;
+
+  @Equals(true, {
+    message: "Vous devez accepter les conditions d'utilisation et la politique de confidentialité",
+  })
+  acceptTerms: boolean;
 }
+
+/** Compte propriétaire du parcours d'installation : mêmes règles, sans case d'acceptation (l'opérateur est l'éditeur). */
+export class SetupAdminDto extends OmitType(RegisterDto, ['acceptTerms'] as const) {}

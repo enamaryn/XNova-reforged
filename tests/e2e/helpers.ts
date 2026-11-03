@@ -36,6 +36,8 @@ export async function registerUser(
   await usernameInput.fill(username);
   await page.locator('#email').fill(email);
   await page.locator('#password').fill(password);
+  // Acceptation obligatoire des conditions d'utilisation et de la politique de confidentialité
+  await page.locator('#acceptTerms').check();
 
   // Cliquer sur le bouton de soumission
   await page.getByRole('button', { name: 'Creer mon compte' }).click();

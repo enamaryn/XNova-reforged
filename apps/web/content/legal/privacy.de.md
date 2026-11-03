@@ -1,6 +1,6 @@
 # Datenschutzerklärung
 
-Letzte Aktualisierung: 27. Oktober 2026. Dieses Dokument erklärt, welche Daten dieser XNova-Reforged-Server erhebt, wozu, wie lange und wie Sie Ihre Rechte ausüben.
+Letzte Aktualisierung: 3. November 2026. Dieses Dokument erklärt, welche Daten dieser XNova-Reforged-Server erhebt, wozu, wie lange und wie Sie Ihre Rechte ausüben.
 
 ## 1. Verantwortlicher
 
@@ -13,6 +13,7 @@ Letzte Aktualisierung: 27. Oktober 2026. Dieses Dokument erklärt, welche Daten 
 | Spielername | Identifikation im Spiel, Ranglisten, Nachrichten, Galaxie (für andere Spieler sichtbar) | Solange das Konto besteht |
 | E-Mail-Adresse (und ihre kanonische Form: ohne „+Tag“-Aliase und Gmail-Punkte) | Anmeldung, Kontobestätigung, Passwort vergessen, Erkennung von Mehrfachkonten | Solange das Konto besteht |
 | Passwort | Anmeldung. Gespeichert wird nur ein **Argon2-Hash**, nie das Passwort selbst | Solange das Konto besteht |
+| Datum und Version der akzeptierten Bedingungen | Nachweis Ihrer Zustimmung zu den Nutzungsbedingungen | Solange das Konto besteht |
 | IP-Adresse (IPv4 oder /64-Präfix bei IPv6), erfasst bei Registrierung, Anmeldung und Sitzungserneuerung | Kontrolle von Mehrfachkonten und Sicherheit | Standardmäßig **90 Tage** nach der letzten Beobachtung (vom Betreiber einstellbar), automatische nächtliche Bereinigung |
 | Spieldaten: Planeten, Gebäude, Forschung, Flotten, Berichte, private Nachrichten, Allianz, Aufgaben, Markt | Betrieb des Spiels | Solange das Konto besteht |
 | Sitzungen: Hash des Erneuerungstokens, Zeitangaben | Angemeldet bleiben, Sitzungen widerrufen können | Höchstens 30 Tage je Sitzung |
@@ -42,7 +43,7 @@ Beim Abmelden wird das Anmelde-Cookie gelöscht.
 
 ## 6. Ihre Rechte
 
-Sie können **Auskunft** über Ihre Daten, deren **Berichtigung**, **Löschung** oder **Übertragbarkeit** verlangen oder der Verarbeitung **widersprechen**, indem Sie an **{{CONTACT}}** schreiben. Eine Schaltfläche zum Löschen des Kontos gibt es noch nicht: Der Betreiber bearbeitet die Anfrage und löscht das Konto samt Spieldaten, soweit das Gesetz keine Aufbewahrung vorschreibt. Sie können sich außerdem bei der Datenschutzaufsichtsbehörde Ihres Landes beschweren.
+Sie können **Auskunft** über Ihre Daten, deren **Berichtigung** oder **Übertragbarkeit** verlangen oder der Verarbeitung **widersprechen**, indem Sie an **{{CONTACT}}** schreiben. Für die **Löschung** gibt es in den Einstellungen den Abschnitt „Mein Konto löschen“: Nach Bestätigung mit Ihrem Passwort werden das Konto sowie Planeten, Flotten, Nachrichten, Sitzungen und IP-Adressen sofort und endgültig gelöscht (nicht möglich, solange Flotten oder Raketen unterwegs sind). Kampfberichte und Handelsverläufe anderer Spieler können Ihren Spielernamen oder eine technische Kennung ohne weitere personenbezogene Daten behalten; vorhandene Sicherungen verschwinden bei ihrer Rotation. Sie können sich außerdem bei der Datenschutzaufsichtsbehörde Ihres Landes beschweren.
 
 ## 7. Sicherheit
 

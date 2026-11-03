@@ -31,6 +31,6 @@ test("le pied de page et l'inscription renvoient vers les deux textes", async ({
 
   await page.goto("/fr/register");
   const notice = page.getByTestId("legal-accept-notice");
-  await expect(notice).toContainText("vous acceptez");
+  await expect(notice).toContainText("J'accepte");
   await expect(notice.getByRole("link", { name: "Politique de confidentialité" })).toHaveAttribute("href", /\/privacy$/);
 });

@@ -954,7 +954,14 @@
     "newPassword": "Nueva contraseña",
     "confirmation": "Confirmación",
     "confirmationAria": "Confirmación de la nueva contraseña",
-    "changePassword": "Cambiar la contraseña"
+    "changePassword": "Cambiar la contraseña",
+    "deleteTitle": "Eliminar mi cuenta",
+    "deleteWarning": "Eliminación definitiva: su cuenta, planetas, flotas, mensajes y ajustes se borran y no podrán recuperarse. No es posible mientras haya flotas o misiles en vuelo; si fundó una alianza, la fundación pasa al miembro de mayor rango.",
+    "deletePassword": "Su contraseña, para confirmar",
+    "deleteConfirm": "Entiendo que esta eliminación es definitiva",
+    "deleteButton": "Eliminar definitivamente mi cuenta",
+    "deleteBusy": "Eliminando…",
+    "deleteDone": "Cuenta eliminada."
   },
   "setup": {
     "kicker": "Instalación del servidor",
@@ -1648,7 +1655,11 @@
   "legal": {
     "terms": "Condiciones de uso",
     "privacy": "Política de privacidad",
-    "acceptPrefix": "Al crear una cuenta, acepta las",
-    "acceptAnd": " y la "
+    "acceptPrefix": "Acepto las",
+    "acceptAnd": " y la ",
+    "acceptTitle": "Condiciones de uso actualizadas",
+    "acceptBody": "Las condiciones de uso y la política de privacidad se han publicado o modificado. Léalas y acéptelas para seguir jugando.",
+    "acceptButton": "Acepto",
+    "acceptError": "No se pudo guardar su aceptación."
   }
 }

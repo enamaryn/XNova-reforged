@@ -954,7 +954,14 @@
     "newPassword": "Neues Passwort",
     "confirmation": "Bestätigung",
     "confirmationAria": "Bestätigung des neuen Passworts",
-    "changePassword": "Passwort ändern"
+    "changePassword": "Passwort ändern",
+    "deleteTitle": "Mein Konto löschen",
+    "deleteWarning": "Endgültige Löschung: Ihr Konto, Ihre Planeten, Flotten, Nachrichten und Einstellungen werden gelöscht und können nicht wiederhergestellt werden. Nicht möglich, solange Flotten oder Raketen unterwegs sind; wenn Sie eine Allianz gegründet haben, geht die Gründerrolle an das ranghöchste Mitglied über.",
+    "deletePassword": "Ihr Passwort zur Bestätigung",
+    "deleteConfirm": "Ich verstehe, dass diese Löschung endgültig ist",
+    "deleteButton": "Mein Konto endgültig löschen",
+    "deleteBusy": "Wird gelöscht…",
+    "deleteDone": "Konto gelöscht."
   },
   "setup": {
     "kicker": "Server-Installation",
@@ -1648,7 +1655,11 @@
   "legal": {
     "terms": "Nutzungsbedingungen",
     "privacy": "Datenschutzerklärung",
-    "acceptPrefix": "Mit der Kontoerstellung akzeptieren Sie die",
-    "acceptAnd": " und die "
+    "acceptPrefix": "Ich akzeptiere die",
+    "acceptAnd": " und die ",
+    "acceptTitle": "Nutzungsbedingungen aktualisiert",
+    "acceptBody": "Die Nutzungsbedingungen und die Datenschutzerklärung wurden veröffentlicht oder geändert. Bitte lesen und akzeptieren Sie sie, um weiterzuspielen.",
+    "acceptButton": "Ich akzeptiere",
+    "acceptError": "Ihre Zustimmung konnte nicht gespeichert werden."
   }
 }

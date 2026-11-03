@@ -1,6 +1,6 @@
 # Política de privacidad
 
-Última actualización: 27 de octubre de 2026. Este documento explica qué datos recoge este servidor de XNova Reforged, para qué, durante cuánto tiempo y cómo ejercer sus derechos.
+Última actualización: 3 de noviembre de 2026. Este documento explica qué datos recoge este servidor de XNova Reforged, para qué, durante cuánto tiempo y cómo ejercer sus derechos.
 
 ## 1. Responsable del tratamiento
 
@@ -13,6 +13,7 @@
 | Nombre de jugador | Identificación en el juego, clasificaciones, mensajes, galaxia (visible para los demás jugadores) | Mientras exista la cuenta |
 | Dirección de correo (y su forma canónica: sin alias «+etiqueta» ni puntos de Gmail) | Inicio de sesión, confirmación de la cuenta, contraseña olvidada, detección de cuentas múltiples | Mientras exista la cuenta |
 | Contraseña | Inicio de sesión. Solo se guarda una **huella Argon2**, nunca la contraseña | Mientras exista la cuenta |
+| Fecha y versión de las condiciones aceptadas | Demostrar su aceptación de las condiciones de uso | Mientras exista la cuenta |
 | Dirección IP (IPv4, o prefijo /64 en IPv6), vista al registrarse, al iniciar sesión y al renovar la sesión | Control de cuentas múltiples y seguridad | **90 días** tras la última observación por defecto (ajustable por el editor), purga automática cada noche |
 | Datos de juego: planetas, edificios, investigaciones, flotas, informes, mensajes privados, alianza, misiones, mercado | Funcionamiento del juego | Mientras exista la cuenta |
 | Sesiones: huella del token de renovación, fechas | Mantener la sesión abierta y poder revocarla | 30 días como máximo por sesión |
@@ -42,7 +43,7 @@ Cerrar sesión elimina la cookie de sesión.
 
 ## 6. Sus derechos
 
-Puede solicitar el **acceso** a sus datos, su **rectificación**, su **supresión**, su **portabilidad**, o **oponerse** a su tratamiento, escribiendo a **{{CONTACT}}**. Todavía no existe un botón para eliminar la cuenta: el editor atiende la solicitud y elimina la cuenta y sus datos de juego, salvo lo que la ley obligue a conservar. También puede presentar una reclamación ante la autoridad de protección de datos de su país.
+Puede solicitar el **acceso** a sus datos, su **rectificación** o su **portabilidad**, u **oponerse** a su tratamiento, escribiendo a **{{CONTACT}}**. Para la **supresión**, hay un botón en Ajustes, sección «Eliminar mi cuenta»: tras confirmar con su contraseña, la cuenta y sus planetas, flotas, mensajes, sesiones y direcciones IP se borran de inmediato y de forma definitiva (no es posible mientras haya flotas o misiles en vuelo). Los informes de combate y los historiales de intercambio de otros jugadores pueden conservar su nombre de jugador o un identificador técnico, sin otros datos personales; las copias de seguridad existentes desaparecen al renovarse. También puede presentar una reclamación ante la autoridad de protección de datos de su país.
 
 ## 7. Seguridad
 

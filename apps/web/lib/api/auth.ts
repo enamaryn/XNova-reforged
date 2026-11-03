@@ -11,6 +11,7 @@ export interface RegisterPayload {
   username: string;
   email: string;
   password: string;
+  acceptTerms: boolean;
 }
 
 export async function login(payload: LoginPayload) {
@@ -108,4 +109,21 @@ export function changeEmail(currentPassword: string, newEmail: string) {
     auth: true,
     body: JSON.stringify({ currentPassword, newEmail }),
   });
+}
+
+/** Enregistre l'acceptation des conditions d'utilisation et de la politique de confidentialité en vigueur. */
+export function acceptTerms() {
+  return apiRequest<{ termsCurrent: boolean }>("/auth/accept-terms", { method: "POST", auth: true });
+}
+
+/** Suppression définitive du compte, confirmée par le mot de passe ; l'état local est ensuite nettoyé. */
+export async function deleteAccount(password: string) {
+  const result = await apiRequest<MessageResponse>("/auth/delete-account", {
+    method: "POST",
+    auth: true,
+    retry: false,
+    body: JSON.stringify({ password }),
+  });
+  useAuthStore.getState().reset();
+  return result;
 }

@@ -19,6 +19,7 @@ import { AccountService } from './account.service';
 import {
   ChangeEmailDto,
   ChangePasswordDto,
+  DeleteAccountDto,
   ForgotPasswordDto,
   ResetPasswordDto,
   TokenDto,
@@ -168,5 +169,25 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   changeEmail(@Body() dto: ChangeEmailDto, @CurrentUser('id') userId: string) {
     return this.account.requestEmailChange(userId, dto.currentPassword, dto.newEmail);
+  }
+
+  /** POST /auth/accept-terms : enregistre l'acceptation des conditions et de la politique en vigueur. */
+  @Post('accept-terms')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  acceptTerms(@CurrentUser('id') userId: string) {
+    return this.authService.acceptTerms(userId);
+  }
+
+  /**
+   * POST /auth/delete-account : suppression définitive du compte et de ses données de jeu, après
+   * confirmation par le mot de passe. Refusée en cas de flottes ou missiles en vol, et pour les rôles d'administration.
+   */
+  @Post('delete-account')
+  @UseGuards(JwtAuthGuard)
+  @RateLimit('account')
+  @HttpCode(HttpStatus.OK)
+  deleteAccount(@Body() dto: DeleteAccountDto, @CurrentUser('id') userId: string) {
+    return this.account.deleteAccount(userId, dto.password);
   }
 }

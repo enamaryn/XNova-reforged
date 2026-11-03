@@ -29,6 +29,9 @@ export const registerSchema = z.object({
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
       "Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre"
     ),
+  acceptTerms: z.boolean().refine((value) => value === true, {
+    message: "Vous devez accepter les conditions d'utilisation et la politique de confidentialité",
+  }),
 });
 
 export type RegisterSchema = z.infer<typeof registerSchema>;
