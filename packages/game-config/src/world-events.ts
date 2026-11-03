@@ -2,7 +2,7 @@
 // Un calendrier de modèles saisonniers sert de RAPPEL à l'administrateur ; rien ne démarre seul, sauf si la case
 // « automatique » du modèle a été cochée. Boss, invasions et saisons réutiliseront ce cadre (champ `kind`).
 
-export const WORLD_EVENT_KINDS = ['SEASONAL'] as const;
+export const WORLD_EVENT_KINDS = ['SEASONAL', 'INVASION'] as const;
 export type WorldEventKind = (typeof WORLD_EVENT_KINDS)[number];
 
 /** Effets d'un événement, en fractions (0,25 = +25 %). */

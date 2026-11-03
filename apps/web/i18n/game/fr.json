@@ -32,7 +32,8 @@
     "achievements": "Succès",
     "npcTrade": "Commerce",
     "boss": "Boss galactique",
-    "support": "Support"
+    "support": "Support",
+    "invasion": "Invasions"
   },
   "sidebar": {
     "principal": "Principal",
@@ -495,7 +496,51 @@
       "spawned": "Boss apparu.",
       "despawned": "Boss retiré."
     },
-    "tabSupport": "Support"
+    "tabSupport": "Support",
+    "tabInvasion": "Invasions",
+    "invasion": {
+      "title": "Invasions aliens",
+      "intro": "Une invasion est une campagne de vagues de flottes aliens, chacune en position 16 d'un système de la galaxie envahie, à repousser avant l'échéance. Les aliens n'attaquent jamais de planète. Réglez le nombre de vagues, leur flotte et leur croissance, le butin et le bonus offert si l'invasion est repoussée. Chaque enregistrement est inscrit au journal d'audit. Les invasions sont désactivées par défaut : vérifiez la puissance des vagues avant de les activer.",
+      "active": "{name} en galaxie {galaxy} : vague {current} sur {total}, échéance le {date}.",
+      "wave": "Vague en cours : n° {wave}, système {system}, santé {percent} %.",
+      "cancel": "Annuler l'invasion",
+      "cancelConfirm": "Annuler l'invasion en cours sans butin ni bonus ?",
+      "none": "Aucune invasion en cours.",
+      "galaxy": "Galaxie (facultatif)",
+      "start": "Lancer une invasion",
+      "historyLine": "{name} — galaxie {galaxy} · {status} (vague {wave} sur {total}) · terminée le {date}",
+      "status": {
+        "ACTIVE": "en cours",
+        "REPELLED": "repoussée",
+        "FAILED": "échouée",
+        "CANCELLED": "annulée"
+      },
+      "enabled": "Invasions actives (lancement, combats, bonus)",
+      "waves": "Nombre de vagues",
+      "durationHours": "Durée de la campagne (heures)",
+      "autoIntervalDays": "Lancement automatique tous les (jours, 0 = manuel)",
+      "waveGrowth": "Croissance des effectifs par vague (×)",
+      "regen": "Régénération (% de la vague par heure)",
+      "rewardTitle": "Bonus offert si l'invasion est repoussée",
+      "rewardPercent": "Bonus de production (%, 0 = aucun)",
+      "rewardDays": "Durée du bonus (jours)",
+      "techTitle": "Technologies des aliens",
+      "weapon": "Armes",
+      "shield": "Bouclier",
+      "armor": "Coque",
+      "waveLootTitle": "Butin de chaque vague détruite",
+      "finalLootTitle": "Butin final (invasion repoussée)",
+      "shipsTitle": "Flotte de la première vague",
+      "removeShip": "Retirer ce vaisseau",
+      "addShip": "Ajouter un vaisseau…",
+      "waveValue": "Valeur de la première vague (équivalent métal) : {value}",
+      "save": "Enregistrer",
+      "saved": "Réglages enregistrés.",
+      "reset": "Valeurs par défaut",
+      "resetConfirm": "Revenir aux valeurs par défaut des invasions ?",
+      "started": "Invasion lancée.",
+      "cancelled": "Invasion annulée."
+    }
   },
   "common": {
     "language": "Langue",
@@ -1478,7 +1523,8 @@
       "summer_solstice": "Solstice d'été",
       "harvest_moon": "Lune des moissons",
       "dark_nebula": "Nébuleuse sombre",
-      "winter_festival": "Fête de l'hiver"
+      "winter_festival": "Fête de l'hiver",
+      "invasion_victory": "Victoire contre l'invasion"
     },
     "admin": {
       "title": "Événements du monde",
@@ -1727,5 +1773,46 @@
     "replyNotice": "Le joueur la lit dans « Mes signalements » et reçoit aussi un message en jeu.",
     "replyError": "Impossible d'envoyer la réponse.",
     "authorFallback": "Support"
+  },
+  "invasion": {
+    "kicker": "Espace profond",
+    "title": "Invasions aliens",
+    "subtitle": "Des vagues de flottes aliens ({waves} par invasion) envahissent des systèmes d'une galaxie. Elles n'attaquent jamais de planète. Attaquez la vague en cours avec la mission « Attaque » vers sa position : ses pertes persistent entre les combats et elle regagne {regen} % de sa flotte par heure. Chaque vague détruite fait apparaître la suivante, plus forte. Repoussez toutes les vagues avant l'échéance ({hours} h) pour partager le butin et déclencher un bonus pour tous.",
+    "disabled": "Les invasions ne sont pas actives pour le moment.",
+    "progress": "Vague {current} sur {total} — {cleared} détruite(s).",
+    "deadline": "Échéance : {date}. Passé ce délai, les aliens se retirent sans butin.",
+    "waveLocation": "Vague {wave} : galaxie {galaxy}, système {system}, position {position}",
+    "health": "Santé : {percent} %",
+    "fleet": "Flotte : {ships}",
+    "attack": "Préparer une attaque",
+    "waveLoot": "Butin partagé à chaque vague détruite : {loot}",
+    "finalLoot": "Butin final partagé si l'invasion est repoussée : {loot}",
+    "reward": "Bonus offert à tous si l'invasion est repoussée : +{percent} % de production pendant {days} jour(s).",
+    "mine": "Vos dégâts sur cette invasion : {damage} (valeur des vaisseaux détruits).",
+    "nextAuto": "Aucune invasion en ce moment. Prochaine invasion : {date}.",
+    "none": "Aucune invasion en ce moment.",
+    "last": {
+      "REPELLED": "Dernière invasion repoussée le {date} : les {total} vagues sont tombées.",
+      "FAILED": "Dernière invasion échouée le {date} : les aliens se sont retirés à la vague {wave} sur {total}.",
+      "CANCELLED": "Dernière invasion annulée le {date}."
+    },
+    "topTitle": "Meilleurs défenseurs ({count} participant(s))",
+    "topLine": "{damage} de dégâts",
+    "battlesTitle": "Vos combats contre les aliens",
+    "battleLine": "Vague {wave} : {result}, {damage} de dégâts infligés. Pertes : {lost}.",
+    "battleCleared": "Vague {wave} : coup fatal ! {damage} de dégâts infligés. Pertes : {lost}.",
+    "lootWaveLine": "Butin de la vague {wave} : {loot}.",
+    "lootFinalLine": "Butin final de l'invasion repoussée : {loot}.",
+    "result": {
+      "attacker_win": "victoire",
+      "defender_win": "défaite",
+      "draw": "match nul"
+    },
+    "names": {
+      "1": "La Marée noire",
+      "2": "Les Essaims de Vorax",
+      "3": "L'Armada fantôme",
+      "4": "La Horde du vide"
+    }
   }
 }

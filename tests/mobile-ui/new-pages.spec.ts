@@ -58,6 +58,36 @@ const npcTrade = {
   resetsAt: "2026-10-23T00:00:00.000Z",
 };
 
+const invasionState = {
+  enabled: true,
+  waves: 5,
+  durationHours: 72,
+  regenPercentPerHour: 3,
+  waveLoot: { metal: 1500000, crystal: 750000, deuterium: 375000 },
+  finalLoot: { metal: 8000000, crystal: 4000000, deuterium: 2000000 },
+  rewardProductionBonus: 0.2,
+  rewardDays: 3,
+  invasion: {
+    nameId: 2,
+    galaxy: 5,
+    startedAt: "2026-11-04T10:00:00Z",
+    endsAt: "2026-11-07T10:00:00Z",
+    currentWave: 3,
+    totalWaves: 5,
+    clearedWaves: 2,
+    wave: { index: 3, system: 287, position: 16, health: 0.63, ships: { "204": 640, "205": 240, "206": 96, "207": 24 }, maxShips: { "204": 729, "205": 273, "206": 109, "207": 27 } },
+    top: [{ username: "Capitaine Aldebaran", damage: 9250000 }, { username: "Nova", damage: 4100000 }],
+    participants: 7,
+    mine: { damage: 1250000 },
+  },
+  nextAuto: null,
+  last: null,
+  battles: [
+    { id: "i1", source: "ATTACK", waveIndex: 3, galaxy: 5, system: 287, result: "defender_win", rounds: 6, attackerLosses: { "207": 40 }, npcLosses: { "204": 90 }, damage: 333000, waveHealthAfter: 0.63, cleared: false, loot: null, createdAt: "2026-11-04T12:00:00Z" },
+    { id: "i2", source: "LOOT_WAVE", waveIndex: 2, galaxy: 5, system: 140, result: null, rounds: 0, attackerLosses: null, npcLosses: null, damage: 1250000, waveHealthAfter: null, cleared: false, loot: { metal: 234567, crystal: 123456, deuterium: 61111 }, createdAt: "2026-11-04T11:00:00Z" },
+  ],
+};
+
 const bossState = {
   enabled: true,
   aggroChance: 0.5,
@@ -184,6 +214,7 @@ async function fixture(page: Page, locale: string, withMoon = false) {
       body = { max: 5, groups: [{ id: "g1", creator: "Capitaine Aldebaran", target: { galaxy: 1, system: 1, position: 1, moon: false }, arrivalTime: new Date(Date.now() + 3600000).toISOString(), fleets: 2 }] };
     else if (path === "/npc-trade") body = npcTrade;
     else if (path === "/boss") body = bossState;
+    else if (path === "/invasions") body = invasionState;
     else if (path === "/quests") body = quests;
     else if (path === "/achievements") body = achievements;
     else if (path === `/moons/${moon.id}`) body = moonOverview;
@@ -283,6 +314,17 @@ for (const locale of ["fr", "de"]) {
       await expect(page.getByTestId("boss-location")).toContainText("321");
       await expect(page.getByTestId("boss-top")).toBeVisible();
       await expect(page.getByTestId("boss-battles")).toBeVisible();
+      expect(await noOverflow(page)).toBe(true);
+      await buttonsFit(page);
+    });
+
+    test("invasions aliens : vague, santé, classement et combats sans débordement", async ({ page }) => {
+      await fixture(page, locale);
+      await page.goto(`/${locale}/invasion`);
+      await expect(page.getByTestId("invasion-active")).toBeVisible();
+      await expect(page.getByTestId("invasion-location")).toContainText("287");
+      await expect(page.getByTestId("invasion-top")).toBeVisible();
+      await expect(page.getByTestId("invasion-battles")).toBeVisible();
       expect(await noOverflow(page)).toBe(true);
       await buttonsFit(page);
     });

@@ -32,7 +32,8 @@
     "achievements": "Erfolge",
     "npcTrade": "Handel",
     "boss": "Galaxie-Boss",
-    "support": "Support"
+    "support": "Support",
+    "invasion": "Invasionen"
   },
   "sidebar": {
     "principal": "Hauptmenü",
@@ -495,7 +496,51 @@
       "spawned": "Boss erschienen.",
       "despawned": "Boss entfernt."
     },
-    "tabSupport": "Support"
+    "tabSupport": "Support",
+    "tabInvasion": "Invasionen",
+    "invasion": {
+      "title": "Alien-Invasionen",
+      "intro": "Eine Invasion ist eine Kampagne aus Wellen von Alien-Flotten, jede auf Position 16 eines Systems der überfallenen Galaxie, die vor Fristablauf zurückgeschlagen werden müssen. Aliens greifen nie Planeten an. Stellen Sie Wellenzahl, Flotte und Wachstum, Beute und den Bonus bei erfolgreicher Abwehr ein. Jede Speicherung wird im Audit-Protokoll festgehalten. Invasionen sind standardmäßig deaktiviert: Prüfen Sie die Stärke der Wellen vor der Aktivierung.",
+      "active": "{name} in Galaxie {galaxy}: Welle {current} von {total}, Frist {date}.",
+      "wave": "Aktuelle Welle: Nr. {wave}, System {system}, Gesundheit {percent} %.",
+      "cancel": "Invasion abbrechen",
+      "cancelConfirm": "Die laufende Invasion ohne Beute und Bonus abbrechen?",
+      "none": "Keine Invasion im Gange.",
+      "galaxy": "Galaxie (optional)",
+      "start": "Invasion starten",
+      "historyLine": "{name} — Galaxie {galaxy} · {status} (Welle {wave} von {total}) · beendet am {date}",
+      "status": {
+        "ACTIVE": "laufend",
+        "REPELLED": "abgewehrt",
+        "FAILED": "gescheitert",
+        "CANCELLED": "abgebrochen"
+      },
+      "enabled": "Invasionen aktiv (Start, Kämpfe, Bonus)",
+      "waves": "Anzahl der Wellen",
+      "durationHours": "Dauer der Kampagne (Stunden)",
+      "autoIntervalDays": "Automatischer Start alle (Tage, 0 = manuell)",
+      "waveGrowth": "Flottenwachstum je Welle (×)",
+      "regen": "Regeneration (% der Welle pro Stunde)",
+      "rewardTitle": "Bonus bei abgewehrter Invasion",
+      "rewardPercent": "Produktionsbonus (%, 0 = keiner)",
+      "rewardDays": "Dauer des Bonus (Tage)",
+      "techTitle": "Technologien der Aliens",
+      "weapon": "Waffen",
+      "shield": "Schild",
+      "armor": "Panzerung",
+      "waveLootTitle": "Beute je zerstörter Welle",
+      "finalLootTitle": "Endbeute (Invasion abgewehrt)",
+      "shipsTitle": "Flotte der ersten Welle",
+      "removeShip": "Dieses Schiff entfernen",
+      "addShip": "Schiff hinzufügen …",
+      "waveValue": "Wert der ersten Welle (Metalläquivalent): {value}",
+      "save": "Speichern",
+      "saved": "Einstellungen gespeichert.",
+      "reset": "Standardwerte",
+      "resetConfirm": "Zu den Standardwerten der Invasionen zurückkehren?",
+      "started": "Invasion gestartet.",
+      "cancelled": "Invasion abgebrochen."
+    }
   },
   "common": {
     "language": "Sprache",
@@ -1478,7 +1523,8 @@
       "summer_solstice": "Sommersonnenwende",
       "harvest_moon": "Erntemond",
       "dark_nebula": "Dunkler Nebel",
-      "winter_festival": "Winterfest"
+      "winter_festival": "Winterfest",
+      "invasion_victory": "Sieg über die Invasion"
     },
     "admin": {
       "title": "Weltereignisse",
@@ -1727,5 +1773,46 @@
     "replyNotice": "Der Spieler liest sie unter „Meine Meldungen“ und erhält zusätzlich eine Nachricht im Spiel.",
     "replyError": "Die Antwort konnte nicht gesendet werden.",
     "authorFallback": "Support"
+  },
+  "invasion": {
+    "kicker": "Tiefer Raum",
+    "title": "Alien-Invasionen",
+    "subtitle": "Wellen von Alien-Flotten ({waves} je Invasion) überfallen Systeme einer Galaxie. Sie greifen nie Planeten an. Greifen Sie die aktuelle Welle mit der Mission „Angriff“ auf ihre Position an: Ihre Verluste bleiben zwischen den Kämpfen bestehen, und sie erholt pro Stunde {regen} % ihrer Flotte. Jede zerstörte Welle ruft die nächste, stärkere hervor. Schlagen Sie alle Wellen vor Fristablauf ({hours} Std.) zurück, um die Beute zu teilen und einen Bonus für alle auszulösen.",
+    "disabled": "Invasionen sind derzeit nicht aktiv.",
+    "progress": "Welle {current} von {total} — {cleared} zerstört.",
+    "deadline": "Frist: {date}. Danach ziehen sich die Aliens ohne Beute zurück.",
+    "waveLocation": "Welle {wave}: Galaxie {galaxy}, System {system}, Position {position}",
+    "health": "Gesundheit: {percent} %",
+    "fleet": "Flotte: {ships}",
+    "attack": "Angriff vorbereiten",
+    "waveLoot": "Beute, die je zerstörter Welle geteilt wird: {loot}",
+    "finalLoot": "Endbeute bei abgewehrter Invasion: {loot}",
+    "reward": "Bonus für alle bei abgewehrter Invasion: +{percent} % Produktion für {days} Tag(e).",
+    "mine": "Ihr Schaden in dieser Invasion: {damage} (Wert der zerstörten Schiffe).",
+    "nextAuto": "Gerade keine Invasion. Nächste Invasion: {date}.",
+    "none": "Gerade keine Invasion.",
+    "last": {
+      "REPELLED": "Letzte Invasion am {date} abgewehrt: alle {total} Wellen fielen.",
+      "FAILED": "Letzte Invasion am {date} gescheitert: Die Aliens zogen sich bei Welle {wave} von {total} zurück.",
+      "CANCELLED": "Letzte Invasion am {date} abgebrochen."
+    },
+    "topTitle": "Beste Verteidiger ({count} Teilnehmer)",
+    "topLine": "{damage} Schaden",
+    "battlesTitle": "Ihre Kämpfe gegen die Aliens",
+    "battleLine": "Welle {wave}: {result}, {damage} Schaden verursacht. Verluste: {lost}.",
+    "battleCleared": "Welle {wave}: Todesstoß! {damage} Schaden verursacht. Verluste: {lost}.",
+    "lootWaveLine": "Beute der Welle {wave}: {loot}.",
+    "lootFinalLine": "Endbeute der abgewehrten Invasion: {loot}.",
+    "result": {
+      "attacker_win": "Sieg",
+      "defender_win": "Niederlage",
+      "draw": "Unentschieden"
+    },
+    "names": {
+      "1": "Die Schwarze Flut",
+      "2": "Die Schwärme von Vorax",
+      "3": "Die Geisterarmada",
+      "4": "Die Horde der Leere"
+    }
   }
 }

@@ -142,6 +142,7 @@ export * from "./fleet-commanders";
 export * from "./attack-groups";
 export * from "./market";
 export * from "./boss";
+export * from "./invasion";
 export * from "./multi-account";
 export * from "./npc-trade";
 export * from "./quests";

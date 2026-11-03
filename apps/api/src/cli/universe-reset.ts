@@ -34,6 +34,7 @@ const COUNTED_TABLES = [
   ['marketTrade', 'échanges du marché'],
   ['npcTrade', 'échanges avec le marchand PNJ'],
   ['galacticBoss', 'boss galactiques'],
+  ['invasion', 'invasions aliens'],
   ['questClaim', 'quêtes réclamées'],
   ['achievementUnlock', 'succès débloqués'],
   ['officer', 'officiers'],
@@ -87,7 +88,7 @@ const DEFAULT_HOOKS: UniverseResetHooks = {
 /**
  * `npm run universe:reset` : remet les planètes de l'univers à zéro en gardant les comptes (voir docs/REMISE_A_ZERO.md).
  *
- * Effacé : planètes, lunes, flottes, missiles, expéditions, rapports, messages, alliances, marché, échanges PNJ, boss,
+ * Effacé : planètes, lunes, flottes, missiles, expéditions, rapports, messages, alliances, marché, échanges PNJ, boss, invasions,
  * quêtes, succès, officiers, commandants, technologies, événements du monde, champs de débris ; points et rangs remis à 0.
  * Gardé : comptes (nom, email, mot de passe, rôle, langue, acceptation des conditions), réglages et état de
  * l'installation, journal d'audit, signalements du support, planètes « abandonnées » du fond de galaxie.
@@ -164,6 +165,7 @@ export async function run(
       await track('offres du marché', tx.marketOffer.deleteMany());
       await track('échanges PNJ', tx.npcTrade.deleteMany());
       await track('boss', tx.galacticBoss.deleteMany()); // dégâts et combats en cascade
+      await track('invasions', tx.invasion.deleteMany()); // vagues, dégâts et combats en cascade
       await track('quêtes réclamées', tx.questClaim.deleteMany());
       await track('succès', tx.achievementUnlock.deleteMany());
       await track('officiers', tx.officer.deleteMany());

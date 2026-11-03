@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { EXPEDITION_POSITION, MissionType, SHIPS, depotSupply, holdFuelPerHour, holdSeconds } from '@xnova/game-config';
 import { BossService } from '../boss/boss.service';
+import { InvasionService } from '../invasions/invasions.service';
 import { lockPlanet } from '../common/atomic';
 import { ServerConfigService } from '../server-config/server-config.service';
 import { ALREADY_PROCESSED, CombatService } from '../combat/combat.service';
@@ -25,6 +26,7 @@ export class FleetCronService {
     private readonly expeditionService: ExpeditionService,
     private readonly serverConfig: ServerConfigService,
     private readonly boss: BossService,
+    private readonly invasions: InvasionService,
   ) {}
 
   /**
@@ -59,8 +61,11 @@ export class FleetCronService {
     for (const fleet of fleets) {
       let processed = true;
       if (fleet.mission === MissionType.ATTACK && fleet.toPosition === EXPEDITION_POSITION) {
-        // Position 16 : le boss galactique (aucune planète ne s'y trouve)
-        processed = await this.boss.resolveAttackArrival(fleet);
+        // Position 16 (aucune planète ne s'y trouve) : le boss galactique, sinon un front d'invasion ; sans adversaire,
+        // la flotte rentre intacte
+        processed = (await this.boss.isEnabledBossAt(fleet.toGalaxy, fleet.toSystem))
+          ? await this.boss.resolveAttackArrival(fleet)
+          : await this.invasions.resolveAttackArrival(fleet);
       } else if (fleet.mission === MissionType.ATTACK) {
         const outcome = await this.combatService.resolveAttackMission(fleet);
         processed = outcome !== ALREADY_PROCESSED;

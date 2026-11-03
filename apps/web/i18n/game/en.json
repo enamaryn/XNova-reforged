@@ -32,7 +32,8 @@
     "achievements": "Achievements",
     "npcTrade": "Trade",
     "boss": "Galactic boss",
-    "support": "Support"
+    "support": "Support",
+    "invasion": "Invasions"
   },
   "sidebar": {
     "principal": "Main",
@@ -495,7 +496,51 @@
       "spawned": "Boss spawned.",
       "despawned": "Boss removed."
     },
-    "tabSupport": "Support"
+    "tabSupport": "Support",
+    "tabInvasion": "Invasions",
+    "invasion": {
+      "title": "Alien invasions",
+      "intro": "An invasion is a campaign of alien fleet waves, each one at position 16 of a system in the invaded galaxy, to be repelled before the deadline. Aliens never attack planets. Set the number of waves, their fleet and growth, the loot and the bonus granted if the invasion is repelled. Every save is written to the audit log. Invasions are disabled by default: check the waves' strength before enabling them.",
+      "active": "{name} in galaxy {galaxy}: wave {current} of {total}, deadline {date}.",
+      "wave": "Current wave: no. {wave}, system {system}, health {percent}%.",
+      "cancel": "Cancel the invasion",
+      "cancelConfirm": "Cancel the current invasion without loot or bonus?",
+      "none": "No invasion in progress.",
+      "galaxy": "Galaxy (optional)",
+      "start": "Start an invasion",
+      "historyLine": "{name} — galaxy {galaxy} · {status} (wave {wave} of {total}) · ended {date}",
+      "status": {
+        "ACTIVE": "in progress",
+        "REPELLED": "repelled",
+        "FAILED": "failed",
+        "CANCELLED": "cancelled"
+      },
+      "enabled": "Invasions enabled (start, combat, bonus)",
+      "waves": "Number of waves",
+      "durationHours": "Campaign duration (hours)",
+      "autoIntervalDays": "Automatic start every (days, 0 = manual)",
+      "waveGrowth": "Fleet growth per wave (×)",
+      "regen": "Regeneration (% of the wave per hour)",
+      "rewardTitle": "Bonus granted if the invasion is repelled",
+      "rewardPercent": "Production bonus (%, 0 = none)",
+      "rewardDays": "Bonus duration (days)",
+      "techTitle": "Alien technologies",
+      "weapon": "Weapons",
+      "shield": "Shield",
+      "armor": "Armor",
+      "waveLootTitle": "Loot for each wave destroyed",
+      "finalLootTitle": "Final loot (invasion repelled)",
+      "shipsTitle": "First wave fleet",
+      "removeShip": "Remove this ship",
+      "addShip": "Add a ship…",
+      "waveValue": "Value of the first wave (metal equivalent): {value}",
+      "save": "Save",
+      "saved": "Settings saved.",
+      "reset": "Defaults",
+      "resetConfirm": "Go back to the default invasion settings?",
+      "started": "Invasion started.",
+      "cancelled": "Invasion cancelled."
+    }
   },
   "common": {
     "language": "Language",
@@ -1478,7 +1523,8 @@
       "summer_solstice": "Summer Solstice",
       "harvest_moon": "Harvest Moon",
       "dark_nebula": "Dark Nebula",
-      "winter_festival": "Winter Festival"
+      "winter_festival": "Winter Festival",
+      "invasion_victory": "Victory over the invasion"
     },
     "admin": {
       "title": "World events",
@@ -1727,5 +1773,46 @@
     "replyNotice": "The player reads it in \"My reports\" and also gets an in-game message.",
     "replyError": "The reply could not be sent.",
     "authorFallback": "Support"
+  },
+  "invasion": {
+    "kicker": "Deep space",
+    "title": "Alien invasions",
+    "subtitle": "Waves of alien fleets ({waves} per invasion) invade systems of a galaxy. They never attack planets. Attack the current wave with the \"Attack\" mission to its position: its losses persist between battles and it regains {regen}% of its fleet per hour. Each wave destroyed brings the next, stronger one. Repel every wave before the deadline ({hours} h) to share the loot and trigger a bonus for everyone.",
+    "disabled": "Invasions are not active at the moment.",
+    "progress": "Wave {current} of {total} — {cleared} destroyed.",
+    "deadline": "Deadline: {date}. After that, the aliens withdraw without loot.",
+    "waveLocation": "Wave {wave}: galaxy {galaxy}, system {system}, position {position}",
+    "health": "Health: {percent}%",
+    "fleet": "Fleet: {ships}",
+    "attack": "Prepare an attack",
+    "waveLoot": "Loot shared for each wave destroyed: {loot}",
+    "finalLoot": "Final loot shared if the invasion is repelled: {loot}",
+    "reward": "Bonus for everyone if the invasion is repelled: +{percent}% production for {days} day(s).",
+    "mine": "Your damage in this invasion: {damage} (value of the ships destroyed).",
+    "nextAuto": "No invasion right now. Next invasion: {date}.",
+    "none": "No invasion right now.",
+    "last": {
+      "REPELLED": "Last invasion repelled on {date}: all {total} waves fell.",
+      "FAILED": "Last invasion failed on {date}: the aliens withdrew at wave {wave} of {total}.",
+      "CANCELLED": "Last invasion cancelled on {date}."
+    },
+    "topTitle": "Best defenders ({count} participant(s))",
+    "topLine": "{damage} damage",
+    "battlesTitle": "Your battles against the aliens",
+    "battleLine": "Wave {wave}: {result}, {damage} damage dealt. Losses: {lost}.",
+    "battleCleared": "Wave {wave}: finishing blow! {damage} damage dealt. Losses: {lost}.",
+    "lootWaveLine": "Loot from wave {wave}: {loot}.",
+    "lootFinalLine": "Final loot of the repelled invasion: {loot}.",
+    "result": {
+      "attacker_win": "victory",
+      "defender_win": "defeat",
+      "draw": "draw"
+    },
+    "names": {
+      "1": "The Black Tide",
+      "2": "The Vorax Swarms",
+      "3": "The Ghost Armada",
+      "4": "The Void Horde"
+    }
   }
 }

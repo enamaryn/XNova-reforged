@@ -164,6 +164,21 @@ Flotte unique en position 16 d'un système tiré au hasard. Elle n'attaque jamai
 
 Fonctionnement : la tâche `boss` (chaque minute) fait apparaître le premier boss dès l'activation, régénère sa flotte (`regenPercentPerHour` de la flotte maximale par heure, par type de vaisseau) et le fait réapparaître `respawnDays` jours après sa mort. Un seul boss vit à la fois (`GalacticBoss.activeSlot` unique, NULL ensuite). Un combat (6 tours, moteur commun, technologies Armes, Bouclier et Coque du joueur contre celles du boss) se déroule sous verrou du boss : pertes persistées, dégâts cumulés par joueur (`BossDamage`, valeur équivalent métal des vaisseaux détruits), journal (`BossBattle`). À la mort, le butin est partagé au prorata des dégâts et versé à la planète d'origine de la dernière flotte de chaque participant (rapport `LOOT`). Une expédition qui arrive dans le système du boss est interceptée avec la probabilité `aggroChance` (rapport d'expédition d'issue `boss`) ; les survivants rentrent, une flotte détruite disparaît avec sa cargaison. Table et migration : `20261026100000_galactic_boss`.
 
+
+## Invasions aliens (`/invasions`, `/admin/invasions`)
+
+Campagne de vagues NPC en position 16, à repousser avant l'échéance ; désactivée par défaut. Aucune attaque de planète.
+
+| Méthode | Endpoint | Description |
+|---------|----------|-------------|
+| GET | `/invasions` | Tout joueur connecté : réglages publics (vagues, durée, régénération, butins, bonus), invasion en cours (`nameId`, galaxie, vague courante et nombre de vagues détruites, échéance, vague avec position, santé et flotte, 10 premiers par dégâts, nombre de participants, ma participation), dernière invasion terminée, prochain lancement automatique, mes 10 derniers combats (`ATTACK`, `LOOT_WAVE`, `LOOT_FINAL`). L'invasion n'apparaît que si elle est activée. |
+| POST | `/fleet/send` | Mission **1 (attaque)** vers la position 16 : cible le boss s'il est vivant et activé à ces coordonnées, sinon la vague d'invasion en cours (400 « Aucun boss ni front d'invasion à cette position » sinon ; aucun débit). |
+| GET | `/admin/invasions` | ADMIN ou SUPER_ADMIN : réglage, valeurs par défaut, bornes, vaisseaux possibles, invasion en cours, 10 dernières invasions terminées, valeur de la première vague. |
+| PUT | `/admin/invasions/config` | Remplace tout le réglage (`enabled`, `autoIntervalDays` 0 à 90, `waves` 1 à 20, `durationHours` 1 à 720, `waveShips`, `waveGrowth` 1 à 3, `tech`, `regenPercentPerHour`, `waveLoot`, `finalLoot`, `rewardProductionBonus` 0 à 5, `rewardDays` 1 à 30). 400 avec la liste des champs invalides, sans rien enregistrer ; audit `update_invasion` (avant/après). |
+| DELETE | `/admin/invasions/config` | Remet les valeurs par défaut ; audit `reset_invasion`. |
+| POST | `/admin/invasions/start` | Lance une invasion tout de suite, invasions désactivées comprises (`galaxy` facultatif) ; 400 si une invasion est déjà en cours ; audit `start_invasion`. |
+| POST | `/admin/invasions/cancel` | Annule l'invasion en cours sans butin ni bonus ; 404 s'il n'y en a pas ; audit `cancel_invasion`. |
+
 ## Attaques groupées (mission 2)
 
 | Méthode | Chemin | Description |

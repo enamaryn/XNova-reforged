@@ -663,10 +663,10 @@ Cette roadmap étend le MVP avec des fonctionnalités avancées pour créer un M
   - Mega-flotte NPC
   - Attaque collaborative (toute alliance)
   - Loot épique (ressources massives, items)
-- [ ] Invasions aliens
-  - Vagues d'attaques NPC
-  - Défense collaborative serveur
-  - Récompenses globales
+- [x] Invasions aliens — livrées le 4 novembre 2026 (voir ROADMAP_MVP.md ; désactivées par défaut)
+  - Vagues NPC successives, plus fortes (en position 16, sans attaque de planète)
+  - Défense collaborative serveur (dégâts cumulés, échéance commune)
+  - Récompenses globales (butin partagé et bonus de production pour tous)
 - [ ] Expéditions améliorées
   - Trésors cachés
   - Rencontres événements

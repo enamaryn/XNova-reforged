@@ -67,6 +67,8 @@ model User {
   achievementUnlocks     AchievementUnlock[]
   accountIps             AccountIp[]
   supportReports         SupportReport[]
+  invasionDamages        InvasionDamage[]
+  invasionBattles        InvasionBattle[]
   resolvedSupportReports SupportReport[] @relation("SupportReportResolver")
   supportReplies         SupportReply[] @relation("SupportReplyAuthor")
   technologies  Technology[]
@@ -1043,4 +1045,100 @@ model SupportReply {
   createdAt DateTime @default(now())
 
   @@index([reportId, createdAt])
+}
+
+// Invasions aliens : campagne de vagues NPC successives en position 16, à repousser avant l'échéance
+model Invasion {
+  id                    String           @id @default(uuid())
+  nameId                Int
+  // ACTIVE, REPELLED (toutes les vagues détruites), FAILED (échéance dépassée) ou CANCELLED
+  status                String           @default("ACTIVE")
+  // 1 tant que l'invasion est en cours : une seule à la fois
+  activeSlot            Int?             @unique
+  galaxy                Int
+  totalWaves            Int
+  currentWave           Int              @default(1)
+  startedAt             DateTime         @default(now())
+  endsAt                DateTime
+  finishedAt            DateTime?
+  // Lancée par le cron (intervalle automatique) plutôt que par un administrateur
+  auto                  Boolean          @default(false)
+  // Bonus de production à offrir (invasion repoussée), réessayé par le cron jusqu'à son lancement
+  rewardPending         Boolean          @default(false)
+  rewardProductionBonus Float            @default(0)
+  rewardDays            Int              @default(0)
+  waves                 InvasionWave[]
+  damages               InvasionDamage[]
+  battles               InvasionBattle[]
+
+  @@index([status, finishedAt])
+}
+
+model InvasionWave {
+  id          String           @id @default(uuid())
+  invasionId  String
+  invasion    Invasion         @relation(fields: [invasionId], references: [id], onDelete: Cascade)
+  // Rang de la vague (1 = première)
+  index       Int
+  system      Int
+  // ACTIVE, CLEARED ou EXPIRED
+  status      String           @default("ACTIVE")
+  // 1 pour la vague en cours : une seule à la fois sur tout le serveur
+  activeSlot  Int?             @unique
+  ships       Json
+  maxShips    Json
+  spawnedAt   DateTime         @default(now())
+  lastRegenAt DateTime         @default(now())
+  clearedAt   DateTime?
+  damages     InvasionDamage[]
+  battles     InvasionBattle[]
+
+  @@unique([invasionId, index])
+}
+
+model InvasionDamage {
+  id         String       @id @default(uuid())
+  invasionId String
+  invasion   Invasion     @relation(fields: [invasionId], references: [id], onDelete: Cascade)
+  waveId     String
+  wave       InvasionWave @relation(fields: [waveId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // Planète qui recevra la part du butin (origine de la dernière flotte engagée)
+  planetId   String
+  damage     Float        @default(0)
+  battles    Int          @default(0)
+  lastAt     DateTime     @default(now())
+
+  @@unique([waveId, userId])
+  @@index([invasionId, userId])
+}
+
+// Combats contre une vague (attaque) et parts de butin versées (vague détruite, invasion repoussée)
+model InvasionBattle {
+  id              String        @id @default(uuid())
+  invasionId      String
+  invasion        Invasion      @relation(fields: [invasionId], references: [id], onDelete: Cascade)
+  waveId          String?
+  wave            InvasionWave? @relation(fields: [waveId], references: [id], onDelete: Cascade)
+  waveIndex       Int
+  userId          String
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // ATTACK, LOOT_WAVE ou LOOT_FINAL
+  source          String
+  galaxy          Int
+  system          Int
+  result          String?
+  rounds          Int           @default(0)
+  attackerShips   Json?
+  attackerLosses  Json?
+  npcLosses       Json?
+  damage          Float         @default(0)
+  waveHealthAfter Float?
+  cleared         Boolean       @default(false)
+  loot            Json?
+  createdAt       DateTime      @default(now())
+
+  @@index([invasionId, createdAt])
+  @@index([userId, createdAt])
 }
