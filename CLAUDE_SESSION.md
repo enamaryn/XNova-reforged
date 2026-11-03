@@ -5,6 +5,13 @@
 
 ---
 
+## Session — Commande `universe:reset` (3 novembre 2026)
+
+- [x] `npm run universe:reset` (`apps/api/src/cli/universe-reset.ts`) : remise à zéro des planètes en gardant les comptes. Refuse si l'API répond ; confirmation `RESET` ; sauvegarde `backup-db.sh` obligatoire avant toute modification (aucune option pour s'en passer) ; une transaction avec contrôle avant validation (une planète par compte, plus aucune donnée de jeu) ; `--dry-run` ; trace dans `GameConfig` (`universe.lastReset`) ; sessions révoquées ; points et rangs à 0 ; fond de galaxie (planètes abandonnées) gardé.
+- [x] Tests : intégration `universe-reset` (7 : refus, annulation, dry-run, sauvegarde en échec, panne en cours de transaction, remise à zéro complète, relance) ; essai réel de bout en bout sur une base jetable (vraie sauvegarde, droits 600, refus quand un serveur répond sur le port).
+- [x] Docs : `REMISE_A_ZERO.md` (outil livré), `OPERATIONS.md`, `V1_VALIDATION.md` (9.5).
+- Reste (propriétaire) : fixer la date, répéter sur une copie du conteneur, supprimer les comptes de test avant (2.7), annoncer.
+
 ## Session — Politique de remise à zéro et plan de capacité (3 novembre 2026)
 
 - [x] `docs/REMISE_A_ZERO.md` (critère V1 9.5) : une remise à zéro des planètes avant l'ouverture publique, comptes conservés, aucune ensuite sauf faille grave (préavis de 7 jours), univers permanent ; tableau effacé/conservé ; déroulé du jour J ; **spécification de la commande `universe:reset`, qui n'existe pas encore**.

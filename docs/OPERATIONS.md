@@ -104,6 +104,10 @@ Voir aussi la section « Première connexion » du `README.md`. Rappels d'exploi
 - Migration d'un serveur existant : `20261006100000_setup_completed_for_existing_installs` marque l'installation
   terminée dès qu'un compte joueur existe.
 
+## Remise à zéro de l'univers
+
+`npm run universe:reset` remet les planètes à zéro en gardant les comptes (jeu arrêté, confirmation `RESET`, sauvegarde vérifiée avant toute modification, une seule transaction). Politique, déroulé et effets : [REMISE_A_ZERO.md](REMISE_A_ZERO.md). `--dry-run` affiche ce qui serait effacé sans rien changer.
+
 ## Support et signalement de bugs
 
 La page publique `/support` (et `/assistance` dans le menu du jeu) affiche l'adresse `LEGAL_CONTACT` et, si `SUPPORT_URL` est renseigné (lien `https://` seulement, par exemple une invitation Discord), un lien vers la communauté ; sans valeur, un texte « non renseignée » s'affiche. Les joueurs connectés y envoient un signalement (bug, question, suggestion, mon compte), joint automatiquement à la page ouverte, à la version du jeu et au navigateur. Console admin → onglet **Support** : liste filtrée par statut, pastille du nombre de nouveaux signalements, boutons « Marquer lu », « Traité », « Classer », « Rouvrir » (journalisés dans l'audit). Chaque joueur voit l'état de ses signalements. **Réponse intégrée** : bouton « Répondre » sur chaque carte ; la réponse est enregistrée sur le signalement (le joueur la lit dans « Mes signalements »), envoyée en message privé du jeu (il est prévenu comme pour tout message) et fait passer un signalement « nouveau » à « lu » ; plusieurs réponses possibles, journal d'audit sans le texte. Le joueur ne peut pas répondre dans le fil (il peut répondre au message en jeu ou envoyer un nouveau signalement). Limites : 5 signalements en attente par joueur, 5 envois par heure et par IP. Les signalements sont effacés avec le compte de leur auteur et cités dans la politique de confidentialité.

@@ -122,7 +122,7 @@ Toutes les décisions listées dans la version précédente sont prises et appli
 - [x] Acceptation des conditions enregistrée (date et version, case obligatoire, bandeau pour les comptes existants) et bouton de suppression de compte (3 novembre 2026).
 - [x] Page de support et signalement de bugs (3 novembre 2026) : `/support`, `/assistance`, formulaire relié à l'onglet Support de la console admin (critère V1 9.4 : livré, canal à annoncer par le propriétaire).
 - [x] Réponse intégrée aux signalements (3 novembre 2026) : réponse de l'administrateur lue dans « Mes signalements » et envoyée en message en jeu.
-- [x] Politique de remise à zéro ([docs/REMISE_A_ZERO.md](docs/REMISE_A_ZERO.md), 9.5) et plan de capacité ([docs/CAPACITE.md](docs/CAPACITE.md), 9.3) rédigés le 3 novembre 2026 ; reste la commande `universe:reset`, la date de remise à zéro et l'essai de charge sur 1 cœur.
+- [x] Politique de remise à zéro ([docs/REMISE_A_ZERO.md](docs/REMISE_A_ZERO.md), 9.5) et plan de capacité ([docs/CAPACITE.md](docs/CAPACITE.md), 9.3) rédigés le 3 novembre 2026 ; la commande `npm run universe:reset` est livrée (3 novembre 2026) ; reste la date de remise à zéro, sa répétition sur une copie et l'essai de charge sur 1 cœur.
 - [ ] Reste : relecture juridique des textes ; courriel de confirmation et délai de grâce de la suppression (non prévus).
 
 ## Événements du monde (22 octobre 2026)
