@@ -66,6 +66,8 @@ model User {
   questClaims            QuestClaim[]
   achievementUnlocks     AchievementUnlock[]
   accountIps             AccountIp[]
+  supportReports         SupportReport[]
+  resolvedSupportReports SupportReport[] @relation("SupportReportResolver")
   technologies  Technology[]
   messages      Message[]      @relation("ReceivedMessages")
   sentMessages  Message[]      @relation("SentMessages")
@@ -1000,4 +1002,29 @@ model WorldEventSetting {
   auto        Boolean  @default(false)
   updatedById String?
   updatedAt   DateTime @updatedAt
+}
+
+// Signalements des joueurs au support (bugs, questions, suggestions) : visibles dans la console admin
+model SupportReport {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // bug | question | suggestion | account
+  kind       String
+  subject    String
+  body       String   @db.Text
+  // Contexte joint automatiquement : page ouverte, version du jeu, navigateur
+  pagePath   String?
+  appVersion String?
+  userAgent  String?
+  // new | seen | resolved | ignored
+  status     String   @default("new")
+  resolvedAt DateTime?
+  resolvedById String?
+  resolvedBy User?    @relation("SupportReportResolver", fields: [resolvedById], references: [id], onDelete: SetNull)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([status, createdAt])
+  @@index([userId, createdAt])
 }

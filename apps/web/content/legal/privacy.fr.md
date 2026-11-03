@@ -14,6 +14,7 @@ Dernière mise à jour : 3 novembre 2026. Ce document explique quelles données 
 | Adresse email (et sa forme canonique : sans alias « +étiquette » ni points Gmail) | Connexion, confirmation du compte, mot de passe oublié, détection des doubles comptes | Tant que le compte existe |
 | Mot de passe | Connexion. Seule une **empreinte Argon2** est stockée, jamais le mot de passe | Tant que le compte existe |
 | Date et version des conditions acceptées | Prouver votre acceptation des conditions d'utilisation | Tant que le compte existe |
+| Signalements envoyés au support : type, sujet, message, page ouverte, version du jeu, navigateur | Traiter vos demandes de support et corriger les bugs | Tant que le compte existe (effacés avec lui) |
 | Adresse IP (IPv4, ou préfixe /64 pour IPv6), vue à l'inscription, à la connexion et au rafraîchissement de session | Contrôle des doubles comptes et sécurité | **90 jours** après la dernière observation par défaut (réglable par l'éditeur), purge automatique chaque nuit |
 | Données de jeu : planètes, bâtiments, recherches, flottes, rapports, messages privés, alliance, quêtes, marché | Fonctionnement du jeu | Tant que le compte existe |
 | Sessions : empreinte du jeton de rafraîchissement, dates | Rester connecté, pouvoir révoquer une session | 30 jours au plus par session |

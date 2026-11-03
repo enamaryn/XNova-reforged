@@ -17,6 +17,9 @@ export function LegalLinks() {
       <Link href="/privacy" className="underline-offset-2 hover:underline">
         {t("legal.privacy")}
       </Link>
+      <Link href="/support" className="underline-offset-2 hover:underline" data-testid="footer-support">
+        {t("nav.support")}
+      </Link>
     </span>
   );
 }

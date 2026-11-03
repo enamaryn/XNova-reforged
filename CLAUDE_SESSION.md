@@ -5,6 +5,14 @@
 
 ---
 
+## Session — Page de support et signalement de bugs (3 novembre 2026)
+
+- [x] Table `SupportReport` (migration `20261103110000_support_reports`) ; module `apps/api/src/support/` : `POST /support/reports` (limite de 5 en attente, verrou par joueur ; débit « support » 5 par heure et par IP), `GET /support/reports/mine`, `GET /admin/support/reports`, `PATCH /admin/support/reports/:id` (statut, clôture datée, audit `support.setStatus`). Constantes dans `packages/game-config/src/support.ts`.
+- [x] Pages `/support` (publique) et `/assistance` (dans le jeu) : coordonnées (`LEGAL_CONTACT`, `SUPPORT_URL`), conseils, FAQ, formulaire, suivi des signalements du joueur ; liens dans le pied de page et le menu ; onglet **Support** de la console admin avec pastille. Textes en 5 langues.
+- [x] Politique de confidentialité : ligne « signalements » (5 langues) ; `LEGAL_VERSION` passée à `2026-11-03.2` (les joueurs revoient le bandeau d'acceptation).
+- [x] Tests : intégration `support` (9), E2E `support` (3). Docs : API_ENDPOINTS, OPERATIONS, V1_VALIDATION (9.4), `.env.example`.
+- Limites : pas de réponse intégrée au joueur (réponse par email ou message en jeu) ; pas de pièces jointes ni de capture d'écran ; un joueur sans compte ou bloqué à la connexion écrit à l'adresse de contact.
+
 ## Session — Acceptation des conditions et suppression de compte (3 novembre 2026)
 
 - [x] Acceptation enregistrée : colonnes `User.termsAcceptedAt` / `termsVersion` (migration `20261103100000_terms_acceptance`), `LEGAL_VERSION` dans `packages/game-config/src/legal.ts` (à changer à chaque révision de fond des textes). `acceptTerms: true` obligatoire à l'inscription (400 sinon) ; le compte du parcours d'installation (`SetupAdminDto`) l'accepte d'office.

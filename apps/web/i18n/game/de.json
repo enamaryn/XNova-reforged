@@ -31,7 +31,8 @@
     "quests": "Quests",
     "achievements": "Erfolge",
     "npcTrade": "Handel",
-    "boss": "Galaxie-Boss"
+    "boss": "Galaxie-Boss",
+    "support": "Support"
   },
   "sidebar": {
     "principal": "Hauptmenü",
@@ -493,7 +494,8 @@
       "resetConfirm": "Zu den Standardwerten des Bosses zurückkehren?",
       "spawned": "Boss erschienen.",
       "despawned": "Boss entfernt."
-    }
+    },
+    "tabSupport": "Support"
   },
   "common": {
     "language": "Sprache",
@@ -1661,5 +1663,60 @@
     "acceptBody": "Die Nutzungsbedingungen und die Datenschutzerklärung wurden veröffentlicht oder geändert. Bitte lesen und akzeptieren Sie sie, um weiterzuspielen.",
     "acceptButton": "Ich akzeptiere",
     "acceptError": "Ihre Zustimmung konnte nicht gespeichert werden."
+  },
+  "support": {
+    "title": "Support und Fehlermeldungen",
+    "intro": "Ein Problem, eine Frage, eine Idee? So erreichen Sie uns. Wir lesen jede Meldung, versprechen aber keine Frist: Das Spiel ist in der Alpha-Phase.",
+    "contactTitle": "Schreiben Sie uns",
+    "contactLabel": "Kontaktadresse",
+    "contactNone": "Der Serveradministrator hat noch keine Kontaktadresse angegeben.",
+    "communityTitle": "Community",
+    "communityLink": "Dem Community-Kanal beitreten",
+    "tipsTitle": "Für eine gute Meldung",
+    "tip1": "Schreiben Sie, was Sie erwartet haben und was stattdessen passiert ist.",
+    "tip2": "Nennen Sie die Schritte, um das Problem nachzustellen.",
+    "tip3": "Geben Sie den betroffenen Planeten, das Gebäude oder die Flotte an.",
+    "tip4": "Geben Sie niemals Ihr Passwort weiter: Der Support fragt es nie ab.",
+    "faqPrefix": "Bevor Sie schreiben: Die",
+    "faqLink": "FAQ",
+    "faqSuffix": " beantwortet viele Fragen.",
+    "formTitle": "Meldung senden",
+    "kind": "Art",
+    "kindbug": "Fehler",
+    "kindquestion": "Frage",
+    "kindsuggestion": "Vorschlag",
+    "kindaccount": "Mein Konto",
+    "subject": "Betreff",
+    "subjectPlaceholder": "In einem Satz",
+    "body": "Beschreibung",
+    "bodyPlaceholder": "Was ist passiert? Wie lässt es sich nachstellen?",
+    "autoNote": "Automatisch angehängt: die geöffnete Seite, die Spielversion und Ihr Browser.",
+    "submit": "Senden",
+    "sending": "Wird gesendet…",
+    "sent": "Danke, Meldung gesendet. Den Status sehen Sie unten.",
+    "loginPrompt": "Melden Sie sich an, um aus dem Spiel eine Meldung zu senden; ohne Konto schreiben Sie an die obige Adresse.",
+    "loginLink": "Anmelden",
+    "mineTitle": "Meine Meldungen",
+    "mineEmpty": "Noch keine Meldungen.",
+    "statusnew": "Eingegangen",
+    "statusseen": "Gelesen",
+    "statusresolved": "Erledigt",
+    "statusignored": "Abgeschlossen",
+    "errorGeneric": "Die Meldung konnte nicht gesendet werden."
+  },
+  "adminSupport": {
+    "title": "Meldungen der Spieler",
+    "filterAll": "Alle",
+    "empty": "Keine Meldungen.",
+    "player": "Spieler",
+    "context": "Kontext",
+    "markSeen": "Als gelesen markieren",
+    "resolve": "Erledigt",
+    "ignore": "Abschließen",
+    "reopen": "Wieder öffnen",
+    "prev": "Zurück",
+    "next": "Weiter",
+    "pageOf": "Seite {page} von {pages}",
+    "error": "Aktion fehlgeschlagen."
   }
 }

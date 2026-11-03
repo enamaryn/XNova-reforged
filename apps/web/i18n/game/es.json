@@ -31,7 +31,8 @@
     "quests": "Misiones",
     "achievements": "Logros",
     "npcTrade": "Comercio",
-    "boss": "Jefe galáctico"
+    "boss": "Jefe galáctico",
+    "support": "Soporte"
   },
   "sidebar": {
     "principal": "Principal",
@@ -493,7 +494,8 @@
       "resetConfirm": "¿Volver a los valores por defecto del jefe?",
       "spawned": "Jefe aparecido.",
       "despawned": "Jefe retirado."
-    }
+    },
+    "tabSupport": "Soporte"
   },
   "common": {
     "language": "Idioma",
@@ -1661,5 +1663,60 @@
     "acceptBody": "Las condiciones de uso y la política de privacidad se han publicado o modificado. Léalas y acéptelas para seguir jugando.",
     "acceptButton": "Acepto",
     "acceptError": "No se pudo guardar su aceptación."
+  },
+  "support": {
+    "title": "Soporte e informes de errores",
+    "intro": "¿Un problema, una pregunta, una idea? Así puede contactarnos. Leemos cada informe sin prometer plazos: el juego está en alfa.",
+    "contactTitle": "Escríbanos",
+    "contactLabel": "Dirección de contacto",
+    "contactNone": "El administrador del servidor aún no ha indicado una dirección de contacto.",
+    "communityTitle": "Comunidad",
+    "communityLink": "Unirse al canal de la comunidad",
+    "tipsTitle": "Para un buen informe",
+    "tip1": "Diga qué esperaba y qué ocurrió en su lugar.",
+    "tip2": "Indique los pasos para reproducir el problema.",
+    "tip3": "Precise el planeta, el edificio o la flota afectados.",
+    "tip4": "No comparta nunca su contraseña: el soporte no se la pedirá.",
+    "faqPrefix": "Antes de escribir, las",
+    "faqLink": "preguntas frecuentes",
+    "faqSuffix": " responden a muchas dudas.",
+    "formTitle": "Enviar un informe",
+    "kind": "Tipo",
+    "kindbug": "Error",
+    "kindquestion": "Pregunta",
+    "kindsuggestion": "Sugerencia",
+    "kindaccount": "Mi cuenta",
+    "subject": "Asunto",
+    "subjectPlaceholder": "En una frase",
+    "body": "Descripción",
+    "bodyPlaceholder": "¿Qué ocurrió? ¿Cómo reproducirlo?",
+    "autoNote": "Se adjuntan automáticamente: la página abierta, la versión del juego y su navegador.",
+    "submit": "Enviar",
+    "sending": "Enviando…",
+    "sent": "Gracias, informe enviado. Puede seguir su estado más abajo.",
+    "loginPrompt": "Inicie sesión para enviar un informe desde el juego; sin cuenta, escríbanos a la dirección anterior.",
+    "loginLink": "Iniciar sesión",
+    "mineTitle": "Mis informes",
+    "mineEmpty": "Aún no hay informes.",
+    "statusnew": "Recibido",
+    "statusseen": "Leído",
+    "statusresolved": "Resuelto",
+    "statusignored": "Archivado",
+    "errorGeneric": "No se pudo enviar el informe."
+  },
+  "adminSupport": {
+    "title": "Informes de los jugadores",
+    "filterAll": "Todos",
+    "empty": "Ningún informe.",
+    "player": "Jugador",
+    "context": "Contexto",
+    "markSeen": "Marcar como leído",
+    "resolve": "Resuelto",
+    "ignore": "Archivar",
+    "reopen": "Reabrir",
+    "prev": "Anterior",
+    "next": "Siguiente",
+    "pageOf": "Página {page} de {pages}",
+    "error": "Acción imposible."
   }
 }

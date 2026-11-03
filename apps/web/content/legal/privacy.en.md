@@ -14,6 +14,7 @@ Last updated: 3 November 2026. This document explains what data this XNova Refor
 | Email address (and its canonical form: without "+tag" aliases or Gmail dots) | Login, account confirmation, forgotten password, multi-account detection | As long as the account exists |
 | Password | Login. Only an **Argon2 hash** is stored, never the password itself | As long as the account exists |
 | Date and version of the terms accepted | Proving your acceptance of the terms of use | As long as the account exists |
+| Reports sent to support: type, subject, message, open page, game version, browser | Handling your support requests and fixing bugs | As long as the account exists (erased with it) |
 | IP address (IPv4, or /64 prefix for IPv6), seen at registration, login and session refresh | Multi-account control and security | **90 days** after the last sighting by default (adjustable by the operator), automatic nightly purge |
 | Game data: planets, buildings, research, fleets, reports, private messages, alliance, quests, market | Running the game | As long as the account exists |
 | Sessions: hash of the refresh token, dates | Staying signed in, being able to revoke a session | 30 days at most per session |
