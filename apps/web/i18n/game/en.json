@@ -31,7 +31,8 @@
     "quests": "Quests",
     "achievements": "Achievements",
     "npcTrade": "Trade",
-    "boss": "Galactic boss"
+    "boss": "Galactic boss",
+    "support": "Support"
   },
   "sidebar": {
     "principal": "Main",
@@ -493,7 +494,8 @@
       "resetConfirm": "Return to the boss's default values?",
       "spawned": "Boss spawned.",
       "despawned": "Boss removed."
-    }
+    },
+    "tabSupport": "Support"
   },
   "common": {
     "language": "Language",
@@ -1661,5 +1663,60 @@
     "acceptBody": "The terms of use and the privacy policy have been published or changed. Please read and accept them to keep playing.",
     "acceptButton": "I accept",
     "acceptError": "Your acceptance could not be saved."
+  },
+  "support": {
+    "title": "Support and bug reports",
+    "intro": "A problem, a question, an idea? Here is how to reach us. We read every report but promise no delay: the game is in alpha.",
+    "contactTitle": "Write to us",
+    "contactLabel": "Contact address",
+    "contactNone": "The server administrator has not provided a contact address yet.",
+    "communityTitle": "Community",
+    "communityLink": "Join the community channel",
+    "tipsTitle": "For a good report",
+    "tip1": "Say what you expected and what happened instead.",
+    "tip2": "Give the steps to reproduce the problem.",
+    "tip3": "Mention the planet, building or fleet involved.",
+    "tip4": "Never share your password: support will never ask for it.",
+    "faqPrefix": "Before writing, the",
+    "faqLink": "FAQ",
+    "faqSuffix": " answers many questions.",
+    "formTitle": "Send a report",
+    "kind": "Type",
+    "kindbug": "Bug",
+    "kindquestion": "Question",
+    "kindsuggestion": "Suggestion",
+    "kindaccount": "My account",
+    "subject": "Subject",
+    "subjectPlaceholder": "In one sentence",
+    "body": "Description",
+    "bodyPlaceholder": "What happened? How can it be reproduced?",
+    "autoNote": "Automatically attached: the open page, the game version and your browser.",
+    "submit": "Send",
+    "sending": "Sending…",
+    "sent": "Thanks, report sent. You can follow its status below.",
+    "loginPrompt": "Sign in to send a report from the game; without an account, write to the address above.",
+    "loginLink": "Sign in",
+    "mineTitle": "My reports",
+    "mineEmpty": "No reports yet.",
+    "statusnew": "Received",
+    "statusseen": "Read",
+    "statusresolved": "Handled",
+    "statusignored": "Closed",
+    "errorGeneric": "The report could not be sent."
+  },
+  "adminSupport": {
+    "title": "Player reports",
+    "filterAll": "All",
+    "empty": "No reports.",
+    "player": "Player",
+    "context": "Context",
+    "markSeen": "Mark as read",
+    "resolve": "Handled",
+    "ignore": "Close",
+    "reopen": "Reopen",
+    "prev": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {pages}",
+    "error": "Action failed."
   }
 }

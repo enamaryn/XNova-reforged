@@ -60,6 +60,7 @@ export async function createIntegrationApp(options: { setupCompleted?: boolean }
   process.env.RATE_LIMIT_LOGIN_MAX = process.env.RATE_LIMIT_LOGIN_MAX || '100000';
   process.env.RATE_LIMIT_REGISTER_MAX = process.env.RATE_LIMIT_REGISTER_MAX || '100000';
   process.env.RATE_LIMIT_ACCOUNT_MAX = process.env.RATE_LIMIT_ACCOUNT_MAX || '100000';
+  process.env.RATE_LIMIT_SUPPORT_MAX = process.env.RATE_LIMIT_SUPPORT_MAX || '100000';
   // La confirmation d'adresse est obligatoire en production ; les suites créent des comptes sans SMTP.
   // La suite dédiée la réactive (scope01-email-required).
   process.env.EMAIL_VERIFICATION_REQUIRED = process.env.EMAIL_VERIFICATION_REQUIRED || 'false';

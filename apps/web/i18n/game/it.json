@@ -31,7 +31,8 @@
     "quests": "Missioni",
     "achievements": "Traguardi",
     "npcTrade": "Commercio",
-    "boss": "Boss galattico"
+    "boss": "Boss galattico",
+    "support": "Supporto"
   },
   "sidebar": {
     "principal": "Principale",
@@ -493,7 +494,8 @@
       "resetConfirm": "Tornare ai valori predefiniti del boss?",
       "spawned": "Boss comparso.",
       "despawned": "Boss rimosso."
-    }
+    },
+    "tabSupport": "Supporto"
   },
   "common": {
     "language": "Lingua",
@@ -1661,5 +1663,60 @@
     "acceptBody": "Le condizioni d'uso e l'informativa sulla privacy sono state pubblicate o modificate. Leggile e accettale per continuare a giocare.",
     "acceptButton": "Accetto",
     "acceptError": "Impossibile registrare la tua accettazione."
+  },
+  "support": {
+    "title": "Supporto e segnalazione di bug",
+    "intro": "Un problema, una domanda, un'idea? Ecco come contattarci. Leggiamo ogni segnalazione senza promettere tempi: il gioco è in alfa.",
+    "contactTitle": "Scrivici",
+    "contactLabel": "Indirizzo di contatto",
+    "contactNone": "L'amministratore del server non ha ancora indicato un indirizzo di contatto.",
+    "communityTitle": "Community",
+    "communityLink": "Unisciti al canale della community",
+    "tipsTitle": "Per una buona segnalazione",
+    "tip1": "Di' cosa ti aspettavi e cosa è successo invece.",
+    "tip2": "Indica i passaggi per riprodurre il problema.",
+    "tip3": "Specifica il pianeta, l'edificio o la flotta coinvolti.",
+    "tip4": "Non comunicare mai la tua password: il supporto non te la chiederà.",
+    "faqPrefix": "Prima di scrivere, le",
+    "faqLink": "FAQ",
+    "faqSuffix": " rispondono a molte domande.",
+    "formTitle": "Invia una segnalazione",
+    "kind": "Tipo",
+    "kindbug": "Bug",
+    "kindquestion": "Domanda",
+    "kindsuggestion": "Suggerimento",
+    "kindaccount": "Il mio account",
+    "subject": "Oggetto",
+    "subjectPlaceholder": "In una frase",
+    "body": "Descrizione",
+    "bodyPlaceholder": "Cos'è successo? Come riprodurlo?",
+    "autoNote": "Vengono allegati automaticamente: la pagina aperta, la versione del gioco e il tuo browser.",
+    "submit": "Invia",
+    "sending": "Invio…",
+    "sent": "Grazie, segnalazione inviata. Puoi seguirne lo stato qui sotto.",
+    "loginPrompt": "Accedi per inviare una segnalazione dal gioco; senza account, scrivi all'indirizzo qui sopra.",
+    "loginLink": "Accedi",
+    "mineTitle": "Le mie segnalazioni",
+    "mineEmpty": "Nessuna segnalazione per ora.",
+    "statusnew": "Ricevuta",
+    "statusseen": "Letta",
+    "statusresolved": "Gestita",
+    "statusignored": "Archiviata",
+    "errorGeneric": "Impossibile inviare la segnalazione."
+  },
+  "adminSupport": {
+    "title": "Segnalazioni dei giocatori",
+    "filterAll": "Tutte",
+    "empty": "Nessuna segnalazione.",
+    "player": "Giocatore",
+    "context": "Contesto",
+    "markSeen": "Segna come letta",
+    "resolve": "Gestita",
+    "ignore": "Archivia",
+    "reopen": "Riapri",
+    "prev": "Precedente",
+    "next": "Successivo",
+    "pageOf": "Pagina {page} di {pages}",
+    "error": "Azione non riuscita."
   }
 }

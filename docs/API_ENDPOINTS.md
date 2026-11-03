@@ -19,6 +19,15 @@ Ce document recense les principaux endpoints exposés par `apps/api`, avec la m�
 
 L’interface envoie l’en-tête `X-Locale` (`fr`, `en`, `es`, `de`, `it`) à chaque appel : l’API localise alors les noms et descriptions du jeu, les libellés d’effets d’amélioration et les prérequis ; absent ou inconnu, les textes restent en français. `GET /setup/status` (public) renvoie `{ setupRequired, language }` — `language` est la langue du serveur choisie à l’installation (`PUT /setup/language`, code d’installation requis, ou `PUT /admin/config` avec `language`).
 
+## Support (`/support`, `/admin/support`)
+
+| Méthode | Endpoint | Description |
+|---------|----------|-------------|
+| POST | `/support/reports` | Envoie un signalement (`kind` : bug, question, suggestion, account ; `subject` 3 à 120 caractères ; `body` 10 à 4000 ; `pagePath` et `appVersion` joints par l’interface ; navigateur lu dans `User-Agent`) — JWT requis. 409 au-delà de 5 signalements en attente ; limitation de débit « support » (5 par heure et par IP, `RATE_LIMIT_SUPPORT_MAX`). |
+| GET | `/support/reports/mine` | Les 20 derniers signalements du joueur et leur statut (new, seen, resolved, ignored) — JWT requis. |
+| GET | `/admin/support/reports` | Liste paginée (25) avec auteur (nom, email), filtre `?status=`, `newCount` — ADMIN ou SUPER_ADMIN. |
+| PATCH | `/admin/support/reports/:id` | Change le statut (`{ status }`) ; clôture datée et journal d’audit `support.setStatus` — ADMIN ou SUPER_ADMIN. |
+
 ## Planètes & ressources (`/planets`)
 
 | Méthode | Endpoint | Description |

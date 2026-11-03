@@ -14,6 +14,7 @@ Letzte Aktualisierung: 3. November 2026. Dieses Dokument erklärt, welche Daten 
 | E-Mail-Adresse (und ihre kanonische Form: ohne „+Tag“-Aliase und Gmail-Punkte) | Anmeldung, Kontobestätigung, Passwort vergessen, Erkennung von Mehrfachkonten | Solange das Konto besteht |
 | Passwort | Anmeldung. Gespeichert wird nur ein **Argon2-Hash**, nie das Passwort selbst | Solange das Konto besteht |
 | Datum und Version der akzeptierten Bedingungen | Nachweis Ihrer Zustimmung zu den Nutzungsbedingungen | Solange das Konto besteht |
+| An den Support gesendete Meldungen: Art, Betreff, Nachricht, geöffnete Seite, Spielversion, Browser | Bearbeitung Ihrer Support-Anfragen und Fehlerbehebung | Solange das Konto besteht (wird mit ihm gelöscht) |
 | IP-Adresse (IPv4 oder /64-Präfix bei IPv6), erfasst bei Registrierung, Anmeldung und Sitzungserneuerung | Kontrolle von Mehrfachkonten und Sicherheit | Standardmäßig **90 Tage** nach der letzten Beobachtung (vom Betreiber einstellbar), automatische nächtliche Bereinigung |
 | Spieldaten: Planeten, Gebäude, Forschung, Flotten, Berichte, private Nachrichten, Allianz, Aufgaben, Markt | Betrieb des Spiels | Solange das Konto besteht |
 | Sitzungen: Hash des Erneuerungstokens, Zeitangaben | Angemeldet bleiben, Sitzungen widerrufen können | Höchstens 30 Tage je Sitzung |

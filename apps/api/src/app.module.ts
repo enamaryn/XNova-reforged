@@ -18,6 +18,7 @@ import { MultiAccountModule } from "./multi-account/multi-account.module";
 import { NpcTradeModule } from "./npc-trade/npc-trade.module";
 import { QuestsModule } from "./quests/quests.module";
 import { WorldEventsModule } from "./world-events/world-events.module";
+import { SupportModule } from "./support/support.module";
 import { FleetCommandersModule } from "./fleet-commanders/fleet-commanders.module";
 import { GalaxyModule } from "./galaxy/galaxy.module";
 import { ResearchModule } from "./research/research.module";
@@ -89,6 +90,7 @@ import { validateEnv } from "./config/env.validation";
     NpcTradeModule,
     QuestsModule,
     WorldEventsModule,
+    SupportModule,
     FleetCommandersModule,
 
     // Module galaxie

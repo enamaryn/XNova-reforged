@@ -31,7 +31,8 @@
     "quests": "Quêtes",
     "achievements": "Succès",
     "npcTrade": "Commerce",
-    "boss": "Boss galactique"
+    "boss": "Boss galactique",
+    "support": "Support"
   },
   "sidebar": {
     "principal": "Principal",
@@ -493,7 +494,8 @@
       "resetConfirm": "Revenir aux valeurs par défaut du boss ?",
       "spawned": "Boss apparu.",
       "despawned": "Boss retiré."
-    }
+    },
+    "tabSupport": "Support"
   },
   "common": {
     "language": "Langue",
@@ -1661,5 +1663,60 @@
     "acceptBody": "Les conditions d'utilisation et la politique de confidentialité ont été publiées ou modifiées. Merci de les lire et de les accepter pour continuer à jouer sereinement.",
     "acceptButton": "J'accepte",
     "acceptError": "Impossible d'enregistrer votre acceptation."
+  },
+  "support": {
+    "title": "Support et signalement de bugs",
+    "intro": "Un problème, une question, une idée ? Voici comment nous joindre. Nous lisons chaque signalement, sans promettre de délai : le jeu est en alpha.",
+    "contactTitle": "Nous écrire",
+    "contactLabel": "Adresse de contact",
+    "contactNone": "L'adresse de contact n'est pas encore renseignée par l'administrateur du serveur.",
+    "communityTitle": "Communauté",
+    "communityLink": "Rejoindre le salon de la communauté",
+    "tipsTitle": "Pour un bon signalement",
+    "tip1": "Dites ce que vous attendiez et ce qui s'est passé à la place.",
+    "tip2": "Indiquez les étapes pour reproduire le problème.",
+    "tip3": "Précisez la planète, le bâtiment ou la flotte concernés.",
+    "tip4": "Ne communiquez jamais votre mot de passe : le support ne vous le demandera pas.",
+    "faqPrefix": "Avant d'écrire, la",
+    "faqLink": "FAQ",
+    "faqSuffix": " répond à beaucoup de questions.",
+    "formTitle": "Envoyer un signalement",
+    "kind": "Type",
+    "kindbug": "Bug",
+    "kindquestion": "Question",
+    "kindsuggestion": "Suggestion",
+    "kindaccount": "Mon compte",
+    "subject": "Sujet",
+    "subjectPlaceholder": "En une phrase",
+    "body": "Description",
+    "bodyPlaceholder": "Que s'est-il passé ? Comment le reproduire ?",
+    "autoNote": "Sont joints automatiquement : la page ouverte, la version du jeu et votre navigateur.",
+    "submit": "Envoyer",
+    "sending": "Envoi…",
+    "sent": "Merci, signalement envoyé. Vous pouvez suivre son état ci-dessous.",
+    "loginPrompt": "Connectez-vous pour envoyer un signalement depuis le jeu ; sans compte, écrivez-nous à l'adresse ci-dessus.",
+    "loginLink": "Se connecter",
+    "mineTitle": "Mes signalements",
+    "mineEmpty": "Aucun signalement pour l'instant.",
+    "statusnew": "Reçu",
+    "statusseen": "Lu",
+    "statusresolved": "Traité",
+    "statusignored": "Classé",
+    "errorGeneric": "Impossible d'envoyer le signalement."
+  },
+  "adminSupport": {
+    "title": "Signalements des joueurs",
+    "filterAll": "Tous",
+    "empty": "Aucun signalement.",
+    "player": "Joueur",
+    "context": "Contexte",
+    "markSeen": "Marquer lu",
+    "resolve": "Traité",
+    "ignore": "Classer",
+    "reopen": "Rouvrir",
+    "prev": "Précédent",
+    "next": "Suivant",
+    "pageOf": "Page {page} sur {pages}",
+    "error": "Action impossible."
   }
 }

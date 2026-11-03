@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { locales, defaultLocale } from './i18n/config'
 
-const protectedPaths = ["/overview", "/buildings", "/research", "/fleet", "/galaxy", "/shipyard", "/defense", "/alliance", "/messages", "/reports", "/statistics", "/settings", "/help"];
+const protectedPaths = ["/overview", "/buildings", "/research", "/fleet", "/galaxy", "/shipyard", "/defense", "/alliance", "/messages", "/reports", "/statistics", "/settings", "/help", "/assistance"];
 
 /** Langue du serveur (choisie à l'installation), lue sur l'API et gardée 60 s en mémoire. */
 let cachedServerLanguage: { value: (typeof locales)[number]; expires: number } | null = null;

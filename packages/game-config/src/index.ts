@@ -9,6 +9,7 @@ export * from "./progression";
 export * from "./onboarding";
 export * from "./speed-profiles";
 export * from "./legal";
+export * from "./support";
 
 // Compte technique propriétaire des planètes abandonnées, exclu du classement des joueurs.
 export const ABANDONED_USERNAME = "__abandoned__";

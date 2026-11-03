@@ -27,6 +27,8 @@ import { WorldEventsPanel } from "./WorldEventsPanel";
 import { MultiAccountPanel } from "./MultiAccountPanel";
 import { NpcTradePanel } from "./NpcTradePanel";
 import { BossPanel } from "./BossPanel";
+import { SupportPanel } from "./SupportPanel";
+import { supportApi } from "@/lib/api/support";
 import { worldEventsApi } from "@/lib/api/world-events";
 
 function GeneralPanel() {
@@ -736,7 +738,7 @@ function GeneralPanel() {
 export default function AdminPage() {
   const { user } = useAuthStore();
   const { t } = useI18n();
-  const [tab, setTab] = useState<"players" | "general" | "events" | "linked" | "npcTrade" | "boss" | "smtp" | "supervision">("players");
+  const [tab, setTab] = useState<"players" | "general" | "events" | "linked" | "npcTrade" | "boss" | "support" | "smtp" | "supervision">("players");
   const canManageEvents = user?.role === "ADMIN" || user?.role === "SUPER_ADMIN";
   // Rappel : le nombre d'événements à lancer s'affiche sur l'onglet, même quand il n'est pas ouvert
   const remindersQuery = useQuery({
@@ -745,6 +747,14 @@ export default function AdminPage() {
     enabled: canManageEvents,
   });
   const reminders = remindersQuery.data?.reminders ?? 0;
+  // Signalements à lire : le nombre s'affiche sur l'onglet, même quand il n'est pas ouvert
+  const supportQuery = useQuery({
+    queryKey: ["admin", "support", "badge"],
+    queryFn: () => supportApi.adminList("new", 1),
+    enabled: hasAdminAccess(user?.role),
+    refetchInterval: 60_000,
+  });
+  const supportNew = supportQuery.data?.newCount ?? 0;
   return (
     <div className="space-y-6">
       <div
@@ -756,7 +766,7 @@ export default function AdminPage() {
             "players",
             "general",
             ...(canManageEvents ? ["events", "linked", "npcTrade", "boss"] : []),
-            ...(hasAdminAccess(user?.role) ? ["supervision"] : []),
+            ...(hasAdminAccess(user?.role) ? ["support", "supervision"] : []),
             ...(isSuperAdmin(user?.role) ? ["smtp"] : []),
           ] as const
         ).map((value) => (
@@ -774,6 +784,15 @@ export default function AdminPage() {
                 {reminders > 0 ? (
                   <span className="ml-2 rounded-full bg-amber-500/20 px-2 py-0.5 text-[11px] text-amber-200" data-testid="events-reminder-badge">
                     {reminders}
+                  </span>
+                ) : null}
+              </>
+            ) : value === "support" ? (
+              <>
+                {t("admin.tabSupport")}
+                {supportNew > 0 ? (
+                  <span className="ml-2 rounded-full bg-sky-500/20 px-2 py-0.5 text-[11px] text-sky-200" data-testid="support-new-badge">
+                    {supportNew}
                   </span>
                 ) : null}
               </>
@@ -799,6 +818,7 @@ export default function AdminPage() {
       {tab === "linked" && canManageEvents && <MultiAccountPanel />}
       {tab === "npcTrade" && canManageEvents && <NpcTradePanel />}
       {tab === "boss" && canManageEvents && <BossPanel />}
+      {tab === "support" && hasAdminAccess(user?.role) && <SupportPanel />}
       {tab === "supervision" && hasAdminAccess(user?.role) && <SupervisionPanel />}
       {tab === "smtp" && isSuperAdmin(user?.role) && <SmtpSettingsPanel />}
     </div>

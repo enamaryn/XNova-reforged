@@ -9,7 +9,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
 
-export type RateLimitRoute = 'login' | 'register' | 'account' | 'setup' | 'clienterror';
+export type RateLimitRoute = 'login' | 'register' | 'account' | 'setup' | 'clienterror' | 'support';
 
 export const RATE_LIMIT_KEY = 'rate-limit-route';
 /** Soumet la route à la limitation de débit d'authentification (SEC-04). */
@@ -29,6 +29,8 @@ const DEFAULTS: Record<RateLimitRoute, { max: number; windowMs: number }> = {
   setup: { max: 60, windowMs: 60_000 },
   // Erreurs signalées par le navigateur (supervision locale) : limite par adresse IP
   clienterror: { max: 20, windowMs: 60_000 },
+  // Signalements au support : 5 par heure et par adresse IP
+  support: { max: 5, windowMs: 3_600_000 },
 };
 
 /**
