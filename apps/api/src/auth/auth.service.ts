@@ -6,7 +6,7 @@ import {
   UnauthorizedException,
   NotFoundException,
 } from '@nestjs/common';
-import { GAME_CONSTANTS, canonicalizeEmail } from '@xnova/game-config';
+import { GAME_CONSTANTS, LEGAL_VERSION, canonicalizeEmail } from '@xnova/game-config';
 import { Prisma, UserRole } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
@@ -44,7 +44,7 @@ export class AuthService {
    * Inscription d'un nouvel utilisateur
    */
   async register(
-    registerDto: RegisterDto,
+    registerDto: Omit<RegisterDto, 'acceptTerms'> & { acceptTerms?: boolean },
     options: { role?: UserRole; internal?: boolean; ip?: string } = {},
   ): Promise<AuthResponseDto | RegistrationPendingDto> {
     const { username, email, password } = registerDto;
@@ -91,6 +91,9 @@ export class AuthService {
               email,
               emailCanonical: canonical,
               password: hashedPassword,
+              // Acceptation des textes légaux : date et version (le compte du parcours d'installation les accepte aussi)
+              termsAcceptedAt: new Date(),
+              termsVersion: LEGAL_VERSION,
               // Langue de l'interface à l'inscription (sinon celle du serveur) : emails et textes
               locale: requestLocaleOrNull() ?? config.language,
               points: 0,
@@ -160,7 +163,7 @@ export class AuthService {
    * Compte super admin du parcours d'installation : créé sans session, adresse à confirmer (la confirmation
    * clôt l'installation). Réservé au parcours (appelé après contrôle du code d'installation).
    */
-  async createSetupAdmin(dto: RegisterDto): Promise<RegistrationPendingDto['user']> {
+  async createSetupAdmin(dto: Omit<RegisterDto, 'acceptTerms'>): Promise<RegistrationPendingDto['user']> {
     const result = await this.register(dto, { role: 'SUPER_ADMIN', internal: true });
     return (result as RegistrationPendingDto).user;
   }
@@ -346,6 +349,8 @@ export class AuthService {
         email: true,
         emailVerifiedAt: true,
         locale: true,
+        termsAcceptedAt: true,
+        termsVersion: true,
         points: true,
         rank: true,
         role: true,
@@ -371,7 +376,18 @@ export class AuthService {
       throw new NotFoundException('Utilisateur non trouvé');
     }
 
-    return user;
+    // Les textes en vigueur ont-ils été acceptés ? (faux pour les comptes antérieurs ou après une révision)
+    return { ...user, termsCurrent: user.termsVersion === LEGAL_VERSION, legalVersion: LEGAL_VERSION };
+  }
+
+  /** Enregistre l'acceptation des textes légaux en vigueur (comptes antérieurs, ou après une révision des textes). */
+  async acceptTerms(userId: string) {
+    const updated = await this.database.user.update({
+      where: { id: userId },
+      data: { termsAcceptedAt: new Date(), termsVersion: LEGAL_VERSION },
+      select: { termsAcceptedAt: true, termsVersion: true },
+    });
+    return { ...updated, termsCurrent: true };
   }
 
   /** Enregistre la langue choisie par le joueur (emails et textes du jeu). */

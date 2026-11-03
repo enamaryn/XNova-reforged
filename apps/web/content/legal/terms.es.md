@@ -1,6 +1,6 @@
 # Condiciones de uso
 
-Última actualización: 27 de octubre de 2026. Estas condiciones se aplican a cualquier persona que cree una cuenta o juegue en este servidor de XNova Reforged.
+Última actualización: 3 de noviembre de 2026. Estas condiciones se aplican a cualquier persona que cree una cuenta o juegue en este servidor de XNova Reforged.
 
 ## 1. Editor y contacto
 
@@ -45,7 +45,7 @@ El uso de sus datos se describe en la [política de privacidad](/{{LOCALE}}/priv
 
 ## 9. Modificación y fin
 
-El editor puede modificar estas condiciones; la fecha anterior cambiará y seguir jugando implica su aceptación. Puede dejar de jugar en cualquier momento y solicitar la eliminación de su cuenta en la dirección de contacto.
+El editor puede modificar estas condiciones; la fecha anterior cambiará y seguir jugando implica su aceptación. Al crear una cuenta acepta estas condiciones y la política de privacidad; se registran la fecha y la versión aceptadas. Puede dejar de jugar en cualquier momento y eliminar usted mismo su cuenta en Ajustes (o solicitarlo en la dirección de contacto).
 
 ## 10. Derecho aplicable
 

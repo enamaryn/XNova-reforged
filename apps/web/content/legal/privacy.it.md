@@ -1,6 +1,6 @@
 # Informativa sulla privacy
 
-Ultimo aggiornamento: 27 ottobre 2026. Questo documento spiega quali dati raccoglie questo server di XNova Reforged, perché, per quanto tempo e come esercitare i tuoi diritti.
+Ultimo aggiornamento: 3 novembre 2026. Questo documento spiega quali dati raccoglie questo server di XNova Reforged, perché, per quanto tempo e come esercitare i tuoi diritti.
 
 ## 1. Titolare del trattamento
 
@@ -13,6 +13,7 @@ Ultimo aggiornamento: 27 ottobre 2026. Questo documento spiega quali dati raccog
 | Nome giocatore | Identificazione nel gioco, classifiche, messaggi, galassia (visibile agli altri giocatori) | Finché esiste l'account |
 | Indirizzo email (e la sua forma canonica: senza alias «+etichetta» né punti di Gmail) | Accesso, conferma dell'account, password dimenticata, rilevamento degli account multipli | Finché esiste l'account |
 | Password | Accesso. Viene conservata solo un'**impronta Argon2**, mai la password | Finché esiste l'account |
+| Data e versione delle condizioni accettate | Dimostrare la tua accettazione delle condizioni d'uso | Finché esiste l'account |
 | Indirizzo IP (IPv4, o prefisso /64 per IPv6), visto alla registrazione, all'accesso e al rinnovo della sessione | Controllo degli account multipli e sicurezza | **90 giorni** dopo l'ultima osservazione per impostazione predefinita (modificabile dal gestore), eliminazione automatica ogni notte |
 | Dati di gioco: pianeti, edifici, ricerche, flotte, rapporti, messaggi privati, alleanza, missioni, mercato | Funzionamento del gioco | Finché esiste l'account |
 | Sessioni: impronta del token di rinnovo, date | Restare connessi, poter revocare una sessione | Al massimo 30 giorni per sessione |
@@ -42,7 +43,7 @@ Disconnettersi elimina il cookie di accesso.
 
 ## 6. I tuoi diritti
 
-Puoi chiedere l'**accesso** ai tuoi dati, la loro **rettifica**, la **cancellazione**, la **portabilità**, oppure **opporti** al trattamento, scrivendo a **{{CONTACT}}**. Non esiste ancora un pulsante per eliminare l'account: il gestore gestisce la richiesta ed elimina l'account e i suoi dati di gioco, salvo ciò che la legge obbliga a conservare. Puoi anche presentare reclamo all'autorità per la protezione dei dati del tuo paese (in Italia, il Garante per la protezione dei dati personali).
+Puoi chiedere l'**accesso** ai tuoi dati, la loro **rettifica** o la **portabilità**, oppure **opporti** al trattamento, scrivendo a **{{CONTACT}}**. Per la **cancellazione** esiste un pulsante in Impostazioni, sezione «Elimina il mio account»: dopo la conferma con la password, l'account e i relativi pianeti, flotte, messaggi, sessioni e indirizzi IP vengono cancellati subito e definitivamente (impossibile finché ci sono flotte o missili in volo). I rapporti di combattimento e gli storici di scambio degli altri giocatori possono conservare il tuo nome giocatore o un identificativo tecnico, senza altri dati personali; i backup già fatti scompaiono al loro rinnovo. Puoi anche presentare reclamo all'autorità per la protezione dei dati del tuo paese (in Italia, il Garante per la protezione dei dati personali).
 
 ## 7. Sicurezza
 

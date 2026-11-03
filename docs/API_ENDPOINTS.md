@@ -6,11 +6,13 @@ Ce document recense les principaux endpoints exposés par `apps/api`, avec la m�
 
 | Méthode | Endpoint | Description |
 |---------|----------|-------------|
-| POST | `/auth/register` | Inscription d’un nouveau joueur (username/email/password). Retourne tokens JWT. |
+| POST | `/auth/register` | Inscription d’un nouveau joueur (username/email/password et `acceptTerms: true`, obligatoire : 400 sinon). La date et la version (`LEGAL_VERSION`) des textes acceptés sont enregistrées. Retourne tokens JWT. |
 | POST | `/auth/login` | Connexion | 
 | POST | `/auth/refresh` | Rafraîchit le token d’accès via `refreshToken`. |
 | POST | `/auth/logout` | Déconnexion (JWT stateless). |
-| GET | `/auth/me` | Infos du joueur courants (planètes, langue `locale`) — JWT requis. |
+| GET | `/auth/me` | Infos du joueur courants (planètes, langue `locale`, `termsAcceptedAt`, `termsVersion`, `termsCurrent` = textes en vigueur acceptés, `legalVersion`) — JWT requis. |
+| POST | `/auth/accept-terms` | Enregistre l’acceptation des conditions et de la politique en vigueur (comptes antérieurs, textes révisés) — JWT requis. |
+| POST | `/auth/delete-account` | Suppression définitive du compte et de ses données (`{ password }`) : 401 mot de passe incorrect, 403 rôle d’administration, 409 flottes ou missiles en vol. Planètes, flottes, messages, sessions, adresses IP partent en cascade ; le fondateur d’une alliance transmet la fondation au membre le plus gradé (l’alliance disparaît s’il est seul). Limitation de débit « account ». |
 | PUT | `/auth/locale` | Enregistre la langue du joueur (`fr`, `en`, `es`, `de`, `it`) : emails et textes — JWT requis. |
 
 ### Langue (`X-Locale`)

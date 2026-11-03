@@ -5,6 +5,15 @@
 
 ---
 
+## Session — Acceptation des conditions et suppression de compte (3 novembre 2026)
+
+- [x] Acceptation enregistrée : colonnes `User.termsAcceptedAt` / `termsVersion` (migration `20261103100000_terms_acceptance`), `LEGAL_VERSION` dans `packages/game-config/src/legal.ts` (à changer à chaque révision de fond des textes). `acceptTerms: true` obligatoire à l'inscription (400 sinon) ; le compte du parcours d'installation (`SetupAdminDto`) l'accepte d'office.
+- [x] `GET /auth/me` renvoie `termsCurrent` ; `POST /auth/accept-terms` ; bandeau d'acceptation dans le jeu pour les comptes antérieurs ou après une révision des textes ; case à cocher obligatoire dans le formulaire d'inscription.
+- [x] Suppression de compte : `POST /auth/delete-account` (mot de passe, limitation « account »), bouton dans Réglages. Refusée avec 409 si flottes ou missiles en vol, 403 pour un rôle d'administration. Cascade des données ; fondateur d'alliance remplacé par le membre le plus gradé (alliance supprimée s'il est seul) ; références sans clé étrangère nettoyées (`BossDamage`, `AccountLinkExemption`, `Incident.userId`).
+- [x] Textes `/privacy` et `/terms` mis à jour (5 langues, version 2026-11-03) ; `docs/API_ENDPOINTS.md`, `docs/V1_VALIDATION.md` (9.2).
+- [x] Tests : intégration `account-deletion-terms` (10), E2E `account-deletion` (3) ; toutes les inscriptions de test passent `acceptTerms: true`.
+- Limites : les rapports de combat et historiques d'échange d'autres joueurs gardent un identifiant (et le nom dans les participants d'une attaque groupée) ; les sauvegardes existantes contiennent le compte jusqu'à leur rotation ; les flottes d'autres joueurs en route vers une planète supprimée suivent la logique existante (cible absente) ; pas de période de grâce ni de courriel de confirmation de suppression.
+
 ## Session — Textes légaux (27 octobre 2026)
 
 - [x] Conditions d'utilisation (`/terms`) et politique de confidentialité (`/privacy`) en 5 langues : `apps/web/content/legal/<document>.<langue>.md`, pages publiques sans connexion, rendues par le rendu Markdown de la FAQ (`apps/web/lib/legal/content.ts`).

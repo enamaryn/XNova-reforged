@@ -1,6 +1,6 @@
 # Terms of Use
 
-Last updated: 27 October 2026. These terms apply to anyone who creates an account or plays on this XNova Reforged server.
+Last updated: 3 November 2026. These terms apply to anyone who creates an account or plays on this XNova Reforged server.
 
 ## 1. Operator and contact
 
@@ -45,7 +45,7 @@ How your data is used is described in the [privacy policy](/{{LOCALE}}/privacy).
 
 ## 9. Changes and termination
 
-The operator may change these terms; the date above then changes, and continuing to play means acceptance. You may stop playing at any time and ask for your account to be deleted at the contact address.
+The operator may change these terms; the date above then changes, and continuing to play means acceptance. By creating an account you accept these terms and the privacy policy; the date and version accepted are recorded. You may stop playing at any time and delete your account yourself in Settings (or ask for it at the contact address).
 
 ## 10. Governing law
 

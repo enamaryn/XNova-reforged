@@ -110,7 +110,7 @@ describe('API integration - Parcours d\'installation du serveur (SETUP-01)', () 
 
       const reg = await request(server())
         .post('/auth/register')
-        .send({ username: 'curieux', email: 'curieux@example.test', password: 'Test1234!' });
+        .send({ username: 'curieux', email: 'curieux@example.test', password: 'Test1234!', acceptTerms: true });
       expect(reg.status).toBe(503);
       expect(reg.body.message).toMatch(/pas encore configuré/);
       expect(await players()).toBe(0);
@@ -247,7 +247,7 @@ describe('API integration - Parcours d\'installation du serveur (SETUP-01)', () 
       expect(login.status).toBe(403);
       const reg = await request(server())
         .post('/auth/register')
-        .send({ username: 'autre', email: 'autre@example.test', password: 'Test1234!' });
+        .send({ username: 'autre', email: 'autre@example.test', password: 'Test1234!', acceptTerms: true });
       expect(reg.status).toBe(503);
     });
 
@@ -307,7 +307,7 @@ describe('API integration - Parcours d\'installation du serveur (SETUP-01)', () 
     it('les inscriptions rouvrent à la fin de l\'installation', async () => {
       const res = await request(server())
         .post('/auth/register')
-        .send({ username: 'joueur1', email: 'joueur1@example.test', password: 'Test1234!' });
+        .send({ username: 'joueur1', email: 'joueur1@example.test', password: 'Test1234!', acceptTerms: true });
       expect(res.status).toBe(201);
       expect(res.body.verificationRequired).toBe(true);
     });
@@ -340,7 +340,7 @@ describe('API integration - Parcours d\'installation du serveur (SETUP-01)', () 
       // Inscriptions de nouveau fermées pendant le réarmement
       const reg = await request(server())
         .post('/auth/register')
-        .send({ username: 'joueur2', email: 'joueur2@example.test', password: 'Test1234!' });
+        .send({ username: 'joueur2', email: 'joueur2@example.test', password: 'Test1234!', acceptTerms: true });
       expect(reg.status).toBe(503);
 
       // Un super admin déjà existant (même identifiant) : conflit explicite ; un nouveau compte passe

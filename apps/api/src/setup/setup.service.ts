@@ -2,7 +2,7 @@ import { BadRequestException, ConflictException, Injectable, ServiceUnavailableE
 import type { SupportedLocale } from '@xnova/game-config';
 import { AccountService } from '../auth/account.service';
 import { AuthService } from '../auth/auth.service';
-import { RegisterDto } from '../auth/dto/register.dto';
+import { SetupAdminDto } from '../auth/dto/register.dto';
 import { UpdateConfigDto } from '../admin/dto/update-config.dto';
 import { UpdateSmtpDto } from '../admin/dto/update-smtp.dto';
 import { DatabaseService } from '../database/database.service';
@@ -131,7 +131,7 @@ export class SetupService {
    * Crée (ou remplace, tant qu'il n'est pas confirmé) le super admin et lui envoie le lien de confirmation.
    * Exige un envoi d'email déjà testé : le lien final prouve que tout fonctionne de bout en bout.
    */
-  async createAdmin(dto: RegisterDto) {
+  async createAdmin(dto: SetupAdminDto) {
     const flags = await readProgressFlags(this.db);
     if (!flags.smtpTestedAt) {
       throw new ConflictException("Testez d'abord l'envoi d'emails (étape SMTP)");

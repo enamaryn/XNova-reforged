@@ -16,6 +16,8 @@ export interface AuthUserDto {
   createdAt: string;
   /** Date de confirmation de l'adresse email ; absent ou null tant qu'elle n'est pas confirmée. */
   emailVerifiedAt?: string | null;
+  /** Les conditions et la politique en vigueur ont-elles été acceptées ? (absent à l'inscription) */
+  termsCurrent?: boolean;
 }
 
 /** Réponse d'inscription lorsque la confirmation de l'adresse est obligatoire : aucune session. */

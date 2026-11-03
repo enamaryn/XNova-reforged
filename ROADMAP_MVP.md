@@ -119,7 +119,8 @@ Toutes les décisions listées dans la version précédente sont prises et appli
 ## Textes légaux (27 octobre 2026)
 
 - [x] Conditions d'utilisation et politique de confidentialité publiées en 5 langues (`/terms`, `/privacy`), liens en pied de page et sous le bouton d'inscription ; éditeur et contact par `LEGAL_OPERATOR_NAME` / `LEGAL_CONTACT` (critère V1 9.1 : texte livré, à compléter et relire par le propriétaire).
-- [ ] Reste : bouton de suppression de compte (9.2), enregistrement de l'acceptation à l'inscription, relecture juridique.
+- [x] Acceptation des conditions enregistrée (date et version, case obligatoire, bandeau pour les comptes existants) et bouton de suppression de compte (3 novembre 2026).
+- [ ] Reste : relecture juridique des textes ; courriel de confirmation et délai de grâce de la suppression (non prévus).
 
 ## Événements du monde (22 octobre 2026)
 

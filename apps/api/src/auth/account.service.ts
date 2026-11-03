@@ -330,4 +330,71 @@ export class AccountService {
     });
     active.forEach((session) => this.gameEvents.disconnectSession(session.id));
   }
+
+  /**
+   * Suppression définitive du compte (droit à l'effacement) : planètes, flottes, messages, files, officiers,
+   * adresses IP vues, sessions et jetons partent en cascade. Refusée tant que des flottes ou missiles sont en vol
+   * (leur contenu serait perdu) et pour les rôles d'administration (à rétrograder d'abord par un super administrateur).
+   * Fondateur d'alliance : l'alliance disparaît s'il est seul, sinon la fondation passe au membre le plus gradé
+   * (puis le plus ancien). Les identifiants restent seulement dans les rapports de combat et historiques d'échange des
+   * autres joueurs, sans lien avec une identité ; les restes d'identifiant des incidents techniques sont effacés.
+   */
+  async deleteAccount(userId: string, password: string) {
+    const user = await this.database.user.findUnique({ where: { id: userId }, select: { id: true, password: true, role: true } });
+    if (!user) throw new NotFoundException('Compte introuvable');
+    if (!(await argon2.verify(user.password, password))) {
+      throw new UnauthorizedException('Mot de passe incorrect');
+    }
+    if (user.role !== 'PLAYER') {
+      throw new ForbiddenException(
+        "Un compte d'administration ne peut pas être supprimé ici : demandez à un super administrateur de changer votre rôle d'abord",
+      );
+    }
+
+    const sessions = await this.database.session.findMany({ where: { userId }, select: { id: true } });
+
+    await this.database.$transaction(async (tx) => {
+      await lockUser(tx, userId);
+
+      const fleets = await tx.fleet.count({ where: { userId, status: { not: 'completed' } } });
+      const missiles = await tx.missileStrike.count({ where: { userId, status: 'traveling' } });
+      if (fleets > 0 || missiles > 0) {
+        throw new ConflictException(
+          'Des flottes ou des missiles sont encore en vol : attendez leur retour avant de supprimer votre compte',
+        );
+      }
+
+      const membership = await tx.allianceMember.findUnique({ where: { userId }, select: { allianceId: true } });
+      if (membership) {
+        const alliance = await tx.alliance.findUnique({ where: { id: membership.allianceId }, select: { founderId: true } });
+        if (alliance?.founderId === userId) {
+          const rankOrder: Record<string, number> = { leader: 0, officer: 1, member: 2 };
+          const others = await tx.allianceMember.findMany({
+            where: { allianceId: membership.allianceId, userId: { not: userId } },
+            select: { id: true, userId: true, rank: true, joinedAt: true },
+          });
+          const heir = others.sort(
+            (a, b) => (rankOrder[a.rank] ?? 3) - (rankOrder[b.rank] ?? 3) || a.joinedAt.getTime() - b.joinedAt.getTime(),
+          )[0];
+          if (heir) {
+            await tx.allianceMember.update({ where: { id: heir.id }, data: { rank: 'founder' } });
+            await tx.alliance.update({ where: { id: membership.allianceId }, data: { founderId: heir.userId } });
+          } else {
+            await tx.alliance.delete({ where: { id: membership.allianceId } });
+          }
+        }
+      }
+
+      // Références par identifiant seul (sans clé étrangère) : à nettoyer à la main
+      await tx.bossDamage.deleteMany({ where: { userId } });
+      await tx.accountLinkExemption.deleteMany({ where: { OR: [{ userA: userId }, { userB: userId }] } });
+      await tx.incident.updateMany({ where: { userId }, data: { userId: null } });
+
+      await tx.user.delete({ where: { id: userId } });
+    });
+
+    sessions.forEach((session) => this.gameEvents.disconnectSession(session.id));
+    this.logger.log(`Compte supprimé à la demande du joueur : ${userId}`);
+    return { message: 'Compte supprimé' };
+  }
 }

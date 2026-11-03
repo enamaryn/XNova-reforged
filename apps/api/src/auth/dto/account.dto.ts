@@ -50,3 +50,9 @@ export class ChangeEmailDto {
   @MaxLength(255)
   newEmail: string;
 }
+
+export class DeleteAccountDto {
+  @IsString()
+  @MaxLength(100)
+  password: string;
+}

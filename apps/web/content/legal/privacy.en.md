@@ -1,6 +1,6 @@
 # Privacy Policy
 
-Last updated: 27 October 2026. This document explains what data this XNova Reforged server collects, why, for how long, and how to exercise your rights.
+Last updated: 3 November 2026. This document explains what data this XNova Reforged server collects, why, for how long, and how to exercise your rights.
 
 ## 1. Data controller
 
@@ -13,6 +13,7 @@ Last updated: 27 October 2026. This document explains what data this XNova Refor
 | Player name | In-game identification, rankings, messages, galaxy view (visible to other players) | As long as the account exists |
 | Email address (and its canonical form: without "+tag" aliases or Gmail dots) | Login, account confirmation, forgotten password, multi-account detection | As long as the account exists |
 | Password | Login. Only an **Argon2 hash** is stored, never the password itself | As long as the account exists |
+| Date and version of the terms accepted | Proving your acceptance of the terms of use | As long as the account exists |
 | IP address (IPv4, or /64 prefix for IPv6), seen at registration, login and session refresh | Multi-account control and security | **90 days** after the last sighting by default (adjustable by the operator), automatic nightly purge |
 | Game data: planets, buildings, research, fleets, reports, private messages, alliance, quests, market | Running the game | As long as the account exists |
 | Sessions: hash of the refresh token, dates | Staying signed in, being able to revoke a session | 30 days at most per session |
@@ -42,7 +43,7 @@ Signing out deletes the login cookie.
 
 ## 6. Your rights
 
-You may request **access** to your data, its **correction**, **deletion** or **portability**, or **object** to its processing, by writing to **{{CONTACT}}**. There is no account deletion button yet: the operator handles the request and deletes the account and its game data, except what the law requires to keep. You may also lodge a complaint with the data protection authority of your country.
+You may request **access** to your data, its **correction** or **portability**, or **object** to its processing, by writing to **{{CONTACT}}**. For **deletion**, there is a button in Settings, "Delete my account" section: after you confirm with your password, the account and its planets, fleets, messages, sessions and IP addresses are erased immediately and permanently (not possible while fleets or missiles are in flight). Other players' combat reports and trade histories may keep your player name or a technical identifier, with no other personal data; existing backups disappear when they are rotated. You may also lodge a complaint with the data protection authority of your country.
 
 ## 7. Security
 

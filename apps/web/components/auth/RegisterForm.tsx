@@ -14,7 +14,7 @@ import { useAuthStore } from "@/lib/stores/auth-store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LegalAcceptNotice } from "@/components/legal/LegalLinks";
+import { LegalAcceptCheckbox } from "@/components/legal/LegalLinks";
 import { ResendConfirmation } from "@/components/auth/ResendConfirmation";
 
 export function RegisterForm() {
@@ -28,6 +28,7 @@ export function RegisterForm() {
       username: "",
       email: "",
       password: "",
+      acceptTerms: false,
     },
   });
 
@@ -132,12 +133,16 @@ export function RegisterForm() {
             </p>
           ) : null}
         </div>
+
+        <LegalAcceptCheckbox
+          inputProps={form.register("acceptTerms")}
+          error={form.formState.errors.acceptTerms?.message}
+        />
       </div>
 
       <Button type="submit" className="w-full" disabled={mutation.isPending}>
         {mutation.isPending ? "Inscription en cours..." : "Creer mon compte"}
       </Button>
-      <LegalAcceptNotice />
     </form>
   );
 }

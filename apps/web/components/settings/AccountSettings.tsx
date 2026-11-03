@@ -4,7 +4,8 @@ import { useI18n } from "@/lib/i18n";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ApiError } from "@/lib/api/client";
-import { changeEmail, changePassword, getMe, resendVerification } from "@/lib/api/auth";
+import { useRouter } from "next/navigation";
+import { changeEmail, changePassword, deleteAccount, getMe, resendVerification } from "@/lib/api/auth";
 
 const inputClass =
   "w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-white outline-hidden focus:border-blue-400/60";
@@ -67,6 +68,18 @@ export function AccountSettings() {
       queryClient.invalidateQueries({ queryKey: ["auth-me"] });
     },
     onError: (error) => setVerifyNotice({ kind: "error", text: messageOf(error, t("account.genericError")) }),
+  });
+
+  const router = useRouter();
+  const [del, setDel] = useState({ password: "", confirmed: false });
+  const [delNotice, setDelNotice] = useState<Notice>(null);
+  const delMutation = useMutation({
+    mutationFn: () => deleteAccount(del.password),
+    onSuccess: () => {
+      queryClient.clear();
+      router.replace("/");
+    },
+    onError: (error) => setDelNotice({ kind: "error", text: messageOf(error, t("account.genericError")) }),
   });
 
   const verified = !!me.data?.emailVerifiedAt;
@@ -199,6 +212,50 @@ export function AccountSettings() {
           {t("account.changePassword")}
         </button>
         <NoticeBox notice={pwdNotice} testId="password-notice" />
+      </form>
+
+      <form
+        className="space-y-3 rounded-2xl border border-rose-500/30 p-4"
+        data-testid="delete-account"
+        onSubmit={(event) => {
+          event.preventDefault();
+          setDelNotice(null);
+          delMutation.mutate();
+        }}
+      >
+        <h3 className="text-xs uppercase tracking-[0.2em] text-rose-300">{t("account.deleteTitle")}</h3>
+        <p className="text-xs text-slate-400">{t("account.deleteWarning")}</p>
+        <label className="block space-y-1">
+          <span className={labelClass}>{t("account.deletePassword")}</span>
+          <input
+            className={inputClass}
+            type="password"
+            required
+            autoComplete="current-password"
+            value={del.password}
+            onChange={(event) => setDel((prev) => ({ ...prev, password: event.target.value }))}
+            aria-label={t("account.deletePassword")}
+          />
+        </label>
+        <label className="flex items-start gap-2 text-xs text-slate-300">
+          <input
+            type="checkbox"
+            className="mt-0.5"
+            checked={del.confirmed}
+            onChange={(event) => setDel((prev) => ({ ...prev, confirmed: event.target.checked }))}
+            data-testid="delete-confirm"
+          />
+          <span>{t("account.deleteConfirm")}</span>
+        </label>
+        <button
+          type="submit"
+          data-testid="delete-submit"
+          className="rounded-full border border-rose-500/60 bg-rose-500/10 px-5 py-2 text-xs uppercase tracking-[0.2em] text-rose-200 hover:bg-rose-500/20 disabled:opacity-50"
+          disabled={delMutation.isPending || !del.confirmed || !del.password}
+        >
+          {delMutation.isPending ? t("account.deleteBusy") : t("account.deleteButton")}
+        </button>
+        <NoticeBox notice={delNotice} testId="delete-notice" />
       </form>
     </div>
   );

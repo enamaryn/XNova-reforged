@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Put, UseGuards } from '@nestjs/common';
 import { UpdateConfigDto } from '../admin/dto/update-config.dto';
 import { UpdateSmtpDto } from '../admin/dto/update-smtp.dto';
-import { RegisterDto } from '../auth/dto/register.dto';
+import { SetupAdminDto } from '../auth/dto/register.dto';
 import { RateLimit, RateLimitGuard } from '../common/security/rate-limit.guard';
 import { SetupLanguageDto, SetupSmtpTestDto } from './dto/setup.dto';
 import { SentryTestDto, UpdateSupervisionDto } from '../supervision/dto';
@@ -84,7 +84,7 @@ export class SetupController {
   @RateLimit('setup')
   @HttpCode(HttpStatus.OK)
   @UseGuards(SetupGuard)
-  createAdmin(@Body() dto: RegisterDto) {
+  createAdmin(@Body() dto: SetupAdminDto) {
     return this.setup.createAdmin(dto);
   }
 

@@ -31,6 +31,7 @@ export function buildTestUser() {
     username: `it_${unique}`,
     email: `itest_${unique}@example.test`,
     password: 'Test1234!',
+    acceptTerms: true,
   };
 }
 

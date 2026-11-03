@@ -41,6 +41,9 @@ model User {
   mustVerifyEmail Boolean @default(false)
   // Langue choisie par le joueur (fr, en, es, de, it) : emails et textes ; null = langue du serveur
   locale    String?
+  // Acceptation des conditions d'utilisation et de la politique de confidentialité : date et version des textes (LEGAL_VERSION) ; null pour les comptes antérieurs
+  termsAcceptedAt DateTime?
+  termsVersion    String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
