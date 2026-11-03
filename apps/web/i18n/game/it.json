@@ -1702,7 +1702,8 @@
     "statusseen": "Letta",
     "statusresolved": "Gestita",
     "statusignored": "Archiviata",
-    "errorGeneric": "Impossibile inviare la segnalazione."
+    "errorGeneric": "Impossibile inviare la segnalazione.",
+    "replyTitle": "Risposta del supporto"
   },
   "adminSupport": {
     "title": "Segnalazioni dei giocatori",
@@ -1717,6 +1718,14 @@
     "prev": "Precedente",
     "next": "Successivo",
     "pageOf": "Pagina {page} di {pages}",
-    "error": "Azione non riuscita."
+    "error": "Azione non riuscita.",
+    "replies": "Risposte inviate",
+    "reply": "Rispondi",
+    "replyPlaceholder": "La tua risposta al giocatore",
+    "replySend": "Invia la risposta",
+    "replySending": "Invio…",
+    "replyNotice": "Il giocatore la legge in «Le mie segnalazioni» e riceve anche un messaggio nel gioco.",
+    "replyError": "Impossibile inviare la risposta.",
+    "authorFallback": "Supporto"
   }
 }

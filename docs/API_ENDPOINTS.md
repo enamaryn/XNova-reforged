@@ -24,8 +24,9 @@ L’interface envoie l’en-tête `X-Locale` (`fr`, `en`, `es`, `de`, `it`) à c
 | Méthode | Endpoint | Description |
 |---------|----------|-------------|
 | POST | `/support/reports` | Envoie un signalement (`kind` : bug, question, suggestion, account ; `subject` 3 à 120 caractères ; `body` 10 à 4000 ; `pagePath` et `appVersion` joints par l’interface ; navigateur lu dans `User-Agent`) — JWT requis. 409 au-delà de 5 signalements en attente ; limitation de débit « support » (5 par heure et par IP, `RATE_LIMIT_SUPPORT_MAX`). |
-| GET | `/support/reports/mine` | Les 20 derniers signalements du joueur et leur statut (new, seen, resolved, ignored) — JWT requis. |
-| GET | `/admin/support/reports` | Liste paginée (25) avec auteur (nom, email), filtre `?status=`, `newCount` — ADMIN ou SUPER_ADMIN. |
+| GET | `/support/reports/mine` | Les 20 derniers signalements du joueur, leur statut (new, seen, resolved, ignored) et les réponses du support (`replies`) — JWT requis. |
+| GET | `/admin/support/reports` | Liste paginée (25) avec auteur (nom, email), réponses, filtre `?status=`, `newCount` — ADMIN ou SUPER_ADMIN. |
+| POST | `/admin/support/reports/:id/replies` | Répond à un signalement (`{ body }`, 1 à 2000 caractères) : réponse enregistrée sur le signalement, message privé envoyé au joueur (sujet « Support : … »), statut « new » → « seen », audit `support.reply` (longueur seulement, pas le texte) — ADMIN ou SUPER_ADMIN. |
 | PATCH | `/admin/support/reports/:id` | Change le statut (`{ status }`) ; clôture datée et journal d’audit `support.setStatus` — ADMIN ou SUPER_ADMIN. |
 
 ## Planètes & ressources (`/planets`)

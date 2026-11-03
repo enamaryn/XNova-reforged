@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { SUPPORT_STATUSES, supportApi, type AdminSupportReport, type SupportStatus } from "@/lib/api/support";
+import { SUPPORT_LIMITS, SUPPORT_STATUSES, supportApi, type AdminSupportReport, type SupportStatus } from "@/lib/api/support";
 import { useI18n } from "@/lib/i18n";
 
 const card = "rounded-3xl border border-slate-800/80 bg-slate-950/60 p-4 sm:p-6";
@@ -26,6 +26,18 @@ function ReportCard({ report, onChanged }: { report: AdminSupportReport; onChang
     onError: () => setError(t("adminSupport.error")),
   });
   const closed = report.status === "resolved" || report.status === "ignored";
+  const [replying, setReplying] = useState(false);
+  const [text, setText] = useState("");
+  const sendReply = useMutation({
+    mutationFn: () => supportApi.reply(report.id, text.trim()),
+    onSuccess: async () => {
+      setText("");
+      setReplying(false);
+      setError(null);
+      await onChanged();
+    },
+    onError: () => setError(t("adminSupport.replyError")),
+  });
   return (
     <li className="rounded-2xl border border-slate-800 bg-slate-950/40 p-4" data-testid={`support-report-${report.id}`}>
       <div className="flex flex-wrap items-center gap-2 text-xs">
@@ -43,7 +55,54 @@ function ReportCard({ report, onChanged }: { report: AdminSupportReport; onChang
       <p className="mt-2 break-words text-xs text-slate-500">
         {t("adminSupport.context")} : {[report.pagePath, report.appVersion, report.userAgent].filter(Boolean).join(" · ") || "—"}
       </p>
+      {report.replies.length > 0 ? (
+        <div className="mt-3 space-y-2" data-testid="support-admin-replies">
+          <p className="text-xs uppercase tracking-wide text-slate-500">{t("adminSupport.replies")}</p>
+          {report.replies.map((reply) => (
+            <blockquote key={reply.id} className="rounded-xl border-l-4 border-sky-400/60 bg-sky-500/10 px-3 py-2 text-sm text-slate-200">
+              <p className="text-xs text-slate-400">
+                {reply.author ?? t("adminSupport.authorFallback")} · {new Date(reply.createdAt).toLocaleString(locale)}
+              </p>
+              <p className="mt-1 whitespace-pre-wrap break-words">{reply.body}</p>
+            </blockquote>
+          ))}
+        </div>
+      ) : null}
+      {replying ? (
+        <form
+          className="mt-3 space-y-2"
+          onSubmit={(event) => {
+            event.preventDefault();
+            setError(null);
+            sendReply.mutate();
+          }}
+        >
+          <textarea
+            className={`${field} min-h-24 w-full`}
+            value={text}
+            maxLength={SUPPORT_LIMITS.replyMax}
+            placeholder={t("adminSupport.replyPlaceholder")}
+            aria-label={t("adminSupport.replyPlaceholder")}
+            onChange={(event) => setText(event.target.value)}
+            data-testid="support-reply-text"
+          />
+          <p className="text-xs text-slate-500">{t("adminSupport.replyNotice")}</p>
+          <div className="flex gap-2">
+            <button type="submit" className={button} disabled={sendReply.isPending || text.trim().length === 0} data-testid="support-reply-send">
+              {sendReply.isPending ? t("adminSupport.replySending") : t("adminSupport.replySend")}
+            </button>
+            <button type="button" className={button} onClick={() => setReplying(false)}>
+              ×
+            </button>
+          </div>
+        </form>
+      ) : null}
       <div className="mt-3 flex flex-wrap gap-2">
+        {!replying ? (
+          <button type="button" className={button} onClick={() => setReplying(true)} data-testid="support-reply-open">
+            {t("adminSupport.reply")}
+          </button>
+        ) : null}
         {report.status === "new" ? (
           <button type="button" className={button} disabled={change.isPending} onClick={() => change.mutate("seen")}>
             {t("adminSupport.markSeen")}

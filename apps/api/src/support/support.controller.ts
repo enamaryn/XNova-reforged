@@ -5,7 +5,7 @@ import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { RateLimit, RateLimitGuard } from '../common/security/rate-limit.guard';
-import { CreateSupportReportDto, UpdateSupportStatusDto } from './dto/support.dto';
+import { CreateSupportReplyDto, CreateSupportReportDto, UpdateSupportStatusDto } from './dto/support.dto';
 import { SupportService } from './support.service';
 
 /** Signalements des joueurs connectés. */
@@ -53,5 +53,16 @@ export class AdminSupportController {
     @CurrentUser('id') actorId: string,
   ) {
     return this.support.setStatus(actorId, id, dto.status);
+  }
+
+  @Post('reports/:id/replies')
+  @Roles('ADMIN', 'SUPER_ADMIN')
+  @HttpCode(HttpStatus.CREATED)
+  reply(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: CreateSupportReplyDto,
+    @CurrentUser('id') actorId: string,
+  ) {
+    return this.support.reply(actorId, id, dto);
   }
 }

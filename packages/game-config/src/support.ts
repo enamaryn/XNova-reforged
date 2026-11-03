@@ -12,6 +12,9 @@ export const SUPPORT_LIMITS = {
   bodyMax: 4000,
   /** Signalements en attente (nouveau ou consulté) par joueur : au-delà, il faut attendre un traitement. */
   maxOpenPerUser: 5,
+  /** Longueur d'une réponse de l'administrateur. */
+  replyMin: 1,
+  replyMax: 2000,
   /** Signalements récents affichés au joueur. */
   mineLimit: 20,
 } as const;

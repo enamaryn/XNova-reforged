@@ -5,6 +5,13 @@
 
 ---
 
+## Session — Réponse intégrée aux signalements (3 novembre 2026)
+
+- [x] Table `SupportReply` (migration `20261103120000_support_replies`) ; `POST /admin/support/reports/:id/replies` : réponse enregistrée sur le signalement, message privé envoyé au joueur (sujet « Support : … »), « nouveau » → « lu », audit `support.reply` sans le texte. `GET /support/reports/mine` et la liste admin renvoient les réponses.
+- [x] Console admin : bouton « Répondre » (formulaire, fil des réponses) ; page de support du joueur : réponses affichées sous chaque signalement. Textes en 5 langues ; politique de confidentialité précisée (réponses du support), sans changement de version des textes.
+- [x] Tests : intégration `support` (14, dont 5 sur les réponses), E2E `support` (réponse, message reçu, lecture par le joueur). Docs : API_ENDPOINTS, OPERATIONS.
+- Limites : le joueur ne répond pas dans le fil (il répond au message en jeu ou envoie un nouveau signalement) ; pas d'email de notification (le message en jeu sert de notification) ; pas de modèles de réponses.
+
 ## Session — Page de support et signalement de bugs (3 novembre 2026)
 
 - [x] Table `SupportReport` (migration `20261103110000_support_reports`) ; module `apps/api/src/support/` : `POST /support/reports` (limite de 5 en attente, verrou par joueur ; débit « support » 5 par heure et par IP), `GET /support/reports/mine`, `GET /admin/support/reports`, `PATCH /admin/support/reports/:id` (statut, clôture datée, audit `support.setStatus`). Constantes dans `packages/game-config/src/support.ts`.

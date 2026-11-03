@@ -6,7 +6,7 @@ export type SupportStatus = "new" | "seen" | "resolved" | "ignored";
 export const SUPPORT_KINDS: SupportKind[] = ["bug", "question", "suggestion", "account"];
 export const SUPPORT_STATUSES: SupportStatus[] = ["new", "seen", "resolved", "ignored"];
 /** Mêmes bornes que l'API (`packages/game-config/src/support.ts`). */
-export const SUPPORT_LIMITS = { subjectMin: 3, subjectMax: 120, bodyMin: 10, bodyMax: 4000 } as const;
+export const SUPPORT_LIMITS = { subjectMin: 3, subjectMax: 120, bodyMin: 10, bodyMax: 4000, replyMax: 2000 } as const;
 
 export interface SupportReportInput {
   kind: SupportKind;
@@ -16,12 +16,19 @@ export interface SupportReportInput {
   appVersion?: string;
 }
 
+export interface SupportReplyView {
+  id: string;
+  body: string;
+  createdAt: string;
+}
+
 export interface MySupportReport {
   id: string;
   kind: SupportKind;
   subject: string;
   status: SupportStatus;
   createdAt: string;
+  replies: SupportReplyView[];
 }
 
 export interface AdminSupportReport {
@@ -36,6 +43,7 @@ export interface AdminSupportReport {
   createdAt: string;
   resolvedAt: string | null;
   user: { id: string; username: string; email: string };
+  replies: (SupportReplyView & { author: string | null })[];
 }
 
 export interface AdminSupportList {
@@ -51,6 +59,8 @@ export const supportApi = {
   mine: () => apiClient.get<MySupportReport[]>("/support/reports/mine"),
   adminList: (status: SupportStatus | "all", page: number) =>
     apiClient.get<AdminSupportList>(`/admin/support/reports?page=${page}${status === "all" ? "" : `&status=${status}`}`),
+  reply: (id: string, body: string) =>
+    apiClient.post<{ id: string; createdAt: string; status: SupportStatus }>(`/admin/support/reports/${encodeURIComponent(id)}/replies`, { body }),
   setStatus: (id: string, status: SupportStatus) =>
     apiRequest<{ id: string; status: SupportStatus }>(`/admin/support/reports/${encodeURIComponent(id)}`, {
       method: "PATCH",

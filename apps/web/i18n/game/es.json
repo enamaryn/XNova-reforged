@@ -1702,7 +1702,8 @@
     "statusseen": "Leído",
     "statusresolved": "Resuelto",
     "statusignored": "Archivado",
-    "errorGeneric": "No se pudo enviar el informe."
+    "errorGeneric": "No se pudo enviar el informe.",
+    "replyTitle": "Respuesta del soporte"
   },
   "adminSupport": {
     "title": "Informes de los jugadores",
@@ -1717,6 +1718,14 @@
     "prev": "Anterior",
     "next": "Siguiente",
     "pageOf": "Página {page} de {pages}",
-    "error": "Acción imposible."
+    "error": "Acción imposible.",
+    "replies": "Respuestas enviadas",
+    "reply": "Responder",
+    "replyPlaceholder": "Su respuesta al jugador",
+    "replySend": "Enviar la respuesta",
+    "replySending": "Enviando…",
+    "replyNotice": "El jugador la lee en «Mis informes» y recibe también un mensaje en el juego.",
+    "replyError": "No se pudo enviar la respuesta.",
+    "authorFallback": "Soporte"
   }
 }

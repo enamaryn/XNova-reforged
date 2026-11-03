@@ -56,6 +56,19 @@ test("un joueur signale un bug depuis le jeu, un administrateur le traite et le 
   await expect(card).toContainText('La file se fige');
   await expect(card).toContainText(player.username);
   await expect(card).toContainText('/fr/assistance');
+
+  // Réponse intégrée : enregistrée sur le signalement et envoyée en message au joueur
+  await card.getByTestId('support-reply-open').click();
+  await card.getByTestId('support-reply-text').fill('Merci, nous corrigeons cela dans la prochaine mise à jour.');
+  await card.getByTestId('support-reply-send').click();
+  // Le signalement passe de « Nouveau » à « Lu » : il quitte la vue par défaut
+  await expect(card).toHaveCount(0);
+  await adminPage.getByTestId('support-filter').selectOption('seen');
+  await expect(card.getByTestId('support-report-status')).toHaveText('Lu');
+  await expect(card.getByTestId('support-admin-replies')).toContainText('prochaine mise à jour');
+  const message = await prisma.message.findFirstOrThrow({ where: { to: { username: player.username } } });
+  expect(message).toMatchObject({ subject: 'Support : La file se fige', read: false });
+
   await card.getByTestId('support-resolve').click();
   await expect.poll(async () => (await prisma.supportReport.findUnique({ where: { id: row.id } }))?.status).toBe('resolved');
   await adminContext.close();
@@ -63,6 +76,7 @@ test("un joueur signale un bug depuis le jeu, un administrateur le traite et le 
   // Le joueur voit le nouvel état
   await page.reload();
   await expect(page.getByTestId('support-mine').getByTestId('support-status-resolved')).toBeVisible();
+  await expect(page.getByTestId('support-reply')).toContainText('prochaine mise à jour');
 });
 
 test("un joueur ordinaire n'a pas l'onglet Support de la console", async ({ page }) => {
