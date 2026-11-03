@@ -5,6 +5,12 @@
 
 ---
 
+## Session — Politique de remise à zéro et plan de capacité (3 novembre 2026)
+
+- [x] `docs/REMISE_A_ZERO.md` (critère V1 9.5) : une remise à zéro des planètes avant l'ouverture publique, comptes conservés, aucune ensuite sauf faille grave (préavis de 7 jours), univers permanent ; tableau effacé/conservé ; déroulé du jour J ; **spécification de la commande `universe:reset`, qui n'existe pas encore**.
+- [x] `docs/CAPACITE.md` (critère V1 9.3) pour le conteneur du propriétaire (1 cœur, 4 Gio, 20 Go) : budget par ressource (mesures de LOAD_TEST.md et estimations signalées), paliers, seuils de surveillance, évolutions, procédure de mesure et tableau de relevés. Le processeur sur 1 cœur n'a jamais été mesuré : c'est l'inconnue principale.
+- Reste (propriétaire) : fixer la date de remise à zéro, essai de charge sur copie, relevés hebdomadaires. Reste (code) : `universe:reset`.
+
 ## Session — Réponse intégrée aux signalements (3 novembre 2026)
 
 - [x] Table `SupportReply` (migration `20261103120000_support_replies`) ; `POST /admin/support/reports/:id/replies` : réponse enregistrée sur le signalement, message privé envoyé au joueur (sujet « Support : … »), « nouveau » → « lu », audit `support.reply` sans le texte. `GET /support/reports/mine` et la liste admin renvoient les réponses.
