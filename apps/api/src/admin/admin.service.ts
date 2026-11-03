@@ -1,3 +1,4 @@
+import { cleanupLooseUserReferences } from "../common/account-cleanup";
 import { ProgressionService } from "../progression/progression.service";
 import { recordSmtpTest } from '../supervision/smtp-test-record';
 import {
@@ -374,8 +375,9 @@ export class AdminService {
               data: { revokedAt: new Date() },
             });
           } else {
-            // ResearchQueue.userId and combat report participant IDs are not foreign keys.
-            await tx.researchQueue.deleteMany({ where: { userId: targetId } });
+            // Les identifiants sans clé étrangère (file de recherche, dégâts de boss, exemptions, incidents) et les
+            // identifiants des participants des rapports de combat sont nettoyés à la main.
+            await cleanupLooseUserReferences(tx, targetId);
             await tx.combatReport.deleteMany({
               where: {
                 OR: [{ attackerId: targetId }, { defenderId: targetId }],

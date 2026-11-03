@@ -413,4 +413,40 @@ describe("Fiche joueur et gestion administrative", () => {
       await database.alliance.delete({ where: { id: alliance.id } });
     }
   });
+
+  it("efface aussi les références sans clé étrangère, comme la suppression par le joueur", async () => {
+    const target = await account();
+    const other = await account();
+    const [first, second] = [target.id, other.id].sort();
+    const boss = await database.galacticBoss.create({
+      data: { nameId: 1, galaxy: 1, system: 1, ships: {}, maxShips: {}, status: "DEAD" },
+    });
+    await database.bossDamage.create({
+      data: { bossId: boss.id, userId: target.id, planetId: target.home.id, damage: 5, battles: 1 },
+    });
+    await database.bossDamage.create({
+      data: { bossId: boss.id, userId: other.id, planetId: other.home.id, damage: 7, battles: 1 },
+    });
+    await database.accountLinkExemption.create({ data: { userA: first, userB: second, reason: "test" } });
+    const incident = await database.incident.create({
+      data: { fingerprint: `del-${randomUUID()}`, level: "error", source: "api", message: "m", userId: target.id },
+    });
+    try {
+      await request(app.getHttpServer())
+        .delete(`/admin/players/${target.id}`)
+        .set(auth())
+        .send(payload(target.username))
+        .expect(200);
+
+      expect(await database.user.findUnique({ where: { id: target.id } })).toBeNull();
+      expect(await database.bossDamage.count({ where: { userId: target.id } })).toBe(0);
+      expect(await database.accountLinkExemption.count({ where: { OR: [{ userA: target.id }, { userB: target.id }] } })).toBe(0);
+      expect((await database.incident.findUniqueOrThrow({ where: { id: incident.id } })).userId).toBeNull();
+      // Les données de l'autre joueur ne sont pas touchées
+      expect(await database.bossDamage.count({ where: { userId: other.id } })).toBe(1);
+    } finally {
+      await database.incident.delete({ where: { id: incident.id } });
+      await database.galacticBoss.delete({ where: { id: boss.id } });
+    }
+  });
 });

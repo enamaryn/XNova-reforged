@@ -5,6 +5,12 @@
 
 ---
 
+## Session — Alignement du nettoyage des suppressions de compte (3 novembre 2026)
+
+- [x] `apps/api/src/common/account-cleanup.ts` : `cleanupLooseUserReferences` (dégâts de boss, exemptions de comptes liés, file de recherche, identifiant des incidents) utilisé par la suppression par le joueur (`AccountService.deleteAccount`) **et** par un administrateur (`AdminService.managePlayer`, action `delete`), qui laissaient jusque-là des restes différents.
+- [x] Test d'intégration ajouté à `admin-player-management` ; V1 5.5 : chiffrement des sauvegardes non retenu (décision du propriétaire).
+- Différences conservées volontairement : la suppression par un administrateur refuse un fondateur d'alliance (test existant) et efface les rapports de combat du joueur ; la suppression par le joueur transmet la fondation et garde les rapports des adversaires.
+
 ## Session — Commande `universe:reset` (3 novembre 2026)
 
 - [x] `npm run universe:reset` (`apps/api/src/cli/universe-reset.ts`) : remise à zéro des planètes en gardant les comptes. Refuse si l'API répond ; confirmation `RESET` ; sauvegarde `backup-db.sh` obligatoire avant toute modification (aucune option pour s'en passer) ; une transaction avec contrôle avant validation (une planète par compte, plus aucune donnée de jeu) ; `--dry-run` ; trace dans `GameConfig` (`universe.lastReset`) ; sessions révoquées ; points et rangs à 0 ; fond de galaxie (planètes abandonnées) gardé.

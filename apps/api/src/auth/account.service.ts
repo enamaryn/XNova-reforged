@@ -16,6 +16,7 @@ import { GameEventsGateway } from '../game-events/game-events.gateway';
 import { MailService } from '../mail/mail.service';
 import { SetupStateService } from '../setup/setup-state.service';
 import { lockUser } from '../common/atomic';
+import { cleanupLooseUserReferences } from '../common/account-cleanup';
 import { canonicalEmailTaken } from '../multi-account/email-canonical';
 import { canonicalizeEmail } from '@xnova/game-config';
 import type { Prisma } from '@prisma/client';
@@ -386,9 +387,7 @@ export class AccountService {
       }
 
       // Références par identifiant seul (sans clé étrangère) : à nettoyer à la main
-      await tx.bossDamage.deleteMany({ where: { userId } });
-      await tx.accountLinkExemption.deleteMany({ where: { OR: [{ userA: userId }, { userB: userId }] } });
-      await tx.incident.updateMany({ where: { userId }, data: { userId: null } });
+      await cleanupLooseUserReferences(tx, userId);
 
       await tx.user.delete({ where: { id: userId } });
     });
