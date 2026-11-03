@@ -1,4 +1,5 @@
 import { BossService } from '../boss/boss.service';
+import { InvasionService } from '../invasions/invasions.service';
 import { MultiAccountService } from '../multi-account/multi-account.service';
 import { OfficersService } from '../officers/officers.service';
 import { FleetCommandersService } from '../fleet-commanders/fleet-commanders.service';
@@ -51,6 +52,7 @@ export class FleetService {
     private readonly commanders: FleetCommandersService,
     private readonly multiAccount: MultiAccountService,
     private readonly boss: BossService,
+    private readonly invasions: InvasionService,
   ) {}
 
   async getAvailableShips(planetId: string, userId: string) {
@@ -178,7 +180,7 @@ export class FleetService {
 
     // Seule une expédition vise la position 16 de l'espace profond, et elle ne vise que celle-ci
     const isExpedition = dto.mission === MissionType.EXPEDITION;
-    // Une attaque vers la position 16 vise le boss galactique (vérifié plus bas) : aucune planète n'y existe
+    // Une attaque vers la position 16 vise le boss galactique ou un front d'invasion (vérifié plus bas) : aucune planète n'y existe
     const isBossAttack = dto.mission === MissionType.ATTACK && dto.toPosition === EXPEDITION_POSITION;
     const maxPosition = isExpedition || isBossAttack ? EXPEDITION_POSITION : GAME_CONSTANTS.MAX_POSITIONS;
     if (
@@ -242,8 +244,11 @@ export class FleetService {
       throw new BadRequestException("Un groupe d'attaque ne se rejoint qu'avec la mission d'attaque groupee");
     }
     if (dto.mission === MissionType.ATTACK && isBossAttack) {
-      if (toMoon) throw new BadRequestException('Le boss ne se trouve pas sur une lune');
-      await this.boss.assertBossAt(dto.toGalaxy, dto.toSystem, dto.toPosition);
+      if (toMoon) throw new BadRequestException("Le boss et les invasions ne se trouvent pas sur une lune");
+      // Position 16 : le boss galactique, sinon un front d'invasion
+      if (!(await this.boss.isEnabledBossAt(dto.toGalaxy, dto.toSystem))) {
+        await this.invasions.assertFrontAt(dto.toGalaxy, dto.toSystem, dto.toPosition);
+      }
     } else if (dto.mission === MissionType.ATTACK) {
       if (!target) throw new BadRequestException(toMoon ? 'Aucune lune a cette position' : 'Aucune planete a cette position');
       if (target.userId === userId) {

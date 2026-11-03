@@ -32,7 +32,8 @@
     "achievements": "Traguardi",
     "npcTrade": "Commercio",
     "boss": "Boss galattico",
-    "support": "Supporto"
+    "support": "Supporto",
+    "invasion": "Invasioni"
   },
   "sidebar": {
     "principal": "Principale",
@@ -495,7 +496,51 @@
       "spawned": "Boss comparso.",
       "despawned": "Boss rimosso."
     },
-    "tabSupport": "Supporto"
+    "tabSupport": "Supporto",
+    "tabInvasion": "Invasioni",
+    "invasion": {
+      "title": "Invasioni aliene",
+      "intro": "Un'invasione è una campagna di ondate di flotte aliene, ciascuna in posizione 16 di un sistema della galassia invasa, da respingere prima della scadenza. Gli alieni non attaccano mai i pianeti. Imposta il numero di ondate, la loro flotta e crescita, il bottino e il bonus concesso se l'invasione viene respinta. Ogni salvataggio è registrato nel registro di controllo. Le invasioni sono disattivate per impostazione predefinita: verifica la forza delle ondate prima di attivarle.",
+      "active": "{name} nella galassia {galaxy}: ondata {current} di {total}, scadenza il {date}.",
+      "wave": "Ondata in corso: n. {wave}, sistema {system}, salute {percent}%.",
+      "cancel": "Annulla l'invasione",
+      "cancelConfirm": "Annullare l'invasione in corso senza bottino né bonus?",
+      "none": "Nessuna invasione in corso.",
+      "galaxy": "Galassia (facoltativa)",
+      "start": "Avvia un'invasione",
+      "historyLine": "{name} — galassia {galaxy} · {status} (ondata {wave} di {total}) · terminata il {date}",
+      "status": {
+        "ACTIVE": "in corso",
+        "REPELLED": "respinta",
+        "FAILED": "fallita",
+        "CANCELLED": "annullata"
+      },
+      "enabled": "Invasioni attive (avvio, combattimenti, bonus)",
+      "waves": "Numero di ondate",
+      "durationHours": "Durata della campagna (ore)",
+      "autoIntervalDays": "Avvio automatico ogni (giorni, 0 = manuale)",
+      "waveGrowth": "Crescita della flotta per ondata (×)",
+      "regen": "Rigenerazione (% dell'ondata all'ora)",
+      "rewardTitle": "Bonus concesso se l'invasione è respinta",
+      "rewardPercent": "Bonus di produzione (%, 0 = nessuno)",
+      "rewardDays": "Durata del bonus (giorni)",
+      "techTitle": "Tecnologie degli alieni",
+      "weapon": "Armi",
+      "shield": "Scudo",
+      "armor": "Corazza",
+      "waveLootTitle": "Bottino di ogni ondata distrutta",
+      "finalLootTitle": "Bottino finale (invasione respinta)",
+      "shipsTitle": "Flotta della prima ondata",
+      "removeShip": "Rimuovi questa nave",
+      "addShip": "Aggiungi una nave…",
+      "waveValue": "Valore della prima ondata (equivalente in metallo): {value}",
+      "save": "Salva",
+      "saved": "Impostazioni salvate.",
+      "reset": "Valori predefiniti",
+      "resetConfirm": "Tornare ai valori predefiniti delle invasioni?",
+      "started": "Invasione avviata.",
+      "cancelled": "Invasione annullata."
+    }
   },
   "common": {
     "language": "Lingua",
@@ -1478,7 +1523,8 @@
       "summer_solstice": "Solstizio d'estate",
       "harvest_moon": "Luna del raccolto",
       "dark_nebula": "Nebulosa oscura",
-      "winter_festival": "Festa d'inverno"
+      "winter_festival": "Festa d'inverno",
+      "invasion_victory": "Vittoria contro l'invasione"
     },
     "admin": {
       "title": "Eventi del mondo",
@@ -1727,5 +1773,46 @@
     "replyNotice": "Il giocatore la legge in «Le mie segnalazioni» e riceve anche un messaggio nel gioco.",
     "replyError": "Impossibile inviare la risposta.",
     "authorFallback": "Supporto"
+  },
+  "invasion": {
+    "kicker": "Spazio profondo",
+    "title": "Invasioni aliene",
+    "subtitle": "Ondate di flotte aliene ({waves} per invasione) invadono sistemi di una galassia. Non attaccano mai i pianeti. Attacca l'ondata in corso con la missione «Attacco» verso la sua posizione: le sue perdite persistono tra i combattimenti e rigenera il {regen}% della flotta all'ora. Ogni ondata distrutta fa apparire la successiva, più forte. Respingi tutte le ondate prima della scadenza ({hours} h) per dividere il bottino e innescare un bonus per tutti.",
+    "disabled": "Le invasioni non sono attive al momento.",
+    "progress": "Ondata {current} di {total} — {cleared} distrutta/e.",
+    "deadline": "Scadenza: {date}. Oltre, gli alieni si ritirano senza bottino.",
+    "waveLocation": "Ondata {wave}: galassia {galaxy}, sistema {system}, posizione {position}",
+    "health": "Salute: {percent}%",
+    "fleet": "Flotta: {ships}",
+    "attack": "Prepara un attacco",
+    "waveLoot": "Bottino diviso per ogni ondata distrutta: {loot}",
+    "finalLoot": "Bottino finale diviso se l'invasione è respinta: {loot}",
+    "reward": "Bonus per tutti se l'invasione è respinta: +{percent}% di produzione per {days} giorno/i.",
+    "mine": "I tuoi danni in questa invasione: {damage} (valore delle navi distrutte).",
+    "nextAuto": "Nessuna invasione al momento. Prossima invasione: {date}.",
+    "none": "Nessuna invasione al momento.",
+    "last": {
+      "REPELLED": "Ultima invasione respinta il {date}: tutte le {total} ondate sono cadute.",
+      "FAILED": "Ultima invasione fallita il {date}: gli alieni si sono ritirati all'ondata {wave} di {total}.",
+      "CANCELLED": "Ultima invasione annullata il {date}."
+    },
+    "topTitle": "Migliori difensori ({count} partecipante/i)",
+    "topLine": "{damage} di danni",
+    "battlesTitle": "I tuoi combattimenti contro gli alieni",
+    "battleLine": "Ondata {wave}: {result}, {damage} di danni inflitti. Perdite: {lost}.",
+    "battleCleared": "Ondata {wave}: colpo fatale! {damage} di danni inflitti. Perdite: {lost}.",
+    "lootWaveLine": "Bottino dell'ondata {wave}: {loot}.",
+    "lootFinalLine": "Bottino finale dell'invasione respinta: {loot}.",
+    "result": {
+      "attacker_win": "vittoria",
+      "defender_win": "sconfitta",
+      "draw": "pareggio"
+    },
+    "names": {
+      "1": "La Marea Nera",
+      "2": "Gli Sciami di Vorax",
+      "3": "L'Armata Fantasma",
+      "4": "L'Orda del Vuoto"
+    }
   }
 }

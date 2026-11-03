@@ -340,8 +340,11 @@ Temporary bonus periods for **all** players, launched by an administrator from t
 **How does the galactic boss work?**
 A single monstrous fleet roams **position 16** (deep space) of a randomly chosen system; the **Galactic boss** page shows its position, health and the loot at stake. It **never attacks planets**. To fight it, send a fleet with the **Attack** mission to that position: the battle lasts 6 rounds, your survivors come home, and **its losses persist** from one battle to the next (it regains a small percentage of its fleet per hour). It can also **intercept an expedition** arriving in its system (50 % by default): the battle takes place and the survivors come home, or the expedition is lost. When its fleet is destroyed, the **loot is shared in proportion to each player's damage** (value of ships destroyed), paid to the planet the fleet left from; it reappears **7 days later** somewhere else, and only one boss exists at a time. Grouped attacks do not target it. All settings (fleet, technologies, loot, regeneration, delay, interception chance) can be changed by administrators; the boss is **disabled** until they enable it.
 
+**How do alien invasions work?**
+An invasion is a **campaign of waves** of alien fleets (5 by default), started by an administrator or automatically. Each wave occupies **position 16** of a system in the invaded galaxy; the **Invasions** page shows its position, health, the deadline and the ranking. Aliens **never attack planets**: to fight them, send a fleet with the **Attack** mission to that position. Their losses persist between battles and they slowly regenerate. A destroyed wave brings the next, stronger one, elsewhere in the galaxy, and its loot is shared in proportion to damage. If every wave falls before the deadline, the invasion is **repelled**: final loot shared by the damage of the whole campaign and a **production bonus for all players** for a few days. Otherwise the aliens withdraw without loot; nothing is lost on the planet side. Invasions stay disabled until the administrator enables them.
+
 ## 11. What does not exist yet
 
-Invasions and competitive seasons. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
+Competitive seasons. The project roadmap ([ROADMAP_MVP.md](../ROADMAP_MVP.md)) tracks these gaps.
 
 *This FAQ was checked against the code (`packages/game-config`, `packages/game-engine`, API) and, for solar satellites, by an automated integration test (`solar-satellites.integration.spec.ts`).*

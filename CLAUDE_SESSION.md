@@ -5,6 +5,15 @@
 
 ---
 
+## Session — Invasions aliens (4 novembre 2026)
+
+- [x] Choix par défaut (demandés par le propriétaire) : campagne de vagues NPC (5, ×1,35 par vague, 72 h), chaque vague en position 16 d'un système de la galaxie envahie, aucune attaque de planète (même principe que le boss), butin de vague puis butin final au prorata des dégâts, bonus de production pour tous (+20 % pendant 3 jours, événement du monde `invasion_victory`) si l'invasion est repoussée, rien si l'échéance est dépassée, désactivées par défaut.
+- [x] `packages/game-config/src/invasion.ts` (réglages stricts/tolérants, vagues, échéance, lancement automatique), tables `Invasion`/`InvasionWave`/`InvasionDamage`/`InvasionBattle` (migration `20261104100000_alien_invasions`, liens vers `User` en cascade : la suppression de compte efface la participation), module `apps/api/src/invasions/` (cron minute, combat, butins, bonus réessayé jusqu'au succès, console admin auditée).
+- [x] Code partagé avec le boss : `apps/api/src/boss/npc-combat.ts` (combat NPC, arrivée de flotte) ; aiguillage position 16 dans `fleet.service.ts` et `fleet-cron.service.ts` (boss prioritaire) ; le boss évite le système d'un front d'invasion ; `universe:reset` efface aussi les invasions ; `WorldEventsService.launchReward`.
+- [x] Interface : page `/invasion` et entrée du menu, onglet Invasions de la console, textes en 5 langues, FAQ (5 langues).
+- [x] Tests : unitaires `invasion.spec` (12), intégration `invasions` (21) et boss (19, après refactor), `universe-reset` (7), E2E `invasion` (2), mobile (invasions et boss).
+- Limites : équilibrage par défaut non éprouvé ; une seule invasion à la fois ; pas d'attaque groupée ni de commandants dans ce combat ; pas de repère dans la vue galaxie ; deux invasions consécutives en automatique ne se chevauchent jamais.
+
 ## Session — Alignement du nettoyage des suppressions de compte (3 novembre 2026)
 
 - [x] `apps/api/src/common/account-cleanup.ts` : `cleanupLooseUserReferences` (dégâts de boss, exemptions de comptes liés, file de recherche, identifiant des incidents) utilisé par la suppression par le joueur (`AccountService.deleteAccount`) **et** par un administrateur (`AdminService.managePlayer`, action `delete`), qui laissaient jusque-là des restes différents.

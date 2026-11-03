@@ -207,6 +207,27 @@ export class WorldEventsService {
     return this.toView(event);
   }
 
+  /**
+   * Événement offert par le jeu (bonus d'une invasion repoussée), sans administrateur : une seule fois par
+   * `occurrenceKey` (ConflictException si déjà lancé). Le nom affiché est la traduction `worldEvents.names.<templateId>`.
+   */
+  async launchReward(input: { templateId: string; occurrenceKey: string; days: number; productionBonus: number; now?: Date }) {
+    const now = input.now ?? new Date();
+    const event = await this.create({
+      kind: 'INVASION',
+      templateId: input.templateId,
+      occurrenceKey: input.occurrenceKey,
+      status: 'ACTIVE',
+      startsAt: now,
+      endsAt: new Date(now.getTime() + input.days * DAY_MS),
+      productionBonus: input.productionBonus,
+      marketTaxReduction: 0,
+      auto: true,
+      launchedById: null,
+    });
+    return this.toView(event);
+  }
+
   /** Termine un événement tout de suite (annulation) : la production est réglée avant le retrait du bonus. */
   async end(actorId: string | null, id: string, status: 'ENDED' | 'CANCELLED' = 'CANCELLED') {
     const event = await this.database.worldEvent.findUnique({ where: { id } });

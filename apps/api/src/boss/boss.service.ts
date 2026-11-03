@@ -18,11 +18,8 @@ import {
   splitBossLoot,
   type BossConfig,
 } from '@xnova/game-config';
-import { simulateCombat } from '@xnova/game-engine';
 import { DatabaseService } from '../database/database.service';
-
-type Tx = Prisma.TransactionClient;
-type Ships = Record<number, number>;
+import { fightNpcFleet, originPlanetId, readShips, settleNpcArrival, type ArrivingFleet, type Ships, type Tx } from './npc-combat';
 
 export interface BossEngagement {
   userId: string;
@@ -46,15 +43,6 @@ export interface BossEngagementResult {
   /** Part de butin du joueur si son combat a tué le boss. */
   loot: Record<'metal' | 'crystal' | 'deuterium', number> | null;
   battleId: string;
-}
-
-function readShips(raw: unknown): Ships {
-  const result: Ships = {};
-  for (const [id, amount] of Object.entries((raw ?? {}) as Record<string, unknown>)) {
-    const n = Math.floor(Number(amount));
-    if (SHIPS[Number(id)] && Number.isFinite(n) && n > 0) result[Number(id)] = n;
-  }
-  return result;
 }
 
 @Injectable()
@@ -94,8 +82,15 @@ export class BossService {
 
   /** Fait apparaître un boss à une position profonde tirée au hasard (ou imposée). Ne crée rien si un boss vit déjà. */
   async spawn(config: BossConfig, place?: { galaxy: number; system: number }) {
-    const galaxy = place?.galaxy ?? 1 + Math.floor(this.random() * GAME_CONSTANTS.MAX_GALAXIES);
-    const system = place?.system ?? 1 + Math.floor(this.random() * GAME_CONSTANTS.MAX_SYSTEMS);
+    let galaxy = place?.galaxy ?? 1 + Math.floor(this.random() * GAME_CONSTANTS.MAX_GALAXIES);
+    let system = place?.system ?? 1 + Math.floor(this.random() * GAME_CONSTANTS.MAX_SYSTEMS);
+    // Pas dans le système d'un front d'invasion en cours (un seul adversaire par position profonde) : nouveau tirage
+    for (let attempt = 0; !place && attempt < 5; attempt += 1) {
+      const front = await this.database.invasionWave.findFirst({ where: { activeSlot: 1, system, invasion: { galaxy } }, select: { id: true } });
+      if (!front) break;
+      galaxy = 1 + Math.floor(this.random() * GAME_CONSTANTS.MAX_GALAXIES);
+      system = 1 + Math.floor(this.random() * GAME_CONSTANTS.MAX_SYSTEMS);
+    }
     const nameId = 1 + Math.floor(this.random() * BOSS_NAME_COUNT);
     try {
       return await this.database.galacticBoss.create({
@@ -168,26 +163,9 @@ export class BossService {
     const hours = (now.getTime() - boss.lastRegenAt.getTime()) / 3_600_000;
     const current = regenerateBossFleet(readShips(boss.ships), max, hours, settings.regenPercentPerHour);
 
-    const techRows = await tx.technology.findMany({
-      where: { userId: engagement.userId, techId: { in: [109, 110, 111] } },
-      select: { techId: true, level: true },
-    });
-    const level = (id: number) => techRows.find((row) => row.techId === id)?.level ?? 0;
-
-    const combat = simulateCombat({
-      attackerShips: engagement.ships,
-      defenderShips: current,
-      attackerTech: { weapon: level(109), armor: level(110), shield: level(111) },
-      defenderTech: settings.tech,
-    });
-
-    const remaining: Ships = {};
-    for (const [id, count] of Object.entries(combat.defenderRemaining)) if (count > 0) remaining[Number(id)] = count;
-    const bossLosses: Ships = {};
-    for (const [id, count] of Object.entries(combat.defenderLosses)) if (count > 0) bossLosses[Number(id)] = count;
-    const damage = fleetValue(bossLosses);
-    const killed = shipTotal(remaining) === 0;
-    const healthAfter = bossHealthRatio(remaining, max);
+    const fight = await fightNpcFleet(tx, { userId: engagement.userId, ships: engagement.ships, current, max, npcTech: settings.tech });
+    const { remaining, npcLosses: bossLosses, attackerLosses, damage, killed, healthAfter } = fight;
+    const combat = { result: fight.result, rounds: fight.rounds, attackerRemaining: fight.survivors };
 
     await tx.bossDamage.upsert({
       where: { bossId_userId: { bossId: boss.id, userId: engagement.userId } },
@@ -195,8 +173,6 @@ export class BossService {
       update: { planetId: engagement.planetId, damage: { increment: damage }, battles: { increment: 1 }, lastAt: now },
     });
 
-    const attackerLosses: Ships = {};
-    for (const [id, count] of Object.entries(combat.attackerLosses)) if (count > 0) attackerLosses[Number(id)] = count;
     const battle = await tx.bossBattle.create({
       data: {
         bossId: boss.id,
@@ -279,58 +255,25 @@ export class BossService {
   }
 
   /** Planète d'origine d'une flotte (reçoit la part de butin) ; à défaut, première planète du joueur. */
-  async originPlanetId(
-    tx: Tx,
-    fleet: { userId: string; fromGalaxy: number; fromSystem: number; fromPosition: number; fromMoon: boolean },
-  ): Promise<string | null> {
-    const origin =
-      (await tx.planet.findFirst({
-        where: { userId: fleet.userId, galaxy: fleet.fromGalaxy, system: fleet.fromSystem, position: fleet.fromPosition, isMoon: fleet.fromMoon },
-        select: { id: true },
-      })) ?? (await tx.planet.findFirst({ where: { userId: fleet.userId, isMoon: false }, orderBy: { createdAt: 'asc' }, select: { id: true } }));
-    return origin?.id ?? null;
+  originPlanetId(tx: Tx, fleet: { userId: string; fromGalaxy: number; fromSystem: number; fromPosition: number; fromMoon: boolean }) {
+    return originPlanetId(tx, fleet);
+  }
+
+  /** Boss vivant et activé à ces coordonnées ? (aiguillage des attaques vers la position 16 : boss ou invasion). */
+  async isEnabledBossAt(galaxy: number, system: number): Promise<boolean> {
+    const config = await this.config();
+    return config.enabled && !!(await this.aliveAt(galaxy, system));
   }
 
   /**
    * Arrivée d'une flotte en attaque (mission 1) en position 16 : combat contre le boss, survivants au retour.
    * Renvoie false si la flotte a déjà été prise en charge (une seule résolution par flotte).
    */
-  async resolveAttackArrival(fleet: {
-    id: string;
-    userId: string;
-    ships: unknown;
-    cargo: unknown;
-    fromGalaxy: number;
-    fromSystem: number;
-    fromPosition: number;
-    fromMoon: boolean;
-    toGalaxy: number;
-    toSystem: number;
-  }): Promise<boolean> {
+  async resolveAttackArrival(fleet: ArrivingFleet): Promise<boolean> {
     const config = await this.config();
-    return this.database.$transaction(async (tx) => {
-      const claimed = await tx.fleet.updateMany({ where: { id: fleet.id, status: 'traveling' }, data: { status: 'returning' } });
-      if (claimed.count !== 1) return false;
-      const originId = await this.originPlanetId(tx, fleet);
-      const sent = readShips(fleet.ships);
-      const outcome = originId
-        ? await this.engage(tx, { userId: fleet.userId, planetId: originId, ships: sent, source: 'ATTACK', galaxy: fleet.toGalaxy, system: fleet.toSystem }, config)
-        : null;
-      // Plus de boss (mort ou retiré entre l'envoi et l'arrivée) : la flotte rentre intacte
-      if (!outcome) return true;
-      if (shipTotal(outcome.survivors) === 0) {
-        await tx.fleet.update({ where: { id: fleet.id }, data: { status: 'completed', ships: {}, cargo: {}, returnTime: null } });
-        return true;
-      }
-      // Cargaison réduite à proportion des vaisseaux perdus (elle ne peut pas dépasser ce que les survivants portent)
-      const keep = shipTotal(outcome.survivors) / Math.max(1, shipTotal(sent));
-      const cargo = (fleet.cargo ?? {}) as Record<string, unknown>;
-      const scaled = Object.fromEntries(
-        ['metal', 'crystal', 'deuterium'].map((resource) => [resource, Math.floor((Number(cargo[resource]) || 0) * keep)]),
-      );
-      await tx.fleet.update({ where: { id: fleet.id }, data: { ships: outcome.survivors as unknown as Prisma.InputJsonValue, cargo: scaled } });
-      return true;
-    });
+    return settleNpcArrival(this.database, fleet, (tx, originId, sent) =>
+      this.engage(tx, { userId: fleet.userId, planetId: originId, ships: sent, source: 'ATTACK', galaxy: fleet.toGalaxy, system: fleet.toSystem }, config),
+    );
   }
 
   // ===== Lecture joueur =====

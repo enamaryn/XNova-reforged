@@ -32,7 +32,8 @@
     "achievements": "Logros",
     "npcTrade": "Comercio",
     "boss": "Jefe galáctico",
-    "support": "Soporte"
+    "support": "Soporte",
+    "invasion": "Invasiones"
   },
   "sidebar": {
     "principal": "Principal",
@@ -495,7 +496,51 @@
       "spawned": "Jefe aparecido.",
       "despawned": "Jefe retirado."
     },
-    "tabSupport": "Soporte"
+    "tabSupport": "Soporte",
+    "tabInvasion": "Invasiones",
+    "invasion": {
+      "title": "Invasiones alienígenas",
+      "intro": "Una invasión es una campaña de oleadas de flotas alienígenas, cada una en la posición 16 de un sistema de la galaxia invadida, que hay que repeler antes del plazo. Los alienígenas nunca atacan planetas. Ajuste el número de oleadas, su flota y su crecimiento, el botín y la bonificación que se concede si se repele la invasión. Cada guardado queda en el diario de auditoría. Las invasiones están desactivadas por defecto: compruebe la fuerza de las oleadas antes de activarlas.",
+      "active": "{name} en la galaxia {galaxy}: oleada {current} de {total}, plazo el {date}.",
+      "wave": "Oleada en curso: n.º {wave}, sistema {system}, salud {percent} %.",
+      "cancel": "Cancelar la invasión",
+      "cancelConfirm": "¿Cancelar la invasión en curso sin botín ni bonificación?",
+      "none": "Ninguna invasión en curso.",
+      "galaxy": "Galaxia (opcional)",
+      "start": "Lanzar una invasión",
+      "historyLine": "{name} — galaxia {galaxy} · {status} (oleada {wave} de {total}) · terminada el {date}",
+      "status": {
+        "ACTIVE": "en curso",
+        "REPELLED": "repelida",
+        "FAILED": "fallida",
+        "CANCELLED": "cancelada"
+      },
+      "enabled": "Invasiones activas (inicio, combates, bonificación)",
+      "waves": "Número de oleadas",
+      "durationHours": "Duración de la campaña (horas)",
+      "autoIntervalDays": "Inicio automático cada (días, 0 = manual)",
+      "waveGrowth": "Crecimiento de la flota por oleada (×)",
+      "regen": "Regeneración (% de la oleada por hora)",
+      "rewardTitle": "Bonificación si se repele la invasión",
+      "rewardPercent": "Bonificación de producción (%, 0 = ninguna)",
+      "rewardDays": "Duración de la bonificación (días)",
+      "techTitle": "Tecnologías de los alienígenas",
+      "weapon": "Armas",
+      "shield": "Escudo",
+      "armor": "Blindaje",
+      "waveLootTitle": "Botín de cada oleada destruida",
+      "finalLootTitle": "Botín final (invasión repelida)",
+      "shipsTitle": "Flota de la primera oleada",
+      "removeShip": "Quitar esta nave",
+      "addShip": "Añadir una nave…",
+      "waveValue": "Valor de la primera oleada (equivalente en metal): {value}",
+      "save": "Guardar",
+      "saved": "Ajustes guardados.",
+      "reset": "Valores por defecto",
+      "resetConfirm": "¿Volver a los valores por defecto de las invasiones?",
+      "started": "Invasión lanzada.",
+      "cancelled": "Invasión cancelada."
+    }
   },
   "common": {
     "language": "Idioma",
@@ -1478,7 +1523,8 @@
       "summer_solstice": "Solsticio de verano",
       "harvest_moon": "Luna de la cosecha",
       "dark_nebula": "Nebulosa oscura",
-      "winter_festival": "Fiesta del invierno"
+      "winter_festival": "Fiesta del invierno",
+      "invasion_victory": "Victoria contra la invasión"
     },
     "admin": {
       "title": "Eventos del mundo",
@@ -1727,5 +1773,46 @@
     "replyNotice": "El jugador la lee en «Mis informes» y recibe también un mensaje en el juego.",
     "replyError": "No se pudo enviar la respuesta.",
     "authorFallback": "Soporte"
+  },
+  "invasion": {
+    "kicker": "Espacio profundo",
+    "title": "Invasiones alienígenas",
+    "subtitle": "Oleadas de flotas alienígenas ({waves} por invasión) invaden sistemas de una galaxia. Nunca atacan planetas. Ataque la oleada en curso con la misión «Ataque» hacia su posición: sus pérdidas persisten entre combates y recupera un {regen} % de su flota por hora. Cada oleada destruida hace aparecer la siguiente, más fuerte. Repela todas las oleadas antes del plazo ({hours} h) para repartir el botín y activar una bonificación para todos.",
+    "disabled": "Las invasiones no están activas por el momento.",
+    "progress": "Oleada {current} de {total} — {cleared} destruida(s).",
+    "deadline": "Plazo: {date}. Pasado ese plazo, los alienígenas se retiran sin botín.",
+    "waveLocation": "Oleada {wave}: galaxia {galaxy}, sistema {system}, posición {position}",
+    "health": "Salud: {percent} %",
+    "fleet": "Flota: {ships}",
+    "attack": "Preparar un ataque",
+    "waveLoot": "Botín repartido por cada oleada destruida: {loot}",
+    "finalLoot": "Botín final repartido si se repele la invasión: {loot}",
+    "reward": "Bonificación para todos si se repele la invasión: +{percent} % de producción durante {days} día(s).",
+    "mine": "Su daño en esta invasión: {damage} (valor de las naves destruidas).",
+    "nextAuto": "Ninguna invasión ahora. Próxima invasión: {date}.",
+    "none": "Ninguna invasión ahora.",
+    "last": {
+      "REPELLED": "Última invasión repelida el {date}: cayeron las {total} oleadas.",
+      "FAILED": "Última invasión fallida el {date}: los alienígenas se retiraron en la oleada {wave} de {total}.",
+      "CANCELLED": "Última invasión cancelada el {date}."
+    },
+    "topTitle": "Mejores defensores ({count} participante(s))",
+    "topLine": "{damage} de daño",
+    "battlesTitle": "Sus combates contra los alienígenas",
+    "battleLine": "Oleada {wave}: {result}, {damage} de daño infligido. Pérdidas: {lost}.",
+    "battleCleared": "Oleada {wave}: ¡golpe de gracia! {damage} de daño infligido. Pérdidas: {lost}.",
+    "lootWaveLine": "Botín de la oleada {wave}: {loot}.",
+    "lootFinalLine": "Botín final de la invasión repelida: {loot}.",
+    "result": {
+      "attacker_win": "victoria",
+      "defender_win": "derrota",
+      "draw": "empate"
+    },
+    "names": {
+      "1": "La Marea Negra",
+      "2": "Los Enjambres de Vorax",
+      "3": "La Armada Fantasma",
+      "4": "La Horda del Vacío"
+    }
   }
 }

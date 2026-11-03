@@ -106,6 +106,10 @@ describe('Remise à zéro de l\'univers (universe:reset)', () => {
     await db.npcTrade.create({ data: { userId: alice.id, planetId: pa.id, kind: 'EXCHANGE', value: 10 } });
     const boss = await db.galacticBoss.create({ data: { nameId: 1, galaxy: 1, system: 1, ships: {}, maxShips: {}, status: 'ALIVE' } });
     await db.bossDamage.create({ data: { bossId: boss.id, userId: alice.id, planetId: pb.id, damage: 5, battles: 1 } });
+    const invasion = await db.invasion.create({ data: { nameId: 1, galaxy: 1, totalWaves: 3, endsAt: new Date(Date.now() + 3600_000), activeSlot: 1 } });
+    const wave = await db.invasionWave.create({ data: { invasionId: invasion.id, index: 1, system: 5, activeSlot: 1, ships: { '210': 5 }, maxShips: { '210': 5 } } });
+    await db.invasionDamage.create({ data: { invasionId: invasion.id, waveId: wave.id, userId: alice.id, planetId: pb.id, damage: 3, battles: 1 } });
+    await db.invasionBattle.create({ data: { invasionId: invasion.id, waveId: wave.id, waveIndex: 1, userId: alice.id, source: 'ATTACK', galaxy: 1, system: 5 } });
     await db.questClaim.create({ data: { userId: alice.id, questId: 'daily_build', periodKey: '2026-11-03' } });
     await db.achievementUnlock.create({ data: { userId: alice.id, achievementId: 'first_planet' } });
     await db.officer.create({ data: { userId: alice.id, type: 'admiral' } });
@@ -226,6 +230,10 @@ describe('Remise à zéro de l\'univers (universe:reset)', () => {
       expect(await db.npcTrade.count()).toBe(0);
       expect(await db.galacticBoss.count()).toBe(0);
       expect(await db.bossDamage.count()).toBe(0);
+      expect(await db.invasion.count()).toBe(0);
+      expect(await db.invasionWave.count()).toBe(0);
+      expect(await db.invasionDamage.count()).toBe(0);
+      expect(await db.invasionBattle.count()).toBe(0);
       expect(await db.questClaim.count()).toBe(0);
       expect(await db.achievementUnlock.count()).toBe(0);
       expect(await db.officer.count()).toBe(0);

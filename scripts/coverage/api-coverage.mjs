@@ -15,8 +15,12 @@ const THRESHOLDS = { statements: 85, lines: 85, branches: 70, functions: 80 };
 const dirs = { unit: '/tmp/xnova-cov-unit', integration: '/tmp/xnova-cov-int' };
 const SOURCES = ['--collectCoverageFrom=src/**/*.ts', '--collectCoverageFrom=!src/**/*.module.ts', '--collectCoverageFrom=!src/main.ts', '--collectCoverageFrom=!src/**/dto/**'];
 
+// Toutes les suites d'intégration tournent dans un seul processus (--runInBand) : avec la couverture, le tas par défaut
+// (environ 2 Go) ne suffit plus (dépassement constaté à 66 suites).
+const NODE_OPTIONS = `${process.env.NODE_OPTIONS ?? ''} --max-old-space-size=4096`.trim();
+
 function jest(args) {
-  const result = spawnSync('npx', ['jest', ...args, '--coverage', ...SOURCES, '--coverageReporters=json'], { cwd: api, stdio: 'inherit', env: process.env });
+  const result = spawnSync('npx', ['jest', ...args, '--coverage', ...SOURCES, '--coverageReporters=json'], { cwd: api, stdio: 'inherit', env: { ...process.env, NODE_OPTIONS } });
   if (result.status !== 0) process.exit(result.status ?? 1);
 }
 
