@@ -1702,7 +1702,8 @@
     "statusseen": "Lu",
     "statusresolved": "Traité",
     "statusignored": "Classé",
-    "errorGeneric": "Impossible d'envoyer le signalement."
+    "errorGeneric": "Impossible d'envoyer le signalement.",
+    "replyTitle": "Réponse du support"
   },
   "adminSupport": {
     "title": "Signalements des joueurs",
@@ -1717,6 +1718,14 @@
     "prev": "Précédent",
     "next": "Suivant",
     "pageOf": "Page {page} sur {pages}",
-    "error": "Action impossible."
+    "error": "Action impossible.",
+    "replies": "Réponses envoyées",
+    "reply": "Répondre",
+    "replyPlaceholder": "Votre réponse au joueur",
+    "replySend": "Envoyer la réponse",
+    "replySending": "Envoi…",
+    "replyNotice": "Le joueur la lit dans « Mes signalements » et reçoit aussi un message en jeu.",
+    "replyError": "Impossible d'envoyer la réponse.",
+    "authorFallback": "Support"
   }
 }

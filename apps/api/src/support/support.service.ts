@@ -1,8 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { SUPPORT_LIMITS, type SupportStatus } from '@xnova/game-config';
 import { DatabaseService } from '../database/database.service';
 import { lockUser } from '../common/atomic';
-import type { CreateSupportReportDto } from './dto/support.dto';
+import type { CreateSupportReplyDto, CreateSupportReportDto } from './dto/support.dto';
 
 const PAGE_SIZE = 25;
 
@@ -50,7 +50,14 @@ export class SupportService {
       where: { userId },
       orderBy: { createdAt: 'desc' },
       take: SUPPORT_LIMITS.mineLimit,
-      select: { id: true, kind: true, subject: true, status: true, createdAt: true },
+      select: {
+        id: true,
+        kind: true,
+        subject: true,
+        status: true,
+        createdAt: true,
+        replies: { orderBy: { createdAt: 'asc' }, select: { id: true, body: true, createdAt: true } },
+      },
     });
   }
 
@@ -64,7 +71,13 @@ export class SupportService {
         orderBy: { createdAt: status === 'new' ? 'asc' : 'desc' },
         skip: (page - 1) * PAGE_SIZE,
         take: PAGE_SIZE,
-        include: { user: { select: { id: true, username: true, email: true } } },
+        include: {
+          user: { select: { id: true, username: true, email: true } },
+          replies: {
+            orderBy: { createdAt: 'asc' },
+            select: { id: true, body: true, createdAt: true, author: { select: { username: true } } },
+          },
+        },
       }),
       this.database.supportReport.count({ where: { status: 'new' } }),
     ]);
@@ -85,6 +98,12 @@ export class SupportService {
         createdAt: r.createdAt,
         resolvedAt: r.resolvedAt,
         user: r.user,
+        replies: r.replies.map((reply) => ({
+          id: reply.id,
+          body: reply.body,
+          createdAt: reply.createdAt,
+          author: reply.author?.username ?? null,
+        })),
       })),
     };
   }
@@ -104,5 +123,40 @@ export class SupportService {
       }),
     ]);
     return { id, status };
+  }
+
+  /**
+   * Répond à un signalement : la réponse est enregistrée sur le signalement (le joueur la lit dans « Mes signalements »)
+   * et envoyée en message privé du jeu, qui le prévient comme tout message. Un signalement « nouveau » passe à « lu ».
+   * Le journal d'audit ne garde que la longueur de la réponse, pas son texte.
+   */
+  async reply(actorId: string, id: string, dto: CreateSupportReplyDto) {
+    const body = clean(dto.body, SUPPORT_LIMITS.replyMax);
+    if (!body) throw new BadRequestException('La réponse est vide');
+    const report = await this.database.supportReport.findUnique({
+      where: { id },
+      select: { id: true, userId: true, subject: true, status: true },
+    });
+    if (!report) throw new NotFoundException('Signalement introuvable');
+
+    return this.database.$transaction(async (tx) => {
+      const reply = await tx.supportReply.create({
+        data: { reportId: id, authorId: actorId, body },
+        select: { id: true, createdAt: true },
+      });
+      if (report.status === 'new') await tx.supportReport.update({ where: { id }, data: { status: 'seen' } });
+      await tx.message.create({
+        data: {
+          fromId: actorId,
+          toId: report.userId,
+          subject: `Support : ${report.subject}`.slice(0, 100),
+          body,
+        },
+      });
+      await tx.adminAuditLog.create({
+        data: { userId: actorId, action: 'support.reply', changes: { id, replyId: reply.id, length: body.length } },
+      });
+      return { id: reply.id, createdAt: reply.createdAt, status: report.status === 'new' ? 'seen' : report.status };
+    });
   }
 }

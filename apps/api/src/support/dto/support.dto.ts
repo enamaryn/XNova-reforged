@@ -32,3 +32,10 @@ export class UpdateSupportStatusDto {
   @IsIn(SUPPORT_STATUSES as unknown as string[])
   status!: (typeof SUPPORT_STATUSES)[number];
 }
+
+export class CreateSupportReplyDto {
+  @IsString()
+  @MinLength(SUPPORT_LIMITS.replyMin, { message: 'La réponse est vide' })
+  @MaxLength(SUPPORT_LIMITS.replyMax, { message: 'La réponse est trop longue' })
+  body!: string;
+}

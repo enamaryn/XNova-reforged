@@ -14,7 +14,7 @@ Ultimo aggiornamento: 3 novembre 2026. Questo documento spiega quali dati raccog
 | Indirizzo email (e la sua forma canonica: senza alias «+etichetta» né punti di Gmail) | Accesso, conferma dell'account, password dimenticata, rilevamento degli account multipli | Finché esiste l'account |
 | Password | Accesso. Viene conservata solo un'**impronta Argon2**, mai la password | Finché esiste l'account |
 | Data e versione delle condizioni accettate | Dimostrare la tua accettazione delle condizioni d'uso | Finché esiste l'account |
-| Segnalazioni inviate al supporto: tipo, oggetto, messaggio, pagina aperta, versione del gioco, browser | Gestire le tue richieste di supporto e correggere i bug | Finché esiste l'account (cancellate con esso) |
+| Segnalazioni inviate al supporto: tipo, oggetto, messaggio, pagina aperta, versione del gioco, browser e le risposte del supporto | Gestire le tue richieste di supporto e correggere i bug | Finché esiste l'account (cancellate con esso) |
 | Indirizzo IP (IPv4, o prefisso /64 per IPv6), visto alla registrazione, all'accesso e al rinnovo della sessione | Controllo degli account multipli e sicurezza | **90 giorni** dopo l'ultima osservazione per impostazione predefinita (modificabile dal gestore), eliminazione automatica ogni notte |
 | Dati di gioco: pianeti, edifici, ricerche, flotte, rapporti, messaggi privati, alleanza, missioni, mercato | Funzionamento del gioco | Finché esiste l'account |
 | Sessioni: impronta del token di rinnovo, date | Restare connessi, poter revocare una sessione | Al massimo 30 giorni per sessione |

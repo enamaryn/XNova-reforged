@@ -14,7 +14,7 @@
 | Dirección de correo (y su forma canónica: sin alias «+etiqueta» ni puntos de Gmail) | Inicio de sesión, confirmación de la cuenta, contraseña olvidada, detección de cuentas múltiples | Mientras exista la cuenta |
 | Contraseña | Inicio de sesión. Solo se guarda una **huella Argon2**, nunca la contraseña | Mientras exista la cuenta |
 | Fecha y versión de las condiciones aceptadas | Demostrar su aceptación de las condiciones de uso | Mientras exista la cuenta |
-| Informes enviados al soporte: tipo, asunto, mensaje, página abierta, versión del juego, navegador | Atender sus solicitudes de soporte y corregir errores | Mientras exista la cuenta (se borran con ella) |
+| Informes enviados al soporte: tipo, asunto, mensaje, página abierta, versión del juego, navegador, y las respuestas del soporte | Atender sus solicitudes de soporte y corregir errores | Mientras exista la cuenta (se borran con ella) |
 | Dirección IP (IPv4, o prefijo /64 en IPv6), vista al registrarse, al iniciar sesión y al renovar la sesión | Control de cuentas múltiples y seguridad | **90 días** tras la última observación por defecto (ajustable por el editor), purga automática cada noche |
 | Datos de juego: planetas, edificios, investigaciones, flotas, informes, mensajes privados, alianza, misiones, mercado | Funcionamiento del juego | Mientras exista la cuenta |
 | Sesiones: huella del token de renovación, fechas | Mantener la sesión abierta y poder revocarla | 30 días como máximo por sesión |

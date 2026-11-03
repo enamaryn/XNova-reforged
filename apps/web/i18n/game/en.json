@@ -1702,7 +1702,8 @@
     "statusseen": "Read",
     "statusresolved": "Handled",
     "statusignored": "Closed",
-    "errorGeneric": "The report could not be sent."
+    "errorGeneric": "The report could not be sent.",
+    "replyTitle": "Support reply"
   },
   "adminSupport": {
     "title": "Player reports",
@@ -1717,6 +1718,14 @@
     "prev": "Previous",
     "next": "Next",
     "pageOf": "Page {page} of {pages}",
-    "error": "Action failed."
+    "error": "Action failed.",
+    "replies": "Replies sent",
+    "reply": "Reply",
+    "replyPlaceholder": "Your reply to the player",
+    "replySend": "Send the reply",
+    "replySending": "Sending…",
+    "replyNotice": "The player reads it in \"My reports\" and also gets an in-game message.",
+    "replyError": "The reply could not be sent.",
+    "authorFallback": "Support"
   }
 }

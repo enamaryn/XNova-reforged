@@ -121,6 +121,7 @@ Toutes les décisions listées dans la version précédente sont prises et appli
 - [x] Conditions d'utilisation et politique de confidentialité publiées en 5 langues (`/terms`, `/privacy`), liens en pied de page et sous le bouton d'inscription ; éditeur et contact par `LEGAL_OPERATOR_NAME` / `LEGAL_CONTACT` (critère V1 9.1 : texte livré, à compléter et relire par le propriétaire).
 - [x] Acceptation des conditions enregistrée (date et version, case obligatoire, bandeau pour les comptes existants) et bouton de suppression de compte (3 novembre 2026).
 - [x] Page de support et signalement de bugs (3 novembre 2026) : `/support`, `/assistance`, formulaire relié à l'onglet Support de la console admin (critère V1 9.4 : livré, canal à annoncer par le propriétaire).
+- [x] Réponse intégrée aux signalements (3 novembre 2026) : réponse de l'administrateur lue dans « Mes signalements » et envoyée en message en jeu.
 - [ ] Reste : relecture juridique des textes ; courriel de confirmation et délai de grâce de la suppression (non prévus).
 
 ## Événements du monde (22 octobre 2026)

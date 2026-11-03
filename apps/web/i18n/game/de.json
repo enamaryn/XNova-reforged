@@ -1702,7 +1702,8 @@
     "statusseen": "Gelesen",
     "statusresolved": "Erledigt",
     "statusignored": "Abgeschlossen",
-    "errorGeneric": "Die Meldung konnte nicht gesendet werden."
+    "errorGeneric": "Die Meldung konnte nicht gesendet werden.",
+    "replyTitle": "Antwort des Supports"
   },
   "adminSupport": {
     "title": "Meldungen der Spieler",
@@ -1717,6 +1718,14 @@
     "prev": "Zurück",
     "next": "Weiter",
     "pageOf": "Seite {page} von {pages}",
-    "error": "Aktion fehlgeschlagen."
+    "error": "Aktion fehlgeschlagen.",
+    "replies": "Gesendete Antworten",
+    "reply": "Antworten",
+    "replyPlaceholder": "Ihre Antwort an den Spieler",
+    "replySend": "Antwort senden",
+    "replySending": "Wird gesendet…",
+    "replyNotice": "Der Spieler liest sie unter „Meine Meldungen“ und erhält zusätzlich eine Nachricht im Spiel.",
+    "replyError": "Die Antwort konnte nicht gesendet werden.",
+    "authorFallback": "Support"
   }
 }

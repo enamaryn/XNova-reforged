@@ -206,6 +206,100 @@ describe('API integration - Support et signalements de bugs', () => {
     });
   });
 
+  describe('réponses aux signalements', () => {
+    const adminToken = async () => {
+      const admin = await signUp('ADMIN');
+      const login = await request(server())
+        .post('/auth/login')
+        .send({ identifier: admin.user.username, password: admin.user.password })
+        .expect(200);
+      return { ...admin, token: login.body.tokens.accessToken as string };
+    };
+    const reply = (token: string, id: string, body: unknown) =>
+      request(server()).post(`/admin/support/reports/${id}/replies`).set(authed(token)).send({ body });
+
+    it('est réservée aux administrateurs', async () => {
+      const player = await signUp();
+      const made = await report(player.access).expect(201);
+      await request(server()).post(`/admin/support/reports/${made.body.id}/replies`).send({ body: 'Bonjour' }).expect(401);
+      await reply(player.access, made.body.id, 'Bonjour').expect(403);
+      expect(await database.supportReply.count({ where: { reportId: made.body.id } })).toBe(0);
+    });
+
+    it('enregistre la réponse, prévient le joueur par message en jeu, passe « nouveau » à « lu » et journalise sans le texte', async () => {
+      const player = await signUp();
+      const admin = await adminToken();
+      const made = await report(player.access, { subject: 'La file se fige' }).expect(201);
+
+      const text = 'Merci du signalement : le correctif part dans la prochaine mise à jour.';
+      const res = await reply(admin.token, made.body.id, text).expect(201);
+      expect(res.body.status).toBe('seen');
+
+      const row = await database.supportReport.findUniqueOrThrow({ where: { id: made.body.id } });
+      expect(row.status).toBe('seen');
+
+      // Le joueur lit la réponse dans « Mes signalements »
+      const mine = await request(server()).get('/support/reports/mine').set(authed(player.access)).expect(200);
+      expect(mine.body[0].replies).toEqual([expect.objectContaining({ body: text })]);
+
+      // ... et dans sa boîte de réception
+      const message = await database.message.findFirstOrThrow({ where: { toId: player.userId } });
+      expect(message).toMatchObject({ fromId: admin.userId, subject: 'Support : La file se fige', body: text, read: false });
+
+      // L'administrateur voit le fil, avec l'auteur
+      const list = await request(server()).get('/admin/support/reports?status=seen').set(authed(admin.token)).expect(200);
+      const found = list.body.items.find((item: { id: string }) => item.id === made.body.id);
+      expect(found.replies).toEqual([expect.objectContaining({ body: text, author: admin.user.username })]);
+
+      // Audit : longueur seulement
+      const audit = await database.adminAuditLog.findFirstOrThrow({
+        where: { userId: admin.userId, action: 'support.reply' },
+        orderBy: { createdAt: 'desc' },
+      });
+      expect(audit.changes).toEqual({ id: made.body.id, replyId: res.body.id, length: text.length });
+    });
+
+    it('garde le statut d’un signalement déjà traité, et accepte plusieurs réponses dans l’ordre', async () => {
+      const player = await signUp();
+      const admin = await adminToken();
+      const made = await report(player.access).expect(201);
+      await database.supportReport.update({ where: { id: made.body.id }, data: { status: 'resolved' } });
+
+      await reply(admin.token, made.body.id, 'Première réponse').expect(201);
+      await reply(admin.token, made.body.id, 'Seconde réponse').expect(201);
+      expect((await database.supportReport.findUniqueOrThrow({ where: { id: made.body.id } })).status).toBe('resolved');
+      const mine = await request(server()).get('/support/reports/mine').set(authed(player.access)).expect(200);
+      expect(mine.body[0].replies.map((r: { body: string }) => r.body)).toEqual(['Première réponse', 'Seconde réponse']);
+    });
+
+    it('refuse une réponse vide ou trop longue, un champ inconnu et un signalement introuvable', async () => {
+      const player = await signUp();
+      const admin = await adminToken();
+      const made = await report(player.access).expect(201);
+      await reply(admin.token, made.body.id, '').expect(400);
+      await reply(admin.token, made.body.id, '\u0000\u0007').expect(400);
+      await reply(admin.token, made.body.id, 'x'.repeat(SUPPORT_LIMITS.replyMax + 1)).expect(400);
+      await request(server())
+        .post(`/admin/support/reports/${made.body.id}/replies`)
+        .set(authed(admin.token))
+        .send({ body: 'Bonjour', status: 'resolved' })
+        .expect(400);
+      await reply(admin.token, '00000000-0000-4000-8000-000000000000', 'Bonjour').expect(404);
+      await reply(admin.token, 'pas-un-uuid', 'Bonjour').expect(400);
+      expect(await database.supportReply.count({ where: { reportId: made.body.id } })).toBe(0);
+      expect(await database.message.count({ where: { toId: player.userId } })).toBe(0);
+    });
+
+    it('la suppression du compte du joueur efface les réponses', async () => {
+      const player = await signUp();
+      const admin = await adminToken();
+      const made = await report(player.access).expect(201);
+      await reply(admin.token, made.body.id, 'Une réponse').expect(201);
+      await request(server()).post('/auth/delete-account').set(authed(player.access)).send({ password: player.user.password }).expect(200);
+      expect(await database.supportReply.count({ where: { reportId: made.body.id } })).toBe(0);
+    });
+  });
+
   it('la suppression du compte efface ses signalements', async () => {
     const { user, userId, access } = await signUp();
     await report(access).expect(201);

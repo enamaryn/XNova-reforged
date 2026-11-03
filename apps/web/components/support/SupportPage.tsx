@@ -24,6 +24,7 @@ const THEMES = {
     muted: "${th.muted}",
     subtle: "${th.subtle}",
     divider: "divide-slate-100",
+    reply: "bg-sky-50",
     button: "bg-slate-900 text-white",
     ok: "text-emerald-700",
     error: "text-rose-700",
@@ -36,6 +37,7 @@ const THEMES = {
     muted: "${th.subtle}",
     subtle: "${th.muted}",
     divider: "divide-slate-800",
+    reply: "bg-sky-500/10",
     button: "border border-blue-500/60 bg-blue-500/10 text-blue-200 hover:bg-blue-500/20",
     ok: "text-emerald-300",
     error: "text-rose-300",
@@ -222,15 +224,29 @@ export function SupportPage({ contact, variant = "public" }: { contact: SupportC
           {mine.data && mine.data.length > 0 ? (
             <ul className={`mt-3 divide-y ${th.divider}`}>
               {mine.data.map((report) => (
-                <li key={report.id} className="flex flex-wrap items-center justify-between gap-2 py-2 text-sm">
-                  <span className={`min-w-0 flex-1 truncate ${th.text}`}>
-                    <span className={`mr-2 text-xs uppercase tracking-wide ${th.subtle}`}>{t(`support.kind${report.kind}`)}</span>
-                    {report.subject}
-                  </span>
-                  <span className={`text-xs ${th.subtle}`}>{new Date(report.createdAt).toLocaleDateString(locale)}</span>
-                  <span className={`rounded-full px-2 py-0.5 text-xs ${STATUS_STYLE[report.status]}`} data-testid={`support-status-${report.status}`}>
-                    {t(`support.status${report.status}`)}
-                  </span>
+                <li key={report.id} className="py-2 text-sm" data-testid={`support-mine-${report.id}`}>
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className={`min-w-0 flex-1 truncate ${th.text}`}>
+                      <span className={`mr-2 text-xs uppercase tracking-wide ${th.subtle}`}>{t(`support.kind${report.kind}`)}</span>
+                      {report.subject}
+                    </span>
+                    <span className={`text-xs ${th.subtle}`}>{new Date(report.createdAt).toLocaleDateString(locale)}</span>
+                    <span className={`rounded-full px-2 py-0.5 text-xs ${STATUS_STYLE[report.status]}`} data-testid={`support-status-${report.status}`}>
+                      {t(`support.status${report.status}`)}
+                    </span>
+                  </div>
+                  {report.replies.map((reply) => (
+                    <blockquote
+                      key={reply.id}
+                      className={`mt-2 rounded-xl border-l-4 border-sky-400/60 px-3 py-2 ${th.reply}`}
+                      data-testid="support-reply"
+                    >
+                      <p className={`text-xs ${th.subtle}`}>
+                        {t("support.replyTitle")} · {new Date(reply.createdAt).toLocaleDateString(locale)}
+                      </p>
+                      <p className={`mt-1 whitespace-pre-wrap break-words ${th.text}`}>{reply.body}</p>
+                    </blockquote>
+                  ))}
                 </li>
               ))}
             </ul>
