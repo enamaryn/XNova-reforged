@@ -27,6 +27,7 @@ export function slugify(text: string): string {
 export function resolveHref(href: string, section: string): { href: string; external: boolean } {
   if (href.startsWith("#")) return { href, external: false };
   if (/^https?:\/\//.test(href)) return { href, external: true };
+  if (/^\/[^/]/.test(href)) return { href, external: false };
   const file = href.split("#")[0];
   const faqLocale = FAQ_FILE_LOCALES[file];
   if (faqLocale) return { href: `/${faqLocale}/${section}`, external: false };

@@ -115,8 +115,8 @@ Ces points ne sont pas visibles depuis le code ; je ne peux ni les vérifier ni 
 
 | # | Critère | Niveau | Preuve attendue | État |
 |---|---|---|---|---|
-| 9.1 | Conditions d'utilisation et politique de confidentialité publiées, cohérentes avec les données collectées (adresse email, adresse IP, mot de passe haché) | R (public) | pages publiées | À faire (propriétaire) |
-| 9.2 | Procédure de suppression de compte et de réponse aux demandes de données personnelles | R (public) | procédure écrite | À faire (propriétaire) |
+| 9.1 | Conditions d'utilisation et politique de confidentialité publiées, cohérentes avec les données collectées (adresse email, adresse IP, mot de passe haché) | R (public) | pages publiées | Texte rédigé et publié sur `/terms` et `/privacy` (Claude, 27 octobre 2026, 5 langues) ; **à faire (propriétaire)** : renseigner `LEGAL_OPERATOR_NAME` et `LEGAL_CONTACT`, faire relire le texte |
+| 9.2 | Procédure de suppression de compte et de réponse aux demandes de données personnelles | R (public) | procédure écrite | Procédure par email décrite dans `/privacy` (pas de bouton de suppression) ; **à faire (propriétaire)** : l'appliquer à la demande, bouton à prévoir avant l'ouverture publique |
 | 9.3 | Capacité d'hébergement et plan de montée en charge (CPU, mémoire, disque, bande passante) | R (public) | relevés pendant la semaine de test | À faire (propriétaire) |
 | 9.4 | Canal de support et de signalement de bugs (adresse, Discord, formulaire) | R | canal annoncé aux joueurs | À faire (propriétaire) |
 | 9.5 | Politique de remise à zéro : l'univers sera-t-il réinitialisé avant l'ouverture ? | R | décision annoncée | À faire (propriétaire) |

@@ -1644,5 +1644,11 @@
       "4": "Orbital Kraken",
       "5": "Forgotten Sentinel"
     }
+  },
+  "legal": {
+    "terms": "Terms of Use",
+    "privacy": "Privacy Policy",
+    "acceptPrefix": "By creating an account, you accept the",
+    "acceptAnd": " and the "
   }
 }

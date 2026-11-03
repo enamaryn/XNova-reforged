@@ -116,6 +116,11 @@ Toutes les décisions listées dans la version précédente sont prises et appli
 
 - [ ] **Checklist de validation V1** (19 octobre : uptime 99,84 % sur 7 jours, email réel, secrets et HTTPS confirmés par le propriétaire ; interblocage des files corrigé) : [docs/V1_VALIDATION.md](docs/V1_VALIDATION.md) (critères bloquants et recommandés, preuves attendues, état de chaque case). Le MVP est clos ; la V1 attend les vérifications côté propriétaire (restauration réelle, email réel, uptime sur 7 jours pleins), une revue indépendante des fonctions récentes et une semaine de test avec des joueurs.
 
+## Textes légaux (27 octobre 2026)
+
+- [x] Conditions d'utilisation et politique de confidentialité publiées en 5 langues (`/terms`, `/privacy`), liens en pied de page et sous le bouton d'inscription ; éditeur et contact par `LEGAL_OPERATOR_NAME` / `LEGAL_CONTACT` (critère V1 9.1 : texte livré, à compléter et relire par le propriétaire).
+- [ ] Reste : bouton de suppression de compte (9.2), enregistrement de l'acceptation à l'inscription, relecture juridique.
+
 ## Événements du monde (22 octobre 2026)
 
 Demande du propriétaire : les événements saisonniers sont **proposés en rappel selon la période** dans le menu admin, **pas automatiques par défaut**, avec une **case à cocher** pour les rendre automatiques. Vérification préalable : `game-events` n'est que la passerelle WebSocket (aucune collision) ; aucun code d'événement n'existait. Module nommé `world-events`.

@@ -1644,5 +1644,11 @@
       "4": "Kraken Orbital",
       "5": "Centinela Olvidado"
     }
+  },
+  "legal": {
+    "terms": "Condiciones de uso",
+    "privacy": "Política de privacidad",
+    "acceptPrefix": "Al crear una cuenta, acepta las",
+    "acceptAnd": " y la "
   }
 }

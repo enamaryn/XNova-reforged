@@ -5,6 +5,14 @@
 
 ---
 
+## Session — Textes légaux (27 octobre 2026)
+
+- [x] Conditions d'utilisation (`/terms`) et politique de confidentialité (`/privacy`) en 5 langues : `apps/web/content/legal/<document>.<langue>.md`, pages publiques sans connexion, rendues par le rendu Markdown de la FAQ (`apps/web/lib/legal/content.ts`).
+- [x] Éditeur et contact : variables `LEGAL_OPERATOR_NAME` et `LEGAL_CONTACT` (lues à chaque requête) ; sans valeur, un texte « non renseigné » s'affiche.
+- [x] Liens dans le pied de page et mention sous le bouton d'inscription (`components/legal/LegalLinks.tsx`) ; clés `legal.*` dans les 5 jeux de messages.
+- [x] Tests : parité des 5 langues (`scripts/faq/test/legal.test.mjs`) et E2E (`tests/e2e/legal.spec.ts`).
+- Limites : l'acceptation n'est pas enregistrée en base (simple mention, pas de case à cocher) ; pas de bouton de suppression de compte (procédure par email) ; textes à faire relire (juriste) avant l'ouverture publique.
+
 ## Session — Renommage middleware → proxy (27 octobre 2026)
 
 - [x] `apps/web/middleware.ts` renommé en `apps/web/proxy.ts`, fonction exportée `proxy` (convention Next 16) ; contenu inchangé.
